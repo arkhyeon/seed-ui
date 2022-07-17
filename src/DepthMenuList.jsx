@@ -33,7 +33,7 @@ import Macro from './page/Macro';
 export const DepthList1 = [
   {
     title: '작업',
-    link: '/',
+    link: '/2',
     component: <Work />,
     menuRole: 3,
   },
@@ -72,22 +72,22 @@ export const DepthList1 = [
         component: <Macro />,
         subMenu: [
           {
-            id: 5_1,
-            title: '업무 등록',
+            id: 5_4,
+            title: '업무 등록1',
             link: '/work',
             routePath: 'work',
             component: <System />,
           },
           {
-            id: 5_2,
-            title: '테이블 동기화',
+            id: 5_5,
+            title: '테이블 동기화2',
             link: '/sync',
             routePath: 'sync',
             component: <Sync />,
           },
           {
-            id: 5_3,
-            title: '매크로 설정',
+            id: 5_6,
+            title: '매크로 설정3',
             link: '/macro',
             routePath: 'macro',
             component: <Macro />,

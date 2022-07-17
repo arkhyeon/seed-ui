@@ -19,8 +19,9 @@ function Index(props) {
           bgColor: 'red',
           bgHoverColor: 'blue',
           fontColor: 'aqua',
-          size: '5.5px 35px',
-          hoverSize: '200px 40px',
+          size: [5.5, 35],
+          depthSize: [200, 40],
+          gap: 20,
         }}
       >
         <MenuInfo>d</MenuInfo>

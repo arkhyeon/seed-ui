@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 
 function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, children }) {
-  const { bgColor, bgHoverColor, fontColor, size, hoverSize, headerColor } = menuStyle;
+  const { bgColor, bgHoverColor, fontColor, size, depthSize, headerColor, gap } = menuStyle;
   const { logo, logoLink = '/', logoColor = '#f1f4f5' } = logoSetting;
   return (
     <>
@@ -18,7 +18,8 @@ function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, chil
           bgHoverColor={bgHoverColor}
           fontColor={fontColor}
           size={size}
-          hoverSize={hoverSize}
+          depthSize={depthSize}
+          gap={gap}
         />
         {children}
       </HeaderWrap>

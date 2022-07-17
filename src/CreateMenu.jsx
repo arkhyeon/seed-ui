@@ -47,9 +47,10 @@ const CreateMenu = (props) => {
 
   return (
     <>
-      {/*<CreateMenu.List onMouseLeave={() => setSelectedMenus([])}>*/}
-      <CreateMenu.List>
+      <CreateMenu.List gap={props.gap} onMouseLeave={() => setSelectedMenus([])}>
+        {/*<CreateMenu.List gap={props.gap}>*/}
         {menus.map((menu) => {
+          console.log(menu);
           return (
             <SubMenuItem
               menu={menu}
@@ -60,7 +61,7 @@ const CreateMenu = (props) => {
               bgHoverColor={props.bgHoverColor}
               fontColor={props.fontColor}
               size={props.size}
-              hoverSize={props.hoverSize}
+              depthSize={props.depthSize}
               useDepth={props.useDepth}
               userRole={props.userRole}
             />
@@ -108,38 +109,35 @@ const SubMenuItem = ({
   bgHoverColor,
   fontColor,
   size,
-  hoverSize,
+  depthSize,
   userRole,
   useDepth,
   depth = 0,
 }) => {
   const { title, link = '', subMenu = [], menuRole = 99 } = menu;
-
+  console.log(useDepth);
   if (userRole > menuRole) {
     return null;
   }
-
   return (
     <>
       {subMenu.length > 0 && useDepth ? (
         <SubMenuItem.Item
-          bgColor={bgColor}
-          bgHoverColor={bgHoverColor}
-          fontColor={fontColor}
-          size={size}
-          hoverSize={hoverSize}
+          bgcolor={bgColor}
+          bghovercolor={bgHoverColor}
+          fontcolor={fontColor}
+          depthsize={depthSize}
         >
           <NavLink
             to={link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
             onClick={(event) => event.preventDefault()}
             style={{ cursor: 'default' }}
-            bgColor={bgColor}
           >
             {title}
           </NavLink>
           {selectedMenus[depth] === title && (
-            <SubMenuItem.List depth={depth} className="subMenuItem" bgColor={bgColor}>
+            <SubMenuItem.List depth={depth} className="subMenuItem" bghovercolor={bgHoverColor}>
               {subMenu.map((child, i) => {
                 const childDepth = depth + 1;
                 return (
@@ -148,10 +146,12 @@ const SubMenuItem = ({
                     handleMenuSelection={handleMenuSelection}
                     key={`sub-${title}-${i}`}
                     depth={childDepth}
+                    useDepth={useDepth}
+                    userRole={userRole}
                     selectedMenus={selectedMenus}
-                    bgColor={bgColor}
-                    fontColor={fontColor}
                     size={size}
+                    bgHoverColor={bgHoverColor}
+                    depthSize={depthSize}
                   />
                 );
               })}
@@ -160,9 +160,10 @@ const SubMenuItem = ({
         </SubMenuItem.Item>
       ) : (
         <SubMenuItem.Item
-          bgColor={bgColor}
-          fontColor={fontColor}
-          size={size}
+          bghovercolor={bgHoverColor}
+          fontcolor={fontColor}
+          depthsize={depthSize}
+          bgcolor={bgColor}
           onMouseEnter={() => handleMenuSelection('', depth)}
           onClick={() => handleMenuSelection('', 0)}
           className="mainActive"
@@ -177,28 +178,26 @@ const SubMenuItem = ({
 CreateMenu.List = styled.ul`
   display: flex;
   justify-content: center;
-  //gap
-  gap: 20px;
+  gap: ${({ gap }) => gap + 'px'};
 
   & > li {
     & > a {
       width: fit-content;
       border-radius: 5px;
-      //size
-      margin: calc(14.5px - 5.5px) 0px;
-      //size
-      padding: 5.5px 35px;
+      margin: calc(14.5px - ${({ children }) => children[0].props.size[0] + 'px'}) 0px;
+      padding: ${({ children }) =>
+        children[0].props.size[0] + 'px ' + children[0].props.size[1] + 'px'};
     }
   }
 `;
 
 SubMenuItem.List = styled.ul`
   & li {
-    border-bottom: 1px solid ${({ bgColor }) => bgColor};
+    border-bottom: 1px solid ${({ bghovercolor }) => bghovercolor};
   }
 
   & li:nth-of-type(1) {
-    border-top: 1px solid ${({ bgColor }) => bgColor};
+    border-top: 1px solid ${({ bghovercolor }) => bghovercolor};
   }
   & > li > a {
     float: left;
@@ -219,27 +218,21 @@ SubMenuItem.List = styled.ul`
 SubMenuItem.Item = styled.li`
   &:hover > a,
   & .active,
-  .subMenuItem &:active > a,
   &.mainActive:active > a {
-    color: ${({ fontColor }) => fontColor};
-    background: ${({ bgHoverColor }) => bgHoverColor};
+    color: ${({ fontcolor }) => fontcolor};
+    background-color: ${({ bghovercolor }) => bghovercolor};
   }
 
   & a {
     display: block;
-    color: ${({ fontColor }) => fontColor};
-    background-color: ${(props) => {
-      console.log(props);
-      return props.bgColor;
-    }};
+    color: ${({ fontcolor }) => fontcolor};
+    background-color: ${({ bgcolor }) => bgcolor};
   }
 
   & ul li a {
-    padding: ${(props) => props.size || '10px 40px'};
     font-size: 0.9rem;
-    //hoverSize
-    width: 200px;
-    height: 40px;
+    width: ${({ depthsize }) => depthsize[0] + 'px'};
+    height: ${({ depthsize }) => depthsize[1] + 'px'};
     display: flex;
     justify-content: center;
     align-items: center;
