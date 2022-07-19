@@ -1,5 +1,5 @@
 {
-  "name": "tsm",
+  "name": "seed-ui",
   "private": false,
   "version": "0.0.1",
   "scripts": {
@@ -26,12 +26,12 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/tsm.umd.js",
-  "module": "./dist/tsm.es.js",
+  "main": "./dist/seed-ui.umd.js",
+  "module": "./dist/seed-ui.es.js",
   "exports": {
     ".": {
-      "import": "./dist/tsm.es.js",
-      "require": "./dist/tsm.umd.js"
+      "import": "./dist/seed-ui.es.js",
+      "require": "./dist/seed-ui.umd.js"
     }
   },
   "browserslist": {

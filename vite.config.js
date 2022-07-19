@@ -9,9 +9,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/components/index.js'),
-      name: 'tsm',
+      name: 'seed-ui',
       formats: ['es', 'umd'],
-      fileName: (format) => `tsm.${format}.js`,
+      fileName: (format) => `seed-ui.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react-router-dom', '@emotion/styled'],
