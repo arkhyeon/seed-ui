@@ -50,7 +50,6 @@ const CreateMenu = (props) => {
       <CreateMenu.List gap={props.gap} onMouseLeave={() => setSelectedMenus([])}>
         {/*<CreateMenu.List gap={props.gap}>*/}
         {menus.map((menu) => {
-          console.log(menu);
           return (
             <SubMenuItem
               menu={menu}
@@ -115,7 +114,6 @@ const SubMenuItem = ({
   depth = 0,
 }) => {
   const { title, link = '', subMenu = [], menuRole = 99 } = menu;
-  console.log(useDepth);
   if (userRole > menuRole) {
     return null;
   }
