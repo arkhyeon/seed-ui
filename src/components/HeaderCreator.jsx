@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CreateMenu from './CreateMenu.jsx';
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
+import { ConfigMenus } from '../assets/DepthMenuList';
+import AsideCreator from './AsideCreator';
 
-function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, children }) {
+function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, children = <div /> }) {
   const { bgColor, bgHoverColor, fontColor, size, depthSize, headerColor, gap } = menuStyle;
   const { logo, logoLink = '/', logoColor = '#f1f4f5' } = logoSetting;
   return (
@@ -22,12 +24,13 @@ function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, chil
         />
         {children}
       </HeaderWrap>
+      <Outlet />
     </>
   );
 }
 
 const HeaderWrap = styled.div`
-  width: 100%;
+  width: calc(100% - 30px);
   background: ${({ headerColor }) => headerColor};
   display: flex;
   justify-content: space-between;

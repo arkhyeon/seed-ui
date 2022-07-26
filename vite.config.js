@@ -2,8 +2,6 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { defineConfig } from 'vite';
 
-console.log(__dirname+'/src/components/index.js')
-console.log(path.resolve(__dirname, 'src/components/index.js'))
 export default defineConfig({
   plugins: [
     react(),

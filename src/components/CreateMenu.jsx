@@ -262,7 +262,6 @@ export const SetRoute = (props, auth) => {
 };
 
 /**
- *
  * @param {Object} route
  * @param {int} depth
  * depth Level

@@ -1,11 +1,12 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import Index from "./Index.jsx";
-import {DepthList1} from "./assets/DepthMenuList.jsx";
-import {SetRoute} from "./components";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Index from './Index.jsx';
+import { DepthList1 } from './assets/DepthMenuList.jsx';
+import { SetRoute } from './components';
+import './index.css';
+import Work from './assets/Work';
 
 function App() {
-
   return (
     <Router>
       <Routes>
@@ -14,7 +15,7 @@ function App() {
         </Route>
       </Routes>
     </Router>
-  )
+  );
 }
 
 export default App;
