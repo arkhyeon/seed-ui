@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CreateMenu from './CreateMenu.jsx';
 import styled from '@emotion/styled';
-import { NavLink, Outlet } from 'react-router-dom';
-import { ConfigMenus } from '../assets/DepthMenuList';
-import AsideCreator from './AsideCreator';
+import { NavLink } from 'react-router-dom';
 
 function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, children = <div /> }) {
   const { bgColor, bgHoverColor, fontColor, size, depthSize, headerColor, gap } = menuStyle;
@@ -24,7 +22,6 @@ function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, chil
         />
         {children}
       </HeaderWrap>
-      <Outlet />
     </>
   );
 }

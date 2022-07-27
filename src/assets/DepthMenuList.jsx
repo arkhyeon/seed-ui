@@ -56,12 +56,13 @@ export const DepthList1 = [
     link: 'config',
     routePath: 'config',
     component: <Config />,
+    icon: <MdSettings />,
     menuRole: 1,
     subMenu: [
       {
         id: 5_1,
         title: '업무 등록',
-        link: 'work',
+        link: '/config/work',
         routePath: 'work',
         component: <System />,
         menuRole: 1,
@@ -70,7 +71,7 @@ export const DepthList1 = [
       {
         id: 5_2,
         title: '테이블 동기화',
-        link: 'sync',
+        link: '/config/sync',
         routePath: 'sync',
         component: <Sync />,
         icon: <MdSettings />,
@@ -78,7 +79,7 @@ export const DepthList1 = [
           {
             id: 5_4,
             title: '업무 등록2',
-            link: 'work',
+            link: '/config/sync/work',
             routePath: 'work',
             component: <System />,
             icon: <MdSettings />,
@@ -104,8 +105,8 @@ export const DepthList1 = [
       {
         id: 5_3,
         title: '매크로 설정',
-        link: 'macro',
-        routePath: 'macro/*',
+        link: '/config/macro',
+        routePath: 'macro',
         component: <Macro />,
         icon: <MdSettings />,
         subMenu: [
@@ -128,17 +129,17 @@ export const DepthList1 = [
           {
             id: 5_6,
             title: '매크로 설정1',
-            link: 'macro1',
-            routePath: 'macro1',
+            link: '/config/macro/sync1',
+            routePath: 'sync1',
             component: <Macro />,
             icon: <MdSettings />,
             subMenu: [
               {
                 id: 5_4,
                 title: '업무 등록3',
-                link: 'work',
+                link: '/config/macro/sync1/work',
                 routePath: 'work',
-                component: <System />,
+                component: <Work />,
                 icon: <MdSettings />,
               },
               {
@@ -162,63 +163,5 @@ export const DepthList1 = [
         ],
       },
     ],
-  },
-];
-
-export const ConfigMenus = [
-  {
-    title: '설정',
-    icon: <MdSettings />,
-    isTitle: true,
-  },
-  {
-    title: '업무 등록',
-    icon: <MdUploadFile />,
-    to: '2',
-  },
-  {
-    title: '테이블 동기화',
-    icon: <MdSwapHorizontalCircle />,
-    to: 'sync',
-  },
-  {
-    title: '매크로 설정',
-    icon: <MdBuildCircle />,
-    to: 'macro',
-  },
-];
-
-export const MessageMenus = [
-  {
-    title: '메시지 작성',
-    icon: (
-      <svg
-        stroke="currentColor"
-        fill="currentColor"
-        strokeWidth="0"
-        role="img"
-        viewBox="0 0 24 24"
-        height="1em"
-        width="1em"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <title />
-        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
-      </svg>
-    ),
-    navigate: 'MessageWrite',
-    isTitle: true,
-  },
-  {
-    title: '받은 메시지',
-    icon: <MdEmail />,
-    to: 'MessageReceive',
-    state: 'RECEIVE',
-  },
-  {
-    title: '보낸 메시지',
-    icon: <MdSend />,
-    to: 'MessageDispatch',
-    state: 'DISPATCH',
   },
 ];

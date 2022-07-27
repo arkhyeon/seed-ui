@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConfigMenus, DepthList1 } from './assets/DepthMenuList.jsx';
+import { DepthList1 } from './assets/DepthMenuList.jsx';
 import { HeaderCreator } from './components';
 import AsideCreator from './components/AsideCreator';
 import { NavLink, Outlet } from 'react-router-dom';
@@ -25,8 +25,9 @@ function Index(props) {
           gap: 20,
         }}
       >
-        <div>HI</div>
+        <NavLink to={'1S'}>SS</NavLink>
       </HeaderCreator>
+      <Outlet />
     </>
   );
 }

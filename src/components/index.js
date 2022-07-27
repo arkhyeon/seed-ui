@@ -1,14 +1,9 @@
-import HeaderCreator from "./HeaderCreator.jsx";
-import {SetRoute} from "./CreateMenu";
+import HeaderCreator from './HeaderCreator.jsx';
+import { SetRoute } from './CreateMenu';
+import AsideCreator from './AsideCreator';
 
-export {HeaderCreator};
+export { HeaderCreator };
 
-export {SetRoute};
+export { SetRoute };
 
-
-
-
-
-
-
-
+export { AsideCreator };

@@ -4,7 +4,6 @@ import Index from './Index.jsx';
 import { DepthList1 } from './assets/DepthMenuList.jsx';
 import { SetRoute } from './components';
 import './index.css';
-import Work from './assets/Work';
 
 function App() {
   return (
