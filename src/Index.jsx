@@ -9,7 +9,7 @@ function Index(props) {
     <>
       <HeaderCreator
         logoSetting={{
-          logo: 'SQLCanvas Post',
+          logo: 'Seed UI Project',
           logoLink: '/',
           logoColor: '#eeeeee',
         }}
@@ -25,7 +25,7 @@ function Index(props) {
           gap: 20,
         }}
       >
-        <NavLink to={'1S'}>SS</NavLink>
+        <NavLink to={'children'}>Children</NavLink>
       </HeaderCreator>
       <Outlet />
     </>

@@ -5,10 +5,10 @@ import styled from '@emotion/styled';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import CreateAsideMenu from './CreateAsideMenu';
 
-function AsideCreator({ menus, title, children }) {
+function AsideCreator({ menuList, title, children }) {
   const resizeAside = useRef();
   const navigate = useNavigate();
-  const targetMenu = _.find(menus, { title: title });
+  const targetMenu = _.find(menuList, { title: title });
   const [resizer, setResizer] = useState({
     currentScreenX: 0,
     mouseActive: false,
