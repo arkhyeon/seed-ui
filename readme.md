@@ -214,7 +214,7 @@ HeaderCreator로 Logo, TopMenu, Personal Menu 구성할 수 있습니다.
    
    
 2. <code>menuList {ObjectArray}</code>   
- Header에 생성될 메뉴 리스트 [1] 메뉴 생성 참고
+ Header에 생성될 메뉴 리스트 [3] 메뉴 생성 참고
 
  
 3. <code>useDepth {Boolean} (Default : True)</code>  
