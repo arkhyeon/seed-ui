@@ -1,0 +1,135 @@
+import React from 'react';
+import Work from './Work.jsx';
+import Project from './Project.jsx';
+import Macro from './Macro.jsx';
+import { MdPanoramaPhotosphereSelect, MdSettings, MdSync, MdWork } from 'react-icons/all';
+import ConfigWork from './ConfigWork';
+import ConfigSyncTable from './ConfigSyncTable';
+import ConfigSync from './ConfigSync';
+import MacroRegister from './MacroRegister';
+import MacroDashboard from './MacroDashboard';
+import MacroCommand from './MacroCommand';
+import MacroCommandSetting from './MacroCommandSetting';
+import MacroCommandTest from './MacroCommandTest';
+import MacroCommandRegister from './MacroCommandRegister';
+
+/**
+ * @param {String} title
+ * 메뉴에 들어갈 텍스트, map key 역할[unique]
+ * @param {String} link(option)
+ * URL Path
+ * NavLink to={link}
+ * routePath가 없으면 link가 routePath로 설정
+ * @param {String} routePath(option)
+ * routePath
+ * Route path={routePath}
+ * @param {component} component(option)
+ * 해당 URL에 보여줄 컴포넌트
+ * Route element={component}
+ * @param {Integer} userRole(option)
+ * 권한 체크
+ * userRole(ulevel)이 menuRole보다 작다면 활성화
+ * ex ) userRole[1] > menuRole[3] >> 활성화
+ *      userRole[3] > menuRole[1] >> 비활성
+ * @param {Array} subMenu(option)
+ *  - 해당 메뉴 하위로 나올 메뉴
+ *
+ * @return
+ * function CreateMenu = title, link, subMenu 사용
+ * function setRoute   = title, link, subMenu, component 사용
+ */
+export const DepthList1 = [
+  {
+    title: '작업',
+    link: 'work',
+    component: <Work />,
+    menuRole: 3,
+  },
+  {
+    title: '프로젝트',
+    link: 'project',
+    component: <Project />,
+    menuRole: 3,
+  },
+  {
+    title: '설정',
+    link: 'config',
+    icon: <MdSettings />,
+    menuRole: 1,
+    subMenu: [
+      {
+        title: '작업 설정',
+        link: '/config/work',
+        routePath: 'work',
+        component: <ConfigWork />,
+        menuRole: 1,
+        icon: <MdWork />,
+      },
+      {
+        title: '테이블 동기화',
+        link: '/config/sync',
+        routePath: 'sync',
+        icon: <MdSync />,
+        subMenu: [
+          {
+            title: '테이블 설정',
+            link: '/config/sync/table',
+            routePath: 'work',
+            component: <ConfigSyncTable />,
+          },
+          {
+            title: '동기화 설정',
+            link: '/config/sync/csync',
+            routePath: 'csync',
+            component: <ConfigSync />,
+          },
+        ],
+      },
+      {
+        title: '매크로',
+        link: '/config/macro',
+        routePath: 'macro',
+        icon: <MdPanoramaPhotosphereSelect />,
+        subMenu: [
+          {
+            title: '매크로 등록',
+            link: '/config/macro/register',
+            routePath: 'register',
+            component: <MacroRegister />,
+          },
+          {
+            title: '대시보드',
+            link: '/config/macro/dashboard',
+            routePath: 'dashboard',
+            component: <MacroDashboard />,
+          },
+          {
+            title: '명령어',
+            link: '/config/macro/command',
+            routePath: 'command',
+            subMenu: [
+              {
+                title: '명령어 등록',
+                link: '/config/macro/command/register',
+                routePath: 'register',
+                component: <MacroCommandRegister />,
+              },
+              {
+                title: '명령어 설정',
+                link: '/config/macro/command/setting',
+                routePath: 'setting',
+                component: <MacroCommandSetting />,
+              },
+              {
+                title: '명령어 테스트',
+                link: '/config/macro/command/test',
+                routePath: 'test',
+                component: <MacroCommandTest />,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
