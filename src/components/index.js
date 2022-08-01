@@ -1,4 +1,4 @@
-import HeaderCreator from './HeaderCreator.jsx';
+import HeaderCreator from './HeaderCreator';
 import { SetRoute } from './CreateMenu';
 import AsideCreator from './AsideCreator';
 

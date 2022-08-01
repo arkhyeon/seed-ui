@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import styled from '@emotion/styled';
@@ -8,13 +8,13 @@ import CreateAsideMenu from './CreateAsideMenu';
 function AsideCreator({ menuList, title, children }) {
   const resizeAside = useRef();
   const navigate = useNavigate();
-  const targetMenu = _.find(menuList, { title: title });
-  const [resizer, setResizer] = useState({
-    currentScreenX: 0,
-    mouseActive: false,
-    currentWidth: 0,
-    maxWidth: 0,
-  });
+  const targetMenu = _.find(menuList, { title });
+  // const [resizer, setResizer] = useState({
+  //   currentScreenX: 0,
+  //   mouseActive: false,
+  //   currentWidth: 0,
+  //   maxWidth: 0,
+  // });
 
   useEffect(() => {
     collapseStyle(window.sessionStorage.getItem('AsideWidth') || 265);
@@ -44,15 +44,15 @@ function AsideCreator({ menuList, title, children }) {
   //   }
   // }, 1);
   //
-  const collapseStyle = (currentWidth) => {
-    const classList = resizeAside.current.classList;
+  const collapseStyle = currentWidth => {
+    const { classList } = resizeAside.current;
 
     classList.toggle('narrow', currentWidth > 183 && currentWidth < 203);
     classList.toggle('narrower', currentWidth <= 183);
 
-    if (!resizer.mouseActive) {
-      resizeAside.current.style.width = currentWidth + 'px';
-    }
+    // if (!resizer.mouseActive) {
+    //   resizeAside.current.style.width = `${currentWidth}px`;
+    // }
 
     window.sessionStorage.setItem('AsideWidth', currentWidth);
   };
@@ -67,8 +67,12 @@ function AsideCreator({ menuList, title, children }) {
   // };
 
   const toggleCollapse = () => {
-    const isNarrower = resizeAside.current.classList.contains('narrower');
-    isNarrower ? collapseStyle(265) : collapseStyle(43);
+    const isNarrower = resizeAside.current?.classList.contains('narrower');
+    if (isNarrower) {
+      collapseStyle(265);
+    } else {
+      collapseStyle(43);
+    }
   };
 
   return (
@@ -90,7 +94,7 @@ function AsideCreator({ menuList, title, children }) {
           <MdArrowBackIosNew />
         </ToggleButton>
       </AsideWrap>
-      {/*<ResizerBar onMouseDown={(e) => resizingStart(e)} />*/}
+      {/* <ResizerBar onMouseDown={(e) => resizingStart(e)} /> */}
       <MainWrap>{children}</MainWrap>
     </Container>
   );
@@ -156,7 +160,7 @@ const AsideWrap = styled.div`
     }
 
     a {
-      padding: 7px 0px 7px 0px;
+      padding: 7px 0 7px 0;
     }
 
     svg {
@@ -196,7 +200,7 @@ const SideTitle = styled.div`
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 0px 20px;
+  padding: 0 20px;
 
   & svg {
     font-size: 21px;

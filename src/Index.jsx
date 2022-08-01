@@ -1,10 +1,9 @@
 import React from 'react';
-import { DepthList1 } from './assets/DepthMenuList.jsx';
-import { HeaderCreator } from './components';
-import AsideCreator from './components/AsideCreator';
 import { NavLink, Outlet } from 'react-router-dom';
+import { DepthList1 } from './assets/DepthMenuList';
+import { HeaderCreator } from './components';
 
-function Index(props) {
+function Index() {
   return (
     <>
       <HeaderCreator
@@ -14,7 +13,7 @@ function Index(props) {
           logoColor: '#eeeeee',
         }}
         menuList={DepthList1}
-        useDepth={true}
+        useDepth
         menuStyle={{
           headerColor: '#222831',
           bgColor: '#393E46',
@@ -25,7 +24,7 @@ function Index(props) {
           gap: 20,
         }}
       >
-        <NavLink to={'children'}>Children</NavLink>
+        <NavLink to="children">Children</NavLink>
       </HeaderCreator>
       <Outlet />
     </>

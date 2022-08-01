@@ -3,25 +3,25 @@ import { NavLink, Route } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 /**
- * @param {Array} menus
+ * @param {Array} props.menus
  * EX) Auth : {userLevel === "1" ? [AdminArray] : [UserArray]}
  *      OR
  *     Common : {[Array]}
- * @param {Boolean} useDepth
+ * @param {Boolean} props.useDepth
  * 사이드 메뉴 사용할 때 Depth를 사용할 것인지 아닌지
  * true : Depth 이용 메뉴
  * false : Depth 없이 메뉴
- * @param {String} color
- * @param {String} fontColor
+ * @param {String} props.color
+ * @param {String} props.fontColor
  * EX) {"#0b2444"} Or {"red"}
  *      If a color value exists, use the color value first.
  *      If not, use the theme provider color
  *      color 값 O > color 이용
  *      color 값 X > theme provider color 이용
  *      theme provider 사용 시 테마 색을 먼저 이용합니다.
- * @param {String} size
+ * @param {String} props.size
  * EX) {"WidthPadding HeightPaaing"} => {"13px 40px"}
- * @param {Integer} userRole(option)
+ * @param {int} props.userRole(option)
  * 권한 체크
  * userRole(ulevel)이 menuRole보다 작다면 활성화
  * ex ) userRole[1] > menuRole[3] >> 활성화
@@ -30,13 +30,13 @@ import styled from '@emotion/styled';
  * @returns {JSX.Element} Menu Component
  */
 
-const CreateMenu = (props) => {
+function CreateMenu(props) {
   const menus = props.menus;
   const [selectedMenus, setSelectedMenus] = useState([]);
 
   const handleMenuSelection = (label, depth) => {
-    setSelectedMenus((selectedMenus) => {
-      const newSelectedMenus = [...selectedMenus];
+    setSelectedMenus(selectedMenusProp => {
+      const newSelectedMenus = [...selectedMenusProp];
       newSelectedMenus.length = depth;
       if (label !== '') {
         newSelectedMenus[depth] = label;
@@ -46,30 +46,27 @@ const CreateMenu = (props) => {
   };
 
   return (
-    <>
-      <CreateMenu.List gap={props.gap} onMouseLeave={() => setSelectedMenus([])}>
-        {/*<CreateMenu.List gap={props.gap}>*/}
-        {menus.map((menu) => {
-          return (
-            <SubMenuItem
-              menu={menu}
-              handleMenuSelection={handleMenuSelection}
-              key={menu.title}
-              selectedMenus={selectedMenus}
-              bgColor={props.bgColor}
-              bgHoverColor={props.bgHoverColor}
-              fontColor={props.fontColor}
-              size={props.size}
-              depthSize={props.depthSize}
-              useDepth={props.useDepth}
-              userRole={props.userRole}
-            />
-          );
-        })}
-      </CreateMenu.List>
-    </>
+    <CreateMenu.List gap={props.gap} onMouseLeave={() => setSelectedMenus([])}>
+      {menus.map(menu => {
+        return (
+          <SubMenuItem
+            menu={menu}
+            handleMenuSelection={handleMenuSelection}
+            key={menu.title}
+            selectedMenus={selectedMenus}
+            bgColor={props.bgColor}
+            bgHoverColor={props.bgHoverColor}
+            fontColor={props.fontColor}
+            size={props.size}
+            depthSize={props.depthSize}
+            useDepth={props.useDepth}
+            userRole={props.userRole}
+          />
+        );
+      })}
+    </CreateMenu.List>
   );
-};
+}
 
 /**
  * @param {Object} menu
@@ -91,7 +88,7 @@ const CreateMenu = (props) => {
  * CreateMenu 선언부 props에서 할당된 색
  * @param {String} size
  * EX) {"WidthPadding HeightPaaing"} => {"13px 40px"}
- * @param {Integer} userRole(option)
+ * @param {int} userRole(option)
  * 권한 체크
  * userRole(ulevel)이 menuRole보다 작다면 활성화
  * ex ) userRole[1] > menuRole[3] >> 활성화
@@ -100,7 +97,7 @@ const CreateMenu = (props) => {
  * depth Level
  * @returns {JSX.Element} Menu Unit Component
  */
-const SubMenuItem = ({
+function SubMenuItem({
   menu,
   handleMenuSelection,
   selectedMenus,
@@ -112,7 +109,7 @@ const SubMenuItem = ({
   userRole,
   useDepth,
   depth = 0,
-}) => {
+}) {
   const { title, link = '', subMenu = [], menuRole = 99 } = menu;
   if (userRole > menuRole) {
     return null;
@@ -129,7 +126,7 @@ const SubMenuItem = ({
           <NavLink
             to={link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
-            onClick={(event) => event.preventDefault()}
+            onClick={event => event.preventDefault()}
             style={{ cursor: 'default' }}
           >
             {title}
@@ -142,7 +139,7 @@ const SubMenuItem = ({
                   <SubMenuItem
                     menu={child}
                     handleMenuSelection={handleMenuSelection}
-                    key={`sub-${title}-${i}`}
+                    key={`sub-${title}${i + 1}`}
                     depth={childDepth}
                     useDepth={useDepth}
                     userRole={userRole}
@@ -171,20 +168,19 @@ const SubMenuItem = ({
       )}
     </>
   );
-};
+}
 
 CreateMenu.List = styled.ul`
   display: flex;
   justify-content: center;
-  gap: ${({ gap }) => gap + 'px'};
+  gap: ${({ gap }) => `${gap}px`};
 
   & > li {
     & > a {
       width: fit-content;
       border-radius: 5px;
-      margin: calc(14.5px - ${({ children }) => children[0].props.size[0] + 'px'}) 0px;
-      padding: ${({ children }) =>
-        children[0].props.size[0] + 'px ' + children[0].props.size[1] + 'px'};
+      margin: calc(14.5px - ${({ children }) => `${children[0].props.size[0]}px`}) 0px;
+      padding: ${({ children }) => `${children[0].props.size[0]}px ${children[0].props.size[1]}px`};
     }
   }
 `;
@@ -229,8 +225,8 @@ SubMenuItem.Item = styled.li`
 
   & ul li a {
     font-size: 0.9rem;
-    width: ${({ depthsize }) => depthsize[0] + 'px'};
-    height: ${({ depthsize }) => depthsize[1] + 'px'};
+    width: ${({ depthsize }) => `${depthsize[0]}px`};
+    height: ${({ depthsize }) => `${depthsize[1]}px`};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -239,8 +235,8 @@ SubMenuItem.Item = styled.li`
 
 /**
  * Route Component를 props에 맞게 자동 생성(재귀 SubRoute())
- * @param {Array{Object}} props
- * @param {Integer} auth(option)
+ * @param {ArrayObject} props
+ * @param {int} auth(option)
  * 권한 체크
  * auth(ulevel)이 menuRole보다 작다면 활성화
  * ex ) auth[1] > menuRole[3] >> 활성화
@@ -248,10 +244,10 @@ SubMenuItem.Item = styled.li`
  * @returns
  * Route Component
  */
-export const SetRoute = (props, auth) => {
+export function SetRoute(props, auth) {
   return (
     <>
-      {props.map((route) => {
+      {props.map(route => {
         if (auth > route.menuRole) {
           return '';
         }
@@ -259,7 +255,7 @@ export const SetRoute = (props, auth) => {
       })}
     </>
   );
-};
+}
 
 /**
  * @param {Object} route
@@ -268,23 +264,23 @@ export const SetRoute = (props, auth) => {
  * @returns
  * Route Component
  */
-const SubRoute = (route, depth = 0) => {
+function SubRoute(route, depth = 0) {
   const { component, link = '', title, subMenu = [], routePath } = route;
   return (
     <Fragment key={title}>
       {subMenu.length > 0 ? (
-        <Route path={routePath ? routePath : link} element={component}>
-          {subMenu.map((child) => {
+        <Route path={routePath || link} element={component}>
+          {subMenu.map(child => {
             const childDepth = depth + 1;
             return SubRoute(child, childDepth);
           })}
         </Route>
       ) : (
-        <Route path={routePath ? routePath : link} element={component} />
+        <Route path={routePath || link} element={component} />
       )}
     </Fragment>
   );
-};
+}
 
 // export const setMsgRoute = () => {
 // 	return (

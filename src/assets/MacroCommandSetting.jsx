@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-function MacroCommandSetting(props) {
+function MacroCommandSetting() {
   const { pathname } = useLocation();
   return (
     <div>
