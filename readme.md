@@ -177,7 +177,7 @@ export const MenuList = [
 SetRoute를 이용해 메뉴의 Route를 생성
 
 1. <code>MenuList {ObjectArray}</code>  
- Route를 구성할 객체 배열 [1] 메뉴 생성 참고
+ Route를 구성할 객체 배열 [3] 메뉴 생성 참고
  
  
 2. <code>UserRole {Integer}</code>  
@@ -220,8 +220,15 @@ HeaderCreator로 Logo, TopMenu, Personal Menu 구성할 수 있습니다.
 3. <code>useDepth {Boolean} (Default : True)</code>  
  Header 메뉴의 DropDown 기능 사용 유무
 
- 
-4. <code>menuStyle {Object}</code>    
+4. <code>userRole {Int} (Default : 99)</code>  
+   해당 메뉴의 사용 권한을 체크하여 메뉴 활성/비활성(display:block/none) 판단    
+   userRole(ulevel)이 menuRole보다 작다면 활성화
+     ```javascript
+     userRole[1] > menuRole[3] >> 메뉴 활성화  
+     userRole[3] > menuRole[1] >> 메뉴 비활성
+     ```
+
+5<code>menuStyle {Object}</code>    
    - <code>headerColor {String or HexColorCode}</code>  
    Header Background-color
    - <code>bgColor {String or HexColorCode}</code>  
@@ -238,7 +245,7 @@ HeaderCreator로 Logo, TopMenu, Personal Menu 구성할 수 있습니다.
    Header 메뉴의 사이의 간격 수치
 
 
-5. <code>children {String or Component}</code>  
+6<code>children {String or Component}</code>  
 Header의 우측에 위치 할 Component
 
 ```javascript
@@ -253,6 +260,7 @@ function Index(props) {
 				}}
 				menuList={DepthList1}
 				useDepth={true}
+                userRole={3}
 				menuStyle={{
 					headerColor: '#222831',
 					bgColor: '#393E46',
@@ -295,4 +303,33 @@ function SideMenuTest() {
       </AsideCreator>
   );
 }
+```
+
+3. SideMenu Style
+원하는 페이지에 사용이 될 SideMenu는 공통된 Style을 사용하기 위해 ThemeProvider 사용
+
+ - ThemeProvider(@emotion/react) 사용하여 사용할 프로젝트를 감싸준다.
+```javascript
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </React.StrictMode>,
+);
+```
+
+ - 원하는 Directory 내 theme.jsx 파일 생성
+ - asideMenuStyle 키로 지정하여 아래와 같이 Color 작성
+```javascript
+export const theme = {
+  asideMenuStyle: {
+    backgroundColor: '#222831',       // 기본 Background color
+    fontColor: '#EEEEEE',             // 기본 Font Color
+    hoverBackgroundColor: '#00ADB5',  // hover 시 Background Color
+    hoverFontColor: '#EEEEEE',        // hover 시 Font Color
+    divideLine: '#ebebeb',            // 구분선 Color
+  },
+};
+
 ```

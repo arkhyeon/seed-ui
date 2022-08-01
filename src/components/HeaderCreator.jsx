@@ -3,7 +3,14 @@ import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 import CreateMenu from './CreateMenu';
 
-function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, children = <div /> }) {
+function HeaderCreator({
+  logoSetting,
+  menuList,
+  useDepth = true,
+  userRole = 99,
+  menuStyle,
+  children = <div />,
+}) {
   const { bgColor, bgHoverColor, fontColor, size, depthSize, headerColor, gap } = menuStyle;
   const { logo, logoLink = '/', logoColor = '#f1f4f5' } = logoSetting;
   return (
@@ -12,6 +19,7 @@ function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, chil
       <CreateMenu
         menus={menuList}
         useDepth={useDepth}
+        userRole={userRole}
         bgColor={bgColor}
         bgHoverColor={bgHoverColor}
         fontColor={fontColor}
