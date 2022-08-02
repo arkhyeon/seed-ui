@@ -21,7 +21,6 @@
 |------------------|---------|-----------------|---------|
 | react            | 18.2.0  | @emotion/react  | 11.9.3  |
 | react-router-dom | 6.3.0   | @emotion/styled | 11.9.3  |
-| lodash           | 18.2.0  |                 |         |
 
 ## [3] 메뉴 객체 생성
 원하는 옵션으로 메뉴 객체를 생성합니다.  
@@ -283,7 +282,7 @@ function Index(props) {
 최상단 컴포넌트에 사이드 메뉴를 생성하고 내부에 컴포넌트 작성 (children 이용하여 보여준다.)
 
 1. <code>menuList {ObjectArray}</code>
-사이드 메뉴에 생성될 메뉴 리스트 [2] 메뉴 생성 참고
+사이드 메뉴에 생성될 메뉴 리스트 [3] 메뉴 생성 참고
 
 
 2. <code>title {String}</code>   

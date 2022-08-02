@@ -9,17 +9,16 @@ export default defineConfig({
       entry: path.resolve(__dirname, 'src/components/index.js'),
       name: 'seed-ui',
       formats: ['es', 'umd'],
-      fileName: (format) => `seed-ui.${format}.js`,
+      fileName: format => `seed-ui.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react-router-dom', '@emotion/styled', 'lodash'],
+      external: ['react', 'react-dom', 'react-router-dom', '@emotion/styled'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           'react-router-dom': 'react-router-dom',
           '@emotion/styled': 'styled',
-          lodash: '_',
         },
       },
     },

@@ -235,7 +235,7 @@ SubMenuItem.Item = styled.li`
 
 /**
  * Route Component를 props에 맞게 자동 생성(재귀 SubRoute())
- * @param {ArrayObject} props
+ * @param {[{component, menuRole: number, link: string, title: string},{component, menuRole: number, link: string, title: string},{subMenu: [{routePath: string, component, menuRole: number, link: string, icon, title: string},{routePath: string, subMenu: [{routePath: string, component, link: string, title: string},{routePath: string, component, link: string, title: string}], link: string, icon, title: string},{routePath: string, subMenu: [{routePath: string, component, link: string, title: string},{routePath: string, component, link: string, title: string},{routePath: string, subMenu: [{routePath: string, component, link: string, title: string},{routePath: string, component, link: string, title: string},{routePath: string, component, link: string, title: string}], link: string, title: string}], link: string, icon, title: string}], menuRole: number, link: string, icon, title: string}]} props
  * @param {int} auth(option)
  * 권한 체크
  * auth(ulevel)이 menuRole보다 작다면 활성화
