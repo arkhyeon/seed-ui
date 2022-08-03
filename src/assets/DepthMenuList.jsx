@@ -1,14 +1,12 @@
 import React from 'react';
-import Work from './Work.jsx';
-import Project from './Project.jsx';
-import Macro from './Macro.jsx';
 import { MdPanoramaPhotosphereSelect, MdSettings, MdSync, MdWork } from 'react-icons/all';
+import Work from './Work';
+import Project from './Project';
 import ConfigWork from './ConfigWork';
 import ConfigSyncTable from './ConfigSyncTable';
 import ConfigSync from './ConfigSync';
 import MacroRegister from './MacroRegister';
 import MacroDashboard from './MacroDashboard';
-import MacroCommand from './MacroCommand';
 import MacroCommandSetting from './MacroCommandSetting';
 import MacroCommandTest from './MacroCommandTest';
 import MacroCommandRegister from './MacroCommandRegister';

@@ -1,28 +1,34 @@
 import React from 'react';
-import CreateMenu from './CreateMenu.jsx';
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
+import CreateMenu from './CreateMenu';
 
-function HeaderCreator({ logoSetting, menuList, useDepth = true, menuStyle, children = <div /> }) {
+function HeaderCreator({
+  logoSetting,
+  menuList,
+  useDepth = true,
+  userRole = 99,
+  menuStyle,
+  children = <div />,
+}) {
   const { bgColor, bgHoverColor, fontColor, size, depthSize, headerColor, gap } = menuStyle;
   const { logo, logoLink = '/', logoColor = '#f1f4f5' } = logoSetting;
   return (
-    <>
-      <HeaderWrap headerColor={headerColor} logoColor={logoColor}>
-        <NavLink to={logoLink}>{logo}</NavLink>
-        <CreateMenu
-          menus={menuList}
-          useDepth={useDepth}
-          bgColor={bgColor}
-          bgHoverColor={bgHoverColor}
-          fontColor={fontColor}
-          size={size}
-          depthSize={depthSize}
-          gap={gap}
-        />
-        {children}
-      </HeaderWrap>
-    </>
+    <HeaderWrap headerColor={headerColor} logoColor={logoColor}>
+      <NavLink to={logoLink}>{logo}</NavLink>
+      <CreateMenu
+        menus={menuList}
+        useDepth={useDepth}
+        userRole={userRole}
+        bgColor={bgColor}
+        bgHoverColor={bgHoverColor}
+        fontColor={fontColor}
+        size={size}
+        depthSize={depthSize}
+        gap={gap}
+      />
+      {children}
+    </HeaderWrap>
   );
 }
 
@@ -32,7 +38,7 @@ const HeaderWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 15px;
+  padding: 0 15px;
   height: 50px;
   position: relative;
   z-index: 10;

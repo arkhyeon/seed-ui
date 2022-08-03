@@ -22,14 +22,14 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
 
   return (
     <ul>
-      {currentSideMenu.map((sm) => {
+      {currentSideMenu.map(sm => {
         return (
           <ASideMenuList key={sm.link} depth={depth}>
             {sm.subMenu ? (
               <NavLink
                 activeclassname="sideSelectMenu"
                 to={sm.link}
-                onClick={(e) => {
+                onClick={e => {
                   if (window.sessionStorage.getItem('AsideWidth') > 83) {
                     e.preventDefault();
                     setDisplayChildren({
@@ -63,7 +63,7 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
 
 const ASideMenuList = styled.li`
   & li {
-    text-indent: ${(props) => `${props.depth * 15 + 25}px`};
+    text-indent: ${props => `${props.depth * 15 + 25}px`};
   }
 
   & p {

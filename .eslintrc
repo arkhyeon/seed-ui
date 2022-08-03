@@ -1,0 +1,30 @@
+{
+  "parser": "@babel/eslint-parser",
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "babelrc": false,
+      "configFile": false,
+      "presets": ["@babel/preset-env", "@babel/preset-react"]
+    }
+  },
+  "extends": ["react-app", "airbnb", "plugin:prettier/recommended"],
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/no-extraneous-dependencies": 0,
+    "import/prefer-default-export": 0,
+    "import/no-cycle": 0,
+    "react/prop-types": 0,
+    "no-use-before-define": ["error", { "functions": false, "variables": false }],
+    "no-plusplus": 0,
+    "react/jsx-no-useless-fragment": 0,
+    "react/destructuring-assignment": 0,
+    "prefer-destructuring": 0,
+    "react/jsx-props-no-spreading": 0
+  }
+}

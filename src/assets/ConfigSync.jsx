@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-function ConfigSync(props) {
+function ConfigSync() {
   const { pathname } = useLocation();
   return (
     <div>

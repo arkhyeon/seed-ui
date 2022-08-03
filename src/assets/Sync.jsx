@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-function Sync(props) {
+function Sync() {
   const { pathname } = useLocation();
   return (
     <div>
