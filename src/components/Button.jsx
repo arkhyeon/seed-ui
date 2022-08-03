@@ -23,8 +23,6 @@ const colorComb = {
  * "coral" : 산호색
  * "blue" : 연한 파랑색
  * "gray" : 회색 (default)
- * @param {String} props.children
- * 버튼에 들어갈 텍스트
  * @param {String} props.size
  * 버튼의 크기 결정
  * "small" : 작은 크기
@@ -32,7 +30,7 @@ const colorComb = {
  * "big": 큰 크기
  * @param {Number} props.width
  * 버튼의 너비 설정 (default === auto)
- * 모든 버튼이 동일한 너비를 가져야 할 때 길이 지정 가능
+ * 버튼이 특정한 너비를 가져야 할 때 길이 지정 가능
  * @param {Boolean} props.disabled
  * 버튼 활성화 여부
  * true : 버튼 활성화 (default)
