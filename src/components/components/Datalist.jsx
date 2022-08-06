@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { MdKeyboardArrowDown } from 'react-icons/all';
+import TextInput from './TextInput';
 
-function Datalist() {
+function Datalist({ id, setData }) {
   return (
     <>
-      <label htmlFor="icecream">라벨 이름 :</label>
-      <input id="icecream" type="text" list="ice-cream-flavors" name="ice-cream-choice" />
+      <label htmlFor={id}>{id} : </label>
+      <input id={id} type="text" onChange={e => setData(id, e.target.value)} />
+      <TextInput title="hi" value="b" />
       <MdKeyboardArrowDown />
 
       <DataListWrap>
