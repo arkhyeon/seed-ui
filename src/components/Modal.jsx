@@ -5,9 +5,9 @@ import { AiOutlineClose } from 'react-icons/ai';
 
 /**
  *
- * @param {Number} props.width
+ * @param {String} props.width
  * 모달의 너비
- * @param {Number} props.height
+ * @param {String} props.height
  * 모달의 높이
  * @param {String} props.position
  * 모달의 위치
@@ -65,8 +65,8 @@ import { AiOutlineClose } from 'react-icons/ai';
  * @returns {JSX.Element} Button Component
  */
 function Modal({
-  width = 600,
-  height = 600,
+  width = `600px`,
+  height = '600px',
   position = 'center',
   children,
   modalState = false,
@@ -592,8 +592,8 @@ const Wrapper = styled.div`
 
   ${({ width, height }) => {
     return css`
-      width: ${width}px;
-      height: ${height}px;
+      width: ${width};
+      height: ${height};
     `;
   }}
 
