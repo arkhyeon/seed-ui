@@ -43,13 +43,16 @@ function Tooltip({
 }) {
   const wrapperRef = useRef(null);
   const tooltipRef = useRef(null);
+  const contentRef = useRef(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [tooltipSize, setTooltipSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     setSize({
-      width: wrapperRef.current.offsetWidth,
-      height: wrapperRef.current.offsetHeight,
+      // width: wrapperRef.current.offsetWidth,
+      // height: wrapperRef.current.offsetHeight,
+      width: contentRef.current.offsetWidth,
+      height: contentRef.current.offsetHeight,
     });
 
     setTooltipSize({
@@ -59,41 +62,45 @@ function Tooltip({
   }, [wrapperRef.current, tooltipRef.current]);
 
   const handleOver = e => {
-    tooltipRef.current.style.display = 'block';
+    tooltipRef.current.style.visibility = 'visible';
   };
 
   const handleLeave = e => {
-    tooltipRef.current.style.display = 'none';
+    tooltipRef.current.style.visibility = 'hidden';
   };
 
   return (
     <>
       <Wrapper onMouseOver={handleOver} onMouseLeave={handleLeave} ref={wrapperRef}>
-        {children}
-        <TooltipComponent
-          position={position}
-          ref={tooltipRef}
-          size={size}
-          tooltipSize={tooltipSize}
-          bgColor={bgColor}
-          fontColor={fontColor}
-          fontSize={fontSize}
-        >
-          {text}
-        </TooltipComponent>
+        <Text ref={contentRef} style={{ fontSize: '2rem' }}>
+          {children}
+          <TooltipComponent
+            position={position}
+            ref={tooltipRef}
+            size={size}
+            tooltipSize={tooltipSize}
+            bgColor={bgColor}
+            fontColor={fontColor}
+            fontSize={fontSize}
+          >
+            {text}
+          </TooltipComponent>
+        </Text>
       </Wrapper>
     </>
   );
 }
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: relative;
   white-space: nowrap;
+  display: block;
 `;
 
 const TooltipComponent = styled.div`
   position: absolute;
   z-index: 99;
+  visibility: hidden;
   white-space: nowrap;
   padding: 4px 8px;
   border-radius: 4px;
@@ -108,60 +115,60 @@ const TooltipComponent = styled.div`
   ${({ position, size, tooltipSize }) => {
     if (position === 'top-start') {
       return css`
-        bottom: ${size.height + 8}px;
+        bottom: ${size.height}px;
       `;
     }
     if (position === 'top-center') {
       return css`
-        left: ${size.width / 2}px;
-        bottom: ${size.height + 8}px;
+        left: ${size.width / 2 - tooltipSize.width / 2}px;
+        bottom: ${size.height}px;
       `;
     }
     if (position === 'top-end') {
       return css`
         left: ${size.width}px;
-        bottom: ${size.height + 8}px;
+        bottom: ${size.height}px;
       `;
     }
     if (position === 'right-start') {
       return css`
-        left: ${size.width}px;
+        left: ${size.width + 12}px;
         bottom: ${size.height + 8}px;
       `;
     }
     if (position === 'right-center') {
       return css`
-        left: ${size.width + 12}px;
+        left: ${size.width + 16}px;
         bottom: ${size.height / 2 - tooltipSize.height / 2}px;
       `;
     }
     if (position === 'right-end') {
       return css`
-        left: ${size.width}px;
+        left: ${size.width + 12}px;
         top: ${size.height + 8}px;
       `;
     }
     if (position === 'bottom-start') {
       return css`
-        top: ${size.height + 12}px;
+        margin-top: 8px;
       `;
     }
     if (position === 'bottom-center') {
       return css`
-        left: ${size.width / 2}px;
-        top: ${size.height + 12}px;
+        margin-top: 8px;
+        left: ${size.width / 2 - tooltipSize.width / 2}px;
       `;
     }
     if (position === 'bottom-end') {
       return css`
-        left: ${size.width}px;
-        top: ${size.height + 12}px;
+        left: ${size.width + 4}px;
+        margin-top: 8px;
       `;
     }
     if (position === 'left-start') {
       return css`
         right: ${size.width + 8}px;
-        bottom: ${size.height + 8}px;
+        bottom: ${size.height}px;
       `;
     }
     if (position === 'left-center') {
@@ -173,7 +180,7 @@ const TooltipComponent = styled.div`
     if (position === 'left-end') {
       return css`
         right: ${size.width + 12}px;
-        top: ${size.height + 8}px;
+        margin-top: ${8}px;
       `;
     }
     return css``;
@@ -203,7 +210,7 @@ const TooltipComponent = styled.div`
       if (position === 'top-center') {
         return css`
           top: ${tooltipSize.height}px;
-          transform: rotate(15deg);
+          left: ${tooltipSize.width / 2}px;
         `;
       }
       if (position === 'top-end') {
@@ -214,19 +221,20 @@ const TooltipComponent = styled.div`
       }
       if (position === 'right-start') {
         return css`
-          transform: rotate(25deg);
-          top: ${tooltipSize.height}px;
+          transform: rotate(45deg);
+          top: ${tooltipSize.height - 4}px;
+          left: 0px;
         `;
       }
       if (position === 'right-center') {
         return css`
-          transform: rotate(90deg) translate(${tooltipSize.height / 2 - 4}px, 12px);
+          transform: rotate(90deg) translate(8px, 12px);
         `;
       }
       if (position === 'right-end') {
         return css`
           bottom: ${tooltipSize.height - 2}px;
-          transform: rotate(140deg);
+          transform: rotate(140deg) translate(5px, 2px);
         `;
       }
       if (position === 'bottom-start') {
@@ -238,7 +246,8 @@ const TooltipComponent = styled.div`
       if (position === 'bottom-center') {
         return css`
           bottom: ${tooltipSize.height}px;
-          transform: rotate(165deg);
+          left: ${tooltipSize.width / 2}px;
+          transform: rotate(180deg);
         `;
       }
       if (position === 'bottom-end') {
@@ -262,13 +271,19 @@ const TooltipComponent = styled.div`
       }
       if (position === 'left-end') {
         return css`
-          left: ${tooltipSize.width - 4}px;
-          transform: rotate(215deg) translate(6px, 6px);
+          left: ${tooltipSize.width - 3}px;
+          transform: rotate(215deg) translate(4px, 7px);
         `;
       }
       return css``;
     }};
   }
+`;
+
+const Text = styled.div`
+  display: inline-block;
+  position: relative;
+  border: 1px solid black;
 `;
 
 export default Tooltip;
