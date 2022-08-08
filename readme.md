@@ -12,6 +12,7 @@
 - [[6] 사이드 메뉴 생성](#6-사이드-메뉴-생성)
 - [[7] 버튼 생성](#7-버튼-생성)
 - [[8] 툴팁 생성](#8-툴팁-생성)
+- [[9] 모달 생성](#9-모달-생성)
 
 ## [1] 소개
 
@@ -448,5 +449,103 @@ Tooltip 컴포넌트를 통해, 텍스트에 마우스를 올릴 시 툴팁을 �
 ```javascript
 function TestTooltip() {
   return <Tooltip text="표시될 툴팁">툴팁이 나와야할 텍스트</Tooltip>;
+}
+```
+
+## [9] 모달생성
+
+Modal 컴포넌트를 통해, 모달 창을 생성합니다.
+
+1. <code>width {String} </code>
+
+- 모달의 너비
+- default 값은 '600px';
+
+2. <code>height {String} </code>
+
+- 모달의 높이
+- default 값은 '600px';
+
+3. <code>position {String} </code>
+
+- 모달 생성 위치
+- default 값은 'center'
+
+<div style="text-align: center;">
+    <img src="./readmeImg/modalPos.jpg" />
+</div>
+
+4. <code>modalState {Boolean} </code>
+
+- 모달 on, off 여부
+- 상위 컴포넌트에서 useState 값 내려 받음
+- default 값은 false
+
+5. <code>handleClose {Function} </code>
+
+- 모달을 닫는 (상태를 변경 하는 ) 함수
+- 상위 컴포넌트에서 상태변경 기능이 포함된 함수를 내려 받음
+- default 값은 null
+
+6. <code>modalTitle {String} </code>
+
+- 모달 제목
+- default 값은 'undefined'로 ''로 표시됨
+
+7. <code>isCloseBtn {Boolean} </code>
+
+- 모달창 오른족 상단에 닫기 버튼 존재 여부
+- default 값은 true
+
+8. <code>resizable {Boolean} </code>
+
+- 모달창 크기 조절 가능 여부
+- default 값은 false
+
+9. <code>movable {Boolean} </code>
+
+- 모달창 상단을 드래그 하여 이동 가능한 지 여부
+- default 값은 true
+
+10. <code>style {Object} </code>
+
+- 모달창 세부 스타일 지정
+  - <code>headBg {String} </code>
+    - 모달창 상단 배경 색상
+    - default 값은 '#eee'
+  - <code>headFc {String} </code>
+    - 모달창 상단의 글씨, 아이콘의 색상
+    - default 값은 '#808080'
+  - <code>headBorder {String} </code>
+    - 모달창 상단의 하단 테두리 스타일 지정
+    - default 값은 'none'
+  - <code>closeBtn {Component} </code>
+    - 모달창 상단의 닫기 버튼에 들어갈 컴포넌트
+    - default 값은 react-icons의 <AiOutlineClose />
+  - <code>modalBorder {String} </code>
+    - 모달창의 테두리 스타일 지정
+    - default 값은 'none'
+  - <code>isShadow {String} </code>
+    - 모달창의 그림자 여부
+    - default 값은 true
+
+예시
+
+```javascript
+function TestModal() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModal = useCallback(() => {
+    setIsModalOpen(!isModalOpen);
+  }, [setIsModalOpen, isModalOpen]);
+
+  return (
+    <>
+      <button onClick={handleModal}>modalOpen</button>
+      <Modal modalState={isModalOpen} handleClose={handleModal}>
+        <div>modalContent</div>
+      </Modal>
+    </>
+  );
 }
 ```
