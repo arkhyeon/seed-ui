@@ -111,28 +111,40 @@ function Modal({
       setPos({ x: 1, y: 1 });
     }
     if (position === 'left-center') {
-      setPos({ x: 1, y: window.innerHeight / 2 - height / 2 });
+      setPos({ x: 1, y: window.innerHeight / 2 - height.slice(0, -2) / 2 });
     }
     if (position === 'left-end') {
-      setPos({ x: 1, y: window.innerHeight - height - 5 });
+      setPos({ x: 1, y: window.innerHeight - height.slice(0, -2) - 5 });
     }
     if (position === 'center-start') {
-      setPos({ x: window.innerWidth / 2 - width / 2, y: 1 });
+      setPos({ x: window.innerWidth / 2 - width.slice(0, -2) / 2, y: 1 });
     }
     if (position === 'center') {
-      setPos({ x: window.innerWidth / 2 - width / 2, y: window.innerHeight / 2 - height / 2 });
+      setPos({
+        x: window.innerWidth / 2 - width.slice(0, -2) / 2,
+        y: window.innerHeight / 2 - height.slice(0, -2) / 2,
+      });
     }
     if (position === 'center-end') {
-      setPos({ x: window.innerWidth / 2 - width / 2, y: window.innerHeight - height - 5 });
+      setPos({
+        x: window.innerWidth / 2 - width.slice(0, -2) / 2,
+        y: window.innerHeight - height.slice(0, -2) - 5,
+      });
     }
     if (position === 'right-start') {
-      setPos({ x: window.innerWidth - width - 5, y: 1 });
+      setPos({ x: window.innerWidth - width.slice(0, -2) - 5, y: 1 });
     }
     if (position === 'right-center') {
-      setPos({ x: window.innerWidth - width - 5, y: window.innerHeight / 2 - height / 2 });
+      setPos({
+        x: window.innerWidth - width.slice(0, -2) - 5,
+        y: window.innerHeight / 2 - height.slice(0, -2) / 2,
+      });
     }
     if (position === 'right-end') {
-      setPos({ x: window.innerWidth - width - 5, y: window.innerHeight - height - 5 });
+      setPos({
+        x: window.innerWidth - width.slice(0, -2) - 5,
+        y: window.innerHeight - height.slice(0, -2) - 5,
+      });
     }
   }, [height, width, position]);
 
