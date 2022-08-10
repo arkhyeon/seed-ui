@@ -1,7 +1,15 @@
-import React, { useRef, useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+  createElement,
+} from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineClose } from 'react-icons/ai';
+import Button from './Button.jsx';
 
 /**
  *
@@ -42,6 +50,15 @@ import { AiOutlineClose } from 'react-icons/ai';
  * @param {Boolean} props.movable
  * 모달창 상단을 드래그 하여 이동 가능한 지 여부
  * default 값은 true
+ * @param {Component[]} props.buttonList
+ * 모달창 하단에 표시될 버튼 목록
+ * default 값은 [
+ * <Button size="small" color="blue" onClick={callback}> 확인 </Button>,
+   <Button size="small" onClick={handleClose}>닫기</Button>
+   ]
+ * @param {Function} props.callback
+ * 모달창 확인 버튼을 눌렀을 시, 실행되는 함수
+ * default 값은 null
  * @param {Object} props.style
  * 모달창 세부 스타일 지정
  * @param {String} props.style.headBg
@@ -76,6 +93,15 @@ function Modal({
   resizable = true,
   movable = true,
   style = {},
+  callback = null,
+  buttonList = [
+    <Button size="small" color="blue" onClick={callback}>
+      확인
+    </Button>,
+    <Button size="small" onClick={handleClose}>
+      닫기
+    </Button>,
+  ],
 }) {
   const modalRef = useRef(null);
   const headRef = useRef(null);
@@ -105,6 +131,29 @@ function Modal({
     }
     handleClose();
   }, [handleClose]);
+
+  useLayoutEffect(() => {
+    const backgroundDiv = document.createElement('div');
+    backgroundDiv.style.background = '#808080';
+    backgroundDiv.style.position = 'absolute';
+    backgroundDiv.style.width = '100%';
+    backgroundDiv.style.height = '100%';
+    backgroundDiv.style.top = 0;
+    backgroundDiv.style.left = 0;
+    backgroundDiv.style.zIndex = 90;
+    backgroundDiv.style.opacity = 0.3;
+    backgroundDiv.className = 'background';
+
+    backgroundDiv.addEventListener('click', handleClose);
+    if (modalState) {
+      document.body.appendChild(backgroundDiv);
+    } else {
+      const backgroundDivs = document.querySelectorAll('.background');
+      for (let i = 0; i < backgroundDivs.length; i++) {
+        backgroundDivs[i].parentNode.removeChild(backgroundDivs[i]);
+      }
+    }
+  }, [modalState]);
 
   useLayoutEffect(() => {
     if (position === 'left-start') {
@@ -565,34 +614,51 @@ function Modal({
   });
 
   return modalState ? (
-    <Wrapper
-      ref={modalRef}
-      style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
-      width={width}
-      height={height}
-      position={position}
-      modalBorder={modalBorder}
-      isShadow={isShadow}
-    >
-      {resizable ? (
-        <>
-          <Border pos="top" ref={topRef} data-pos="top" />
-          <Border pos="right" ref={rightRef} data-pos="right" />
-          <Border pos="bottom" ref={bottomRef} data-pos="bottom" />
-          <Border pos="left" ref={leftRef} data-pos="left" />
-          <Border pos="leftTop" ref={leftTopRef} data-pos="leftTop" />
-          <Border pos="rightTop" ref={rightTopRef} data-pos="rightTop" />
-          <Border pos="leftBottom" ref={leftBottomRef} data-pos="leftBottom" />
-          <Border pos="rightBottom" ref={rightBottomRef} data-pos="rightBottom" />
-        </>
-      ) : null}
+    <>
+      <Wrapper
+        ref={modalRef}
+        style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+        width={width}
+        height={height}
+        position={position}
+        modalBorder={modalBorder}
+        isShadow={isShadow}
+      >
+        {resizable ? (
+          <>
+            <Border pos="top" ref={topRef} data-pos="top" />
+            <Border pos="right" ref={rightRef} data-pos="right" />
+            <Border pos="bottom" ref={bottomRef} data-pos="bottom" />
+            <Border pos="left" ref={leftRef} data-pos="left" />
+            <Border pos="leftTop" ref={leftTopRef} data-pos="leftTop" />
+            <Border pos="rightTop" ref={rightTopRef} data-pos="rightTop" />
+            <Border pos="leftBottom" ref={leftBottomRef} data-pos="leftBottom" />
+            <Border pos="rightBottom" ref={rightBottomRef} data-pos="rightBottom" />
+          </>
+        ) : null}
 
-      <Head ref={headRef} headBg={headBg} headFc={headFc} headBorder={headBorder} movable={movable}>
-        {modalTitle ? modalState : null}
-        {isCloseBtn ? <CloseBtn onClick={handleModal}>{closeBtn}</CloseBtn> : null}
-      </Head>
-      {children}
-    </Wrapper>
+        <Head
+          ref={headRef}
+          headBg={headBg}
+          headFc={headFc}
+          headBorder={headBorder}
+          movable={movable}
+        >
+          {modalTitle ? modalState : null}
+          {isCloseBtn ? <CloseBtn onClick={handleModal}>{closeBtn}</CloseBtn> : null}
+        </Head>
+        <ChildrenWrapper height={height}> {children}</ChildrenWrapper>
+        <Bottom height={height}>
+          {buttonList.map((el, idx) => {
+            return (
+              <div style={{ display: 'inline-block' }} key={`button-${idx}`}>
+                {el}
+              </div>
+            );
+          })}
+        </Bottom>
+      </Wrapper>
+    </>
   ) : null;
 }
 
@@ -606,6 +672,8 @@ const Wrapper = styled.div`
     return css`
       width: ${width};
       height: ${height};
+      min-width: ${width};
+      min-height: ${height};
     `;
   }}
 
@@ -742,6 +810,23 @@ const CloseBtn = styled.div`
   }
 
   cursor: pointer;
+`;
+
+const Bottom = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+  button {
+    margin-right: 12px;
+  }
+`;
+
+const ChildrenWrapper = styled.div`
+  height: calc(${props => props.height} - 96px);
 `;
 
 export default Modal;
