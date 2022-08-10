@@ -507,7 +507,17 @@ Modal 컴포넌트를 통해, 모달 창을 생성합니다.
 - 모달창 상단을 드래그 하여 이동 가능한 지 여부
 - default 값은 true
 
-10. <code>style {Object} </code>
+10. <code>buttonList {Component[]} </code>
+
+- 모달창 하단에 표시될 버튼 목록
+- default 값은 [ <Button size="small" color="blue" onClick={callback}> 확인 </Button>, <Button size="small" onClick={handleClose}>닫기</Button> ]
+
+11. <code>callback {Function} </code>
+
+- 모달창 확인 버튼을 눌렀을 시, 실행되는 함수
+- default 값은 null
+
+12. <code>style {Object} </code>
 
 - 모달창 세부 스타일 지정
   - <code>headBg {String} </code>
