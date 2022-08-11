@@ -49,7 +49,7 @@ function Work() {
   ];
   return (
     <AsideCreator menuList={DepthList1} title="설정">
-      <Datalist id="ice" labelList={data2} setData={setDataListData} />
+      <Datalist id="ice" valueList={data2} setData={setDataListData} />
       <br />
       Hello Work! <br /> <br /> path : {pathname}
       <button
