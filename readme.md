@@ -13,6 +13,7 @@
 - [[7] 버튼 생성](#7-버튼-생성)
 - [[8] 툴팁 생성](#8-툴팁-생성)
 - [[9] 모달 생성](#9-모달-생성)
+- [[10] 알림창 생성](#10-알림창-생성)
 
 ## [1] 소개
 
@@ -557,5 +558,95 @@ function TestModal() {
       </Modal>
     </>
   );
+}
+```
+
+## [10] 알림창 생성
+
+alarm 함수를 사용하여 특정 상황에서 알림창을 생성합니다.
+
+1. <code>name {String}</code>
+
+- 안내 창의 성격
+- 'success' (default)
+- 'error'
+- 'warning'
+- 'info'
+- 'answer'
+
+2. <code>position {String}</code>
+
+- 안내 창이 뜨는 위치
+- 'left-start'
+- 'left-center'
+- 'left-end'
+- 'center-start'
+- 'center' (default)
+- 'center-end'
+- 'right-start'
+- 'right-center'
+- 'right-end'
+<div style="text-align: center;">
+    <img src="./readmeImg/modalPos.jpg" />
+</div>
+
+3. <code>width {String}</code>
+
+- 안내 창의 너비
+- default 값은 '400px'
+
+4. <code>height {String}</code>
+
+- 안내 창의 높이
+- default 값은 '100px
+
+5. <code>timeLimit {Number}</code>
+
+- 안내 창의 지속 시간
+- default 값은 10000
+
+6. <code>type {String}</code>
+
+- 안내 창의 형태
+- 'dark'
+- 'light' (default)
+- 'border'
+
+7. <code>title {String}</code>
+
+- 안내 창의 제목
+- name === 'success'일 시, default 값은 성공
+- name === 'error'일 시, default 값은 에러
+- name === 'warning'일 시, default 값은 경고
+- name === 'info'일 시, default 값은 안내
+- name === 'answer'일 시, default 값은 확인
+
+8. <code>text {String}</code>
+
+- 안내 창의 상세 문구
+- default 값은 '텍스트를 입력해주세요.'
+
+9. <code>callback {Function}</code>
+
+- (name === 'answer'일 때) 확인 버튼을 눌렀을 때 실행될 함수
+- default 값은 null
+
+10. <code>yBtnText {String}</code>
+
+- (name === 'answer'일 때) 확인 버튼에 들어갈 텍스트
+- default 값은 '확인'
+
+11. <code>nBtnText {String}</code>
+
+- (name === 'answer'일 때) 취소 버튼에 들어갈 텍스트
+- default 값은 '취소'
+
+예시
+
+```javascript
+function checkValid(input) {
+  if (input.length < 8) {
+    alert({ name: error, text: '8자 이상 입력해주세요.' });
+  }
 }
 ```
