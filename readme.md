@@ -14,6 +14,7 @@
 - [[8] 툴팁 생성](#8-툴팁-생성)
 - [[9] 모달 생성](#9-모달-생성)
 - [[10] 알림창 생성](#10-알림창-생성)
+- [[11] 슬라이더 생성](#11-슬라이더-생성)
 
 ## [1] 소개
 
@@ -648,5 +649,52 @@ function checkValid(input) {
   if (input.length < 8) {
     alert({ name: error, text: '8자 이상 입력해주세요.' });
   }
+}
+```
+
+## [11] 슬라이더 생성
+
+Slider 컴포넌트를 통해, 슬라이더를 생성합니다.
+
+1. <code>width {String}</code>
+
+- Slider 컴포넌트의 너비
+- default 값은 '800px'
+
+2. <code>height {String}</code>
+
+- Slider 컴포넌트의 높이
+- default 값은 '400px'
+
+3. <code>itemList {Component[]}</code>
+
+- 보여주고자 하는 컴포넌트들을 담은 배열
+- default 값은 null
+
+4. <code>autoPlay {Boolean}</code>
+
+- Slider 자동 재생 여부
+- default 값은 false
+
+5. <code>autoTime {Number}</code>
+
+- 자동 재생 시 페이지 넘어가는 시간
+- default 값은 5000
+
+6. <code>border {String}</code>
+
+- Slider 컴포넌트의 테두리 스타일
+- default 값은 '1px solid black'
+
+7. <code>background {String}</code>
+
+- 각 페이지의 배경색
+- default 값은 'transparent'
+
+예시
+
+```javascript
+function TestComponent () {
+  return <Slider itemList={[<div>test1</div>, <div>test2</div>]}>
 }
 ```
