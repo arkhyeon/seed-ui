@@ -15,6 +15,7 @@
 - [[9] 모달 생성](#9-모달-생성)
 - [[10] 알림창 생성](#10-알림창-생성)
 - [[11] 슬라이더 생성](#11-슬라이더-생성)
+- [[12] 데이트픽커 생성](#12-데이트픽커-생성)
 
 ## [1] 소개
 
@@ -696,5 +697,55 @@ Slider 컴포넌트를 통해, 슬라이더를 생성합니다.
 ```javascript
 function TestComponent () {
   return <Slider itemList={[<div>test1</div>, <div>test2</div>]}>
+}
+```
+
+## [12] 데이트픽커 생성
+
+DatePicker 컴포넌트를 통해, 데이트 픽커를 생성합니다.
+
+1. <code>date {Date}</code>
+
+- 선택하고자 하는 날짜
+- useState로 관리하는 값(상태)이여야 함
+- default 값은 new Date()
+
+2. <code>setDate {Function}</code>
+
+- 날짜를 바꾸는 함수
+- setState 함수(상태 변경 함수)여야 함
+
+3. <code>width {String}</code>
+
+- input 박스의 너비
+- default 값은 '100px'
+
+4. <code>headBg {String}</code>
+
+- datePicker의 상단 부분 배경색
+- default 값은 '#eee'
+
+5. <code>pickerBg {String}</code>
+
+- datePicker의 전체 배경색
+- default 값은 'white'
+
+6. <code>weekDaysBg {String}</code>
+
+- 요일 표시 줄의 배경색
+- default 값은 'white'
+
+7. <code>selectedBg {String}</code>
+
+- 선택된 날짜의 배경색
+- default 값은 '#808080'
+
+예시
+
+```javascript
+function Test() {
+  const [date, setDate] = useState(new Date());
+
+  return <DatePicker date={date} setDate={setDate} />;
 }
 ```
