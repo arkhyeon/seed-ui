@@ -16,6 +16,7 @@
 - [[10] 알림창 생성](#10-알림창-생성)
 - [[11] 슬라이더 생성](#11-슬라이더-생성)
 - [[12] 데이트픽커 생성](#12-데이트픽커-생성)
+- [[13] 데이트비트윈픽커 생성](#13-데이트비트윈픽커-생성)
 
 ## [1] 소개
 
@@ -747,5 +748,81 @@ function Test() {
   const [date, setDate] = useState(new Date());
 
   return <DatePicker date={date} setDate={setDate} />;
+}
+```
+
+## [13] 데이트비트윈픽커 생성
+
+데이트비트윈픽커 컴포넌트를 사용하여 시작 날짜, 종료 날짜를 설정할 수 있습니다.
+
+1. <code>startDate {Date}</code>
+
+- 시작 날짜
+- state로 관리하는 상태 값 이여야 함
+- default 값은 new Date()
+
+2. <code>endDate {Date}</code>
+
+- 종료 날짜
+- state로 관리하는 상태 값 이여야 함
+- default 값은 new Date()
+
+3. <code>setStartDate {Function}</code>
+
+- 시작 날짜를 변경하는 함수
+- setState 함수(상태 변경 함수)여야 함
+- default 값은 null
+
+4. <code>setEndDate {Function}</code>
+
+- 종료 날짜를 변경하는 함수
+- setState 함수(상태 변경 함수)여야 함
+- default 값은 null
+
+5. <code>width {String}</code>
+
+- input 박스의 너비
+- default 값은 '100px'
+
+6. <code>pickerBg {String}</code>
+
+- datePicker의 전체 배경 색
+- default 값은 'white'
+
+7. <code>headBg {String}</code>
+
+- datePicker의 제일 상단 배경 색
+- default 값은 '#eee'
+
+8. <code>weekDaysBg {String}</code>
+
+- 요일 표시줄 배경색
+- default 값은 'white'
+
+9. <code>selectedBg {String}</code>
+
+- 선택된 날짜들 배경 색
+- default 값은 '#808080'
+
+10. <code>selectedFC {String}</code>
+
+- 선택된 날짜들 글시 색
+- default 값은 'white'
+
+예시
+
+```javascript
+function Test() {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  return (
+    <DateBetweenPicker
+      startDate={startDate}
+      setStartDate={setStartDate}
+      endDate={endDate}
+      setEndDate={setEndDate}
+    />
+  );
 }
 ```
