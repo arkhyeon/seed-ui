@@ -952,6 +952,9 @@ const Day = styled.li`
     if (dateViewed.getFullYear() < startDate.getFullYear()) {
       return css`
         background: transparent;
+        :hover {
+          background: #eee;
+        }
       `;
     }
     if (
@@ -960,6 +963,9 @@ const Day = styled.li`
     ) {
       return css`
         background: transparent;
+        :hover {
+          background: #eee;
+        }
       `;
     }
     if (
@@ -969,11 +975,17 @@ const Day = styled.li`
     ) {
       return css`
         background: transparent;
+        :hover {
+          background: #eee;
+        }
       `;
     }
     if (dateViewed.getFullYear() > endDate.getFullYear()) {
       return css`
         background: transparent;
+        :hover {
+          background: #eee;
+        }
       `;
     }
     if (
@@ -982,6 +994,9 @@ const Day = styled.li`
     ) {
       return css`
         background: transparent;
+        :hover {
+          background: #eee;
+        }
       `;
     }
     if (
@@ -991,6 +1006,9 @@ const Day = styled.li`
     ) {
       return css`
         background: transparent;
+        :hover {
+          background: #eee;
+        }
       `;
     }
 

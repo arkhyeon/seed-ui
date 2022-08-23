@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
   AiOutlineLeft,
@@ -591,15 +592,27 @@ const Day = styled.li`
 
   border-radius: 4px;
 
-  background: ${({ day, date, dateViewed, selectedBg }) => {
+  ${({ day, date, dateViewed, selectedBg }) => {
     if (
       dateViewed.getFullYear() === date.getFullYear() &&
       dateViewed.getMonth() === date.getMonth() &&
       parseInt(day, 10) === date.getDate()
     ) {
-      return `${selectedBg}`;
+      return css`
+        background: ${selectedBg};
+      `;
     }
-    return 'transparent';
+    if (day !== '') {
+      return css`
+        background: transparent;
+        :hover {
+          background: #eee;
+        }
+      `;
+    }
+    return css`
+      background: transparent;
+    `;
   }};
 `;
 
