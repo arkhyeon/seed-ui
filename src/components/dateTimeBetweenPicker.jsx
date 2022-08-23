@@ -292,24 +292,36 @@ function DateTimeBetweenPicker({
     const month = dupDate.getMonth() + 1;
     const day = parseInt(e.target.textContent, 10);
 
-    if (target === 'start') {
-      setStartDate(new Date(`${year}-${month}-${day}`));
-      setStartDateViewed(new Date(`${year}-${month}-${day}`));
-      setIsOpenStart(false);
-    } else if (target === 'end') {
-      if (!checkStartEnd(startDate, new Date(`${year}-${month}-${day}`))) {
-        alarm({
-          position: 'center-start',
-          name: 'error',
-          text: '종료 날짜는 시작날짜보다 앞설 수 없습니다.',
-        });
-        return;
-      }
+    let newStartDate;
+    let newEndDate;
 
-      setEndDate(new Date(`${year}-${month}-${day}`));
-      setEndDateViewed(new Date(`${year}-${month}-${day}`));
-      setIsOpenEnd(false);
+    if (target === 'start') {
+      newStartDate = new Date(`${year}-${month}-${day}`);
+      newStartDate.setHours(parseInt(startHourInput, 10));
+      newStartDate.setMinutes(parseInt(startMinuteInput, 10));
+      newEndDate = endDate;
+    } else {
+      newStartDate = startDate;
+      newEndDate = new Date(`${year}-${month}-${day}`);
+      newEndDate.setHours(parseInt(endHourInput, 10));
+      newEndDate.setMinutes(parseInt(endMinuteInput, 10));
     }
+
+    if (!checkStartEnd(newStartDate, newEndDate)) {
+      if (target === 'start') {
+        newEndDate = newStartDate;
+      } else {
+        newStartDate = newEndDate;
+      }
+    }
+
+    setStartDate(newStartDate);
+    setStartDateViewed(newStartDate);
+    setEndDate(newEndDate);
+    setEndDateViewed(newEndDate);
+
+    setIsOpenStart(false);
+    setIsOpenEnd(false);
   };
 
   const handleInput = (e, target) => {
@@ -422,24 +434,24 @@ function DateTimeBetweenPicker({
         newEndDate.setHours(convertedHour);
         newEndDate.setMinutes(convertedMinute);
       }
-      if (target === 'end' && !checkStartEnd(newStartDate, newEndDate)) {
-        alarm({
-          position: 'center-start',
-          name: 'error',
-          text: '종료 날짜는 시작날짜보다 앞설 수 없습니다.',
-        });
-        return;
+      if (!checkStartEnd(newStartDate, newEndDate)) {
+        if (target === 'start') {
+          newEndDate = newStartDate;
+        } else {
+          newStartDate = newEndDate;
+        }
       }
 
+      setStartDate(newStartDate);
+      setStartDateViewed(newStartDate);
+      setEndDate(newEndDate);
+      setEndDateViewed(newEndDate);
+
       if (target === 'start') {
-        setStartDate(newStartDate);
-        setStartDateViewed(newStartDate);
         setTimeout(() => {
           startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
         }, 10);
       } else if (target === 'end') {
-        setEndDate(new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`));
-        setEndDateViewed(new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`));
         setTimeout(() => {
           endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
         }, 10);
