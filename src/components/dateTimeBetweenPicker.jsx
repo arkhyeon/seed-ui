@@ -1007,6 +1007,7 @@ const TimeWrapper = styled.div`
   border: 1px solid black;
   margin-top: 4px;
   border-radius: 4px;
+  background: white;
 
   display: flex;
   padding: 4px;

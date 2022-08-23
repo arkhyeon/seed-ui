@@ -612,6 +612,7 @@ const TimeWrapper = styled.div`
 
   display: flex;
   padding: 4px;
+  background: white;
 `;
 
 const LineWrapper = styled.div`
