@@ -307,8 +307,13 @@ function DateTimePicker({
     const year = dupDate.getFullYear();
     const month = dupDate.getMonth() + 1;
     const day = parseInt(e.target.textContent, 10);
-    setDate(new Date(`${year}-${month}-${day}`));
-    setDateViewed(new Date(`${year}-${month}-${day}`));
+
+    const newDate = new Date(`${year}-${month}-${day}`);
+    newDate.setHours(hourInput);
+    newDate.setMinutes(minuteInput);
+
+    setDate(newDate);
+    setDateViewed(newDate);
 
     setIsOpen(false);
   };
