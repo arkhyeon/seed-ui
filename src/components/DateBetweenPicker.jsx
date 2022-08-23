@@ -240,24 +240,32 @@ function DateBetweenPicker({
     const month = dupDate.getMonth() + 1;
     const day = parseInt(e.target.textContent, 10);
 
-    if (target === 'start') {
-      setStartDate(new Date(`${year}-${month}-${day}`));
-      setStartDateViewed(new Date(`${year}-${month}-${day}`));
-      setIsOpenStart(false);
-    } else if (target === 'end') {
-      if (!checkStartEnd(startDate, new Date(`${year}-${month}-${day}`))) {
-        alarm({
-          position: 'center-start',
-          name: 'error',
-          text: '종료 날짜는 시작날짜보다 앞설 수 없습니다.',
-        });
-        return;
-      }
+    let newStartDate;
+    let newEndDate;
 
-      setEndDate(new Date(`${year}-${month}-${day}`));
-      setEndDateViewed(new Date(`${year}-${month}-${day}`));
-      setIsOpenEnd(false);
+    if (target === 'start') {
+      newStartDate = new Date(`${year}-${month}-${day}`);
+      newEndDate = endDate;
+    } else {
+      newStartDate = startDate;
+      newEndDate = new Date(`${year}-${month}-${day}`);
     }
+
+    if (!checkStartEnd(newStartDate, newEndDate)) {
+      if (target === 'start') {
+        newEndDate = newStartDate;
+      } else {
+        newStartDate = newEndDate;
+      }
+    }
+
+    setStartDate(newStartDate);
+    setStartDateViewed(newStartDate);
+    setEndDate(newEndDate);
+    setEndDateViewed(newEndDate);
+
+    setIsOpenStart(false);
+    setIsOpenEnd(false);
   };
 
   const handleInput = (e, target) => {
@@ -327,27 +335,34 @@ function DateBetweenPicker({
         endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
       }
     } else {
-      if (
-        target === 'end' &&
-        !checkStartEnd(startDate, new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`))
-      ) {
-        alarm({
-          position: 'center-start',
-          name: 'error',
-          text: '종료 날짜는 시작날짜보다 앞설 수 없습니다.',
-        });
-        return;
-      }
+      let newStartDate;
+      let newEndDate;
 
       if (target === 'start') {
-        setStartDate(new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`));
-        setStartDateViewed(new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`));
+        newStartDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+        newEndDate = endDate;
+      } else {
+        newStartDate = startDate;
+        newEndDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+      }
+      if (!checkStartEnd(newStartDate, newEndDate)) {
+        if (target === 'start') {
+          newEndDate = newStartDate;
+        } else {
+          newStartDate = newEndDate;
+        }
+      }
+
+      setStartDate(newStartDate);
+      setStartDateViewed(newStartDate);
+      setEndDate(newEndDate);
+      setEndDateViewed(newEndDate);
+
+      if (target === 'start') {
         setTimeout(() => {
           startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
         }, 10);
       } else if (target === 'end') {
-        setEndDate(new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`));
-        setEndDateViewed(new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`));
         setTimeout(() => {
           endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
         }, 10);
