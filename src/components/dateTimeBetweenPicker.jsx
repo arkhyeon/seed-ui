@@ -717,6 +717,88 @@ function DateTimeBetweenPicker({
     return reg.test(input);
   };
 
+  const renderYear = target => {
+    const temp = [];
+
+    for (let i = 2000; i <= 2040; i++) {
+      temp.push(`${i}년`);
+    }
+
+    return (
+      <select
+        defaultValue={
+          target === 'start' ? `${startDate.getFullYear()}년` : `${endDate.getFullYear()}년`
+        }
+        onChange={e => changeYear(e, target)}
+      >
+        {temp.map(el => (
+          <option key={`year-${el}`} value={el}>
+            {el}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const renderMonth = target => {
+    const temp = [];
+
+    for (let i = 1; i <= 12; i++) {
+      temp.push(`${i}월`);
+    }
+
+    return (
+      <select
+        defaultValue={
+          target === 'start' ? `${startDate.getMonth() + 1}월` : `${endDate.getMonth() + 1}월`
+        }
+        onChange={e => changeMonth(e, target)}
+      >
+        {temp.map(el => (
+          <option key={`month-${el}`} value={el}>
+            {el}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const changeYear = (e, target) => {
+    let dupDate;
+
+    if (target === 'start') {
+      dupDate = new Date(startDateViewed);
+    } else {
+      dupDate = new Date(endDateViewed);
+    }
+
+    dupDate.setFullYear(e.target.value.slice(0, -1));
+
+    if (target === 'start') {
+      setStartDateViewed(dupDate);
+    } else {
+      setEndDateViewed(dupDate);
+    }
+  };
+
+  const changeMonth = (e, target) => {
+    let dupDate;
+
+    if (target === 'start') {
+      dupDate = new Date(startDateViewed);
+    } else {
+      dupDate = new Date(endDateViewed);
+    }
+
+    dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+
+    if (target === 'start') {
+      setStartDateViewed(dupDate);
+    } else {
+      setEndDateViewed(dupDate);
+    }
+  };
+
   return (
     <Wrapper>
       <div style={{ position: 'relative' }}>
@@ -737,13 +819,8 @@ function DateTimeBetweenPicker({
                 <Button pos="right" width={width} onClick={() => handleNext('start')}>
                   <AiOutlineRight />
                 </Button>
-                {`${new Date(startDateViewed.getTime() - new Date().getTimezoneOffset() * 60000)
-                  .toISOString()
-                  .slice(0, 4)}년 ${new Date(
-                  startDateViewed.getTime() - new Date().getTimezoneOffset() * 60000,
-                )
-                  .toISOString()
-                  .slice(5, 7)}월`}
+                {renderYear('start')}
+                {renderMonth('start')}
               </Head>
               {renderWeekDays()}
               {renderDays('start')}
@@ -791,13 +868,8 @@ function DateTimeBetweenPicker({
                 <Button pos="right" width={width} onClick={() => handleNext('end')}>
                   <AiOutlineRight />
                 </Button>
-                {`${new Date(startDateViewed.getTime() - new Date().getTimezoneOffset() * 60000)
-                  .toISOString()
-                  .slice(0, 4)}년 ${new Date(
-                  endDateViewed.getTime() - new Date().getTimezoneOffset() * 60000,
-                )
-                  .toISOString()
-                  .slice(5, 7)}월`}
+                {renderYear('end')}
+                {renderMonth('end')}
               </Head>
               {renderWeekDays()}
               {renderDays('end')}

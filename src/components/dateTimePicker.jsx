@@ -43,7 +43,6 @@ function DateTimePicker({
   selectedBg = '#808080',
 }) {
   const inputRef = useRef(null);
-  const dateInfo = useRef(null);
   const weekDays = useRef(['일', '월', '화', '수', '목', '금', '토']).current;
   const [dateViewed, setDateViewed] = useState(date);
   const [inputValue, setInputValue] = useState(
@@ -81,15 +80,11 @@ function DateTimePicker({
     setMinuteInput(`${timezoneDate.toISOString().slice(14, 16)}`);
   }, [date]);
 
-  useLayoutEffect(() => {
-    const timezoneOffset = new Date().getTimezoneOffset() * 60000;
-    const timezoneDate = new Date(dateViewed.getTime() - timezoneOffset);
-    if (isOpen) {
-      dateInfo.current.textContent = `${timezoneDate.toISOString().slice(0, 4)}년 ${dateViewed
-        .toISOString()
-        .slice(5, 7)}월`;
+  useEffect(() => {
+    if (!isOpen) {
+      setDateViewed(date);
     }
-  }, [dateViewed, date, isOpen]);
+  }, [isOpen, setDateViewed, date]);
 
   const handleClose = useCallback(
     e => {
@@ -437,6 +432,54 @@ function DateTimePicker({
     return reg.test(input);
   };
 
+  const renderYear = () => {
+    const temp = [];
+
+    for (let i = 2000; i <= 2040; i++) {
+      temp.push(`${i}년`);
+    }
+
+    return (
+      <select defaultValue={`${date.getFullYear()}년`} onChange={changeYear}>
+        {temp.map(el => (
+          <option key={`year-${el}`} value={el}>
+            {el}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const renderMonth = () => {
+    const temp = [];
+
+    for (let i = 1; i <= 12; i++) {
+      temp.push(`${i}월`);
+    }
+
+    return (
+      <select defaultValue={`${date.getMonth() + 1}월`} onChange={changeMonth}>
+        {temp.map(el => (
+          <option key={`month-${el}`} value={el}>
+            {el}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const changeYear = e => {
+    const dupDate = new Date(dateViewed);
+    dupDate.setFullYear(e.target.value.slice(0, -1));
+    setDateViewed(dupDate);
+  };
+
+  const changeMonth = e => {
+    const dupDate = new Date(dateViewed);
+    dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+    setDateViewed(dupDate);
+  };
+
   return (
     <Wrapper>
       <Input
@@ -458,7 +501,8 @@ function DateTimePicker({
               <Button pos="right" width={width} onClick={handleNext}>
                 <AiOutlineRight />
               </Button>
-              <div ref={dateInfo} />
+              {renderYear()}
+              {renderMonth()}
             </Head>
             {renderWeekDays()}
             {renderDays()}

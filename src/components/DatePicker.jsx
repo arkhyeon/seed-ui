@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { set } from 'lodash';
 
 /**
  * @param {Date} param.date
@@ -38,7 +39,6 @@ function DatePicker({
   selectedBg = '#808080',
 }) {
   const inputRef = useRef(null);
-  const dateInfo = useRef(null);
   const weekDays = useRef(['일', '월', '화', '수', '목', '금', '토']).current;
   const [dateViewed, setDateViewed] = useState(date);
   const [inputValue, setInputValue] = useState(
@@ -52,16 +52,6 @@ function DatePicker({
     const timezoneDate = new Date(date.getTime() - timezoneOffset);
     setInputValue(timezoneDate.toISOString().slice(0, 10));
   }, [date]);
-
-  useEffect(() => {
-    const timezoneOffset = new Date().getTimezoneOffset() * 60000;
-    const timezoneDate = new Date(dateViewed.getTime() - timezoneOffset);
-    if (isOpen) {
-      dateInfo.current.textContent = `${timezoneDate.toISOString().slice(0, 4)}년 ${dateViewed
-        .toISOString()
-        .slice(5, 7)}월`;
-    }
-  }, [dateViewed, date, isOpen]);
 
   const handleClose = useCallback(
     e => {
@@ -79,6 +69,12 @@ function DatePicker({
       document.removeEventListener('mousedown', handleClose);
     };
   }, [handleClose]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setDateViewed(date);
+    }
+  }, [isOpen, setDateViewed, date]);
 
   const handleInput = e => {
     const [prevYear, prevMonth, prevDay] = inputValue.split('-');
@@ -249,6 +245,54 @@ function DatePicker({
     setIsOpen(false);
   };
 
+  const renderYear = () => {
+    const temp = [];
+
+    for (let i = 2000; i <= 2040; i++) {
+      temp.push(`${i}년`);
+    }
+
+    return (
+      <select defaultValue={`${date.getFullYear()}년`} onChange={changeYear}>
+        {temp.map(el => (
+          <option key={`year-${el}`} value={el}>
+            {el}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const renderMonth = () => {
+    const temp = [];
+
+    for (let i = 1; i <= 12; i++) {
+      temp.push(`${i}월`);
+    }
+
+    return (
+      <select defaultValue={`${date.getMonth() + 1}월`} onChange={changeMonth}>
+        {temp.map(el => (
+          <option key={`month-${el}`} value={el}>
+            {el}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const changeYear = e => {
+    const dupDate = new Date(dateViewed);
+    dupDate.setFullYear(e.target.value.slice(0, -1));
+    setDateViewed(dupDate);
+  };
+
+  const changeMonth = e => {
+    const dupDate = new Date(dateViewed);
+    dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+    setDateViewed(dupDate);
+  };
+
   return (
     <Wrapper>
       <Input
@@ -269,7 +313,8 @@ function DatePicker({
             <Button pos="right" width={width} onClick={handleNext}>
               <AiOutlineRight />
             </Button>
-            <div ref={dateInfo} />
+            {renderYear()}
+            {renderMonth()}
           </Head>
           {renderWeekDays()}
           {renderDays()}
