@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
@@ -70,6 +70,10 @@ function DateBetweenPicker({
   const [endInputValue, setEndInputValue] = useState(
     new Date(endDate.getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10),
   );
+  const startYearRef = useRef(null);
+  const endYearRef = useRef(null);
+  const startMonthRef = useRef(null);
+  const endMonthRef = useRef(null);
 
   useEffect(() => {
     if (!isOpenEnd) {
@@ -92,6 +96,18 @@ function DateBetweenPicker({
         .slice(0, 10),
     );
   }, [startDate, endDate]);
+
+  useLayoutEffect(() => {
+    if (startPickerRef.current) {
+      startYearRef.current.value = `${startDateViewed.getFullYear()}년`;
+      startMonthRef.current.value = `${startDateViewed.getMonth() + 1}월`;
+    }
+
+    if (endPickerRef.current) {
+      endYearRef.current.value = `${endDateViewed.getFullYear()}년`;
+      endMonthRef.current.value = `${endDateViewed.getMonth() + 1}월`;
+    }
+  }, [startDateViewed, endDateViewed]);
 
   const handleStartPicker = () => {
     setIsOpenStart(!isOpenStart);
@@ -409,6 +425,7 @@ function DateBetweenPicker({
           target === 'start' ? `${startDate.getFullYear()}년` : `${endDate.getFullYear()}년`
         }
         onChange={e => changeYear(e, target)}
+        ref={target === 'start' ? startYearRef : endYearRef}
       >
         {temp.map(el => (
           <option key={`year-${el}`} value={el}>
@@ -432,6 +449,7 @@ function DateBetweenPicker({
           target === 'start' ? `${startDate.getMonth() + 1}월` : `${endDate.getMonth() + 1}월`
         }
         onChange={e => changeMonth(e, target)}
+        ref={target === 'start' ? startMonthRef : endMonthRef}
       >
         {temp.map(el => (
           <option key={`month-${el}`} value={el}>

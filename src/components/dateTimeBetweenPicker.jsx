@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
@@ -107,6 +107,10 @@ function DateTimeBetweenPicker({
   const startMinuteRef = useRef(null);
   const endHourRef = useRef(null);
   const endMinuteRef = useRef(null);
+  const startYearRef = useRef(null);
+  const endYearRef = useRef(null);
+  const startMonthRef = useRef(null);
+  const endMonthRef = useRef(null);
 
   useEffect(() => {
     if (!isOpenEnd) {
@@ -210,6 +214,18 @@ function DateTimeBetweenPicker({
       document.removeEventListener('mousedown', handleOutside);
     };
   }, [handleOutside]);
+
+  useLayoutEffect(() => {
+    if (startPickerRef.current) {
+      startYearRef.current.value = `${startDateViewed.getFullYear()}년`;
+      startMonthRef.current.value = `${startDateViewed.getMonth() + 1}월`;
+    }
+
+    if (endPickerRef.current) {
+      endYearRef.current.value = `${endDateViewed.getFullYear()}년`;
+      endMonthRef.current.value = `${endDateViewed.getMonth() + 1}월`;
+    }
+  }, [startDateViewed, endDateViewed]);
 
   const renderWeekDays = () => {
     return (
@@ -730,6 +746,7 @@ function DateTimeBetweenPicker({
           target === 'start' ? `${startDate.getFullYear()}년` : `${endDate.getFullYear()}년`
         }
         onChange={e => changeYear(e, target)}
+        ref={target === 'start' ? startYearRef : endYearRef}
       >
         {temp.map(el => (
           <option key={`year-${el}`} value={el}>
@@ -753,6 +770,7 @@ function DateTimeBetweenPicker({
           target === 'start' ? `${startDate.getMonth() + 1}월` : `${endDate.getMonth() + 1}월`
         }
         onChange={e => changeMonth(e, target)}
+        ref={target === 'start' ? startMonthRef : endMonthRef}
       >
         {temp.map(el => (
           <option key={`month-${el}`} value={el}>

@@ -67,6 +67,8 @@ function DateTimePicker({
   );
   const hourRef = useRef(null);
   const minuteRef = useRef(null);
+  const yearRef = useRef(null);
+  const monthRef = useRef(null);
 
   useLayoutEffect(() => {
     const timezoneOffset = new Date().getTimezoneOffset() * 60000;
@@ -85,6 +87,16 @@ function DateTimePicker({
       setDateViewed(date);
     }
   }, [isOpen, setDateViewed, date]);
+
+  useEffect(() => {
+    if (yearRef.current) {
+      yearRef.current.value = `${dateViewed.getFullYear()}년`;
+    }
+
+    if (monthRef.current) {
+      monthRef.current.value = `${dateViewed.getMonth() + 1}월`;
+    }
+  }, [dateViewed]);
 
   const handleClose = useCallback(
     e => {
@@ -440,7 +452,7 @@ function DateTimePicker({
     }
 
     return (
-      <select defaultValue={`${date.getFullYear()}년`} onChange={changeYear}>
+      <select defaultValue={`${date.getFullYear()}년`} onChange={changeYear} ref={yearRef}>
         {temp.map(el => (
           <option key={`year-${el}`} value={el}>
             {el}
@@ -458,7 +470,7 @@ function DateTimePicker({
     }
 
     return (
-      <select defaultValue={`${date.getMonth() + 1}월`} onChange={changeMonth}>
+      <select defaultValue={`${date.getMonth() + 1}월`} onChange={changeMonth} ref={monthRef}>
         {temp.map(el => (
           <option key={`month-${el}`} value={el}>
             {el}

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
-import { set } from 'lodash';
 
 /**
  * @param {Date} param.date
@@ -46,6 +45,8 @@ function DatePicker({
   );
   const [isOpen, setIsOpen] = useState(false);
   const pickerRef = useRef(null);
+  const yearRef = useRef(null);
+  const monthRef = useRef(null);
 
   useEffect(() => {
     const timezoneOffset = new Date().getTimezoneOffset() * 60000;
@@ -75,6 +76,16 @@ function DatePicker({
       setDateViewed(date);
     }
   }, [isOpen, setDateViewed, date]);
+
+  useEffect(() => {
+    if (yearRef.current) {
+      yearRef.current.value = `${dateViewed.getFullYear()}년`;
+    }
+
+    if (monthRef.current) {
+      monthRef.current.value = `${dateViewed.getMonth() + 1}월`;
+    }
+  }, [dateViewed]);
 
   const handleInput = e => {
     const [prevYear, prevMonth, prevDay] = inputValue.split('-');
@@ -253,7 +264,7 @@ function DatePicker({
     }
 
     return (
-      <select defaultValue={`${date.getFullYear()}년`} onChange={changeYear}>
+      <select defaultValue={`${date.getFullYear()}년`} onChange={changeYear} ref={yearRef}>
         {temp.map(el => (
           <option key={`year-${el}`} value={el}>
             {el}
@@ -271,7 +282,7 @@ function DatePicker({
     }
 
     return (
-      <select defaultValue={`${date.getMonth() + 1}월`} onChange={changeMonth}>
+      <select defaultValue={`${date.getMonth() + 1}월`} onChange={changeMonth} ref={monthRef}>
         {temp.map(el => (
           <option key={`month-${el}`} value={el}>
             {el}
