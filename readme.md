@@ -19,6 +19,7 @@
 - [[13] 데이트비트윈픽커 생성](#13-데이트비트윈픽커-생성)
 - [[14] 데이트타임픽커 생성](#14-데이트타임픽커-생성)
 - [[15] 데이트타임비트윈픽커 생성](#15-데이트타임비트윈픽커-생성)
+- [[16] 타임픽커 생성](#16-타임픽커-생성)
 
 ## [1] 소개
 
@@ -953,4 +954,42 @@ function Test() {
     />
   );
 }
+```
+
+## [16] 타임 픽커 생성
+
+타임픽커 컴포넌트를 사용하여 시간을 설정할 수 있습니다.
+
+1. <code>time {String} </code>
+
+- 다루고자 하는 시간
+- '00:00' 양식
+- state로 관리되는 값 이여야 함(상태 값)
+- default 값은 '00:00'
+
+2. <code>setTime {Function} </code>
+
+- 시간을 관리하는 함수
+- useState를 통해 생성된 상태 관리 함수여야 함
+- default 값은 null
+
+3. <code>svgColor {String} </code>
+
+- 아이콘들의 색상
+- default 값은 'black'
+
+4. <code>width {String} </code>
+
+- 기본 input 태그의 너비
+- default 값은 '50px'
+
+예시
+
+```javascript
+function Test() {
+  const [time, setTime] = useState('00:00');
+
+  return <TimePicker time={time} setTime={setTime}>
+}
+
 ```
