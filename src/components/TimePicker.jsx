@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
@@ -26,6 +26,22 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
   const hourRef = useRef(null);
   const minuteRef = useRef(null);
   const inputRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const pickerRef = useRef(null);
+
+  const handleOutside = e => {
+    if (isOpen && !pickerRef.current.contains(e.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+    };
+  }, [handleOutside]);
 
   const handleHour = e => {
     const prevMinute = time.slice(3, 5);
@@ -182,21 +198,31 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
     return reg.test(input);
   };
 
+  const handleOpen = () => [setIsOpen(!isOpen)];
+
   return (
     <Wrapper>
-      <Input value={time} onChange={handleInput} ref={inputRef} width={width} />
-      <TimeWrapper>
-        <LineWrapper svgColor={svgColor}>
-          <AiOutlineCaretUp onClick={plusHour} />
-          <TimeInput value={time.slice(0, 2)} onChange={handleHour} ref={hourRef} />
-          <AiOutlineCaretDown onClick={minusHour} />
-        </LineWrapper>
-        <LineWrapper svgColor={svgColor}>
-          <AiOutlineCaretUp onClick={plusMinute} />
-          <TimeInput value={time.slice(3, 5)} onChange={handleMinute} ref={minuteRef} />
-          <AiOutlineCaretDown onClick={minusMinute} />
-        </LineWrapper>
-      </TimeWrapper>
+      <Input
+        value={time}
+        onChange={handleInput}
+        ref={inputRef}
+        width={width}
+        onClick={handleOpen}
+      />
+      {isOpen && (
+        <TimeWrapper ref={pickerRef}>
+          <LineWrapper svgColor={svgColor}>
+            <AiOutlineCaretUp onClick={plusHour} />
+            <TimeInput value={time.slice(0, 2)} onChange={handleHour} ref={hourRef} />
+            <AiOutlineCaretDown onClick={minusHour} />
+          </LineWrapper>
+          <LineWrapper svgColor={svgColor}>
+            <AiOutlineCaretUp onClick={plusMinute} />
+            <TimeInput value={time.slice(3, 5)} onChange={handleMinute} ref={minuteRef} />
+            <AiOutlineCaretDown onClick={minusMinute} />
+          </LineWrapper>
+        </TimeWrapper>
+      )}
     </Wrapper>
   );
 }
