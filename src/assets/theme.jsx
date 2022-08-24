@@ -9,4 +9,14 @@ export const theme = {
     hoverFontColor: '#EEEEEE',
     divideLine: '#ebebeb',
   },
+  dataListStyle: {
+    hoverBackgroundColor: '#00ADB5',
+  },
+  paginationStyle: {
+    backgroundColor: '#515558',
+    fontColor: 'white',
+    hoverBackgroundColor: '#e7434e',
+    hoverFontColor: 'white',
+    divideLine: '#fff',
+  },
 };

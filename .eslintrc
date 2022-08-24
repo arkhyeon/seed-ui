@@ -24,7 +24,17 @@
 		"no-plusplus": 0,
 		"react/jsx-no-useless-fragment": 0,
 		"react/destructuring-assignment": 0,
-		"prefer-destructuring": 0
-
+		"prefer-destructuring": 0,
+		"jsx-a11y/label-has-for": [ 2,
+			{
+				"required": {
+					"some": [
+						"nesting",
+						"id"
+					]
+				}
+			}
+		],
+		"react/jsx-props-no-spreading": 0
 	}
 }
