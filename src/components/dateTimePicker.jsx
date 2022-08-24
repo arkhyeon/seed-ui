@@ -84,7 +84,9 @@ function DateTimePicker({
 
   useEffect(() => {
     if (!isOpen) {
-      setDateViewed(date);
+      const dupDate = new Date(date);
+      dupDate.setDate(1);
+      setDateViewed(dupDate);
     }
   }, [isOpen, setDateViewed, date]);
 

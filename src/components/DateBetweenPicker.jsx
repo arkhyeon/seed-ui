@@ -77,10 +77,14 @@ function DateBetweenPicker({
 
   useEffect(() => {
     if (!isOpenEnd) {
-      setStartDateViewed(startDate);
+      const dupDate = new Date(startDate);
+      dupDate.setDate(1);
+      setStartDateViewed(dupDate);
     }
     if (!isOpenEnd) {
-      setEndDateViewed(endDate);
+      const dupDate = new Date(endDate);
+      dupDate.setDate(1);
+      setEndDateViewed(dupDate);
     }
   }, [isOpenEnd, isOpenStart, startDate, endDate]);
 
