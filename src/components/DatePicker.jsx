@@ -84,37 +84,33 @@ function DatePicker({
     const [prevYear, prevMonth, prevDay] = inputValue.split('-');
     const [year, month, day] = e.target.value.split('-');
     let convertedYear = '';
-    let checkDiff = false;
+    const checkDiff = false;
     let convertedMonth = '';
     let convertedDay = '';
     const cursorIdx = e.target.selectionStart;
 
     for (let i = 0; i < year.length; i++) {
-      if (year[i - 1] !== prevYear[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
+      if (i !== cursorIdx) {
         convertedYear += year[i];
       }
     }
 
     for (let i = 0; i < month.length; i++) {
-      if (month[i - 1] !== prevMonth[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
+      if (i + 5 !== cursorIdx) {
         convertedMonth += month[i];
       }
     }
 
     for (let i = 0; i < day.length; i++) {
-      if (day[i - 1] !== prevDay[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
+      if (i + 8 !== cursorIdx) {
         convertedDay += day[i];
       }
     }
 
     if (convertedMonth[0] === '1' && cursorIdx === 6) {
       convertedMonth = `${convertedMonth[0]}0`;
+    } else if (convertedMonth[0] === '0' && cursorIdx === 6) {
+      convertedMonth = `${convertedMonth[0]}1`;
     }
 
     if (cursorIdx === 6 || cursorIdx === 7) {
@@ -123,6 +119,8 @@ function DatePicker({
 
     if (convertedDay[0] === '3' && cursorIdx === 9) {
       convertedDay = `${convertedDay[0]}0`;
+    } else if (convertedDay[0] === '0' && cursorIdx === 9) {
+      convertedDay = `${convertedDay[0]}1`;
     }
 
     if (

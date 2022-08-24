@@ -7,7 +7,6 @@ import {
   AiOutlineCaretDown,
   AiOutlineCaretUp,
 } from 'react-icons/ai';
-import alarm from './alarm';
 
 /**
  * @param {Date} param.startDate
@@ -342,7 +341,7 @@ function DateTimeBetweenPicker({
     const [year, month, day] = e.target.value.slice(0, 11).trim().split('-');
     const [hour, minute] = e.target.value.slice(11, 17).trim().split(':');
     let convertedYear = '';
-    let checkDiff = false;
+    const checkDiff = false;
     let convertedMonth = '';
     let convertedDay = '';
     let convertedHour = '';
@@ -350,47 +349,39 @@ function DateTimeBetweenPicker({
     const cursorIdx = e.target.selectionStart;
 
     for (let i = 0; i < year.length; i++) {
-      if (year[i - 1] !== prevYear[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
+      if (i !== cursorIdx) {
         convertedYear += year[i];
       }
     }
 
     for (let i = 0; i < month.length; i++) {
-      if (month[i - 1] !== prevMonth[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
+      if (i + 5 !== cursorIdx) {
         convertedMonth += month[i];
       }
     }
 
     for (let i = 0; i < day.length; i++) {
-      if (day[i - 1] !== prevDay[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
+      if (i + 8 !== cursorIdx) {
         convertedDay += day[i];
       }
     }
 
     for (let i = 0; i < hour.length; i++) {
-      if (hour[i - 1] !== prevHour[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
-        convertedHour += hour[i];
+      if (i + 11 !== cursorIdx) {
+        convertedHour += `${hour[i]}`;
       }
     }
 
     for (let i = 0; i < minute.length; i++) {
-      if (minute[i - 1] !== prevMinute[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
-        convertedMinute += minute[i];
+      if (i + 14 !== cursorIdx) {
+        convertedMinute += `${minute[i]}`;
       }
     }
 
     if (convertedMonth[0] === '1' && cursorIdx === 6) {
       convertedMonth = `${convertedMonth[0]}0`;
+    } else if (convertedMonth[0] === '0' && cursorIdx === 6) {
+      convertedMonth = `${convertedMonth[0]}1`;
     }
 
     if (cursorIdx === 6 || cursorIdx === 7) {
@@ -399,6 +390,8 @@ function DateTimeBetweenPicker({
 
     if (convertedDay[0] === '3' && cursorIdx === 9) {
       convertedDay = `${convertedDay[0]}0`;
+    } else if (convertedDay[0] === '0' && cursorIdx === 9) {
+      convertedDay = `${convertedDay[0]}1`;
     }
 
     if (convertedHour[0] === '2' && cursorIdx === 12) {
