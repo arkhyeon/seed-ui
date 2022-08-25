@@ -30,6 +30,10 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
   const pickerRef = useRef(null);
 
   const handleOutside = e => {
+    if (inputRef.current.contains(e.target)) {
+      return;
+    }
+
     if (isOpen && !pickerRef.current.contains(e.target)) {
       setIsOpen(false);
     }
@@ -243,6 +247,7 @@ const TimeWrapper = styled.div`
   border: 1px solid black;
   margin-top: 4px;
   border-radius: 4px;
+  z-index: 80;
 
   display: flex;
   padding: 4px;
