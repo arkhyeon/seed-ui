@@ -39,7 +39,7 @@ function Index() {
         }}
         menuList={DepthList1}
         useDepth
-        userRole={3}
+        userRole={1}
         menuStyle={{
           headerColor: '#222831',
           bgColor: '#393E46',

@@ -8,8 +8,8 @@ import ConfigSync from './ConfigSync';
 import MacroRegister from './MacroRegister';
 import MacroDashboard from './MacroDashboard';
 import MacroCommandSetting from './MacroCommandSetting';
-import MacroCommandTest from './MacroCommandTest';
 import MacroCommandRegister from './MacroCommandRegister';
+import MacroCommandTest from './MacroCommandTest';
 
 /**
  * @param {String} title

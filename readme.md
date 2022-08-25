@@ -36,7 +36,6 @@
 | ---------------- | ------- | --------------- | ------- |
 | react            | 18.2.0  | @emotion/react  | 11.9.3  |
 | react-router-dom | 6.3.0   | @emotion/styled | 11.9.3  |
-| lodash           | 18.2.0  |                 |         |
 
 ## [3] 메뉴 객체 생성
 
@@ -343,122 +342,6 @@ export const theme = {
     divideLine: '#ebebeb', // 구분선 Color
   },
 };
-```
-
-## [7] 버튼 생성
-
-Button 컴포넌트를 이용해 원하는 옵션의 button 태그를 생성합니다.
-
-1. <code>type {String}</code>
-
-- 버튼의 형태
-- "fill" : 배경색 존재 (default)
-- "border" : 배경색 흰색, 테투리 존재
-- "text" : 배경색 투명, 테두리 없이 텍스트만 존재
-
-<div style="text-align: center;">
-    <img src="./readmeImg/buttonType.jpg" />
-</div>
-
-2. <code>color {String}</code>
-
-- 버튼의 색깔
-- "success" : 초록색
-- "error" : 빨간색
-- "coral" : 산호색
-- "blue" : 파란색
-- "gray" : 회색
-
-<div style="text-align: center;">
-    <img src="./readmeImg/buttonColor.jpg" />
-</div>
-
-3. <code>size {String}</code>
-
-- 버튼의 크기
-- "small" : 작은 크기
-- "medium" : 중간 크기 (default)
-- "big" : 큰 크기
-
-<div style="text-align: center;">
-    <img src="./readmeImg/buttonSize.jpg" />
-</div>
-
-4. <code>width {Number}</code>
-
-- 버튼의 너비
-- 버튼이 특정한 너비를 가져야 할 때 길이 지정 가능
-- default 값은 auto
-
-5. <code>disabled {Boolean}</code>
-
-- 버튼 활성화 여부
-- true : 버튼 활성화 (default)
-- false : 버튼 비활성화
-
-6. <code>isAnimation {Boolean}</code>
-
-- 버튼 클릭시 애니메이션 동작 여부
-- true : 애니메이션 동작 (default)
-- false : 애니메이션 미동작
-
-7. <code>icon {Component}</code>
-
-- 아이콘 컴포넌트
-- deafault 값은 <></>
-
-<div style="text-align: center;">
-    <img src="./readmeImg/buttonIcon.jpg" />
-</div>
-<br/> 
- 
-8. 이벤트 및 텍스트, 기존 HTML 태그와 같은 방식으로 이용 가능
-
-```javascript
-function ButtonTest() {
-  return <Button onClick={() => console.log('테스트 성공')}>테스트</Button>;
-}
-```
-
-## [8] 툴팁 생성
-
-Tooltip 컴포넌트를 통해, 텍스트에 마우스를 올릴 시 툴팁을 생성합니다.
-
-1. <code>text {String}</code>
-
-- 툴팁에 들어갈 텍스트
-- default 값은 '텍스트를 넣어주세요.'
-
-2. <code>position {String}</code>
-
-- 툴팁의 위치
-- default 값은 'top-center'
-
-<div style="text-align: center;">
-    <img src="./readmeImg/tooltipPos.jpg" />
-</div>
-
-3. <code>bgColor {String}</code>
-
-- 툴팁의 배경색
-- default 값은 '#808080'
-
-4. <code>fontColor {String}</code>
-
-- 툴팁 텍스트의 색
-- default 값은 'white'
-
-5. <code>fontSize {String}</code>
-
-- 툴팁 텍스트의 크기
-- default 값은 '1rem'
-
-예시
-
-```javascript
-function TestTooltip() {
-  return <Tooltip text="표시될 툴팁">툴팁이 나와야할 텍스트</Tooltip>;
-}
 ```
 
 ## [9] 모달생성
