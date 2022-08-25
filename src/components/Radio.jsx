@@ -24,9 +24,9 @@ import styled from '@emotion/styled';
  * @param {String} param.hoverColor
  * 체크 단락에 마우스를 올렸을 때 생기는 원의 색
  * default 값은 '#eee'
+ * @param {String} param.labelInSpacing
  * 한 라벨 내에서 체크 단락과 글씨와의 간격
  * default 값은 '4px'
- * @param {String} param.labelInSpacing
  * @param {String} param.labelOutSpacing
  * 라벨 간의 간격
  * default 값은 '8px'
