@@ -41,27 +41,27 @@ const colors = {
 
 const iconSrcs = {
   success: {
-    lightIcon: 'src/img/alarm/lightSuccess.svg',
-    darkIcon: 'src/img/alarm/darkSuccess.svg',
+    lightIcon: `data:image/svg+xml;charset=utf-8,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Layer_1'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse stroke='white' ry='89.5' rx='89.5' id='svg_10' cy='101.5' cx='100.5' fill-opacity='0' stroke-width='10' fill='%23000000'/%3E%3Cg id='svg_14'%3E%3Cline id='svg_11' y2='144.89118' x2='91.89118' y1='99' x1='46' fill-opacity='0' stroke-width='10' stroke='white' fill='none'/%3E%3Cline id='svg_13' y2='71.82897' x2='159.17103' y1='145' x1='86' fill-opacity='0' stroke-width='10' stroke='white' fill='none'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E`,
+    darkIcon: `data:image/svg+xml;charset=utf-8,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Layer_1'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse stroke='%2358a15c' ry='89.5' rx='89.5' id='svg_10' cy='101.5' cx='100.5' fill-opacity='0' stroke-width='10' fill='%23000000'/%3E%3Cg id='svg_14'%3E%3Cline id='svg_11' y2='144.89118' x2='91.89118' y1='99' x1='46' fill-opacity='0' stroke-width='10' stroke='%2358a15c' fill='none'/%3E%3Cline id='svg_13' y2='71.82897' x2='159.17103' y1='145' x1='86' fill-opacity='0' stroke-width='10' stroke='%2358a15c' fill='none'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E`,
   },
   error: {
-    lightIcon: 'src/img/alarm/lightError.svg',
-    darkIcon: 'src/img/alarm/darkError.svg',
+    lightIcon: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse fill-opacity="0" stroke="white" stroke-width="10" ry="89.99999" rx="89.99999" id="svg_1" cy="100.49999" cx="98.99999" fill="%23000000"/%3E%3Ctext transform="matrix(2.06412 0 0 1.22397 -97.6366 16.5265)" stroke="white" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="150" id="svg_2" y="125.16692" x="73.18491" stroke-width="0" fill="white"%3E!%3C/text%3E%3C/g%3E%3C/svg%3E`,
+    darkIcon: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse fill-opacity="0" stroke="%23dd3d32" stroke-width="10" ry="89.99999" rx="89.99999" id="svg_1" cy="100.49999" cx="98.99999" fill="%23000000"/%3E%3Ctext transform="matrix(2.06412 0 0 1.22397 -97.6366 16.5265)" stroke="%23dd3d32" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="150" id="svg_2" y="125.16692" x="73.18491" stroke-width="0" fill="%23dd3d32"%3E!%3C/text%3E%3C/g%3E%3C/svg%3E`,
   },
   warning: {
-    lightIcon: 'src/img/alarm/lightWarning.svg',
-    darkIcon: 'src/img/alarm/darkWarning.svg',
+    lightIcon: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cpath fill-opacity="0" stroke="white" id="svg_6" d="m12.865,192.62161l88.00001,-179.60848l88.00001,179.60848l-176.00001,0z" stroke-width="10" fill="%23000000"/%3E%3Ctext transform="matrix(1.60474 0 0 0.88954 -57.1294 31.2502)" stroke="white" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="150" id="svg_9" y="161.50329" x="77.56082" stroke-width="0" fill="white"%3E!%3C/text%3E%3C/g%3E%3C/svg%3E`,
+    darkIcon: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cpath fill-opacity="0" stroke="%23db9021" id="svg_6" d="m12.865,192.62161l88.00001,-179.60848l88.00001,179.60848l-176.00001,0z" stroke-width="10" fill="%23000000"/%3E%3Ctext transform="matrix(1.60474 0 0 0.88954 -57.1294 31.2502)" stroke="%23db9021" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="150" id="svg_9" y="161.50329" x="77.56082" stroke-width="0" fill="%23db9021"%3E!%3C/text%3E%3C/g%3E%3C/svg%3E`,
   },
   info: {
-    lightIcon: 'src/img/alarm/lightInfo.svg',
-    darkIcon: 'src/img/alarm/darkInfo.svg',
+    lightIcon: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse fill-opacity="0" stroke="white" stroke-width="10" ry="89.99999" rx="89.99999" id="svg_1" cy="100.49999" cx="98.99999" fill="%23000000"/%3E%3Crect stroke="%23dd3d32" id="svg_3" height="80" width="24" y="91" x="87" stroke-width="0" fill="white"/%3E%3Cellipse ry="18" rx="18" id="svg_4" cy="59" cx="99" stroke-width="0" stroke="%23dd3d32" fill="white"/%3E%3C/g%3E%3C/svg%3E`,
+    darkIcon: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse fill-opacity="0" stroke="%232294c7" stroke-width="10" ry="89.99999" rx="89.99999" id="svg_1" cy="100.49999" cx="98.99999" fill="%23000000"/%3E%3Crect stroke="%23dd3d32" id="svg_3" height="80" width="24" y="91" x="87" stroke-width="0" fill="%232294c7"/%3E%3Cellipse ry="18" rx="18" id="svg_4" cy="59" cx="99" stroke-width="0" stroke="%23dd3d32" fill="%232294c7"/%3E%3C/g%3E%3C/svg%3E`,
   },
   close: {
-    light: 'src/img/alarm/lightClose.svg',
-    success: 'src/img/alarm/successClose.svg',
-    error: 'src/img/alarm/errorClose.svg',
-    warning: 'src/img/alarm/warningClose.svg',
-    info: 'src/img/alarm/infoClose.svg',
+    light: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="white" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="white" fill="none"/%3E%3C/g%3E%3C/svg%3E`,
+    success: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="rgb(83, 133, 76)" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="rgb(83, 133, 76)" fill="none"/%3E%3C/g%3E%3C/svg%3E`,
+    error: `data:image/svg+xml;charset=utf-8,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Layer_1'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke='%23dd3d32' stroke-width='30' stroke-linecap='undefined' stroke-linejoin='undefined' id='svg_1' y2='191' x2='189.99998' y1='11' x1='10' fill='none'/%3E%3Cline stroke-linecap='undefined' stroke-linejoin='undefined' id='svg_2' y2='12.46607' x2='190.53393' y1='193' x1='10' stroke-width='30' stroke='%23dd3d32' fill='none'/%3E%3C/g%3E%3C/svg%3E`,
+    warning: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="%23db9021" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="%23db9021" fill="none"/%3E%3C/g%3E%3C/svg%3E`,
+    info: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="%232294c7" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="%232294c7" fill="none"/%3E%3C/g%3E%3C/svg%3E`,
   },
 };
 
@@ -118,27 +118,27 @@ const setTypeStyle = (
 const typeStyle = {
   success: {
     dark: {
-      iconSrc: 'src/img/alarm/darkSuccess.svg',
+      iconSrc: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse stroke="%2358a15c" ry="89.5" rx="89.5" id="svg_10" cy="101.5" cx="100.5" fill-opacity="0" stroke-width="10" fill="%23000000"/%3E%3Cg id="svg_14"%3E%3Cline id="svg_11" y2="144.89118" x2="91.89118" y1="99" x1="46" fill-opacity="0" stroke-width="10" stroke="%2358a15c" fill="none"/%3E%3Cline id="svg_13" y2="71.82897" x2="159.17103" y1="145" x1="86" fill-opacity="0" stroke-width="10" stroke="%2358a15c" fill="none"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E`,
       wrapperBg: `${colors.success.darkBg}`,
-      closeBtnSrc: 'src/img/alarm/lightClose.svg',
+      closeBtnSrc: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="white" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="white" fill="none"/%3E%3C/g%3E%3C/svg%3E`,
       titleFW: 'bold',
       textColor: `${colors.success.main2}`,
     },
     light: {
-      iconSrc: 'src/img/alarm/lightSuccess.svg',
+      iconSrc: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse stroke="white" ry="89.5" rx="89.5" id="svg_10" cy="101.5" cx="100.5" fill-opacity="0" stroke-width="10" fill="%23000000"/%3E%3Cg id="svg_14"%3E%3Cline id="svg_11" y2="144.89118" x2="91.89118" y1="99" x1="46" fill-opacity="0" stroke-width="10" stroke="white" fill="none"/%3E%3Cline id="svg_13" y2="71.82897" x2="159.17103" y1="145" x1="86" fill-opacity="0" stroke-width="10" stroke="white" fill="none"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E`,
       titleColor: 'white',
       titleFW: 'bold',
       wrapperBg: `${colors.success.main1}`,
-      closeBtnSrc: 'src/img/alarm/lightClose.svg',
+      closeBtnSrc: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="white" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="white" fill="none"/%3E%3C/g%3E%3C/svg%3E`,
       textColor: 'white',
     },
     border: {
-      iconSrc: 'src/img/alarm/darkSuccess.svg',
+      iconSrc: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cellipse stroke="%2358a15c" ry="89.5" rx="89.5" id="svg_10" cy="101.5" cx="100.5" fill-opacity="0" stroke-width="10" fill="%23000000"/%3E%3Cg id="svg_14"%3E%3Cline id="svg_11" y2="144.89118" x2="91.89118" y1="99" x1="46" fill-opacity="0" stroke-width="10" stroke="%2358a15c" fill="none"/%3E%3Cline id="svg_13" y2="71.82897" x2="159.17103" y1="145" x1="86" fill-opacity="0" stroke-width="10" stroke="%2358a15c" fill="none"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E`,
       titleColor: `${colors.success.main1}`,
       titleFW: 'bold',
       wrapperBorder: `3px solid ${colors.success.main1}`,
       wrapperBg: `${colors.success.borderBg}`,
-      closeBtnSrc: 'src/img/alarm/successClose.svg',
+      closeBtnSrc: `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="rgb(83, 133, 76)" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="rgb(83, 133, 76)" fill="none"/%3E%3C/g%3E%3C/svg%3E`,
       textColor: `${colors.success.main1}`,
       progressBg: `${colors.success.main1}`,
     },
@@ -448,21 +448,21 @@ const alarm = ({
     noBtn.addEventListener('click', handleN);
 
     if (type === 'dark') {
-      iconDiv.src = 'src/img/alarm/darkAnswer.svg';
+      iconDiv.src = `data:image/svg+xml;charset=utf-8,%3Csvg stroke="%23eee" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath fill="none" stroke="%23eee" stroke-width="2" d="M20,15 C19,16 21.25,18.75 20,20 C18.75,21.25 16,19 15,20 C14,21 13.5,23 12,23 C10.5,23 10,21 9,20 C8,19 5.25,21.25 4,20 C2.75,18.75 5,16 4,15 C3,14 1,13.5 1,12 C1,10.5 3,10 4,9 C5,8 2.75,5.25 4,4 C5.25,2.75 8,5 9,4 C10,3 10.5,1 12,1 C13.5,1 14,3 15,4 C16,5 18.75,2.75 20,4 C21.25,5.25 19,8 20,9 C21,10 23,10.5 23,12 C23,13.5 21,14 20,15 Z M7,12 L10,15 L17,8"%3E%3C/path%3E%3C/svg%3E`;
       wrapper.style.background = 'rgb(77, 77 ,77)';
       titleDiv.style.color = '#eee';
       titleDiv.style.fontWeight = 'bold';
       textDiv.style.color = '#eee';
-      closeBtn.src = 'src/img/alarm/lightClose.svg';
+      closeBtn.src = `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="white" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="white" fill="none"/%3E%3C/g%3E%3C/svg%3E`;
       noBtn.style.background = 'rgb(77, 77 ,77)';
       noBtn.style.color = '#eee';
     }
     if (type === 'light') {
-      iconDiv.src = 'src/img/alarm/lightAnswer.svg';
+      iconDiv.src = `data:image/svg+xml;charset=utf-8,%3Csvg stroke='black' fill='currentColor' stroke-width='0' viewBox='0 0 24 24' height='1em' width='1em' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M20,15 C19,16 21.25,18.75 20,20 C18.75,21.25 16,19 15,20 C14,21 13.5,23 12,23 C10.5,23 10,21 9,20 C8,19 5.25,21.25 4,20 C2.75,18.75 5,16 4,15 C3,14 1,13.5 1,12 C1,10.5 3,10 4,9 C5,8 2.75,5.25 4,4 C5.25,2.75 8,5 9,4 C10,3 10.5,1 12,1 C13.5,1 14,3 15,4 C16,5 18.75,2.75 20,4 C21.25,5.25 19,8 20,9 C21,10 23,10.5 23,12 C23,13.5 21,14 20,15 Z M7,12 L10,15 L17,8'%3E%3C/path%3E%3C/svg%3E`;
       titleDiv.style.color = 'black';
       titleDiv.style.fontWeight = 'bold';
       wrapper.style.background = 'rgb(227, 227, 227)';
-      closeBtn.src = 'src/img/alarm/answerClose.svg';
+      closeBtn.src = `data:image/svg+xml;charset=utf-8,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Layer_1'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke='black' stroke-width='30' stroke-linecap='undefined' stroke-linejoin='undefined' id='svg_1' y2='191' x2='189.99998' y1='11' x1='10' fill='none'/%3E%3Cline stroke-linecap='undefined' stroke-linejoin='undefined' id='svg_2' y2='12.46607' x2='190.53393' y1='193' x1='10' stroke-width='30' stroke='black' fill='none'/%3E%3C/g%3E%3C/svg%3E`;
       textDiv.style.color = 'black';
 
       yesBtn.style.background = '#808080';
@@ -471,13 +471,13 @@ const alarm = ({
       noBtn.style.background = '#eee';
     }
     if (type === 'border') {
-      iconDiv.src = 'src/img/alarm/lightAnswer.svg';
+      iconDiv.src = `data:image/svg+xml;charset=utf-8,%3Csvg stroke="black" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath fill="none" stroke="black" stroke-width="2" d="M20,15 C19,16 21.25,18.75 20,20 C18.75,21.25 16,19 15,20 C14,21 13.5,23 12,23 C10.5,23 10,21 9,20 C8,19 5.25,21.25 4,20 C2.75,18.75 5,16 4,15 C3,14 1,13.5 1,12 C1,10.5 3,10 4,9 C5,8 2.75,5.25 4,4 C5.25,2.75 8,5 9,4 C10,3 10.5,1 12,1 C13.5,1 14,3 15,4 C16,5 18.75,2.75 20,4 C21.25,5.25 19,8 20,9 C21,10 23,10.5 23,12 C23,13.5 21,14 20,15 Z M7,12 L10,15 L17,8"%3E%3C/path%3E%3C/svg%3E`;
       titleDiv.style.color = 'black';
       titleDiv.style.fontWeight = 'bold';
       wrapper.style.border = '3px solid #808080';
       wrapper.style.background = '#eee';
       textDiv.style.color = 'black';
-      closeBtn.src = 'src/img/alarm/answerClose.svg';
+      closeBtn.src = `data:image/svg+xml;charset=utf-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cg id="Layer_1"%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cline stroke="black" stroke-width="30" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="191" x2="189.99998" y1="11" x1="10" fill="none"/%3E%3Cline stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.46607" x2="190.53393" y1="193" x1="10" stroke-width="30" stroke="black" fill="none"/%3E%3C/g%3E%3C/svg%3E`;
       progressDiv.style.background = '#808080';
 
       yesBtn.style.background = '#808080';
