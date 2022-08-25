@@ -283,7 +283,6 @@ const TooltipComponent = styled.div`
 const Text = styled.div`
   display: inline-block;
   position: relative;
-  border: 1px solid black;
 `;
 
 export default Tooltip;
