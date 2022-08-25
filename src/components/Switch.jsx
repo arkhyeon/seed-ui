@@ -18,14 +18,34 @@ const colorBg = {
   gray: '#9b9b9b',
 };
 
-function Switch({ size = 'middle', value = true, setValue = null, color = 'green' }) {
+/**
+ * @param {String} param.size
+ * 컴포넌트의 사이즈
+ * 'middle', 'small' 두 가지 값 유효
+ * default 값은 'middle'
+ * @param {Boolean} param.value
+ * 관리하고자 하는 Boolean 값
+ * state로 관리되는 값이여 함 (상태 값)
+ * default 값은 true
+ * @param {Function} param.setValue
+ * Boolean 값을 변화시키는 함수
+ * useState로 생성된 함수여야 함 (상태 관리 함수)
+ * default 값은 null
+ * @param {String} param.color
+ * 컴포넌트의 색
+ * 'blue', 'green', 'coral', 'red', 'gray' 5가지 값 유효
+ * default 값은 blue'
+ * @returns {JSX.Element} Component
+ */
+
+function Switch({ size = 'middle', value = true, setValue = null, color = 'blue' }) {
   const handleValue = () => {
     setValue(!value);
   };
 
   return (
     <Wrapper size={size} value={value} onClick={handleValue} color={color}>
-      <Check size={size} value={value} color={color}></Check>
+      <Check size={size} value={value} color={color} />
     </Wrapper>
   );
 }
@@ -58,9 +78,8 @@ const Wrapper = styled.label`
   background: ${({ value, color }) => {
     if (value) {
       return colorBg[color];
-    } else {
-      return '#808080';
     }
+    return '#808080';
   }};
 
   :hover {
@@ -68,9 +87,8 @@ const Wrapper = styled.label`
       background: ${({ color, value }) => {
         if (value) {
           return `rgba(${colorComb[color]}, 0.4)`;
-        } else {
-          return 'rgba(128, 128, 128, 0.4)';
         }
+        return 'rgba(128, 128, 128, 0.4)';
       }}};
     }
   }
@@ -92,30 +110,26 @@ const Check = styled.div`
         return css`
           transform: translate(16px, 0);
         `;
-      } else {
-        return css`
-          transform: translate(16px, 0);
-        `;
       }
-    } else {
-      if (size === 'middle') {
-        return css`
-          transform: translate(0, 0);
-        `;
-      } else {
-        return css`
-          transform: translate(0, 0);
-        `;
-      }
+      return css`
+        transform: translate(16px, 0);
+      `;
     }
+    if (size === 'middle') {
+      return css`
+        transform: translate(0, 0);
+      `;
+    }
+    return css`
+      transform: translate(0, 0);
+    `;
   }}
 
   background: ${({ value, color }) => {
     if (value) {
       return `rgba(${colorComb[color]}, 1)`;
-    } else {
-      return '#eee';
     }
+    return '#eee';
   }};
 
   ${({ size, value }) => {
