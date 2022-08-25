@@ -27,8 +27,11 @@ import { css } from '@emotion/react';
  * @param {String} props.fontColor
  * 툴팁 텍스트의 색
  * default 값은 'white'
- * @param {String} props.fontSize
+ * @param {String} props.textSize
  * 툴팁 텍스트의 크기
+ * default 값은 '1rem'
+ * @param {String} props.fontSize
+ * 일반 텍스트의 크기
  * default 값은 '1rem'
  * @returns
  */
@@ -38,6 +41,7 @@ function Tooltip({
   position = 'top-center',
   bgColor = '#808080',
   fontColor = 'white',
+  textSize = '1rem',
   fontSize = '1rem',
   children,
 }) {
@@ -72,7 +76,7 @@ function Tooltip({
   return (
     <>
       <Wrapper onMouseOver={handleOver} onMouseLeave={handleLeave} ref={wrapperRef}>
-        <Text ref={contentRef} style={{ fontSize: '2rem' }}>
+        <Text ref={contentRef} fontSize={fontSize}>
           {children}
           <TooltipComponent
             position={position}
@@ -81,6 +85,7 @@ function Tooltip({
             tooltipSize={tooltipSize}
             bgColor={bgColor}
             fontColor={fontColor}
+            textSize={textSize}
             fontSize={fontSize}
           >
             {text}
@@ -104,83 +109,84 @@ const TooltipComponent = styled.div`
   white-space: nowrap;
   padding: 4px 8px;
   border-radius: 4px;
-  ${({ bgColor, fontColor, fontSize }) => {
+  ${({ bgColor, fontColor, textSize }) => {
     return css`
       background: ${bgColor};
       color: ${fontColor};
-      font-size: ${fontSize};
+      font-size: ${textSize};
+      line-height: calc(${textSize} + 8px);
     `;
   }};
 
-  ${({ position, size, tooltipSize }) => {
+  ${({ position, size, tooltipSize, fontSize }) => {
     if (position === 'top-start') {
       return css`
-        bottom: ${size.height}px;
+        bottom: calc(${fontSize} + 12px);
       `;
     }
     if (position === 'top-center') {
       return css`
         left: ${size.width / 2 - tooltipSize.width / 2}px;
-        bottom: ${size.height}px;
+        bottom: calc(${fontSize} + 12px);
       `;
     }
     if (position === 'top-end') {
       return css`
         left: ${size.width}px;
-        bottom: ${size.height}px;
+        bottom: calc(${fontSize} + 12px);
       `;
     }
     if (position === 'right-start') {
       return css`
         left: ${size.width + 12}px;
-        bottom: ${size.height + 8}px;
+        bottom: calc(${fontSize} + 8px);
       `;
     }
     if (position === 'right-center') {
       return css`
         left: ${size.width + 16}px;
-        bottom: ${size.height / 2 - tooltipSize.height / 2}px;
+        bottom: calc(${size.height / 2}px - ${tooltipSize.height / 2}px);
       `;
     }
     if (position === 'right-end') {
       return css`
         left: ${size.width + 12}px;
-        top: ${size.height + 8}px;
+        top: calc(${fontSize} + 8px);
       `;
     }
     if (position === 'bottom-start') {
       return css`
-        margin-top: 8px;
+        margin-top: 12px;
       `;
     }
     if (position === 'bottom-center') {
       return css`
-        margin-top: 8px;
+        margin-top: 12px;
         left: ${size.width / 2 - tooltipSize.width / 2}px;
       `;
     }
     if (position === 'bottom-end') {
       return css`
         left: ${size.width + 4}px;
-        margin-top: 8px;
+        margin-top: 12px;
       `;
     }
     if (position === 'left-start') {
       return css`
         right: ${size.width + 8}px;
-        bottom: ${size.height}px;
+        bottom: ${fontSize};
       `;
     }
     if (position === 'left-center') {
       return css`
         right: ${size.width + 16}px;
-        bottom: ${size.height / 2 - tooltipSize.height / 2}px;
+        bottom: calc(${size.height / 2}px - ${tooltipSize.height / 2}px);
       `;
     }
     if (position === 'left-end') {
       return css`
         right: ${size.width + 12}px;
-        margin-top: ${8}px;
+        top: calc(${fontSize} + 8px);
       `;
     }
     return css``;
@@ -283,6 +289,9 @@ const TooltipComponent = styled.div`
 const Text = styled.div`
   display: inline-block;
   position: relative;
+  font-size: ${({ fontSize }) => fontSize};
+  background: orange;
+  line-height: ${({ fontSize }) => fontSize};
 `;
 
 export default Tooltip;
