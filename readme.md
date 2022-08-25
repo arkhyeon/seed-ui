@@ -501,8 +501,12 @@ export const theme = {
    툴팁 텍스트의 색  
    default 값은 'white'
 
-5. <code>fontSize {String}</code>  
+5. <code>textSize {String}</code>  
    툴팁 텍스트의 크기  
+   default 값은 '1rem'
+
+6. <code>fontSize {String}</code>  
+   일반 텍스트의 크기  
    default 값은 '1rem'
 
 ## 8. <a name='8-modal'></a>[8] modal
