@@ -20,6 +20,7 @@
 - [[14] 데이트타임픽커 생성](#14-데이트타임픽커-생성)
 - [[15] 데이트타임비트윈픽커 생성](#15-데이트타임비트윈픽커-생성)
 - [[16] 타임픽커 생성](#16-타임픽커-생성)
+- [[17] 라디오 생성](#17-라디오-생성)
 
 ## [1] 소개
 
@@ -992,4 +993,62 @@ function Test() {
   return <TimePicker time={time} setTime={setTime}>
 }
 
+```
+
+## [17] 라디오 생성
+
+라디오 컴포넌트를 통해 라디오 형식을 손쉽게 만들 수 있습니다.
+
+1. <code>value {Number} </code>
+
+- 선택하고자 하는 값
+- 숫자 타입으로 인덱스 값으로 대상을 분류한다고 가정
+- state로 관리하는 값이여야 함 (상태값)
+- default 값은 0
+
+2. <code>setValue {Function} </code>
+
+- 선택 값을 바꾸는 함수
+- useState로 생성한 상태 관리 함수여야 함
+- default 값은 null
+
+3. <code>list {Stirng | Number []} </code>
+
+- 선택할 수 있는 값들로 이루어진 배열
+- index를 통해 값이 선택 되므로 정해진 순서를 고려해 넣어야 함
+- default 값은 ['항목 없음']
+
+4. <code>text {String} </code>
+
+- 선택에 대한 제목
+- default 값은 '텍스트를 입력해주세요.'
+
+5. <code>checkColor {String} </code>
+
+- 체크 단락의 색
+- default 값은 'rgb(144, 202, 249)'
+
+6. <code>hoverColor {String} </code>
+
+- 체크 단락에 마우스를 올렸을 때 생기는 원의 색
+- default 값은 '#eee'
+
+7. <code>labelInSpacing {String} </code>
+
+- 한 라벨 내에서 체크 단락과 글씨와의 간격
+- default 값은 '4px'
+
+8. <code>labelOutSpacing {String} </code>
+
+- 라벨 간의 간격
+- default 값은 '8px'
+
+예시
+
+```javascript
+function Test () {
+  const [categoryValue, setCategoryValue] = useState(0);
+
+  return <Radio value={categoryValue} setValue={setCategoryValue} text={'카테고리를 선택해주세요'} list={['A', 'B', 'C', 'D']}>
+}
 ```
