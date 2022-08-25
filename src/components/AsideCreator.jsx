@@ -68,6 +68,7 @@ function AsideCreator({ menuList, title, children }) {
 
   const toggleCollapse = () => {
     const isNarrower = resizeAside.current?.classList.contains('narrower');
+    console.log(isNarrower);
     if (isNarrower) {
       collapseStyle(265);
     } else {
@@ -155,6 +156,7 @@ const AsideWrap = styled.div`
   //}
 
   &.narrower {
+    width: 43px;
     & > div {
       padding: 0;
     }

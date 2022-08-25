@@ -5,7 +5,7 @@
 ---
 
 - [seed-ui](#seed-ui)
-  - [[1] 소개](#1-소개)
+  - [[1] 소개](#1)
   - [[2] 설치 및 의존성](#2-설치-및-의존성)
   - [[3] Layout](#3-layout)
     - [[3-1] 메뉴 객체 생성](#3-1-메뉴-객체-생성)
@@ -14,12 +14,24 @@
     - [[3-4] 사이드 메뉴 생성](#3-4-사이드-메뉴-생성)
   - [[4] DataList](#4-datalist)
   - [[5] Pagination](#5-pagination)
+  - [[6] button](#6-button)
+  - [[7] tooltip](#7-tooltip)
+  - [[8] modal](#8-modal)
+  - [[9] alarm](#9-alarm)
+  - [[10] slider](#10-slider)
+  - [[11] datePicker](#10-datePicker)
+  - [[12] dateBetweenPicker](#11-dateBetweenPicker)
+  - [[13] dateTimePicker](#12-dateTimePicker)
+  - [[14] dateTimeBetweenPicker](#13-dateTimeBetweenPicker)
+  - [[15] timePicker](#14-timePicker)
+  - [[16] radio](#15-radio)
+  - [[17] switch](#16-switch)
 
 ## 1. <a name='1'></a>[1] 소개
 
 웹사이트 제작에 공통적으로 필요한 템플릿 및 컴포넌트들을 제공하여 빠른 UI 구축할 수 있는 라이브러리 입니다.
 
-## 2. <a name='2'></a>[2] 설치 및 의존성
+## 2. <a name='2-설치-및-의존성'></a>[2] 설치 및 의존성
 
 > npm install seed-ui  
 > yarn add seed-ui
@@ -29,9 +41,9 @@
 | react            | 18.2.0  | @emotion/react  | 11.9.3  |
 | react-router-dom | 6.3.0   | @emotion/styled | 11.9.3  |
 
-## 3. <a name='3Layout'></a>[3] Layout
+## 3. <a name='3-layout'></a>[3] Layout
 
-### 3.1. <a name='3-1'></a>[3-1] 메뉴 객체 생성
+### 3.1. <a name='3-1-메뉴-객체-생성'></a>[3-1] 메뉴 객체 생성
 
 원하는 옵션으로 메뉴 객체를 생성합니다.  
 해당 객체는 헤더와 사이드 메뉴 그리고 라우터를 생성할 때 필요합니다.
@@ -180,7 +192,7 @@ export const MenuList = [
 ];
 ```
 
-### 3.2. <a name='3-2Route'></a>[3-2] Route 생성
+### 3.2. <a name='3-2-route-생성'></a>[3-2] Route 생성
 
 SetRoute를 이용해 메뉴의 Route를 생성
 
@@ -204,7 +216,7 @@ function App() {
 }
 ```
 
-### 3.3. <a name='3-3'></a>[3-3] 헤더 생성
+### 3.3. <a name='3-3-헤더-생성'></a>[3-3] 헤더 생성
 
 HeaderCreator로 Logo, TopMenu, Personal Menu 구성할 수 있습니다.
 
@@ -284,7 +296,7 @@ function Index(props) {
 }
 ```
 
-### 3.4. <a name='3-4'></a>[3-4] 사이드 메뉴 생성
+### 3.4. <a name='3-4-사이드-메뉴-생성'></a>[3-4] 사이드 메뉴 생성
 
 사이드 메뉴를 원하는 페이지를 AsideCreator로 감싸준다.  
 최상단 컴포넌트에 사이드 메뉴를 생성하고 내부에 컴포넌트 작성 (children 이용하여 보여준다.)
@@ -338,7 +350,7 @@ export const theme = {
 };
 ```
 
-## 4. <a name='4DataList'></a>[4] DataList
+## 4. <a name='4-datalist'></a>[4] DataList
 
 DataList 사용 시 Custom 한계가 있어 제작
 
@@ -375,7 +387,7 @@ export const theme = {
 };
 ```
 
-## 5. <a name='5Pagination'></a>[5] Pagination
+## 5. <a name='5-pagination'></a>[5] Pagination
 
 ```javascript
 const pageFunction = (currentPage, dataLength) => {
@@ -409,7 +421,7 @@ export const theme = {
 };
 ```
 
-## 6. <a name='6'></a>[6] button
+## 6. <a name='6-button'></a>[6] button
 
 ```javascript
 <Button>버튼<Button>
@@ -454,7 +466,7 @@ export const theme = {
    값의 여부에 따라 아이콘 추가 여부 결정  
    값이 존재할 시 텍스트 앞에 해당 아이콘 추가
 
-## 7. <a name='7'></a>[7] tooltip
+## 7. <a name='7-tooltip'></a>[7] tooltip
 
 툴팁이 표시되는 텍스트 만들 때 사용 가능
 
@@ -493,7 +505,7 @@ export const theme = {
    툴팁 텍스트의 크기  
    default 값은 '1rem'
 
-## 8. <a name='8'></a>[8] modal
+## 8. <a name='8-modal'></a>[8] modal
 
 Modal 컴포넌트를 통해, 모달 창을 생성
 
@@ -610,14 +622,14 @@ function TestModal() {
 - 모달창의 그림자 여부
 - default 값은 true
 
-## 9. <a name='9'></a>[9] alarm
+## 9. <a name='9-alarm'></a>[9] alarm
 
 alarm 함수를 사용하여 특정 상황에서 알림창 생성
 
 ```javascript
 function checkValid(input) {
   if (input.length < 8) {
-    alert({ name: error, text: '8자 이상 입력해주세요.' });
+    alarm({ name: error, text: '8자 이상 입력해주세요.' });
   }
 }
 ```
@@ -693,7 +705,7 @@ function checkValid(input) {
     (name === 'answer'일 때) 취소 버튼에 들어갈 텍스트  
      default 값은 '취소'
 
-## 10. <a name='10'></a>[10] slider
+## 10. <a name='10-slider'></a>[10] slider
 
 Slider 컴포넌트를 통해, 슬라이더(넘기면서 조회)를 생성
 
@@ -738,7 +750,7 @@ function TestComponent () {
    각 페이지의 배경색  
    default 값은 'transparent'
 
-## 10. <a name='10'></a>[10] datePicker
+## 11. <a name='11-datePicker'></a>[11] datePicker
 
 ```javascript
 function Test() {
@@ -784,7 +796,7 @@ function Test() {
    선택된 날짜의 배경색  
    default 값은 '#808080'
 
-## 11. <a name='11'></a>[11] dateBetweenPicker
+## 12. <a name='12-dateBetweenPicker'></a>[12] dateBetweenPicker
 
 데이트비트윈픽커 컴포넌트를 사용하여 시작 날짜, 종료 날짜를 설정 가능
 
@@ -841,7 +853,7 @@ function Test() {
     선택된 날짜들 글씨 색  
     default 값은 'white'
 
-## 12. <a name='12'></a>[12] dateTimePicker
+## 13. <a name='13-dateTimePicker'></a>[13] dateTimePicker
 
 datePicker에 시간 선택 기능 추가
 
@@ -889,7 +901,7 @@ function Test() {
    선택된 날짜의 배경색  
    default 값은 '#808080'
 
-## 13. <a name='13'></a>[13] dateTimeBetweenPicker
+## 14. <a name='14-dateTimeBetweenPicker'></a>[14] dateTimeBetweenPicker
 
 DateTimeBetweenPicker 컴포넌트에 시간 선택 기능 추가
 
@@ -963,7 +975,7 @@ function Test() {
     선택된 날짜들 글씨 색  
     default 값은 'white'
 
-## 14. <a name='14'></a>[14] timePicker
+## 15. <a name='15-timePicker'></a>[15] timePicker
 
 ```javascript
 function Test() {
@@ -996,7 +1008,7 @@ function Test() {
    기본 input 태그의 너비  
    default 값은 '50px'
 
-## 15. <a name='15'></a>[15] radio
+## 16. <a name='16-radio'></a>[16] radio
 
 라디오 컴포넌트를 통해 라디오 형식을 쉽게 생성 가능
 
@@ -1052,7 +1064,7 @@ function Test () {
    라벨 간의 간격  
    default 값은 '8px'
 
-## 16. <a name='16'></a>[16] switch
+## 17. <a name='17-switch'></a>[17] switch
 
 Switch 컴포넌트를 통해 변화하는 Boolean 값 시각적 표현 가능
 

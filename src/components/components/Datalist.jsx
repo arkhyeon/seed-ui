@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { MdKeyboardArrowDown } from 'react-icons/all';
-import TextInput from './TextInput';
+import DataListInput from './DataListInput';
 
 function Datalist({ id, valueList, labelList = [], setData }) {
   const ref = useRef();
@@ -101,8 +100,7 @@ function Datalist({ id, valueList, labelList = [], setData }) {
   return (
     <>
       <DataListWrap>
-        <label htmlFor={id}>{id} : </label>
-        <TextInput
+        <DataListInput
           id={id}
           inputref={ref}
           type="text"
@@ -115,7 +113,6 @@ function Datalist({ id, valueList, labelList = [], setData }) {
             arrowMove(e);
           }}
         />
-        <MdKeyboardArrowDown />
         <DataListItemWrap ref={dataListWrapRef}>
           {dataListState.map((data, i) => {
             return (
@@ -140,27 +137,20 @@ function Datalist({ id, valueList, labelList = [], setData }) {
 
 const DataListWrap = styled.div`
   width: 100%;
-
-  & svg {
-    margin-left: -20px;
-    position: relative;
-    top: 3px;
-  }
 `;
 
 const DataListItemWrap = styled.ul`
-  width: 100%;
-  background-color: darkolivegreen;
+  width: 250px;
   display: none;
 `;
 
 const DataListItem = styled.li`
-  width: 100%;
-
+  width: 250px;
+  height: 24px;
   &:hover,
   &:focus,
   &.activeDataList {
-    background-color: hotpink;
+    background-color: ${({ theme }) => theme.dataListStyle.hoverBackgroundColor};
   }
 `;
 

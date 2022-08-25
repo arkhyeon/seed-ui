@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import styled from '@emotion/styled';
 import AsideCreator from '../components/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
 import Datalist from '../components/components/Datalist';
+import Pagination from '../components/components/Pagination';
 
 function Work() {
   const { pathname } = useLocation();
@@ -47,9 +49,18 @@ function Work() {
     'Marianne',
     'Dael',
   ];
+
+  const pageFunction = (currentPage, dataLength) => {
+    console.log(currentPage);
+    console.log(dataLength);
+  };
+
   return (
     <AsideCreator menuList={DepthList1} title="설정">
-      <Datalist id="ice" valueList={data2} setData={setDataListData} />
+      <PaginationWrap>
+        <Pagination totalLength={243} pageEvent={pageFunction} />
+      </PaginationWrap>
+      <Datalist id="프로젝트" valueList={data2} setData={setDataListData} />
       <br />
       Hello Work! <br /> <br /> path : {pathname}
       <button
@@ -63,5 +74,11 @@ function Work() {
     </AsideCreator>
   );
 }
+
+const PaginationWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default Work;
