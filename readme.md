@@ -4,30 +4,22 @@
 
 ---
 
-- [[1] 소개](#1-소개)
-- [[2] 설치 및 의존성](#2-설치-및-의존성)
-- [[3] 메뉴 객체 생성](#3-메뉴-객체-생성)
-- [[4] Route 생성](#1-Route-생성)
-- [[5] 헤더 생성](#5-헤더-생성)
-- [[6] 사이드 메뉴 생성](#6-사이드-메뉴-생성)
-- [[7] 버튼 생성](#7-버튼-생성)
-- [[8] 툴팁 생성](#8-툴팁-생성)
-- [[9] 모달 생성](#9-모달-생성)
-- [[10] 알림창 생성](#10-알림창-생성)
-- [[11] 슬라이더 생성](#11-슬라이더-생성)
-- [[12] 데이트픽커 생성](#12-데이트픽커-생성)
-- [[13] 데이트비트윈픽커 생성](#13-데이트비트윈픽커-생성)
-- [[14] 데이트타임픽커 생성](#14-데이트타임픽커-생성)
-- [[15] 데이트타임비트윈픽커 생성](#15-데이트타임비트윈픽커-생성)
-- [[16] 타임픽커 생성](#16-타임픽커-생성)
-- [[17] 라디오 생성](#17-라디오-생성)
-- [[18] 스위치 생성](#18-스위치-생성)
+- [seed-ui](#seed-ui)
+  - [[1] 소개](#1-소개)
+  - [[2] 설치 및 의존성](#2-설치-및-의존성)
+  - [[3] Layout](#3-layout)
+    - [[3-1] 메뉴 객체 생성](#3-1-메뉴-객체-생성)
+    - [[3-2] Route 생성](#3-2-route-생성)
+    - [[3-3] 헤더 생성](#3-3-헤더-생성)
+    - [[3-4] 사이드 메뉴 생성](#3-4-사이드-메뉴-생성)
+  - [[4] DataList](#4-datalist)
+  - [[5] Pagination](#5-pagination)
 
-## [1] 소개
+## 1. <a name='1'></a>[1] 소개
 
 웹사이트 제작에 공통적으로 필요한 템플릿 및 컴포넌트들을 제공하여 빠른 UI 구축할 수 있는 라이브러리 입니다.
 
-## [2] 설치 및 의존성
+## 2. <a name='2'></a>[2] 설치 및 의존성
 
 > npm install seed-ui  
 > yarn add seed-ui
@@ -37,7 +29,9 @@
 | react            | 18.2.0  | @emotion/react  | 11.9.3  |
 | react-router-dom | 6.3.0   | @emotion/styled | 11.9.3  |
 
-## [3] 메뉴 객체 생성
+## 3. <a name='3Layout'></a>[3] Layout
+
+### 3.1. <a name='3-1'></a>[3-1] 메뉴 객체 생성
 
 원하는 옵션으로 메뉴 객체를 생성합니다.  
 해당 객체는 헤더와 사이드 메뉴 그리고 라우터를 생성할 때 필요합니다.
@@ -90,103 +84,103 @@ userRole[3] > menuRole[1] >> 메뉴 비활성
 
 ```JavaScript
 export const MenuList = [
-	{
-		title: '작업',
-		link: 'work',
-		component: <Work />,
-		menuRole: 3,
-	},
-	{
-		title: '프로젝트',
-		link: 'project',
-		component: <Project />,
-		menuRole: 3,
-	},
-	{
-		title: '설정',
-		link: 'config',
-		icon: <MdSettings />,
-		menuRole: 1,
-		subMenu: [
-			{
-				title: '작업 설정',
-				link: '/config/work',
-				routePath: 'work',
-				component: <ConfigWork />,
-				menuRole: 1,
-				icon: <MdWork />,
-			},
-			{
-				title: '테이블 동기화',
-				link: '/config/sync',
-				routePath: 'sync',
-				icon: <MdSync />,
-				subMenu: [
-					{
-						title: '테이블 설정',
-						link: '/config/sync/table',
-						routePath: 'work',
-						component: <ConfigSyncTable />,
-					},
-					{
-						title: '동기화 설정',
-						link: '/config/sync/csync',
-						routePath: 'csync',
-						component: <ConfigSync />,
-					},
-				],
-			},
-			{
-				title: '매크로',
-				link: '/config/macro',
-				routePath: 'macro',
-				icon: <MdPanoramaPhotosphereSelect />,
-				subMenu: [
-					{
-						title: '매크로 등록',
-						link: '/config/macro/register',
-						routePath: 'register',
-						component: <MacroRegister />,
-					},
-					{
-						title: '대시보드',
-						link: '/config/macro/dashboard',
-						routePath: 'dashboard',
-						component: <MacroDashboard />,
-					},
-					{
-						title: '명령어',
-						link: '/config/macro/command',
-						routePath: 'command',
-						subMenu: [
-							{
-								title: '명령어 등록',
-								link: '/config/macro/command/register',
-								routePath: 'register',
-								component: <MacroCommandRegister />,
-							},
-							{
-								title: '명령어 설정',
-								link: '/config/macro/command/setting',
-								routePath: 'setting',
-								component: <MacroCommandSetting />,
-							},
-							{
-								title: '명령어 테스트',
-								link: '/config/macro/command/test',
-								routePath: 'test',
-								component: <MacroCommandTest />,
-							},
-						],
-					},
-				],
-			},
-		],
-	},
+   {
+      title: '작업',
+      link: 'work',
+      component: <Work />,
+      menuRole: 3,
+   },
+   {
+      title: '프로젝트',
+      link: 'project',
+      component: <Project />,
+      menuRole: 3,
+   },
+   {
+      title: '설정',
+      link: 'config',
+      icon: <MdSettings />,
+      menuRole: 1,
+      subMenu: [
+         {
+            title: '작업 설정',
+            link: '/config/work',
+            routePath: 'work',
+            component: <ConfigWork />,
+            menuRole: 1,
+            icon: <MdWork />,
+         },
+         {
+            title: '테이블 동기화',
+            link: '/config/sync',
+            routePath: 'sync',
+            icon: <MdSync />,
+            subMenu: [
+               {
+                  title: '테이블 설정',
+                  link: '/config/sync/table',
+                  routePath: 'work',
+                  component: <ConfigSyncTable />,
+               },
+               {
+                  title: '동기화 설정',
+                  link: '/config/sync/csync',
+                  routePath: 'csync',
+                  component: <ConfigSync />,
+               },
+            ],
+         },
+         {
+            title: '매크로',
+            link: '/config/macro',
+            routePath: 'macro',
+            icon: <MdPanoramaPhotosphereSelect />,
+            subMenu: [
+               {
+                  title: '매크로 등록',
+                  link: '/config/macro/register',
+                  routePath: 'register',
+                  component: <MacroRegister />,
+               },
+               {
+                  title: '대시보드',
+                  link: '/config/macro/dashboard',
+                  routePath: 'dashboard',
+                  component: <MacroDashboard />,
+               },
+               {
+                  title: '명령어',
+                  link: '/config/macro/command',
+                  routePath: 'command',
+                  subMenu: [
+                     {
+                        title: '명령어 등록',
+                        link: '/config/macro/command/register',
+                        routePath: 'register',
+                        component: <MacroCommandRegister />,
+                     },
+                     {
+                        title: '명령어 설정',
+                        link: '/config/macro/command/setting',
+                        routePath: 'setting',
+                        component: <MacroCommandSetting />,
+                     },
+                     {
+                        title: '명령어 테스트',
+                        link: '/config/macro/command/test',
+                        routePath: 'test',
+                        component: <MacroCommandTest />,
+                     },
+                  ],
+               },
+            ],
+         },
+      ],
+   },
 ];
 ```
 
-## [4] Route 생성
+### 3.2. <a name='3-2Route'></a>[3-2] Route 생성
 
 SetRoute를 이용해 메뉴의 Route를 생성
 
@@ -210,7 +204,7 @@ function App() {
 }
 ```
 
-## [5] 헤더 생성
+### 3.3. <a name='3-3'></a>[3-3] 헤더 생성
 
 HeaderCreator로 Logo, TopMenu, Personal Menu 구성할 수 있습니다.
 
@@ -290,12 +284,12 @@ function Index(props) {
 }
 ```
 
-## [6] 사이드 메뉴 생성
+### 3.4. <a name='3-4'></a>[3-4] 사이드 메뉴 생성
 
 사이드 메뉴를 원하는 페이지를 AsideCreator로 감싸준다.  
 최상단 컴포넌트에 사이드 메뉴를 생성하고 내부에 컴포넌트 작성 (children 이용하여 보여준다.)
 
-1. <code>menuList {ObjectArray}</code> 사이드 메뉴에 생성될 메뉴 리스트 [2] 메뉴 생성 참고
+1. <code>menuList {ObjectArray}</code> 사이드 메뉴에 생성될 메뉴 리스트 [3] 메뉴 생성 참고
 
 2. <code>title {String}</code>  
    menuList에서 사이드 메뉴에 사용할 페이지의 최상단 메뉴 객체의 title 작성  
@@ -344,94 +338,164 @@ export const theme = {
 };
 ```
 
-## [9] 모달생성
+## 4. <a name='4DataList'></a>[4] DataList
 
-Modal 컴포넌트를 통해, 모달 창을 생성합니다.
+DataList 사용 시 Custom 한계가 있어 제작
 
-1. <code>width {String} </code>
+```javascript
+const [dataListData, setDataListData] = useState();
 
-- 모달의 너비
-- default 값은 '600px';
+<Datalist
+  id="프로젝트 검색"
+  valueList={valueList}
+  labelList={labelList}
+  setData={setDataListData}
+/>;
+```
 
-2. <code>height {String} </code>
+1. <code>id {String}</code>  
+   Text Input 앞에 붙게 될 이름 및 Input의 ID 값
 
-- 모달의 높이
-- default 값은 '600px';
+2. <code>valueList {Array}</code>  
+   DataList Option의 Value 값으로 labelList가 없다면 해당 리스트가 label의 역할까지 담당
 
-3. <code>position {String} </code>
+3. <code>labelList {Array} (Optional)</code>  
+   DataList Option의 Label 값으로 valueList와 1:1 매치되어야 정상 작동
 
-- 모달 생성 위치
-- default 값은 'center'
+4. <code>setData {useState}</code>  
+   DataList에 설정된 Value 값 상태 관리 담당
 
-<div style="text-align: center;">
-    <img src="./readmeImg/modalPos.jpg" />
-</div>
+5. Style
 
-4. <code>modalState {Boolean} </code>
+```javascript
+export const theme = {
+  dataListStyle: {
+    hoverBackgroundColor: '#00ADB5',
+  },
+};
+```
 
-- 모달 on, off 여부
-- 상위 컴포넌트에서 useState 값 내려 받음
-- default 값은 false
+## 5. <a name='5Pagination'></a>[5] Pagination
 
-5. <code>handleClose {Function} </code>
+```javascript
+const pageFunction = (currentPage, dataLength) => {
+  console.log(currentPage);
+  console.log(dataLength);
+};
 
-- 모달을 닫는 (상태를 변경 하는 ) 함수
-- 상위 컴포넌트에서 상태변경 기능이 포함된 함수를 내려 받음
-- default 값은 null
+<Pagination totalLength={1205} buttonLength={10} pageEvent={pageFunction} />;
+```
 
-6. <code>modalTitle {String} </code>
+1. <code>totalLength {Int}</code>  
+   총 데이터의 개수
 
-- 모달 제목
-- default 값은 'undefined'로 ''로 표시됨
+2. <code>buttonLength {Int} (Default : 10)</code>  
+   페이징 버튼의 개수
 
-7. <code>isCloseBtn {Boolean} </code>
+3. <code>pageEvent {Function}</code>  
+   페이징 버튼에 추가될 함수로 현재 몇 번째 페이지 인지 / 몇 개의 데이터를 나열할 것인지를 파라미터로 제공
 
-- 모달창 오른족 상단에 닫기 버튼 존재 여부
-- default 값은 true
+4. Style
 
-8. <code>resizable {Boolean} </code>
+```javascript
+export const theme = {
+  paginationStyle: {
+    backgroundColor: '#515558',
+    fontColor: 'white',
+    hoverBackgroundColor: '#e7434e',
+    hoverFontColor: 'white',
+    divideLine: '#fff',
+  },
+};
+```
 
-- 모달창 크기 조절 가능 여부
-- default 값은 false
+## 6. <a name='6'></a>[6] button
 
-9. <code>movable {Boolean} </code>
+```javascript
+<Button>버튼<Button>
+```
 
-- 모달창 상단을 드래그 하여 이동 가능한 지 여부
-- default 값은 true
+1. <code>type {String}</code>  
+   버튼 형태 결정 (색은 color 값에 따라 결정)  
+   'fill': 배경색 존재 (default)  
+   'border': 배경색 흰색, 테두리만 존재  
+   'text': 배경색 투명, 테두리 없이 텍스트만 존재
 
-10. <code>buttonList {Component[]} </code>
+2. <code>color {String}</code>  
+   버튼의 색깔 결정  
+   'success': 초록색  
+   'error': 빨간색  
+   'coral': 산호색  
+   'blue': 연한 파란색  
+   'gray': 회색 (default)
 
-- 모달창 하단에 표시될 버튼 목록
-- default 값은 [ <Button size="small" color="blue" onClick={callback}> 확인 </Button>, <Button size="small" onClick={handleClose}>닫기</Button> ]
+3. <code>size {String}</code>  
+   버튼의 크기 결정  
+   'small': 작은 크기  
+   'medium': 중간 크기 (default)  
+   'big': 큰 크기
 
-11. <code>callback {Function} </code>
+4. <code>width {Int}</code>  
+   버튼의 너비 설정  
+   버튼이 특정한 너비를 가져야 할 때 길이 지정 가능  
+   default 값은 'auto'
 
-- 모달창 확인 버튼을 눌렀을 시, 실행되는 함수
-- default 값은 null
+5. <code>disabled {Boolean}</code>  
+   버튼 활성화 여부  
+   true: 버튼 활성화 (default)  
+   false: 버튼 비활성화
 
-12. <code>style {Object} </code>
+6. <code>isAnimation {Boolean}</code>  
+   버튼 클릭시 애니메이션 동작 여부 결정  
+   true: 애니메이션 동작 (default)  
+   false: 애니메이션 미동작
 
-- 모달창 세부 스타일 지정
-  - <code>headBg {String} </code>
-    - 모달창 상단 배경 색상
-    - default 값은 '#eee'
-  - <code>headFc {String} </code>
-    - 모달창 상단의 글씨, 아이콘의 색상
-    - default 값은 '#808080'
-  - <code>headBorder {String} </code>
-    - 모달창 상단의 하단 테두리 스타일 지정
-    - default 값은 'none'
-  - <code>closeBtn {Component} </code>
-    - 모달창 상단의 닫기 버튼에 들어갈 컴포넌트
-    - default 값은 react-icons의 <AiOutlineClose />
-  - <code>modalBorder {String} </code>
-    - 모달창의 테두리 스타일 지정
-    - default 값은 'none'
-  - <code>isShadow {String} </code>
-    - 모달창의 그림자 여부
-    - default 값은 true
+7. <code>icon {Component}</code>  
+   값의 여부에 따라 아이콘 추가 여부 결정  
+   값이 존재할 시 텍스트 앞에 해당 아이콘 추가
 
-예시
+## 7. <a name='7'></a>[7] tooltip
+
+툴팁이 표시되는 텍스트 만들 때 사용 가능
+
+```javascript
+<Tooltip text="도움말">도움말 보기<Tooltip>
+```
+
+1. <code>text {String}</code>  
+   툴팁에 들어갈 텍스트  
+   default 값은 '텍스트를 넣어주세요'
+
+2. <code>position {String}</code>  
+   툴팁의 위치  
+   'top-start'  
+   'top-center' (default)  
+   'top-end'  
+   'right-start'  
+   'right-center'  
+   'right-end'  
+   'bottom-start'  
+   'bottom-center'  
+   'bottom-end'  
+   'left-start'  
+   'left-center'  
+   'left-end'
+
+3. <code>bgColor {String}</code>  
+   툴팁의 배경색  
+   default 값은 '#808080'
+
+4. <code>fontColor {String}</code>  
+   툴팁 텍스트의 색  
+   default 값은 'white'
+
+5. <code>fontSize {String}</code>  
+   툴팁 텍스트의 크기  
+   default 값은 '1rem'
+
+## 8. <a name='8'></a>[8] modal
+
+Modal 컴포넌트를 통해, 모달 창을 생성
 
 ```javascript
 function TestModal() {
@@ -452,87 +516,103 @@ function TestModal() {
 }
 ```
 
-## [10] 알림창 생성
+1. <code>width {String} </code>
 
-alarm 함수를 사용하여 특정 상황에서 알림창을 생성합니다.
+   모달의 너비  
+   default 값은 '600px';
 
-1. <code>name {String}</code>
+2. <code>height {String} </code>
 
-- 안내 창의 성격
-- 'success' (default)
-- 'error'
-- 'warning'
-- 'info'
-- 'answer'
+   모달의 높이  
+   default 값은 '600px'
 
-2. <code>position {String}</code>
+3. <code>position {String} </code>
 
-- 안내 창이 뜨는 위치
-- 'left-start'
-- 'left-center'
-- 'left-end'
-- 'center-start'
-- 'center' (default)
-- 'center-end'
-- 'right-start'
-- 'right-center'
-- 'right-end'
+   모달 생성 위치  
+   default 값은 'center'
+
 <div style="text-align: center;">
     <img src="./readmeImg/modalPos.jpg" />
 </div>
 
-3. <code>width {String}</code>
+4. <code>modalState {Boolean} </code>
 
-- 안내 창의 너비
-- default 값은 '400px'
+   모달 on, off 여부  
+   상위 컴포넌트에서 useState 값 내려 받음  
+   default 값은 false
 
-4. <code>height {String}</code>
+5. <code>handleClose {Function} </code>
 
-- 안내 창의 높이
-- default 값은 '100px
+   모달을 닫는 (상태를 변경 하는 ) 함수  
+   상위 컴포넌트에서 상태변경 기능이 포함된 함수를 내려 받음  
+   default 값은 null
 
-5. <code>timeLimit {Number}</code>
+6. <code>modalTitle {String} </code>
 
-- 안내 창의 지속 시간
-- default 값은 10000
+   모달 제목  
+   default 값은 'undefined'로 ''로 표시됨
 
-6. <code>type {String}</code>
+7. <code>isCloseBtn {Boolean} </code>
 
-- 안내 창의 형태
-- 'dark'
-- 'light' (default)
-- 'border'
+   모달창 오른족 상단에 닫기 버튼 존재 여부  
+   default 값은 true
 
-7. <code>title {String}</code>
+8. <code>resizable {Boolean} </code>
 
-- 안내 창의 제목
-- name === 'success'일 시, default 값은 성공
-- name === 'error'일 시, default 값은 에러
-- name === 'warning'일 시, default 값은 경고
-- name === 'info'일 시, default 값은 안내
-- name === 'answer'일 시, default 값은 확인
+   모달창 크기 조절 가능 여부  
+   default 값은 false
 
-8. <code>text {String}</code>
+9. <code>movable {Boolean} </code>
 
-- 안내 창의 상세 문구
-- default 값은 '텍스트를 입력해주세요.'
+   모달창 상단을 드래그 하여 이동 가능한 지 여부 default 값은 true
 
-9. <code>callback {Function}</code>
+10. <code>buttonList {Component[]} </code>
 
-- (name === 'answer'일 때) 확인 버튼을 눌렀을 때 실행될 함수
-- default 값은 null
+    모달창 하단에 표시될 버튼 목록  
+    default 값은 [ <Button size="small" color="blue" onClick={callback}> 확인 </Button>, <Button size="small" onClick={handleClose}>닫기</Button> ]
 
-10. <code>yBtnText {String}</code>
+11. <code>callback {Function} </code>
 
-- (name === 'answer'일 때) 확인 버튼에 들어갈 텍스트
-- default 값은 '확인'
+    모달창 확인 버튼을 눌렀을 시, 실행되는 함수  
+    default 값은 null
 
-11. <code>nBtnText {String}</code>
+12. <code>style {Object} </code>
 
-- (name === 'answer'일 때) 취소 버튼에 들어갈 텍스트
-- default 값은 '취소'
+모달창 세부 스타일 지정
 
-예시
+<code>headBg {String} </code>
+
+- 모달창 상단 배경 색상
+- default 값은 '#eee'
+
+<code>headFc {String} </code>
+
+- 모달창 상단의 글씨, 아이콘의 색상
+- default 값은 '#808080'
+
+<code>headBorder {String} </code>
+
+- 모달창 상단의 하단 테두리 스타일 지정
+- default 값은 'none'
+
+<code>closeBtn {Component} </code>
+
+- 모달창 상단의 닫기 버튼에 들어갈 컴포넌트
+- default 값은 react-icons의 <AiOutlineClose />
+
+<code>modalBorder {String} </code>
+
+- 모달창의 테두리 스타일 지정
+- default 값은 'none'
+
+<code>isShadow {String} </code>
+
+- 모달창의 그림자 여부
+- default 값은 true
+
+## 9. <a name='9'></a>[9] alarm
+
+alarm 함수를 사용하여 특정 상황에서 알림창 생성
 
 ```javascript
 function checkValid(input) {
@@ -542,46 +622,80 @@ function checkValid(input) {
 }
 ```
 
-## [11] 슬라이더 생성
+1. <code>name {String}</code>
 
-Slider 컴포넌트를 통해, 슬라이더를 생성합니다.
+   안내 창의 성격  
+   'success' (default)  
+   'error'  
+   'warning'  
+   'info'  
+   'answer'
 
-1. <code>width {String}</code>
+2. <code>position {String}</code>
 
-- Slider 컴포넌트의 너비
-- default 값은 '800px'
+   안내 창이 뜨는 위치  
+    'left-start'  
+    'left-center'  
+    'left-end'  
+    'center-start'  
+    'center' (default)  
+    'center-end'  
+    'right-start'  
+    'right-center'  
+    'right-end'
 
-2. <code>height {String}</code>
+3. <code>width {String}</code>
 
-- Slider 컴포넌트의 높이
-- default 값은 '400px'
+   안내 창의 너비  
+   default 값은 '400px'
 
-3. <code>itemList {Component[]}</code>
+4. <code>height {String}</code>
 
-- 보여주고자 하는 컴포넌트들을 담은 배열
-- default 값은 null
+   안내 창의 높이  
+   default 값은 '100px
 
-4. <code>autoPlay {Boolean}</code>
+5. <code>timeLimit {Number}</code>
 
-- Slider 자동 재생 여부
-- default 값은 false
+   안내 창의 지속 시간  
+   default 값은 10000
 
-5. <code>autoTime {Number}</code>
+6. <code>type {String}</code>
 
-- 자동 재생 시 페이지 넘어가는 시간
-- default 값은 5000
+   안내 창의 형태  
+   'dark'  
+   'light' (default)  
+   'border'
 
-6. <code>border {String}</code>
+7. <code>title {String}</code>
 
-- Slider 컴포넌트의 테두리 스타일
-- default 값은 '1px solid black'
+   안내 창의 제목  
+   name === 'success'일 시, default 값은 성공  
+   name === 'error'일 시, default 값은 에러  
+   name === 'warning'일 시, default 값은 경고  
+   name === 'info'일 시, default 값은 안내  
+   name === 'answer'일 시, default 값은 확인
 
-7. <code>background {String}</code>
+8. <code>text {String}</code>
 
-- 각 페이지의 배경색
-- default 값은 'transparent'
+   안내 창의 상세 문구  
+   default 값은 '텍스트를 입력해주세요.'
 
-예시
+9. <code>callback {Function}</code>
+
+   (name === 'answer'일 때) 확인 버튼을 눌렀을 때 실행될 함수  
+   default 값은 null
+
+10. <code>yBtnText {String}</code>  
+    (name === 'answer'일 때) 확인 버튼에 들어갈 텍스트  
+    default 값은 '확인'
+
+11. <code>nBtnText {String}</code>  
+    (name === 'answer'일 때) 취소 버튼에 들어갈 텍스트  
+     default 값은 '취소'
+
+## 10. <a name='10'></a>[10] slider
+
+Slider 컴포넌트를 통해, 슬라이더(넘기면서 조회)를 생성
 
 ```javascript
 function TestComponent () {
@@ -589,47 +703,42 @@ function TestComponent () {
 }
 ```
 
-## [12] 데이트픽커 생성
+1. <code>width {String}</code>
 
-DatePicker 컴포넌트를 통해, 데이트 픽커를 생성합니다.
+   Slider 컴포넌트의 너비  
+   default 값은 '800px'
 
-1. <code>date {Date}</code>
+2. <code>height {String}</code>
 
-- 선택하고자 하는 날짜
-- useState로 관리하는 값(상태)이여야 함
-- default 값은 new Date()
+   Slider 컴포넌트의 높이  
+   default 값은 '400px'
 
-2. <code>setDate {Function}</code>
+3. <code>itemList {Component[]}</code>
 
-- 날짜를 바꾸는 함수
-- setState 함수(상태 변경 함수)여야 함
+   보여주고자 하는 컴포넌트들을 담은 배열  
+   default 값은 null
 
-3. <code>width {String}</code>
+4. <code>autoPlay {Boolean}</code>
 
-- input 박스의 너비
-- default 값은 '100px'
+   Slider 자동 재생 여부  
+   default 값은 false
 
-4. <code>headBg {String}</code>
+5. <code>autoTime {Number}</code>
 
-- datePicker의 상단 부분 배경색
-- default 값은 '#eee'
+   자동 재생 시 페이지 넘어가는 시간  
+   default 값은 5000
 
-5. <code>pickerBg {String}</code>
+6. <code>border {String}</code>
 
-- datePicker의 전체 배경색
-- default 값은 'white'
+   Slider 컴포넌트의 테두리 스타일  
+   default 값은 '1px solid black'
 
-6. <code>weekDaysBg {String}</code>
+7. <code>background {String}</code>
 
-- 요일 표시 줄의 배경색
-- default 값은 'white'
+   각 페이지의 배경색  
+   default 값은 'transparent'
 
-7. <code>selectedBg {String}</code>
-
-- 선택된 날짜의 배경색
-- default 값은 '#808080'
-
-예시
+## 10. <a name='10'></a>[10] datePicker
 
 ```javascript
 function Test() {
@@ -639,123 +748,102 @@ function Test() {
 }
 ```
 
-## [13] 데이트비트윈픽커 생성
-
-데이트비트윈픽커 컴포넌트를 사용하여 시작 날짜, 종료 날짜를 설정할 수 있습니다.
-
-1. <code>startDate {Date}</code>
-
-- 시작 날짜
-- state로 관리하는 상태 값 이여야 함
-- default 값은 new Date()
-
-2. <code>endDate {Date}</code>
-
-- 종료 날짜
-- state로 관리하는 상태 값 이여야 함
-- default 값은 new Date()
-
-3. <code>setStartDate {Function}</code>
-
-- 시작 날짜를 변경하는 함수
-- setState 함수(상태 변경 함수)여야 함
-- default 값은 null
-
-4. <code>setEndDate {Function}</code>
-
-- 종료 날짜를 변경하는 함수
-- setState 함수(상태 변경 함수)여야 함
-- default 값은 null
-
-5. <code>width {String}</code>
-
-- input 박스의 너비
-- default 값은 '100px'
-
-6. <code>pickerBg {String}</code>
-
-- datePicker의 전체 배경 색
-- default 값은 'white'
-
-7. <code>headBg {String}</code>
-
-- datePicker의 제일 상단 배경 색
-- default 값은 '#eee'
-
-8. <code>weekDaysBg {String}</code>
-
-- 요일 표시줄 배경색
-- default 값은 'white'
-
-9. <code>selectedBg {String}</code>
-
-- 선택된 날짜들 배경 색
-- default 값은 '#808080'
-
-10. <code>selectedFC {String}</code>
-
-- 선택된 날짜들 글시 색
-- default 값은 'white'
-
-예시
-
-```javascript
-function Test() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-
-  return (
-    <DateBetweenPicker
-      startDate={startDate}
-      setStartDate={setStartDate}
-      endDate={endDate}
-      setEndDate={setEndDate}
-    />
-  );
-}
-```
-
-## [14] 데이트타임픽커 생성
-
-DateTimePicker 컴포넌트를 통해, 날짜, 시간을 선택할 수 있습니다.
-
 1. <code>date {Date}</code>
 
-- 선택하고자 하는 날짜
-- useState로 관리하는 값(상태)이여야 함
-- default 값은 new Date()
+   선택하고자 하는 날짜  
+   useState로 관리하는 값(상태)이여야 함  
+   default 값은 new Date()
 
 2. <code>setDate {Function}</code>
 
-- 날짜를 바꾸는 함수
-- setState 함수(상태 변경 함수)여야 함
+   날짜를 바꾸는 함수  
+   setState 함수(상태 변경 함수)여야 함
 
 3. <code>width {String}</code>
 
-- input 박스의 너비
-- default 값은 '100px'
+   input 박스의 너비  
+   default 값은 '100px'
 
 4. <code>headBg {String}</code>
 
-- dateTimePicker의 상단 부분 배경색
-- default 값은 '#eee'
+   datePicker의 상단 부분 배경색  
+   default 값은 '#eee'
 
 5. <code>pickerBg {String}</code>
 
-- dateTimePicker의 전체 배경색
-- default 값은 'white'
+   datePicker의 전체 배경색  
+   default 값은 'white'
 
 6. <code>weekDaysBg {String}</code>
 
-- 요일 표시 줄의 배경색
-- default 값은 'white'
+   요일 표시 줄의 배경색  
+   default 값은 'white'
 
 7. <code>selectedBg {String}</code>
 
-- 선택된 날짜의 배경색
-- default 값은 '#808080'
+   선택된 날짜의 배경색  
+   default 값은 '#808080'
 
-예시
+## 11. <a name='11'></a>[11] dateBetweenPicker
+
+데이트비트윈픽커 컴포넌트를 사용하여 시작 날짜, 종료 날짜를 설정 가능
+
+1. <code>startDate {Date}</code>
+
+   시작 날짜  
+   state로 관리하는 상태 값 이여야 함  
+   default 값은 new Date()
+
+2. <code>endDate {Date}</code>
+
+   종료 날짜  
+   state로 관리하는 상태 값 이여야 함  
+   default 값은 new Date()
+
+3. <code>setStartDate {Function}</code>
+
+   시작 날짜를 변경하는 함수  
+   setState 함수(상태 변경 함수)여야 함  
+   default 값은 null
+
+4. <code>setEndDate {Function}</code>
+
+   종료 날짜를 변경하는 함수  
+   setState 함수(상태 변경 함수)여야 함  
+   default 값은 null
+
+5. <code>width {String}</code>
+
+   input 박스의 너비  
+   default 값은 '100px'
+
+6. <code>pickerBg {String}</code>
+
+   datePicker의 전체 배경 색  
+   default 값은 'white'
+
+7. <code>headBg {String}</code>
+
+   datePicker의 제일 상단 배경 색  
+   default 값은 '#eee'
+
+8. <code>weekDaysBg {String}</code>
+
+   요일 표시줄 배경색  
+   default 값은 'white'
+
+9. <code>selectedBg {String}</code>
+
+   선택된 날짜들 배경 색  
+   default 값은 '#808080'
+
+10. <code>selectedFC {String}</code>  
+    선택된 날짜들 글씨 색  
+    default 값은 'white'
+
+## 12. <a name='12'></a>[12] dateTimePicker
+
+datePicker에 시간 선택 기능 추가
 
 ```javascript
 function Test() {
@@ -765,65 +853,45 @@ function Test() {
 }
 ```
 
-## [15] 데이트타임비트윈픽커 생성
+1. <code>date {Date}</code>
 
-데이트타임비트윈픽커 컴포넌트를 사용하여 시작 시간 및 날짜, 종료 시간 및 날짜 를 설정할 수 있습니다.
+   선택하고자 하는 날짜  
+   useState로 관리하는 값(상태)이여야 함  
+   default 값은 new Date()
 
-1. <code>startDate {Date}</code>
+2. <code>setDate {Function}</code>
 
-- 시작 날짜
-- state로 관리하는 상태 값 이여야 함
-- default 값은 new Date()
+   날짜를 바꾸는 함수  
+   setState 함수(상태 변경 함수)여야 함
 
-2. <code>endDate {Date}</code>
+3. <code>width {String}</code>
 
-- 종료 날짜
-- state로 관리하는 상태 값 이여야 함
-- default 값은 new Date()
+   input 박스의 너비  
+   default 값은 '100px'
 
-3. <code>setStartDate {Function}</code>
+4. <code>headBg {String}</code>
 
-- 시작 날짜를 변경하는 함수
-- setState 함수(상태 변경 함수)여야 함
-- default 값은 null
+   dateTimePicker의 상단 부분 배경색  
+   default 값은 '#eee'
 
-4. <code>setEndDate {Function}</code>
+5. <code>pickerBg {String}</code>
 
-- 종료 날짜를 변경하는 함수
-- setState 함수(상태 변경 함수)여야 함
-- default 값은 null
+   dateTimePicker의 전체 배경색  
+   default 값은 'white'
 
-5. <code>width {String}</code>
+6. <code>weekDaysBg {String}</code>
 
-- input 박스의 너비
-- default 값은 '100px'
+   요일 표시 줄의 배경색  
+   default 값은 'white'
 
-6. <code>pickerBg {String}</code>
+7. <code>selectedBg {String}</code>
 
-- datePicker의 전체 배경 색
-- default 값은 'white'
+   선택된 날짜의 배경색  
+   default 값은 '#808080'
 
-7. <code>headBg {String}</code>
+## 13. <a name='13'></a>[13] dateTimeBetweenPicker
 
-- datePicker의 제일 상단 배경 색
-- default 값은 '#eee'
-
-8. <code>weekDaysBg {String}</code>
-
-- 요일 표시줄 배경색
-- default 값은 'white'
-
-9. <code>selectedBg {String}</code>
-
-- 선택된 날짜들 배경 색
-- default 값은 '#808080'
-
-10. <code>selectedFC {String}</code>
-
-- 선택된 날짜들 글시 색
-- default 값은 'white'
-
-예시
+DateTimeBetweenPicker 컴포넌트에 시간 선택 기능 추가
 
 ```javascript
 function Test() {
@@ -841,34 +909,61 @@ function Test() {
 }
 ```
 
-## [16] 타임 픽커 생성
+1. <code>startDate {Date}</code>
 
-타임픽커 컴포넌트를 사용하여 시간을 설정할 수 있습니다.
+   시작 날짜  
+   state로 관리하는 상태 값 이여야 함  
+   default 값은 new Date()
 
-1. <code>time {String} </code>
+2. <code>endDate {Date}</code>
 
-- 다루고자 하는 시간
-- '00:00' 양식
-- state로 관리되는 값 이여야 함(상태 값)
-- default 값은 '00:00'
+   종료 날짜  
+   state로 관리하는 상태 값 이여야 함  
+   default 값은 new Date()
 
-2. <code>setTime {Function} </code>
+3. <code>setStartDate {Function}</code>
 
-- 시간을 관리하는 함수
-- useState를 통해 생성된 상태 관리 함수여야 함
-- default 값은 null
+   시작 날짜를 변경하는 함수  
+   setState 함수(상태 변경 함수)여야 함  
+   default 값은 null
 
-3. <code>svgColor {String} </code>
+4. <code>setEndDate {Function}</code>
 
-- 아이콘들의 색상
-- default 값은 'black'
+   종료 날짜를 변경하는 함수  
+   setState 함수(상태 변경 함수)여야 함  
+   default 값은 null
 
-4. <code>width {String} </code>
+5. <code>width {String}</code>
 
-- 기본 input 태그의 너비
-- default 값은 '50px'
+   input 박스의 너비  
+   default 값은 '100px'
 
-예시
+6. <code>pickerBg {String}</code>
+
+   datePicker의 전체 배경 색  
+   default 값은 'white'
+
+7. <code>headBg {String}</code>
+
+   datePicker의 제일 상단 배경 색  
+   default 값은 '#eee'
+
+8. <code>weekDaysBg {String}</code>
+
+   요일 표시줄 배경색  
+   default 값은 'white'
+
+9. <code>selectedBg {String}</code>
+
+   선택된 날짜들 배경 색  
+   default 값은 '#808080'
+
+10. <code>selectedFC {String}</code>
+
+    선택된 날짜들 글씨 색  
+    default 값은 'white'
+
+## 14. <a name='14'></a>[14] timePicker
 
 ```javascript
 function Test() {
@@ -876,58 +971,34 @@ function Test() {
 
   return <TimePicker time={time} setTime={setTime}>
 }
-
 ```
 
-## [17] 라디오 생성
+1. <code>time {String} </code>
 
-라디오 컴포넌트를 통해 라디오 형식을 손쉽게 만들 수 있습니다.
+   다루고자 하는 시간  
+   '00:00' 양식  
+   state로 관리되는 값 이여야 함(상태 값)  
+   default 값은 '00:00'
 
-1. <code>value {Number} </code>
+2. <code>setTime {Function} </code>
 
-- 선택하고자 하는 값
-- 숫자 타입으로 인덱스 값으로 대상을 분류한다고 가정
-- state로 관리하는 값이여야 함 (상태값)
-- default 값은 0
+   시간을 관리하는 함수  
+   useState를 통해 생성된 상태 관리 함수여야 함  
+   default 값은 null
 
-2. <code>setValue {Function} </code>
+3. <code>svgColor {String} </code>
 
-- 선택 값을 바꾸는 함수
-- useState로 생성한 상태 관리 함수여야 함
-- default 값은 null
+   아이콘들의 색상  
+   default 값은 'black'
 
-3. <code>list {Stirng | Number []} </code>
+4. <code>width {String} </code>
 
-- 선택할 수 있는 값들로 이루어진 배열
-- index를 통해 값이 선택 되므로 정해진 순서를 고려해 넣어야 함
-- default 값은 ['항목 없음']
+   기본 input 태그의 너비  
+   default 값은 '50px'
 
-4. <code>text {String} </code>
+## 15. <a name='15'></a>[15] radio
 
-- 선택에 대한 제목
-- default 값은 '텍스트를 입력해주세요.'
-
-5. <code>checkColor {String} </code>
-
-- 체크 단락의 색
-- default 값은 'rgb(144, 202, 249)'
-
-6. <code>hoverColor {String} </code>
-
-- 체크 단락에 마우스를 올렸을 때 생기는 원의 색
-- default 값은 '#eee'
-
-7. <code>labelInSpacing {String} </code>
-
-- 한 라벨 내에서 체크 단락과 글씨와의 간격
-- default 값은 '4px'
-
-8. <code>labelOutSpacing {String} </code>
-
-- 라벨 간의 간격
-- default 값은 '8px'
-
-예시
+라디오 컴포넌트를 통해 라디오 형식을 쉽게 생성 가능
 
 ```javascript
 function Test () {
@@ -937,35 +1008,53 @@ function Test () {
 }
 ```
 
-## [18] 스위치 생성
+1. <code>value {Number} </code>
 
-스위치 컴포넌트를 통해 변화하는 Boolean 값을 시각적으로 표현할 수 있습니다.
+   선택하고자 하는 값  
+   숫자 타입으로 인덱스 값으로 대상을 분류한다고 가정  
+   state로 관리하는 값이여야 함 (상태값)  
+   default 값은 0
 
-1. <code>size {String}</code>
+2. <code>setValue {Function} </code>
 
-- 컴포넌트의 사이즈
-- 'middle', 'small' 두 가지 값 유효
-- default 값은 'middle'
+   선택 값을 바꾸는 함수  
+   useState로 생성한 상태 관리 함수여야 함  
+   default 값은 null
 
-2. <code>value {Boolean}</code>
+3. <code>list {Stirng | Number []} </code>
 
-- 관리하고자 하는 Boolean 값
-- state로 관리되는 값이여야 함 (상태 값)
-- default 값은 true
+   선택할 수 있는 값들로 이루어진 배열  
+   index를 통해 값이 선택 되므로 정해진 순서를 고려해 넣어야 함  
+   default 값은 ['항목 없음']
 
-3. <code>setValue {Function}</code>
+4. <code>text {String} </code>
 
-- Booleand 값을 변화시키는 함수
-- useState로 생성된 함수여야 함 (상태 관리 함수)
-- default 값은 null
+   선택에 대한 제목  
+   default 값은 '텍스트를 입력해주세요.'
 
-4. <code>color {String}</code>
+5. <code>checkColor {String} </code>
 
-- 컴포넌트의 색
-- 'blue', 'green', 'coral', 'red', 'gray' 5가지 값 윻ㅅ
-- default 값은 'blue'
+   체크 단락의 색  
+   default 값은 'rgb(144, 202, 249)'
 
-예시
+6. <code>hoverColor {String} </code>
+
+   체크 단락에 마우스를 올렸을 때 생기는 원의 색  
+   default 값은 '#eee'
+
+7. <code>labelInSpacing {String} </code>
+
+   한 라벨 내에서 체크 단락과 글씨와의 간격  
+   default 값은 '4px'
+
+8. <code>labelOutSpacing {String} </code>
+
+   라벨 간의 간격  
+   default 값은 '8px'
+
+## 16. <a name='16'></a>[16] switch
+
+Switch 컴포넌트를 통해 변화하는 Boolean 값 시각적 표현 가능
 
 ```javascript
 function Test() {
@@ -974,3 +1063,27 @@ function Test() {
   return <Switch value={isTest} setValue={setIsTest}>
 }
 ```
+
+1. <code>size {String}</code>
+
+   컴포넌트의 사이즈  
+   'middle', 'small' 두 가지 값 유효  
+   default 값은 'middle'
+
+2. <code>value {Boolean}</code>
+
+   관리하고자 하는 Boolean 값  
+   state로 관리되는 값이여야 함 (상태 값)  
+   default 값은 true
+
+3. <code>setValue {Function}</code>
+
+   Booleand 값을 변화시키는 함수  
+   useState로 생성된 함수여야 함 (상태 관리 함수)  
+   default 값은 null
+
+4. <code>color {String}</code>
+
+   컴포넌트의 색  
+   'blue', 'green', 'coral', 'red', 'gray' 5가지 값 유효  
+   default 값은 'blue'
