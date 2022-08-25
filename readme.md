@@ -21,6 +21,7 @@
 - [[15] 데이트타임비트윈픽커 생성](#15-데이트타임비트윈픽커-생성)
 - [[16] 타임픽커 생성](#16-타임픽커-생성)
 - [[17] 라디오 생성](#17-라디오-생성)
+- [[18] 스위치 생성](#18-스위치-생성)
 
 ## [1] 소개
 
@@ -1050,5 +1051,43 @@ function Test () {
   const [categoryValue, setCategoryValue] = useState(0);
 
   return <Radio value={categoryValue} setValue={setCategoryValue} text={'카테고리를 선택해주세요'} list={['A', 'B', 'C', 'D']}>
+}
+```
+
+## [18] 스위치 생성
+
+스위치 컴포넌트를 통해 변화하는 Boolean 값을 시각적으로 표현할 수 있습니다.
+
+1. <code>size {String}</code>
+
+- 컴포넌트의 사이즈
+- 'middle', 'small' 두 가지 값 유효
+- default 값은 'middle'
+
+2. <code>value {Boolean}</code>
+
+- 관리하고자 하는 Boolean 값
+- state로 관리되는 값이여야 함 (상태 값)
+- default 값은 true
+
+3. <code>setValue {Function}</code>
+
+- Booleand 값을 변화시키는 함수
+- useState로 생성된 함수여야 함 (상태 관리 함수)
+- default 값은 null
+
+4. <code>color {String}</code>
+
+- 컴포넌트의 색
+- 'blue', 'green', 'coral', 'red', 'gray' 5가지 값 윻ㅅ
+- default 값은 'blue'
+
+예시
+
+```javascript
+function Test() {
+  const [isTest, setIsTest] = useState(true);
+
+  return <Switch value={isTest} setValue={setIsTest}>
 }
 ```
