@@ -290,7 +290,6 @@ const Text = styled.div`
   display: inline-block;
   position: relative;
   font-size: ${({ fontSize }) => fontSize};
-  background: orange;
   line-height: ${({ fontSize }) => fontSize};
 `;
 
