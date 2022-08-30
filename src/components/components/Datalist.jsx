@@ -137,11 +137,15 @@ function Datalist({ id, valueList, labelList = [], setData }) {
 
 const DataListWrap = styled.div`
   width: 100%;
+  position: relative;
 `;
 
 const DataListItemWrap = styled.ul`
   width: 250px;
   display: none;
+  position: absolute;
+  background: white;
+  z-index: 50;
 `;
 
 const DataListItem = styled.li`
