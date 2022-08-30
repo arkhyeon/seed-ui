@@ -651,7 +651,7 @@ function Modal({
           headBorder={headBorder}
           movable={movable}
         >
-          {modalTitle ? modalState : null}
+          {modalTitle || null}
           {isCloseBtn ? <CloseBtn onClick={handleModal}>{closeBtn}</CloseBtn> : null}
         </Head>
         <ChildrenWrapper height={height}> {children}</ChildrenWrapper>
