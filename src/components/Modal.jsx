@@ -132,7 +132,11 @@ function Modal({
     handleClose();
   }, [handleClose]);
 
-  useLayoutEffect(() => {
+  const clickOutSide = () => {
+    handleClose();
+  };
+
+  useEffect(() => {
     const backgroundDiv = document.createElement('div');
     backgroundDiv.style.background = '#808080';
     backgroundDiv.style.position = 'absolute';
@@ -144,15 +148,18 @@ function Modal({
     backgroundDiv.style.opacity = 0.3;
     backgroundDiv.className = 'background';
 
-    backgroundDiv.addEventListener('click', handleClose);
+    backgroundDiv.addEventListener('click', clickOutSide);
+
     if (modalState) {
       document.body.appendChild(backgroundDiv);
-    } else {
+    }
+
+    return () => {
       const backgroundDivs = document.querySelectorAll('.background');
       for (let i = 0; i < backgroundDivs.length; i++) {
-        backgroundDivs[i].parentNode.removeChild(backgroundDivs[i]);
+        document.body.removeChild(backgroundDivs[i]);
       }
-    }
+    };
   }, [modalState]);
 
   useLayoutEffect(() => {
