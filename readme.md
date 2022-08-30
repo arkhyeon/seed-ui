@@ -19,13 +19,14 @@
   - [[8] modal](#8-modal)
   - [[9] alarm](#9-alarm)
   - [[10] slider](#10-slider)
-  - [[11] datePicker](#10-datePicker)
-  - [[12] dateBetweenPicker](#11-dateBetweenPicker)
-  - [[13] dateTimePicker](#12-dateTimePicker)
-  - [[14] dateTimeBetweenPicker](#13-dateTimeBetweenPicker)
-  - [[15] timePicker](#14-timePicker)
-  - [[16] radio](#15-radio)
-  - [[17] switch](#16-switch)
+  - [[11] datePicker](#11-datePicker)
+  - [[12] dateBetweenPicker](#12-dateBetweenPicker)
+  - [[13] dateTimePicker](#13-dateTimePicker)
+  - [[14] dateTimeBetweenPicker](#14-dateTimeBetweenPicker)
+  - [[15] timePicker](#15-timePicker)
+  - [[16] radio](#16-radio)
+  - [[17] switch](#17-switch)
+  - [[18] toggle](#18-toggle)
 
 ## 1. <a name='1'></a>[1] 소개
 
@@ -501,8 +502,12 @@ export const theme = {
    툴팁 텍스트의 색  
    default 값은 'white'
 
-5. <code>fontSize {String}</code>  
+5. <code>textSize {String}</code>  
    툴팁 텍스트의 크기  
+   default 값은 '1rem'
+
+6. <code>fontSize {String}</code>  
+   일반 텍스트의 크기  
    default 값은 '1rem'
 
 ## 8. <a name='8-modal'></a>[8] modal
@@ -1099,3 +1104,77 @@ function Test() {
    컴포넌트의 색  
    'blue', 'green', 'coral', 'red', 'gray' 5가지 값 유효  
    default 값은 'blue'
+
+## 18. <a name='18-toggle'></a>[18] toggle
+
+토글 컴포넌트를 통해 토글 기능 손쉽게 사용
+
+```javascript
+function TestToggle () {
+   const [value, setValue] = useState(1);
+   const itemList = ['토글1', '토글2', '토글3']
+
+   return <Toggle value={value} setValue={setValue} list={itemList}>
+}
+```
+
+1. <code> list {String[]} </code>
+
+   토글에 들어갈 텍스트가 담긴 배열  
+   default 값은 ['아이템 없음']
+
+2. <code> padding {String} </code>
+
+   버튼에서 텍스트가 가지는 여백 (버튼의 크기 관련)  
+   default 값은 '12px'
+
+3. <code> value {Number} </code>
+
+   선택된 버튼의 값  
+   useState로 관리되는 상태값 이여야 함  
+   default 값은 1
+
+4. <code> setValue {Function} </code>
+
+   선택된 버튼의 값을 바꾸는 함수  
+   useState로 생성된 상태 관리 함수여야 함  
+   default 값은 null
+
+5. <code> style {Object} </code>
+
+   토글의 css를 관리하는 객체
+
+   1. <code>bgColor {String} </code>
+
+   토글 버튼의 기본 색  
+   default 값은 '#eee'
+
+   2. <code>fontColor {Strimg} </code>
+
+   토글 버튼의 텍스트 기본 색  
+   default 값은 'black'
+
+   3. <code>fontSize {String} </code>
+
+   토글 버튼의 텍스트 크기  
+   default 값은 '1rem'
+
+   4. <code>hoverColor {String} </code>
+
+   토글 버튼에 커서 올렸을 때, 버튼의 색  
+   default 값은 'white'
+
+   5. <code>hoverFontColor {String} </code>
+
+   토글 버튼에 커서 올렸을 때, 텍스트의 색  
+   default 값은 'white'
+
+   6. <code>clickedColor {String} </code>
+
+   선택된 버튼의 색  
+   default 값은 '#3498db'
+
+   7. <code>clickedFontColor {String} </code>
+
+   선택된 버튼의 텍스트 색  
+   default 값은 'white'

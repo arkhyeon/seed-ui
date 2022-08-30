@@ -13,6 +13,9 @@ import DateTimeBetweenPicker from './DateTimeBetweenPicker';
 import TimePicker from './TimePicker';
 import Radio from './Radio';
 import Switch from './Switch';
+import Datalist from './components/Datalist';
+import Pagination from './components/Pagination';
+import Toggle from './Toggle';
 
 export { HeaderCreator };
 
@@ -43,3 +46,9 @@ export { TimePicker };
 export { Radio };
 
 export { Switch };
+
+export { Datalist };
+
+export { Pagination };
+
+export { Toggle };
