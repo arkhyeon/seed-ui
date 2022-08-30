@@ -58,7 +58,7 @@ function Work() {
   return (
     <AsideCreator menuList={DepthList1} title="설정">
       <PaginationWrap>
-        <Pagination totalLength={243} pageEvent={pageFunction} />
+        <Pagination totalLength={22313} buttonLength={29} pageEvent={pageFunction} />
       </PaginationWrap>
       <Datalist id="프로젝트" valueList={data2} setData={setDataListData} />
       <br />

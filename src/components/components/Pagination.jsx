@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { BiArrowToLeft, BiArrowToRight, BiLeftArrowAlt, BiRightArrowAlt } from 'react-icons/all';
+import {
+  BiArrowToLeft,
+  BiArrowToRight,
+  BiLeftArrowAlt,
+  BiRightArrowAlt,
+  MdOutlineArrowBackIosNew,
+  MdOutlineArrowForwardIos,
+} from 'react-icons/all';
 
 function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +36,14 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
           <BiArrowToLeft />
         </PaginationItem>
         <DivideLine />
+        <PaginationItem
+          onClick={() => movePage(currentPage - buttonLength)}
+          className="rowBackPass"
+        >
+          <MdOutlineArrowBackIosNew />
+          <BiLeftArrowAlt />
+        </PaginationItem>
+        <DivideLine />
         <PaginationItem onClick={() => movePage(currentPage - 1)}>
           <BiLeftArrowAlt />
         </PaginationItem>
@@ -47,6 +62,14 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
         <DivideLine />
         <PaginationItem onClick={() => movePage(currentPage + 1)}>
           <BiRightArrowAlt />
+        </PaginationItem>
+        <DivideLine />
+        <PaginationItem
+          onClick={() => movePage(currentPage + buttonLength)}
+          className="rowFrontPass"
+        >
+          <BiRightArrowAlt />
+          <MdOutlineArrowForwardIos />
         </PaginationItem>
         <DivideLine />
         <PaginationItem onClick={() => movePage(btnTotalLength)}>
@@ -104,6 +127,30 @@ const PaginationItem = styled.li`
     font-weight: bold;
     cursor: revert;
     transform: revert;
+  }
+
+  &.rowBackPass svg {
+    position: relative;
+
+    &:first-of-type {
+      left: 5px;
+      font-size: 18px;
+    }
+    &:last-of-type {
+      right: 5px;
+    }
+  }
+
+  &.rowFrontPass svg {
+    position: relative;
+
+    &:first-of-type {
+      left: 5px;
+    }
+    &:last-of-type {
+      font-size: 18px;
+      right: 5px;
+    }
   }
 `;
 
