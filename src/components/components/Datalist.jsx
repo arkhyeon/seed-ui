@@ -23,7 +23,11 @@ function Datalist({ id, valueList, labelList = [], setData }) {
   }, []);
 
   const exitDataList = e => {
-    if (dataListWrapRef.current.contains(e.target) || ref.current.contains(e.target)) {
+    if (
+      dataListWrapRef.current === null ||
+      dataListWrapRef.current.contains(e.target) ||
+      ref.current.contains(e.target)
+    ) {
       return;
     }
     dataListWrapRef.current.style.display = 'none';
