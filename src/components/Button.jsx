@@ -93,6 +93,8 @@ const Component = styled.button`
   transition: 0.2s;
   overflow: hidden;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
 
   svg {
     display: inline-block;
