@@ -3,8 +3,10 @@ import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import AsideCreator from '../components/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
-import Datalist from '../components/components/Datalist';
+import Datalist from '../components/components/DataList';
 import Pagination from '../components/components/Pagination';
+import Button from '../components/Button';
+import { TextInput } from '../components/components/InputComponent';
 
 function Work() {
   const { pathname } = useLocation();
@@ -55,10 +57,18 @@ function Work() {
     console.log(dataLength);
   };
 
+  const componentClickFunc = () => {
+    console.log('clicked');
+  };
+
+  const componentChangeFunc = value => {
+    console.log(value);
+  };
+
   return (
     <AsideCreator menuList={DepthList1} title="설정">
       <PaginationWrap>
-        <Pagination totalLength={22313} buttonLength={29} pageEvent={pageFunction} />
+        <Pagination totalLength={22313} pageEvent={pageFunction} />
       </PaginationWrap>
       <Datalist id="프로젝트" valueList={data2} setData={setDataListData} />
       <br />
@@ -71,6 +81,29 @@ function Work() {
       >
         버튼
       </button>
+      <SearchWrapper>
+        <label>DBMS 명 :</label>
+        <Datalist id="DBMS" valueList={data2} setData={setDataListData} />
+        <label htmlFor="HEY">DBMS 명 :</label>
+        <Datalist id="HEY" valueList={data1} setData={setDataListData} />
+
+        <label htmlFor="hello">테이블 명 :</label>
+        <TextInput
+          id="hello"
+          onClick={componentClickFunc}
+          onChange={e => componentChangeFunc(e.target.value)}
+        />
+        <label>
+          상태
+          <select>
+            <option value={1}>신규</option>
+            <option value={2}>업데이트</option>
+          </select>
+        </label>
+        <Button size="small" color="blue">
+          검색
+        </Button>
+      </SearchWrapper>
     </AsideCreator>
   );
 }
@@ -79,6 +112,18 @@ const PaginationWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const SearchWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+  gap: 12px;
+
+  & label {
+    min-width: 80px;
+  }
 `;
 
 export default Work;

@@ -13,7 +13,7 @@ import DateTimeBetweenPicker from './DateTimeBetweenPicker';
 import TimePicker from './TimePicker';
 import Radio from './Radio';
 import Switch from './Switch';
-import Datalist from './components/Datalist';
+import Datalist from './components/DataList';
 import Pagination from './components/Pagination';
 import Toggle from './Toggle';
 
