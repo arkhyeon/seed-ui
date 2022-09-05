@@ -1288,8 +1288,3 @@ function TestInputGrid () {
 
    내용 칸의 여백 값  
    default 값은 '12px'
-
-9. <code> contentWidth {String} </code>
-
-   내용 칸의 너비  
-   default 값은 '200px'

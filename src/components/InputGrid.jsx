@@ -14,7 +14,7 @@ import styled from '@emotion/styled';
  * @param {String} param.subjectBg
  * 제목 칸의 배경 색
  * default 값은 '#eee'
- * @param {String} param.subjectPadding
+ * @param {String} param.subjectadding
  * 제목 칸의 여백 값
  * default 값은 '12px'
  * @param {String} param.subjectWidth
@@ -26,9 +26,6 @@ import styled from '@emotion/styled';
  * @param {String} param.contentPadding
  * 내용 칸의 여백 값
  * default 값은 '12px'
- * @param {String} param.contentWidth
- * 내용 칸의 너비
- * default 값은 '200px'
  * @param {Array} param.list
  * 그리드 안에 들어갈 내용
  * 한 줄에 하나의 내용만 들어갈 경우,
@@ -56,8 +53,8 @@ function InputGrid({
   subjectWidth = '200px',
   subjectJustify = 'center',
   contentPadding = '12px',
-  contentWidth = '200px',
   list = [{ subject: '내용 없음', content: <input /> }],
+  fullSize = true,
 }) {
   const renderLine = useCallback(() => {
     return (
@@ -102,9 +99,7 @@ function InputGrid({
                 >
                   {el.subject}
                 </Subject>
-                <Content contentPadding={contentPadding} contentWidth={contentWidth}>
-                  {el.content}
-                </Content>
+                <Content contentPadding={contentPadding}>{el.content}</Content>
               </LineWrapper>
             );
           }
@@ -116,7 +111,6 @@ function InputGrid({
     list,
     border,
     contentPadding,
-    contentWidth,
     lineHeight,
     subjectBg,
     subjectJustify,
@@ -127,7 +121,9 @@ function InputGrid({
 
   return (
     <Container>
-      <Wrapper border={border}>{renderLine()}</Wrapper>
+      <Wrapper border={border} fullSize={fullSize}>
+        {renderLine()}
+      </Wrapper>
     </Container>
   );
 }
@@ -137,7 +133,12 @@ const Container = styled.div``;
 const Wrapper = styled.div`
   border: ${({ border }) => border};
   border-bottom: none;
-  display: inline-block;
+  display: ${({ fullSize }) => {
+    if (fullSize) {
+      return 'block';
+    }
+    return 'inline-block';
+  }};
 `;
 
 const LineWrapper = styled.div`
@@ -166,12 +167,6 @@ const Content = styled.div`
   display: table-cell;
   display: flex;
   align-items: center;
-  width: ${({ contentWidth }) => {
-    if (contentWidth) {
-      return contentWidth;
-    }
-    return 'auto';
-  }};
   padding: ${({ contentPadding }) => contentPadding};
 `;
 
