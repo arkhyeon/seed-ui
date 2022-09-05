@@ -27,6 +27,9 @@
   - [[16] radio](#16-radio)
   - [[17] switch](#17-switch)
   - [[18] toggle](#18-toggle)
+  - [[19] inputGrid](#19-inputGrid)
+    - [[19-1] 그리드 내용 배열 생성](#19-1-그리드-내용-배열-생성)
+    - [[19-2] InputGrid 생성](#19-1-InputGrid-생성)
 
 ## 1. <a name='1'></a>[1] 소개
 
@@ -1178,3 +1181,110 @@ function TestToggle () {
 
    선택된 버튼의 텍스트 색  
    default 값은 'white'
+
+## 19. <a name='19-inputGrid'></a>[18] inputGrid
+
+입력 값이 많을 때 사용하는 그리드를 컴포넌트로 간편하게 사용 가능
+
+### 19.1. <a name='19-1-그리드-내용-배열-생성'></a>[19-1] 그리드 내용 배열 생성
+
+InputGrid에 들어갈 내용을 담은 배열을 생성
+
+각 인덱스 당, 한 줄에 표현하고자 하는 내용들이 담김
+
+- 한 줄에 하나의 제목만 들어갈 경우
+
+  1.  <code> subject {String} </code>
+
+  넣고자 하는 제목
+
+  2. <code> content {Component} </code>
+
+  내용 안에 들어갈 컴포넌트
+
+- 한 줄에 여러 제목이 들어갈 경우  
+   배열 안에 객체를 여러개 담음
+
+```javascript
+[
+  {
+    subject: '제목',
+    content: <input />,
+  },
+  [
+    {
+      subject: '제목',
+      content: <input />,
+    },
+    {
+      subject: '제목',
+      content: <input />,
+    },
+  ],
+];
+```
+
+### 19.2. <a name='19-1-InputGrid-생성'></a>[19-2] InputGrid 생성
+
+```javascript
+function TestInputGrid () {
+   const list = [
+      {
+         subject: "제목",
+         content: <input />
+      },
+      [
+         {
+            subject: "제목",
+            content: <input />
+         },
+         {
+            subject: "제목",
+            content: <input />
+         },
+      ]
+   ];
+
+   return <InputGrid list={list}>
+}
+```
+
+1. <code> border {String} </code>
+
+   전체 그리드의 테두리 선 설정  
+   default 값은 '2px solid #d2d2d2'
+
+2. <code> lineHeight {String} </code>
+
+   한 라인의 높이  
+   default 값은 '2rem'
+
+3. <code> subjectBorder {String} </code>
+
+   한 라인 내에서 제목과 내용 사이의 테두리 선 설정  
+   default 값은 '1px solid #d2d2d2'
+
+4. <code> subjectBg {String} </code>
+
+   제목 칸의 배경 색  
+   default 값은 '#eee'
+
+5. <code> subjectPadding {String} </code>
+
+   제목 칸의 여백 값  
+   default 값은 '12px'
+
+6. <code> subjectWidth {String} </code>
+
+   제목 칸의 너비  
+   default 값은 '200px'
+
+7. <code> subjectJustify {String} </code>
+
+   제목 칸의 가로 정렬 속성  
+   default 값은 'center'
+
+8. <code> contentPadding {String} </code>
+
+   내용 칸의 여백 값  
+   default 값은 '12px'
