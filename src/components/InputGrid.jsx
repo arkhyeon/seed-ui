@@ -14,7 +14,7 @@ import styled from '@emotion/styled';
  * @param {String} param.subjectBg
  * 제목 칸의 배경 색
  * default 값은 '#eee'
- * @param {String} param.padding
+ * @param {String} param.subjectPadding
  * 제목 칸의 여백 값
  * default 값은 '12px'
  * @param {String} param.subjectWidth
