@@ -74,6 +74,7 @@ export const DepthList1 = [
             link: '/config/sync/table',
             routePath: 'work',
             component: <ConfigSyncTable />,
+            display: false,
           },
           {
             title: '동기화 설정',
@@ -100,6 +101,7 @@ export const DepthList1 = [
             link: '/config/macro/dashboard',
             routePath: 'dashboard',
             component: <MacroDashboard />,
+            display: false,
           },
           {
             title: '명령어',
