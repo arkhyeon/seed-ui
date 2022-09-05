@@ -16,6 +16,7 @@ import Switch from './Switch';
 import Datalist from './components/DataList';
 import Pagination from './components/Pagination';
 import Toggle from './Toggle';
+import { TextInput } from './components/InputComponent';
 
 export { HeaderCreator };
 
@@ -52,3 +53,5 @@ export { Datalist };
 export { Pagination };
 
 export { Toggle };
+
+export { TextInput };
