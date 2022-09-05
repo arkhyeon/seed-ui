@@ -17,6 +17,7 @@ import Datalist from './components/DataList';
 import Pagination from './components/Pagination';
 import Toggle from './Toggle';
 import { TextInput } from './components/InputComponent';
+import InputGrid from './InputGrid';
 
 export { HeaderCreator };
 
@@ -55,3 +56,5 @@ export { Pagination };
 export { Toggle };
 
 export { TextInput };
+
+export { InputGrid };
