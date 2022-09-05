@@ -358,7 +358,7 @@ DataList 사용 시 Custom 한계가 있어 제작
 ```javascript
 const [dataListData, setDataListData] = useState();
 
-<Datalist
+<DataList
   id="프로젝트 검색"
   valueList={valueList}
   labelList={labelList}

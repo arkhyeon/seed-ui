@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { DataListInput } from './InputComponent';
 
-function Datalist({ id, valueList, labelList = [], setData }) {
+function DataList({ id, valueList, labelList = [], setData, select = false }) {
   const ref = useRef();
   const dataListWrapRef = useRef();
   const dataList = valueList.map((value, i) => {
@@ -35,8 +35,12 @@ function Datalist({ id, valueList, labelList = [], setData }) {
 
   const searchData = value => {
     setData(value);
+    if (select) {
+      return;
+    }
     const searchList = dataList.filter(data => {
-      return data.label.includes(value);
+      const stringLabel = data.label.toString();
+      return stringLabel.includes(value);
     });
 
     dataListWrapRef.current.style.display = 'block';
@@ -119,6 +123,7 @@ function Datalist({ id, valueList, labelList = [], setData }) {
           onKeyDown={e => {
             arrowMove(e);
           }}
+          readOnly={select}
         />
         <DataListItemWrap ref={dataListWrapRef}>
           {dataListState.map((data, i) => {
@@ -158,8 +163,19 @@ const DataListItemWrap = styled.ul`
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
   overflow-y: scroll;
+
   &::-webkit-scrollbar {
     width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #eeeeee;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #d3d3d3;
   }
 `;
 
@@ -175,4 +191,4 @@ const DataListItem = styled.li`
   }
 `;
 
-export default Datalist;
+export default DataList;

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import AsideCreator from '../components/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
-import Datalist from '../components/components/DataList';
+import DataList from '../components/components/DataList';
 import Pagination from '../components/components/Pagination';
 import Button from '../components/Button';
 import { TextInput } from '../components/components/InputComponent';
@@ -65,12 +65,18 @@ function Work() {
     console.log(value);
   };
 
+  const checkSubmit = e => {
+    e.preventDefault();
+    console.log('chekc');
+    console.log(e);
+  };
+
   return (
     <AsideCreator menuList={DepthList1} title="설정">
       <PaginationWrap>
         <Pagination totalLength={22313} pageEvent={pageFunction} />
       </PaginationWrap>
-      <Datalist id="프로젝트" valueList={data2} setData={setDataListData} />
+      <DataList id="프로젝트" valueList={data2} setData={setDataListData} />
       <br />
       Hello Work! <br /> <br /> path : {pathname}
       <button
@@ -83,9 +89,9 @@ function Work() {
       </button>
       <SearchWrapper>
         <label>DBMS 명 :</label>
-        <Datalist id="DBMS" valueList={data2} setData={setDataListData} />
+        <DataList id="DBMS" valueList={data2} setData={setDataListData} />
         <label htmlFor="HEY">DBMS 명 :</label>
-        <Datalist id="HEY" valueList={data1} setData={setDataListData} />
+        <DataList id="HEY" valueList={data1} setData={setDataListData} select />
 
         <label htmlFor="hello">테이블 명 :</label>
         <TextInput
@@ -104,6 +110,15 @@ function Work() {
           검색
         </Button>
       </SearchWrapper>
+      <form
+        onSubmit={e => {
+          checkSubmit(e);
+        }}
+      >
+        <input id="a1" type="text" />
+        <input id="b1" type="text" />
+        <button type="submit">hi</button>
+      </form>
     </AsideCreator>
   );
 }
