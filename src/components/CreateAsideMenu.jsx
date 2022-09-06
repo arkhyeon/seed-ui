@@ -23,6 +23,9 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
   return (
     <ul>
       {currentSideMenu.map(sm => {
+        if (sm.display === false) {
+          return '';
+        }
         return (
           <ASideMenuList key={sm.link} depth={depth}>
             {sm.subMenu ? (

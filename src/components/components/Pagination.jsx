@@ -100,21 +100,22 @@ const PaginationWarp = styled.ul`
   justify-content: center;
   align-items: center;
   border-radius: 5px;
+  border: 1px solid ${({ theme }) => theme.paginationStyle.borderColor};
 `;
 
 const PaginationItem = styled.li`
   width: 43px;
-  height: 38px;
+  height: 40px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: white;
+  color: ${({ theme }) => theme.paginationStyle.fontColor};
 
   &:hover {
     background-color: ${({ theme }) => theme.paginationStyle.hoverBackgroundColor};
-    font-color: ${({ theme }) => theme.paginationStyle.hoverFontColor};
+    color: ${({ theme }) => theme.paginationStyle.hoverFontColor};
   }
 
   & svg {
@@ -123,7 +124,7 @@ const PaginationItem = styled.li`
 
   &[aria-current] {
     background-color: ${({ theme }) => theme.paginationStyle.hoverBackgroundColor};
-    font-color: ${({ theme }) => theme.paginationStyle.hoverFontColor};
+    color: ${({ theme }) => theme.paginationStyle.hoverFontColor};
     font-weight: bold;
     cursor: revert;
     transform: revert;
@@ -156,7 +157,7 @@ const PaginationItem = styled.li`
 
 const DivideLine = styled.div`
   width: 1px;
-  height: 38px;
+  height: 40px;
   background-color: ${({ theme }) => theme.paginationStyle.divideLine};
 `;
 

@@ -72,15 +72,15 @@ export const DepthList1 = [
           {
             title: '테이블 설정',
             link: '/config/sync/table',
-            routePath: 'work',
+            routePath: 'table',
             component: <ConfigSyncTable />,
-            display: false,
           },
           {
             title: '동기화 설정',
             link: '/config/sync/csync',
             routePath: 'csync',
             component: <ConfigSync />,
+            display: false,
           },
         ],
       },

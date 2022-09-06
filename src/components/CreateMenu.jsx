@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { NavLink, Route } from 'react-router-dom';
+import { NavLink, Route, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 /**
@@ -36,6 +36,7 @@ import styled from '@emotion/styled';
 function CreateMenu(props) {
   const menus = props.menus;
   const [selectedMenus, setSelectedMenus] = useState([]);
+  const navigate = useNavigate();
 
   const handleMenuSelection = (label, depth) => {
     setSelectedMenus(selectedMenusProp => {
@@ -64,6 +65,7 @@ function CreateMenu(props) {
             depthSize={props.depthSize}
             useDepth={props.useDepth}
             userRole={props.userRole}
+            navigate={navigate}
           />
         );
       })}
@@ -112,11 +114,19 @@ function SubMenuItem({
   userRole,
   useDepth,
   depth = 0,
+  navigate,
 }) {
   const { title, link = '', subMenu = [], menuRole = 99 } = menu;
   if (userRole > menuRole) {
     return null;
   }
+  const restrictMove = e => {
+    e.preventDefault();
+    if (depth !== 0) {
+      navigate(subMenu[0]?.link);
+    }
+  };
+
   return (
     <>
       {subMenu.length > 0 && useDepth ? (
@@ -129,8 +139,10 @@ function SubMenuItem({
           <NavLink
             to={link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
-            onClick={event => event.preventDefault()}
-            style={{ cursor: 'default' }}
+            onClick={event => {
+              restrictMove(event);
+            }}
+            style={{ cursor: depth === 0 ? 'default' : 'pointer' }}
           >
             {title}
           </NavLink>
@@ -153,6 +165,7 @@ function SubMenuItem({
                     size={size}
                     bgHoverColor={bgHoverColor}
                     depthSize={depthSize}
+                    navigate={navigate}
                   />
                 );
               })}

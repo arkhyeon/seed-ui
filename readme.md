@@ -92,15 +92,17 @@ userRole[3] > menuRole[1] >> 메뉴 비활성
 ```
 
 6. <code>subMenu {Array} (All)</code>  
-   객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성
+    객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성  
+    1번째 SubMenu의 Link는 부모의 이동 경로가 된다.  
+    따라서 해당 부모 메뉴의 Index 메뉴 처리를 하고 싶으면 SubMenu의 1번째 작성
 
 7. <code>icon {component} (Side Menu Option)</code>  
-   사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
-   (react-icons / svg 태그 사용)
-
+    사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
+    (react-icons / svg 태그 사용)
+ 
 8. <code>display {boolean} (default = true)</code>  
-   메뉴의 display 여부를 결정  
-   메뉴에 보이지 않고 내부 링크로만 사용할 시 해당 param을 false 처리 한다.
+    메뉴의 display 여부를 결정  
+    메뉴에 보이지 않고 내부 링크로만 사용할 시 해당 param을 false 처리 한다.
 
 ```JavaScript
 export const MenuList = [
@@ -388,7 +390,8 @@ const [dataListData, setDataListData] = useState();
    DataList에 설정된 Value 값 상태 관리 담당
 
 5. <code>select {boolean} (default = false)</code>  
-   DataList가 아닌 Select 사용 시 select 설정 select가 true라면 readOnly 설정됨.
+   DataList가 아닌 Select 사용 시 select 설정
+   select가 true라면 readOnly 설정됨.
 
 6. Style
 
@@ -452,8 +455,7 @@ export const theme = {
    'error': 빨간색  
    'coral': 산호색  
    'blue': 연한 파란색  
-   'gray': 회색 (default)  
-   'black': 검정색
+   'gray': 회색 (default)
 
 3. <code>size {String}</code>  
    버튼의 크기 결정  
@@ -466,23 +468,17 @@ export const theme = {
    버튼이 특정한 너비를 가져야 할 때 길이 지정 가능  
    default 값은 'auto'
 
-5. <code>fontSize {String}</code> 버튼 내 텍스트의 크기  
-   default 값은 'size' 값에 따라 상이  
-   'small'일 시, '0.8rem'  
-   'medium'일 시, '1.5rem'  
-   'big'일 시, '1.8rem'
-
-6. <code>disabled {Boolean}</code>  
+5. <code>disabled {Boolean}</code>  
    버튼 활성화 여부  
    true: 버튼 활성화 (default)  
    false: 버튼 비활성화
 
-7. <code>isAnimation {Boolean}</code>  
+6. <code>isAnimation {Boolean}</code>  
    버튼 클릭시 애니메이션 동작 여부 결정  
    true: 애니메이션 동작 (default)  
    false: 애니메이션 미동작
 
-8. <code>icon {Component}</code>  
+7. <code>icon {Component}</code>  
    값의 여부에 따라 아이콘 추가 여부 결정  
    값이 존재할 시 텍스트 앞에 해당 아이콘 추가
 
@@ -616,44 +612,35 @@ function TestModal() {
 
 모달창 세부 스타일 지정
 
+<code>headBg {String} </code>
+
+- 모달창 상단 배경 색상
+- default 값은 '#eee'
+
+<code>headFc {String} </code>
+
+- 모달창 상단의 글씨, 아이콘의 색상
+- default 값은 '#808080'
+
+<code>headBorder {String} </code>
+
+- 모달창 상단의 하단 테두리 스타일 지정
+- default 값은 'none'
+
 <code>closeBtn {Component} </code>
 
 - 모달창 상단의 닫기 버튼에 들어갈 컴포넌트
 - default 값은 react-icons의 <AiOutlineClose />
 
+<code>modalBorder {String} </code>
+
+- 모달창의 테두리 스타일 지정
+- default 값은 'none'
+
 <code>isShadow {String} </code>
 
 - 모달창의 그림자 여부
 - default 값은 true
-
-13. 모달의 경우 공통된 스타일을 공유하기에, ThemeProvider에서 스타일 지정  
-    (3-4 사이드 메뉴 생성 참고)
-
-    - ThemeProvider(@emotion/react) 사용하여 사용할 프로젝트를 감싸준다.
-
-```javascript
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>,
-);
-```
-
-- 원하는 Directory 내 theme.jsx 파일 생성
-- modalStyle 키로 지정하여 아래와 같이 Color 작성
-
-```javascript
-export const theme = {
-  modalStyle: {
-    headBg: '#eee',
-    headFc: '#808080',
-    headBorder: 'none',
-    modalBorder: 'none',
-  },
-};
-```
 
 ## 9. <a name='9-alarm'></a>[9] alarm
 
@@ -1174,13 +1161,7 @@ function TestToggle () {
    useState로 생성된 상태 관리 함수여야 함  
    default 값은 null
 
-5. <code> type {String} </code>
-
-   토글의 형태를 지정  
-   'fill' 배경색이 있는 토글  
-   'border' 배경색 없이 밑줄이 생기는 토글 (default)
-
-6. <code> style {Object} </code>
+5. <code> style {Object} </code>
 
    토글의 css를 관리하는 객체
 
