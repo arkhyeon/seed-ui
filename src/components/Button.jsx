@@ -8,6 +8,7 @@ const colorComb = {
   coral: ['242, 186, 167'],
   blue: ['111, 181, 255'],
   gray: ['189, 190, 189'],
+  black: ['64, 64, 64'],
 };
 
 /**
@@ -23,6 +24,7 @@ const colorComb = {
  * "coral" : 산호색
  * "blue" : 연한 파랑색
  * "gray" : 회색 (default)
+ * "black": 검정색
  * @param {String} props.size
  * 버튼의 크기 결정
  * "small" : 작은 크기

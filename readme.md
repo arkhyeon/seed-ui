@@ -443,7 +443,8 @@ export const theme = {
    'error': 빨간색  
    'coral': 산호색  
    'blue': 연한 파란색  
-   'gray': 회색 (default)
+   'gray': 회색 (default)  
+   'black': 검정색
 
 3. <code>size {String}</code>  
    버튼의 크기 결정  
