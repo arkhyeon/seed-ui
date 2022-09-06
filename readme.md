@@ -1168,7 +1168,13 @@ function TestToggle () {
    useState로 생성된 상태 관리 함수여야 함  
    default 값은 null
 
-5. <code> style {Object} </code>
+5. <code> type {String} </code>
+
+   토글의 형태를 지정  
+   'fill' 배경색이 있는 토글  
+   'border' 배경색 없이 밑줄이 생기는 토글 (default)
+
+6. <code> style {Object} </code>
 
    토글의 css를 관리하는 객체
 
