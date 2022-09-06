@@ -104,13 +104,7 @@ function Modal({
   const leftBottomRef = useRef(null);
   const rightBottomRef = useRef(null);
   const directs = useRef(null);
-  const {
-    headFc = '#808080',
-    headBorder = 'none',
-    closeBtn = <AiOutlineClose />,
-    modalBorder = 'none',
-    isShadow = true,
-  } = style;
+  const { closeBtn = <AiOutlineClose />, isShadow = true } = style;
 
   const handleModal = useCallback(() => {
     if (!handleClose) {
@@ -615,7 +609,6 @@ function Modal({
         width={width}
         height={height}
         position={position}
-        modalBorder={modalBorder}
         isShadow={isShadow}
       >
         {resizable ? (
@@ -631,7 +624,7 @@ function Modal({
           </>
         ) : null}
 
-        <Head ref={headRef} headFc={headFc} headBorder={headBorder} movable={movable}>
+        <Head ref={headRef} movable={movable}>
           {modalTitle || null}
           {isCloseBtn ? <CloseBtn onClick={handleModal}>{closeBtn}</CloseBtn> : null}
         </Head>
@@ -814,7 +807,7 @@ const Bottom = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: ${({ theme }) => theme.modalStyle.headBorder};
 
   button {
     margin-right: 12px;
