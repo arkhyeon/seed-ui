@@ -8,6 +8,7 @@ const colorComb = {
   coral: ['242, 186, 167'],
   blue: ['111, 181, 255'],
   gray: ['189, 190, 189'],
+  black: ['64, 64, 64'],
 };
 
 /**
@@ -23,6 +24,7 @@ const colorComb = {
  * "coral" : 산호색
  * "blue" : 연한 파랑색
  * "gray" : 회색 (default)
+ * "black": 검정색
  * @param {String} props.size
  * 버튼의 크기 결정
  * "small" : 작은 크기
@@ -31,6 +33,12 @@ const colorComb = {
  * @param {Number} props.width
  * 버튼의 너비 설정 (default === auto)
  * 버튼이 특정한 너비를 가져야 할 때 길이 지정 가능
+ * @param {String} props.fontSize
+ * 버튼 내 텍스트의 크기
+ * default 값은 'size' 값에 따라 상이
+ * 'small'일 시, '0.8rem'
+ * 'medium'일 시, '1.5rem'
+ * 'big'일 시, '1.8rem'
  * @param {Boolean} props.disabled
  * 버튼 활성화 여부
  * true : 버튼 활성화 (default)
@@ -54,6 +62,7 @@ function Button({
   disabled = false,
   isAnimation = true,
   icon = <></>,
+  fontSize = undefined,
   ...rootDOMAttributes
 }) {
   return (
@@ -65,6 +74,7 @@ function Button({
       size={size}
       isAnimation={isAnimation}
       width={width}
+      fontSize={fontSize}
     >
       {icon} {children}
     </Component>
@@ -87,7 +97,7 @@ const Component = styled.button`
   padding-right: 8px;
   outline: none;
   border-radius: 4px;
-  display: inline-flexbox;
+  display: inline-flex;
   position: relative;
   align-items: center;
   transition: 0.2s;
@@ -95,9 +105,12 @@ const Component = styled.button`
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 
   svg {
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   ${({ type, color }) => {
@@ -139,7 +152,7 @@ const Component = styled.button`
   ${({ width }) => {
     if (width) {
       return css`
-        width: ${width}px;
+        width: ${width};
       `;
     }
     return css`
@@ -151,7 +164,7 @@ const Component = styled.button`
     if (size === 'small') {
       return css`
         height: 1.8rem;
-        font-size: 1rem;
+        font-size: 0.8rem;
       `;
     }
     if (size === 'medium') {
@@ -192,6 +205,14 @@ const Component = styled.button`
 
     animation: ${ripple} 1200ms ease-out forwards, ${fade} 1000ms ease-out forwards;
   }
+
+  ${({ fontSize }) => {
+    if (fontSize) {
+      return css`
+        font-size: ${fontSize};
+      `;
+    }
+  }};
 `;
 
 export default Button;

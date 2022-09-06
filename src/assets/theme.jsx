@@ -20,4 +20,11 @@ export const theme = {
     borderColor: '#737373',
     divideLine: '#737373',
   },
+
+  modalStyle: {
+    headBg: '#eee',
+    headFc: '#808080',
+    headBorder: 'none',
+    modalBorder: 'none',
+  },
 };

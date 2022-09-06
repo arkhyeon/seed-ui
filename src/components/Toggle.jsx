@@ -24,6 +24,10 @@ function Toggle({
    * 선택된 버튼의 값을 바꾸는 함수
    * useState로 생성된 상태 관리 함수여야 함
    * default 값은 null
+   * @param {String} param.type
+   * 토글의 형태를 지정
+   * 'fill' 배경색이 있는 토글
+   * 'border' 배경색 없이 밑줄이 생기는 토글 (default)
    * @param {String} param.style.bgColor
    * 토글 버튼의 기본 색
    * default 값은 '#eee'
@@ -56,6 +60,7 @@ function Toggle({
     hoverFontColor = 'white',
     clickedColor = '#3498db',
     clickedFontColor = 'white',
+    type = 'border',
   } = style;
 
   const handleToggle = btnValue => {
@@ -79,6 +84,7 @@ function Toggle({
             clickedColor={clickedColor}
             clickedFontColor={clickedFontColor}
             padding={padding}
+            type={type}
           >
             {el}
           </Button>
@@ -87,13 +93,22 @@ function Toggle({
     );
   };
 
-  return <Wrapper bgColor={bgColor}>{renderBtn()}</Wrapper>;
+  return (
+    <Wrapper bgColor={bgColor} type={type}>
+      {renderBtn()}
+    </Wrapper>
+  );
 }
 
 const Wrapper = styled.div`
   display: inline-block;
   border-radius: 4px;
-  background: ${({ bgColor }) => bgColor};
+  background: ${({ bgColor, type }) => {
+    if (type === 'fill') {
+      return bgColor;
+    }
+    return 'transparent';
+  }};
 `;
 
 const Button = styled.button`
@@ -110,7 +125,28 @@ const Button = styled.button`
     `};
 
   font-size: ${({ fontSize }) => fontSize};
-  ${({ btnValue, value, bgColor, fontColor, clickedColor, clickedFontColor }) => {
+  ${({ btnValue, value, bgColor, fontColor, clickedColor, clickedFontColor, type }) => {
+    if (type === 'border' && btnValue === value) {
+      return css`
+        background: transparent;
+        font-weight: bolder;
+
+        :after {
+          content: '';
+          display: block;
+          border-bottom: 2px solid ${clickedColor};
+          margin: 8px 4px;
+        }
+      `;
+    }
+
+    if (type === 'border') {
+      return css`
+        background: transparent;
+        color: ${fontColor};
+      `;
+    }
+
     if (btnValue === value) {
       return css`
         background: ${clickedColor};
@@ -130,11 +166,24 @@ const Button = styled.button`
   }};
 
   :hover {
-    ${({ hoverColor, hoverFontColor }) =>
-      css`
-        background: ${hoverColor};
-        color: ${hoverFontColor};
-      `}
+    ${({ hoverColor, hoverFontColor, type, clickedColor, btnValue, value }) => {
+      if (type === 'fill') {
+        return css`
+          background: ${hoverColor};
+          color: ${hoverFontColor};
+        `;
+      }
+      if (type === 'border' && btnValue !== value) {
+        return css`
+          :after {
+            content: '';
+            display: block;
+            border-bottom: 0.2px solid ${clickedColor};
+            margin: 8px 4px;
+          }
+        `;
+      }
+    }}
   }
 `;
 
