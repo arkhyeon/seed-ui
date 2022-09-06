@@ -36,9 +36,9 @@ const colorComb = {
  * @param {String} props.fontSize
  * 버튼 내 텍스트의 크기
  * default 값은 'size' 값에 따라 상이
- * 'small'일시, '1rem'
- * 'medium'일시, '1.5rem'
- * 'big'일시, '1.8rem'
+ * 'small'일 시, '1rem'
+ * 'medium'일 시, '1.5rem'
+ * 'big'일 시, '1.8rem'
  * @param {Boolean} props.disabled
  * 버튼 활성화 여부
  * true : 버튼 활성화 (default)
@@ -151,7 +151,7 @@ const Component = styled.button`
   ${({ width }) => {
     if (width) {
       return css`
-        width: ${width}px;
+        width: ${width};
       `;
     }
     return css`
