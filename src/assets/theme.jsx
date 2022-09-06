@@ -13,10 +13,11 @@ export const theme = {
     hoverBackgroundColor: '#00ADB5',
   },
   paginationStyle: {
-    backgroundColor: '#515558',
-    fontColor: 'white',
+    backgroundColor: 'white',
+    fontColor: 'red',
     hoverBackgroundColor: '#e7434e',
     hoverFontColor: 'white',
-    divideLine: '#fff',
+    borderColor: '#737373',
+    divideLine: '#737373',
   },
 };
