@@ -468,7 +468,7 @@ export const theme = {
 
 5. <code>fontSize {String}</code> 버튼 내 텍스트의 크기  
    default 값은 'size' 값에 따라 상이  
-   'small'일 시, '1rem'  
+   'small'일 시, '0.8rem'  
    'medium'일 시, '1.5rem'  
    'big'일 시, '1.8rem'
 
