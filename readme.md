@@ -92,15 +92,15 @@ userRole[3] > menuRole[1] >> 메뉴 비활성
 ```
 
 6. <code>subMenu {Array} (All)</code>  
-    객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성
+   객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성
 
 7. <code>icon {component} (Side Menu Option)</code>  
-    사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
-    (react-icons / svg 태그 사용)
- 
+   사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
+   (react-icons / svg 태그 사용)
+
 8. <code>display {boolean} (default = true)</code>  
-    메뉴의 display 여부를 결정  
-    메뉴에 보이지 않고 내부 링크로만 사용할 시 해당 param을 false 처리 한다.
+   메뉴의 display 여부를 결정  
+   메뉴에 보이지 않고 내부 링크로만 사용할 시 해당 param을 false 처리 한다.
 
 ```JavaScript
 export const MenuList = [
@@ -388,8 +388,7 @@ const [dataListData, setDataListData] = useState();
    DataList에 설정된 Value 값 상태 관리 담당
 
 5. <code>select {boolean} (default = false)</code>  
-   DataList가 아닌 Select 사용 시 select 설정
-   select가 true라면 readOnly 설정됨.
+   DataList가 아닌 Select 사용 시 select 설정 select가 true라면 readOnly 설정됨.
 
 6. Style
 
@@ -467,17 +466,23 @@ export const theme = {
    버튼이 특정한 너비를 가져야 할 때 길이 지정 가능  
    default 값은 'auto'
 
-5. <code>disabled {Boolean}</code>  
+5. <code>fontSize {String}</code> 버튼 내 텍스트의 크기  
+   default 값은 'size' 값에 따라 상이  
+   'small'일 시, '1rem'  
+   'medium'일 시, '1.5rem'  
+   'big'일 시, '1.8rem'
+
+6. <code>disabled {Boolean}</code>  
    버튼 활성화 여부  
    true: 버튼 활성화 (default)  
    false: 버튼 비활성화
 
-6. <code>isAnimation {Boolean}</code>  
+7. <code>isAnimation {Boolean}</code>  
    버튼 클릭시 애니메이션 동작 여부 결정  
    true: 애니메이션 동작 (default)  
    false: 애니메이션 미동작
 
-7. <code>icon {Component}</code>  
+8. <code>icon {Component}</code>  
    값의 여부에 따라 아이콘 추가 여부 결정  
    값이 존재할 시 텍스트 앞에 해당 아이콘 추가
 
