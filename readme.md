@@ -92,7 +92,9 @@ userRole[3] > menuRole[1] >> 메뉴 비활성
 ```
 
 6. <code>subMenu {Array} (All)</code>  
-    객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성
+    객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성  
+    1번째 SubMenu의 Link는 부모의 이동 경로가 된다.  
+    따라서 해당 부모 메뉴의 Index 메뉴 처리를 하고 싶으면 SubMenu의 1번째 작성
 
 7. <code>icon {component} (Side Menu Option)</code>  
     사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
