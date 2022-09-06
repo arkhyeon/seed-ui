@@ -616,35 +616,44 @@ function TestModal() {
 
 모달창 세부 스타일 지정
 
-<code>headBg {String} </code>
-
-- 모달창 상단 배경 색상
-- default 값은 '#eee'
-
-<code>headFc {String} </code>
-
-- 모달창 상단의 글씨, 아이콘의 색상
-- default 값은 '#808080'
-
-<code>headBorder {String} </code>
-
-- 모달창 상단의 하단 테두리 스타일 지정
-- default 값은 'none'
-
 <code>closeBtn {Component} </code>
 
 - 모달창 상단의 닫기 버튼에 들어갈 컴포넌트
 - default 값은 react-icons의 <AiOutlineClose />
 
-<code>modalBorder {String} </code>
-
-- 모달창의 테두리 스타일 지정
-- default 값은 'none'
-
 <code>isShadow {String} </code>
 
 - 모달창의 그림자 여부
 - default 값은 true
+
+13. 모달의 경우 공통된 스타일을 공유하기에, ThemeProvider에서 스타일 지정  
+    (3-4 사이드 메뉴 생성 참고)
+
+    - ThemeProvider(@emotion/react) 사용하여 사용할 프로젝트를 감싸준다.
+
+```javascript
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </React.StrictMode>,
+);
+```
+
+- 원하는 Directory 내 theme.jsx 파일 생성
+- modalStyle 키로 지정하여 아래와 같이 Color 작성
+
+```javascript
+export const theme = {
+  modalStyle: {
+    headBg: '#eee',
+    headFc: '#808080',
+    headBorder: 'none',
+    modalBorder: 'none',
+  },
+};
+```
 
 ## 9. <a name='9-alarm'></a>[9] alarm
 

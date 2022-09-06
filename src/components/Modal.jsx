@@ -61,21 +61,9 @@ import Button from './Button.jsx';
  * default 값은 null
  * @param {Object} props.style
  * 모달창 세부 스타일 지정
- * @param {String} props.style.headBg
- * 모달창 상단 배경 색상
- * default 값은 '#eee'
- * @param {String} props.style.headFc
- * 모달창 상단의 글씨, 아이콘의 색상
- * default 값은 '#808080'
- * @param {String} props.style.headBorder
- * 모달창 상단의 하단 테두리 스타일 지정
- * default 값은 'none'
  * @param {Component} props.style.closeBtn
  * 모달창 상단의 닫기 버튼에 들어갈 컴포넌트
  * default 값은 react-icons의 <AiOutlineClose />
- * @param {String} props.style.modalBorder
- * 모달창의 테두리 스타일 지정
- * default 값은 'none'
  * @param {Boolean} props.style.isShadow
  * 모달창의 그림자 여부
  * default 값은 true
@@ -117,7 +105,6 @@ function Modal({
   const rightBottomRef = useRef(null);
   const directs = useRef(null);
   const {
-    headBg = '#eee',
     headFc = '#808080',
     headBorder = 'none',
     closeBtn = <AiOutlineClose />,
@@ -644,13 +631,7 @@ function Modal({
           </>
         ) : null}
 
-        <Head
-          ref={headRef}
-          headBg={headBg}
-          headFc={headFc}
-          headBorder={headBorder}
-          movable={movable}
-        >
+        <Head ref={headRef} headFc={headFc} headBorder={headBorder} movable={movable}>
           {modalTitle || null}
           {isCloseBtn ? <CloseBtn onClick={handleModal}>{closeBtn}</CloseBtn> : null}
         </Head>
@@ -674,6 +655,7 @@ const Wrapper = styled.div`
   z-index: 999;
   background: white;
   overflow: hidden;
+  border: ${({ theme }) => theme.modalStyle.modalBorder};
 
   ${({ width, height }) => {
     return css`
@@ -718,10 +700,17 @@ const Head = styled.div`
   display: flex;
   align-items: center;
   padding-left: 12px;
+  font-weight: bolder;
+  ${({ theme }) => {
+    return css`
+      background: ${theme.modalStyle.headBg};
+      color: ${theme.modalStyle.headFc};
+      border-bottom: ${theme.modalStyle.headBorder};
+    `;
+  }}
 
   ${props => {
     return css`
-      background: ${props.headBg};
       color: ${props.headFc};
       border-bottom: ${props.headBorder};
     `;

@@ -19,4 +19,11 @@ export const theme = {
     hoverFontColor: 'white',
     divideLine: '#fff',
   },
+
+  modalStyle: {
+    headBg: '#eee',
+    headFc: '#808080',
+    headBorder: 'none',
+    modalBorder: 'none',
+  },
 };
