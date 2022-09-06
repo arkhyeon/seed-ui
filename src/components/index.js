@@ -13,7 +13,7 @@ import DateTimeBetweenPicker from './DateTimeBetweenPicker';
 import TimePicker from './TimePicker';
 import Radio from './Radio';
 import Switch from './Switch';
-import Datalist from './components/DataList';
+import DataList from './components/DataList';
 import Pagination from './components/Pagination';
 import Toggle from './Toggle';
 import { TextInput } from './components/InputComponent';
@@ -49,7 +49,7 @@ export { Radio };
 
 export { Switch };
 
-export { Datalist };
+export { DataList };
 
 export { Pagination };
 

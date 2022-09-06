@@ -91,12 +91,16 @@ userRole[1] > menuRole[3] >> 메뉴 활성화
 userRole[3] > menuRole[1] >> 메뉴 비활성
 ```
 
-6.  <code>subMenu {Array} (All)</code>  
+6. <code>subMenu {Array} (All)</code>  
     객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성
 
-7.  <code>icon {component} (Side Menu Option)</code>  
+7. <code>icon {component} (Side Menu Option)</code>  
     사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
     (react-icons / svg 태그 사용)
+ 
+8. <code>display {boolean} (default = true)</code>  
+    메뉴의 display 여부를 결정  
+    메뉴에 보이지 않고 내부 링크로만 사용할 시 해당 param을 false 처리 한다.
 
 ```JavaScript
 export const MenuList = [
@@ -131,6 +135,7 @@ export const MenuList = [
             link: '/config/sync',
             routePath: 'sync',
             icon: <MdSync />,
+            display: false
             subMenu: [
                {
                   title: '테이블 설정',
@@ -361,11 +366,12 @@ DataList 사용 시 Custom 한계가 있어 제작
 ```javascript
 const [dataListData, setDataListData] = useState();
 
-<Datalist
+<DataList
   id="프로젝트 검색"
   valueList={valueList}
   labelList={labelList}
   setData={setDataListData}
+  select
 />;
 ```
 
@@ -381,7 +387,11 @@ const [dataListData, setDataListData] = useState();
 4. <code>setData {useState}</code>  
    DataList에 설정된 Value 값 상태 관리 담당
 
-5. Style
+5. <code>select {boolean} (default = false)</code>  
+   DataList가 아닌 Select 사용 시 select 설정
+   select가 true라면 readOnly 설정됨.
+
+6. Style
 
 ```javascript
 export const theme = {
