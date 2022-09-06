@@ -62,7 +62,7 @@ function Button({
   disabled = false,
   isAnimation = true,
   icon = <></>,
-  fontSize = '1rem',
+  fontSize = undefined,
   ...rootDOMAttributes
 }) {
   return (
@@ -205,7 +205,13 @@ const Component = styled.button`
     animation: ${ripple} 1200ms ease-out forwards, ${fade} 1000ms ease-out forwards;
   }
 
-  font-size: ${({ fontSize }) => fontSize};
+  ${({ fontSize }) => {
+    if (fontSize) {
+      return css`
+        font-size: ${fontSize};
+      `;
+    }
+  }};
 `;
 
 export default Button;
