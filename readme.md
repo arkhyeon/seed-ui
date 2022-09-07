@@ -1084,6 +1084,12 @@ function Test () {
    라벨 간의 간격  
    default 값은 '8px'
 
+9. <code>type {String} </code>
+
+   Radio 컴포넌트의 형태 지정  
+   'fill' 체크 할 시, 동그라미로 표시 (default)  
+   'border'체크 할 시, 테두리가 굵어짐
+
 ## 17. <a name='17-switch'></a>[17] switch
 
 Switch 컴포넌트를 통해 변화하는 Boolean 값 시각적 표현 가능

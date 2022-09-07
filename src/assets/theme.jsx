@@ -24,7 +24,7 @@ export const theme = {
   modalStyle: {
     headBg: '#eee',
     headFc: '#808080',
-    headBorder: 'none',
+    headBorder: '1px solid black',
     modalBorder: 'none',
   },
 };

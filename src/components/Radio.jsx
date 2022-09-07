@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 
 /**
  * @param {Number} param.value
@@ -30,6 +31,10 @@ import styled from '@emotion/styled';
  * @param {String} param.labelOutSpacing
  * 라벨 간의 간격
  * default 값은 '8px'
+ * @param {String} param.type
+ * Radio 컴포넌트의 형태 지정
+ * 'fill' 체크 할 시, 동그라미로 표시(default)
+ * 'border' 체크 할 시, 테두리가 굵어짐
  * @returns {JSX.Component} Radio Component
  */
 
@@ -42,6 +47,7 @@ function Radio({
   hoverColor = '#eee',
   labelInSpacing = '4px',
   labelOutSpacing = '8px',
+  type = 'fill',
 }) {
   const handleValue = idx => {
     setValue(idx);
@@ -59,8 +65,11 @@ function Radio({
               checkColor={checkColor}
               labelInSpacing={labelInSpacing}
               hoverColor={hoverColor}
+              type={type}
+              value={value}
+              idx={idx}
             >
-              <Check value={value} idx={idx} checkColor={checkColor} />
+              <Check value={value} idx={idx} checkColor={checkColor} type={type} />
             </CheckWrapper>
             <div>{el}</div>
           </Label>
@@ -89,6 +98,8 @@ const CheckWrapper = styled.div`
   height: 24px;
   background: transparent;
   margin-right: ${({ labelInSpacing }) => labelInSpacing};
+  display: flex;
+  align-items: center;
 
   :hover {
     background: ${({ hoverColor }) => hoverColor};
@@ -105,19 +116,37 @@ const CheckWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
+    ${({ type, value, idx, checkColor }) => {
+      if (type === 'border' && value === idx) {
+        return css`
+          border: 2px solid ${checkColor};
+          background: ${checkColor};
+        `;
+      }
+
+      if (type === 'border') {
+        return css`
+          border: 2px solid #d2d2d2;
+        `;
+      }
+    }};
   }
 `;
 
 const Check = styled.div`
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
 
-  background: ${({ value, idx, checkColor }) => {
+  background: ${({ value, idx, checkColor, type }) => {
+    if (value === idx && type === 'border') {
+      return 'white';
+    }
+
     if (value === idx) {
       return checkColor;
     }
