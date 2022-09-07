@@ -58,10 +58,7 @@ const HeaderWrap = styled.div`
   z-index: 10;
 
   & > a {
-    font-weight: bold;
-    font-size: 27.5px;
     color: ${({ logoColor }) => logoColor};
-    font-family: 'arial', serif;
   }
 `;
 

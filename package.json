@@ -1,7 +1,7 @@
 {
   "name": "seed-ui",
   "private": false,
-  "version": "0.0.944",
+  "version": "0.0.946",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
