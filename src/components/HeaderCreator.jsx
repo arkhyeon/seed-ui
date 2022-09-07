@@ -53,7 +53,7 @@ const HeaderWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 65px;
+  height: 55px;
   position: relative;
   z-index: 10;
 
