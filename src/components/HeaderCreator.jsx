@@ -48,7 +48,7 @@ function HeaderCreator({
 }
 
 const HeaderWrap = styled.div`
-  width: calc(100% - 30px);
+  width: 100%;
   background: ${({ headerColor }) => headerColor};
   display: flex;
   justify-content: space-between;
