@@ -26,33 +26,10 @@ function HeaderCreator({
   children = <div />,
 }) {
   const { logo, logoLink = '/' } = logoSetting;
-  const location = useLocation();
-  const [isAside, setIsAside] = useState(true);
-  useEffect(() => {
-    setIsAside(document.querySelector('#asideContainer'));
-  }, [location]);
 
-  const hideComp = () => {
-    const asideContainer = document.querySelector('#asideContainer');
-    const asideLogo = document.querySelector('#asideLogo');
-    if (!asideContainer) {
-      return;
-    }
-
-    if (asideContainer.style.marginLeft === '-275px') {
-      asideLogo.style.left = '0px';
-      asideContainer.style.marginLeft = '0px';
-    } else {
-      asideLogo.style.left = '-275px';
-      asideContainer.style.marginLeft = '-275px';
-    }
-  };
   return (
     <HeaderWrap>
-      <SideControlWrap isAside={isAside}>
-        <NavLink to={logoLink}>{logo}</NavLink>
-        {isAside && <MdMenu onClick={hideComp} />}
-      </SideControlWrap>
+      <NavLink to={logoLink}>{logo}</NavLink>
       <CreateMenu menus={menuList} useDepth={useDepth} userRole={userRole} />
       {children}
     </HeaderWrap>
@@ -68,25 +45,11 @@ const HeaderWrap = styled.div`
   position: relative;
   z-index: 10;
   background-color: black;
-`;
-
-const SideControlWrap = styled.div`
-  display: flex;
-  align-items: center;
 
   & > a {
     display: flex;
     justify-content: center;
     color: white;
-  }
-
-  & svg {
-    position: absolute;
-    left: 275px;
-    color: white;
-    font-size: 30px;
-    padding: 10px;
-    cursor: pointer;
   }
 `;
 

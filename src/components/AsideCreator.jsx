@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { MdExpandMore } from 'react-icons/md';
+import { MdMenu } from 'react-icons/all';
+import { css } from '@emotion/react';
 import CreateAsideMenu from './CreateAsideMenu';
 
 function AsideCreator({ menuList, title, logoSetting = {}, children }) {
   const targetMenu = menuList.filter(menu => menu.title === title)[0];
   const { logo, logoLink = '/' } = logoSetting;
+  const [hide, setHide] = useState(false);
+
+  const SideHide = () => {
+    setHide(prevState => {
+      return !prevState;
+    });
+  };
 
   return (
-    <Container>
-      {logo && (
-        <NavLink id="asideLogo" to={logoLink}>
-          {logo}
-        </NavLink>
-      )}
-      <AsideWrap id="asideContainer">
+    <Container hide={hide}>
+      {logo && <NavLink to={logoLink}>{logo}</NavLink>}
+      <MdMenu onClick={SideHide} />
+      <AsideWrap hide={hide}>
         <SideTitle>
           <span>{targetMenu.title}</span> <MdExpandMore />
         </SideTitle>
@@ -38,13 +44,31 @@ const Container = styled.div`
     background-color: white;
     border-bottom: 1px solid #bdbdbd;
     transition: 0.4s;
+    color: black;
 
-    & > div {
-      color: black;
-      & > span {
-        color: white;
-      }
+    ${({ hide }) => {
+      return (
+        hide &&
+        css`
+          left: -275px;
+        `
+      );
+    }};
+
+    & div span {
+      color: white;
     }
+  }
+
+  & > svg {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 275px;
+    color: white;
+    font-size: 35px;
+    padding: 10px;
+    cursor: pointer;
   }
 `;
 
@@ -55,6 +79,15 @@ const AsideWrap = styled.div`
   padding: 16px 18px;
   font-size: 15px;
   transition: 0.4s;
+
+  ${({ hide }) => {
+    return (
+      hide &&
+      css`
+        margin-left: -275px;
+      `
+    );
+  }};
 
   & ul li a {
     margin: 2px 0 0 0;
