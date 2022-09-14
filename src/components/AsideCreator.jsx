@@ -1,11 +1,10 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { MdExpandMore } from 'react-icons/md';
 import CreateAsideMenu from './CreateAsideMenu';
 
 function AsideCreator({ menuList, title, logoSetting = {}, children }) {
-  const navigate = useNavigate();
   const targetMenu = menuList.filter(menu => menu.title === title)[0];
   const { logo, logoLink = '/' } = logoSetting;
 
@@ -17,15 +16,9 @@ function AsideCreator({ menuList, title, logoSetting = {}, children }) {
         </NavLink>
       )}
       <AsideWrap id="asideContainer">
-        {targetMenu.navigate ? (
-          <SideTitle style={{ cursor: 'pointer' }} onClick={() => navigate(targetMenu.navigate)}>
-            {targetMenu.icon} <span>{targetMenu.title}</span>
-          </SideTitle>
-        ) : (
-          <SideTitle>
-            <span>{targetMenu.title}</span> <MdExpandMore />
-          </SideTitle>
-        )}
+        <SideTitle>
+          <span>{targetMenu.title}</span> <MdExpandMore />
+        </SideTitle>
         <CreateAsideMenu currentSideMenu={targetMenu.subMenu} />
       </AsideWrap>
       <MainWrap>{children}</MainWrap>
@@ -39,8 +32,8 @@ const Container = styled.div`
 
   & > a {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     z-index: 10;
     background-color: white;
     border-bottom: 1px solid #bdbdbd;
