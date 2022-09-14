@@ -52,7 +52,6 @@ export const DepthList1 = [
   {
     title: '설정',
     link: 'config',
-    icon: <MdSettings />,
     menuRole: 1,
     subMenu: [
       {
@@ -61,13 +60,11 @@ export const DepthList1 = [
         routePath: 'work',
         component: <ConfigWork />,
         menuRole: 1,
-        icon: <MdWork />,
       },
       {
         title: '테이블 동기화',
         link: '/config/sync',
         routePath: 'sync',
-        icon: <MdSync />,
         subMenu: [
           {
             title: '테이블 설정',
@@ -88,7 +85,6 @@ export const DepthList1 = [
         title: '매크로',
         link: '/config/macro',
         routePath: 'macro',
-        icon: <MdPanoramaPhotosphereSelect />,
         subMenu: [
           {
             title: '매크로 등록',

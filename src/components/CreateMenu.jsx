@@ -14,16 +14,6 @@ import styled from '@emotion/styled';
  * @param {Boolean} props.display
  * subMenu에서 Route로만 사용할 메뉴에 대해서 분기 처리
  * default : true, false 설정 시 메뉴에 보이지 않음.
- * @param {String} props.color
- * @param {String} props.fontColor
- * EX) {"#0b2444"} Or {"red"}
- *      If a color value exists, use the color value first.
- *      If not, use the theme provider color
- *      color 값 O > color 이용
- *      color 값 X > theme provider color 이용
- *      theme provider 사용 시 테마 색을 먼저 이용합니다.
- * @param {String} props.size
- * EX) {"WidthPadding HeightPaaing"} => {"13px 40px"}
  * @param {int} props.userRole(option)
  * 권한 체크
  * userRole(ulevel)이 menuRole보다 작다면 활성화
@@ -58,11 +48,6 @@ function CreateMenu(props) {
             handleMenuSelection={handleMenuSelection}
             key={menu.title}
             selectedMenus={selectedMenus}
-            bgColor={props.bgColor}
-            bgHoverColor={props.bgHoverColor}
-            fontColor={props.fontColor}
-            size={props.size}
-            depthSize={props.depthSize}
             useDepth={props.useDepth}
             userRole={props.userRole}
             navigate={navigate}
@@ -87,12 +72,6 @@ function CreateMenu(props) {
  * 사이드 메뉴 사용할 때 Depth를 사용할 것인지 아닌지
  * true : Depth 이용 메뉴 [default]
  * false : Depth없이 메뉴
- * @param {String} color
- * @param {String} fontColor
- * Color assigned from the outside.
- * CreateMenu 선언부 props에서 할당된 색
- * @param {String} size
- * EX) {"WidthPadding HeightPaaing"} => {"13px 40px"}
  * @param {int} userRole(option)
  * 권한 체크
  * userRole(ulevel)이 menuRole보다 작다면 활성화
@@ -106,11 +85,6 @@ function SubMenuItem({
   menu,
   handleMenuSelection,
   selectedMenus,
-  bgColor,
-  bgHoverColor,
-  fontColor,
-  size,
-  depthSize,
   userRole,
   useDepth,
   depth = 0,
@@ -130,12 +104,7 @@ function SubMenuItem({
   return (
     <>
       {subMenu.length > 0 && useDepth ? (
-        <SubMenuItem.Item
-          bgcolor={bgColor}
-          bghovercolor={bgHoverColor}
-          fontcolor={fontColor}
-          depthsize={depthSize}
-        >
+        <SubMenuItem.Item>
           <NavLink
             to={link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
@@ -147,7 +116,7 @@ function SubMenuItem({
             {title}
           </NavLink>
           {selectedMenus[depth] === title && (
-            <SubMenuItem.List depth={depth} className="subMenuItem" bghovercolor={bgHoverColor}>
+            <SubMenuItem.List depth={depth} className="subMenuItem">
               {subMenu.map((child, i) => {
                 if (child.display === false) {
                   return '';
@@ -162,9 +131,6 @@ function SubMenuItem({
                     useDepth={useDepth}
                     userRole={userRole}
                     selectedMenus={selectedMenus}
-                    size={size}
-                    bgHoverColor={bgHoverColor}
-                    depthSize={depthSize}
                     navigate={navigate}
                   />
                 );
@@ -174,10 +140,6 @@ function SubMenuItem({
         </SubMenuItem.Item>
       ) : (
         <SubMenuItem.Item
-          bghovercolor={bgHoverColor}
-          fontcolor={fontColor}
-          depthsize={depthSize}
-          bgcolor={bgColor}
           onMouseEnter={() => handleMenuSelection('', depth)}
           onClick={() => handleMenuSelection('', 0)}
           className="mainActive"
@@ -192,26 +154,26 @@ function SubMenuItem({
 CreateMenu.List = styled.ul`
   display: flex;
   justify-content: center;
-  gap: ${({ gap }) => `${gap}px`};
+  gap: 0;
 
   & > li {
     & > a {
       width: fit-content;
-      border-radius: 5px;
-      margin: calc(14.5px - ${({ children }) => `${children[0].props.size[0]}px`}) 0px;
-      padding: ${({ children }) => `${children[0].props.size[0]}px ${children[0].props.size[1]}px`};
+      height: 55px;
+      padding: 0 40px;
+      line-height: 55px;
+      color: #e0e0e0;
+      font-size: 15px;
+
+      &:hover {
+        color: white;
+        font-weight: bold;
+      }
     }
   }
 `;
 
 SubMenuItem.List = styled.ul`
-  & li {
-    border-bottom: 1px solid ${({ bghovercolor }) => bghovercolor};
-  }
-
-  & li:nth-of-type(1) {
-    border-top: 1px solid ${({ bghovercolor }) => bghovercolor};
-  }
   & > li > a {
     float: left;
   }
@@ -220,6 +182,11 @@ SubMenuItem.List = styled.ul`
   transition: 0.5s;
   flex-direction: column;
   display: flex;
+  padding: 10px 0;
+  border: 1px solid #bdbdbd;
+  border-radius: 5px;
+  background-color: white;
+
   .subMenuItem {
     width: 100%;
     left: 100%;
@@ -229,23 +196,27 @@ SubMenuItem.List = styled.ul`
 `;
 
 SubMenuItem.Item = styled.li`
-  &:hover > a,
-  & .active,
-  &.mainActive:active > a {
-    color: ${({ fontcolor }) => fontcolor};
-    background-color: ${({ bghovercolor }) => bghovercolor};
+  & ul li:hover > a {
+    font-weight: bold;
+    background-color: #e8eefb;
+  }
+
+  & ul li .active,
+  & ul li.mainActive:active > a {
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #212529 !important;
   }
 
   & a {
     display: block;
-    color: ${({ fontcolor }) => fontcolor};
-    background-color: ${({ bgcolor }) => bgcolor};
   }
 
   & ul li a {
-    font-size: 0.9rem;
-    width: ${({ depthsize }) => `${depthsize[0]}px`};
-    height: ${({ depthsize }) => `${depthsize[1]}px`};
+    width: 220px;
+    height: 38px;
+    font-size: 14px;
+    color: #212529;
     display: flex;
     justify-content: center;
     align-items: center;

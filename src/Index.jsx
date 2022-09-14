@@ -9,6 +9,7 @@ import DateBetweenPicker from './components/DateBetweenPicker';
 import TimePicker from './components/TimePicker';
 import Radio from './components/Radio';
 import Switch from './components/Switch';
+import Logo from './assets/Logo';
 
 function Index() {
   const [date1, setDate1] = useState(new Date());
@@ -33,24 +34,16 @@ function Index() {
     <div>
       <HeaderCreator
         logoSetting={{
-          logo: 'Seed UI Project',
+          logo: <Logo />,
           logoLink: '/',
-          logoColor: '#eeeeee',
         }}
         menuList={DepthList1}
         useDepth
         userRole={1}
-        menuStyle={{
-          headerColor: '#222831',
-          bgColor: '#393E46',
-          bgHoverColor: '#00ADB5',
-          fontColor: '#EEEEEE',
-          size: [5.5, 35],
-          depthSize: [200, 40],
-          gap: 20,
-        }}
       >
-        <NavLink to="children">Children</NavLink>
+        <div>
+          <NavLink to="children">Children</NavLink>
+        </div>
       </HeaderCreator>
 
       <Outlet />
