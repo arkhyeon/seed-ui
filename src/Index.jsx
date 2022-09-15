@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { AiOutlineLeft } from 'react-icons/ai';
 import { DepthList1 } from './assets/DepthMenuList';
 import { HeaderCreator } from './components';
 import DateTimePicker from './components/DateTimePicker';
@@ -9,6 +10,13 @@ import DateBetweenPicker from './components/DateBetweenPicker';
 import TimePicker from './components/TimePicker';
 import Radio from './components/Radio';
 import Switch from './components/Switch';
+import alarm from './components/alarm';
+import Tooltip from './components/Tooltip';
+import Toggle from './components/Toggle';
+import Modal from './components/Modal';
+import InputGrid from './components/InputGrid';
+import WhiteButton from './components/Button/WhiteButton';
+import BlackButton from './components/Button/BlackButton';
 
 function Index() {
   const [date1, setDate1] = useState(new Date());
@@ -29,6 +37,13 @@ function Index() {
   const [switch1, setSwitch1] = useState(true);
   const [switch2, setSwitch2] = useState(true);
 
+  const [toggleValue, setToggleValue] = useState(1);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
       <HeaderCreator
@@ -41,8 +56,8 @@ function Index() {
         useDepth
         userRole={1}
         menuStyle={{
-          headerColor: '#222831',
-          bgColor: '#393E46',
+          headerColor: '#eeeeee',
+          bgColor: '#eeeeee',
           bgHoverColor: '#00ADB5',
           fontColor: '#EEEEEE',
           size: [5.5, 35],
@@ -93,12 +108,38 @@ function Index() {
           setValue={setRadio}
           list={['test1', 'test2', 'test3']}
           text="답을 선택해주세요."
+          type="border"
         />
         <Switch value={switch1} setValue={setSwitch1} color="green" />
         <Switch value={switch2} setValue={setSwitch2} color="green" size="small" />
         <Switch value={switch1} setValue={setSwitch1} color="blue" />
         <Switch value={switch2} setValue={setSwitch2} color="blue" size="small" />
       </div>
+
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Tooltip>툴팁보기</Tooltip>
+      </div>
+      <Toggle
+        list={['테이블 설정', '레이아웃 설정', '테']}
+        setValue={setToggleValue}
+        value={toggleValue}
+        style={{ fontSize: '0.9rem' }}
+      />
+      <BlackButton>등록</BlackButton>
+      {isModalOpen && <Modal modalState={isModalOpen} handleClose={handleClose} />}
+      <InputGrid
+        list={[
+          { subject: 'test1', content: <input /> },
+          { subject: 'test2', content: <input /> },
+          { subject: 'test3', content: <input /> },
+          { subject: 'test4', content: <input /> },
+          [
+            { subject: 'test4', content: <input /> },
+            { subject: 'test4', content: <input /> },
+            { subject: 'test4', content: <input /> },
+          ],
+        ]}
+      />
     </div>
   );
 }
