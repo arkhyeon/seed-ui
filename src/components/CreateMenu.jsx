@@ -40,7 +40,7 @@ function CreateMenu(props) {
   };
 
   return (
-    <CreateMenu.List gap={props.gap} onMouseLeave={() => setSelectedMenus([])}>
+    <CreateMenu.List onMouseLeave={() => setSelectedMenus([])}>
       {menus.map(menu => {
         return (
           <SubMenuItem
@@ -103,7 +103,7 @@ function SubMenuItem({
 
   return (
     <>
-      {subMenu.length > 0 && useDepth ? (
+      {subMenu.length > 0 && useDepth && isDisplaySubMenuDepth(subMenu) ? (
         <SubMenuItem.Item>
           <NavLink
             to={link}
@@ -283,5 +283,20 @@ function SubRoute(route, depth = 0) {
 // 		</Route>
 // 	);
 // };
+
+export const isDisplaySubMenuDepth = subMenu => {
+  let subMenuDisplayCount = 0;
+
+  for (let i = 0; i < subMenu.length; i++) {
+    if (subMenu[i].display !== undefined && !subMenu[i].display) {
+      subMenuDisplayCount++;
+    }
+  }
+  if (subMenuDisplayCount === subMenu.length) {
+    return false;
+  }
+
+  return true;
+};
 
 export default CreateMenu;

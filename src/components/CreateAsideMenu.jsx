@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/all';
+import { isDisplaySubMenuDepth } from './CreateMenu';
 
 function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
   const [displayChildren, setDisplayChildren] = useState({});
@@ -28,7 +29,7 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
         }
         return (
           <ASideMenuList key={sm.link} depth={depth}>
-            {sm.subMenu ? (
+            {sm.subMenu && isDisplaySubMenuDepth(sm.subMenu) ? (
               <NavLink
                 activeclassname="sideSelectMenu"
                 to={sm.link}

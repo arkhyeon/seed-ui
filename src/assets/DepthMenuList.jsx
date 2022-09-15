@@ -71,6 +71,7 @@ export const DepthList1 = [
             link: '/config/sync/table',
             routePath: 'table',
             component: <ConfigSyncTable />,
+            display: false,
           },
           {
             title: '동기화 설정',
