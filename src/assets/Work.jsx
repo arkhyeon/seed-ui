@@ -7,6 +7,7 @@ import DataList from '../components/components/DataList';
 import Pagination from '../components/components/Pagination';
 import { TextInput } from '../components/components/InputComponent';
 import BlackButton from '../components/Button/BlackButton';
+import Logo from './Logo';
 
 function Work() {
   const { pathname } = useLocation();
@@ -72,7 +73,14 @@ function Work() {
   };
 
   return (
-    <AsideCreator menuList={DepthList1} title="설정">
+    <AsideCreator
+      menuList={DepthList1}
+      title="설정"
+      logoSetting={{
+        logo: <Logo />,
+        logoLink: '/',
+      }}
+    >
       <PaginationWrap>
         <Pagination totalLength={22313} pageEvent={pageFunction} />
       </PaginationWrap>

@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+import { MdMenu, MdReorder } from 'react-icons/all';
 import CreateMenu from './CreateMenu';
 
 /**
  * @param {Object} logoSetting
  *    @param {String|Component} logoSetting.logo 로고에 작성될 텍스트 또는 컴포넌트
  *    @param {String} [logoSetting.logoLink = "/"] 로고 클릭 시 이동할 URL 주소
- *    @param {String} [logoSetting.logoColor = "#f1f4f5"] logoSetting.logo가 String일 때 StringColor.
  * @param {Object[]} menuList Header에 생성될 메뉴 리스트
  * @param {boolean} [useDepth = true] 상단 메뉴의 Depth 메뉴 on, off 기능
  * @param {number} userRole
@@ -23,46 +23,33 @@ function HeaderCreator({
   menuList,
   useDepth = true,
   userRole = 99,
-  menuStyle,
   children = <div />,
 }) {
-  const { bgColor, bgHoverColor, fontColor, size, depthSize, headerColor, gap } = menuStyle;
-  const { logo, logoLink = '/', logoColor = '#f1f4f5' } = logoSetting;
+  const { logo, logoLink = '/' } = logoSetting;
+
   return (
-    <HeaderWrap headerColor={headerColor} logoColor={logoColor}>
+    <HeaderWrap>
       <NavLink to={logoLink}>{logo}</NavLink>
-      <CreateMenu
-        menus={menuList}
-        useDepth={useDepth}
-        userRole={userRole}
-        bgColor={bgColor}
-        bgHoverColor={bgHoverColor}
-        fontColor={fontColor}
-        size={size}
-        depthSize={depthSize}
-        gap={gap}
-      />
+      <CreateMenu menus={menuList} useDepth={useDepth} userRole={userRole} />
       {children}
     </HeaderWrap>
   );
 }
 
 const HeaderWrap = styled.div`
-  width: calc(100% - 30px);
-  background: ${({ headerColor }) => headerColor};
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
-  height: 50px;
+  height: 55px;
   position: relative;
   z-index: 10;
+  background-color: black;
 
   & > a {
-    font-weight: bold;
-    font-size: 27.5px;
-    color: ${({ logoColor }) => logoColor};
-    font-family: 'arial', serif;
+    display: flex;
+    justify-content: center;
+    color: white;
   }
 `;
 

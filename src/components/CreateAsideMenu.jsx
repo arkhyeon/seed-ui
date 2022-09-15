@@ -21,7 +21,7 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
   };
 
   return (
-    <ul>
+    <ASideMenuWrap>
       {currentSideMenu.map(sm => {
         if (sm.display === false) {
           return '';
@@ -33,13 +33,11 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
                 activeclassname="sideSelectMenu"
                 to={sm.link}
                 onClick={e => {
-                  if (window.sessionStorage.getItem('AsideWidth') > 83) {
-                    e.preventDefault();
-                    setDisplayChildren({
-                      ...displayChildren,
-                      [sm.link]: !displayChildren[sm.link],
-                    });
-                  }
+                  e.preventDefault();
+                  setDisplayChildren({
+                    ...displayChildren,
+                    [sm.link]: !displayChildren[sm.link],
+                  });
                 }}
               >
                 {depth === 0 && sm.icon}
@@ -60,13 +58,19 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
           </ASideMenuList>
         );
       })}
-    </ul>
+    </ASideMenuWrap>
   );
 }
 
+const ASideMenuWrap = styled.ul`
+  & > li {
+    margin-bottom: 10px;
+  }
+`;
+
 const ASideMenuList = styled.li`
   & li {
-    text-indent: ${props => `${props.depth * 15 + 25}px`};
+    text-indent: ${props => `${props.depth * 15 + 15}px`};
   }
 
   & p {

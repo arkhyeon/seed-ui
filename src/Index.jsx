@@ -17,6 +17,7 @@ import Modal from './components/Modal';
 import InputGrid from './components/InputGrid';
 import WhiteButton from './components/Button/WhiteButton';
 import BlackButton from './components/Button/BlackButton';
+import Logo from './assets/Logo';
 
 function Index() {
   const [date1, setDate1] = useState(new Date());
@@ -48,24 +49,16 @@ function Index() {
     <div>
       <HeaderCreator
         logoSetting={{
-          logo: 'Seed UI Project',
+          logo: <Logo />,
           logoLink: '/',
-          logoColor: '#eeeeee',
         }}
         menuList={DepthList1}
         useDepth
         userRole={1}
-        menuStyle={{
-          headerColor: '#eeeeee',
-          bgColor: '#eeeeee',
-          bgHoverColor: '#00ADB5',
-          fontColor: '#EEEEEE',
-          size: [5.5, 35],
-          depthSize: [200, 40],
-          gap: 20,
-        }}
       >
-        <NavLink to="children">Children</NavLink>
+        <div>
+          <NavLink to="children">Children</NavLink>
+        </div>
       </HeaderCreator>
 
       <Outlet />

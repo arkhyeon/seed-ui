@@ -1,101 +1,32 @@
-import React, { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { MdArrowBackIosNew } from 'react-icons/md';
+import { MdExpandMore } from 'react-icons/md';
+import { MdMenu } from 'react-icons/all';
+import { css } from '@emotion/react';
 import CreateAsideMenu from './CreateAsideMenu';
 
-function AsideCreator({ menuList, title, children }) {
-  const resizeAside = useRef();
-  const navigate = useNavigate();
+function AsideCreator({ menuList, title, logoSetting = {}, children }) {
   const targetMenu = menuList.filter(menu => menu.title === title)[0];
+  const { logo, logoLink = '/' } = logoSetting;
+  const [hide, setHide] = useState(false);
 
-  // const [resizer, setResizer] = useState({
-  //   currentScreenX: 0,
-  //   mouseActive: false,
-  //   currentWidth: 0,
-  //   maxWidth: 0,
-  // });
-
-  useEffect(() => {
-    collapseStyle(window.sessionStorage.getItem('AsideWidth') || 265);
-  }, []);
-  //
-  // const resizingStart = (e) => {
-  //   document.body.style.userSelect = 'none';
-  //
-  //   setResizer({
-  //     currentScreenX: e.screenX,
-  //     mouseActive: true,
-  //     currentWidth: resizeAside.current.clientWidth,
-  //     maxWidth: window.innerWidth,
-  //   });
-  // };
-  //
-  // window.onmousemove = (e) => resizing(e);
-  //
-  // const resizing = _.debounce((e) => {
-  //   if (resizer.mouseActive) {
-  //     const move = e.screenX - resizer.currentScreenX;
-  //     const newWidth = resizer.currentWidth + move;
-  //
-  //     resizeAside.current.style.width = newWidth + 'px';
-  //
-  //     collapseStyle(newWidth);
-  //   }
-  // }, 1);
-  //
-  const collapseStyle = currentWidth => {
-    const { classList } = resizeAside.current;
-
-    classList.toggle('narrow', currentWidth > 183 && currentWidth < 203);
-    classList.toggle('narrower', currentWidth <= 183);
-
-    // if (!resizer.mouseActive) {
-    //   resizeAside.current.style.width = `${currentWidth}px`;
-    // }
-
-    window.sessionStorage.setItem('AsideWidth', currentWidth);
-  };
-  //
-  // window.onmouseup = (e) => resizingDone(e);
-  //
-  // const resizingDone = () => {
-  //   if (resizer.mouseActive) {
-  //     document.body.style.userSelect = 'unset';
-  //     setResizer({ ...resizer, mouseActive: false });
-  //   }
-  // };
-
-  const toggleCollapse = () => {
-    const isNarrower = resizeAside.current?.classList.contains('narrower');
-
-    if (isNarrower) {
-      collapseStyle(265);
-    } else {
-      collapseStyle(43);
-    }
+  const SideHide = () => {
+    setHide(prevState => {
+      return !prevState;
+    });
   };
 
   return (
-    <Container>
-      <AsideWrap ref={resizeAside}>
-        {targetMenu.navigate ? (
-          <SideTitle style={{ cursor: 'pointer' }} onClick={() => navigate(targetMenu.navigate)}>
-            {targetMenu.icon} <span>{targetMenu.title}</span>
-          </SideTitle>
-        ) : (
-          <SideTitle>
-            {targetMenu.icon} <span>{targetMenu.title}</span>
-          </SideTitle>
-        )}
-        <hr />
+    <Container hide={hide}>
+      {logo && <NavLink to={logoLink}>{logo}</NavLink>}
+      <MdMenu onClick={SideHide} />
+      <AsideWrap hide={hide}>
+        <SideTitle>
+          <span>{targetMenu.title}</span> <MdExpandMore />
+        </SideTitle>
         <CreateAsideMenu currentSideMenu={targetMenu.subMenu} />
-        <hr />
-        <ToggleButton onClick={() => toggleCollapse()}>
-          <MdArrowBackIosNew />
-        </ToggleButton>
       </AsideWrap>
-      {/* <ResizerBar onMouseDown={(e) => resizingStart(e)} /> */}
       <MainWrap>{children}</MainWrap>
     </Container>
   );
@@ -104,25 +35,67 @@ function AsideCreator({ menuList, title, children }) {
 const Container = styled.div`
   width: 100%;
   display: flex;
+
+  & > a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: white;
+    border-bottom: 1px solid #bdbdbd;
+    transition: 0.4s;
+    color: black;
+
+    ${({ hide }) => {
+      return (
+        hide &&
+        css`
+          left: -275px;
+        `
+      );
+    }};
+
+    & div span {
+      color: white;
+    }
+  }
+
+  & > svg {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 275px;
+    color: white;
+    font-size: 35px;
+    padding: 10px;
+    cursor: pointer;
+  }
 `;
 
 const AsideWrap = styled.div`
-  width: 265px;
-  max-width: 265px;
-  min-width: 43px;
-  padding: 15px;
-  background-color: ${({ theme }) => theme.asideMenuStyle.backgroundColor};
+  width: 239px;
+  max-width: 239px;
+  min-width: 239px;
+  padding: 16px 18px;
+  font-size: 15px;
+  transition: 0.4s;
 
-  & a {
+  ${({ hide }) => {
+    return (
+      hide &&
+      css`
+        margin-left: -275px;
+      `
+    );
+  }};
+
+  & ul li a {
     margin: 2px 0 0 0;
-    font-size: 0.95rem;
-    color: ${({ theme }) => theme.asideMenuStyle.fontColor};
+    color: #212529;
     text-align: left;
-    border-radius: 3px;
-    padding: 7px 16px 7px 20px;
+    border-radius: 5px;
+    padding: 10px 15px;
     display: flex;
-    gap: 5px;
-    height: 21px;
     align-items: center;
 
     & svg {
@@ -131,121 +104,34 @@ const AsideWrap = styled.div`
       display: block;
     }
 
-    &:hover,
+    &:hover {
+      font-weight: bold;
+      background-color: #e8eefb;
+    }
     &.active {
-      color: ${({ theme }) => theme.asideMenuStyle.hoverFontColor};
-      background-color: ${({ theme }) => theme.asideMenuStyle.hoverBackgroundColor};
+      font-weight: bold;
+      color: white;
+      background-color: #212529 !important;
     }
-  }
-
-  //&.narrow a {
-  //  padding: 7px 12px 7px 16px;
-  //  & .nav-item {
-  //    flex-direction: column;
-  //    height: auto;
-  //  }
-  //
-  //  & svg {
-  //    font-size: 23px;
-  //  }
-  //
-  //  & span {
-  //    text-align: center;
-  //    font-size: 0.9em;
-  //  }
-  //}
-
-  &.narrower {
-    width: 43px;
-    & > div {
-      padding: 0;
-    }
-
-    a {
-      padding: 7px 0 7px 0;
-    }
-
-    svg {
-      margin: 0 auto;
-      font-size: 22px;
-    }
-
-    span {
-      display: none;
-    }
-
-    & ul li a p,
-    & ul li ul {
-      display: none;
-    }
-
-    & > div:last-child svg {
-      transform: rotate(180deg);
-    }
-  }
-
-  & hr {
-    margin: 15px 0;
-    border-color: ${({ theme }) => theme.asideMenuStyle.divideLine};
   }
 `;
 
 const SideTitle = styled.div`
-  font-size: 1rem;
-  font-weight: 400;
-  height: 35px;
-  color: ${({ theme }) => theme.asideMenuStyle.fontColor};
-  background-color: ${({ theme }) => theme.asideMenuStyle.hoverBackgroundColor};
-  border: none;
-  border-radius: 3px;
+  font-size: 15px;
+  color: #212529;
+  border-radius: 5px;
+  padding: 10px 15px;
+  background-color: #e8eefb;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 0 20px;
+  justify-content: space-between;
 
   & svg {
-    font-size: 21px;
+    font-size: 20px;
   }
 `;
 
 const MainWrap = styled.div`
   flex: 1;
-  padding: 15px;
-  min-height: calc(100vh - 80px);
-`;
-
-// const ResizerBar = styled.div`
-//   width: 4px;
-//   background-color: rgb(196, 196, 196);
-//   border-right: 1px solid rgb(196, 196, 196);
-//   cursor: ew-resize;
-//
-//   &:hover {
-//     border-right: 3px solid #a9a9a9;
-//   }
-// `;
-
-const ToggleButton = styled.div`
-  width: 35px;
-  height: 35px;
-  background-color: ${({ theme }) => theme.asideMenuStyle.backgroundColor};
-  border-radius: 3px;
-  margin: 25px auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.asideMenuStyle.hoverFontColor};
-    background-color: ${({ theme }) => theme.asideMenuStyle.hoverBackgroundColor};
-  }
-
-  & svg {
-    font-size: 20px;
-    color: ${({ theme }) => theme.asideMenuStyle.fontColor};
-  }
 `;
 
 export default AsideCreator;
