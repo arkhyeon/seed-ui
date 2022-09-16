@@ -5,8 +5,8 @@ import AsideCreator from '../components/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
 import DataList from '../components/components/DataList';
 import Pagination from '../components/components/Pagination';
-import Button from '../components/Button';
 import { TextInput } from '../components/components/InputComponent';
+import BlackButton from '../components/Button/BlackButton';
 import Logo from './Logo';
 
 function Work() {
@@ -114,9 +114,7 @@ function Work() {
             <option value={2}>업데이트</option>
           </select>
         </label>
-        <Button size="small" color="blue">
-          검색
-        </Button>
+        <BlackButton>검색</BlackButton>
       </SearchWrapper>
       <form
         onSubmit={e => {
