@@ -113,7 +113,7 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
       <DataListWrap>
         <DataListInput
           id={id}
-          inputref={ref}
+          inputRef={ref}
           type="text"
           onChange={e => searchData(e.target.value)}
           autoComplete="off"
@@ -148,6 +148,7 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
 }
 
 const DataListWrap = styled.div`
+  width: 100%;
   position: relative;
   display: flex;
 `;
