@@ -90,7 +90,6 @@ const AsideWrap = styled.div`
   }};
 
   & ul li a {
-    margin: 2px 0 0 0;
     color: #212529;
     text-align: left;
     border-radius: 5px;
@@ -103,15 +102,22 @@ const AsideWrap = styled.div`
       min-width: 20px;
       display: block;
     }
-
     &:hover {
-      font-weight: bold;
-      background-color: #e8eefb;
+      background-color: #cfd8dc;
     }
+  }
+
+  & > ul > li > a {
     &.active {
       font-weight: bold;
       color: white;
       background-color: #212529 !important;
+    }
+  }
+
+  & ul li ul li:has(a.active) {
+    &:before {
+      background: black;
     }
   }
 `;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { MdPanoramaPhotosphereSelect, MdSettings, MdSync, MdWork } from 'react-icons/all';
 import Work from './Work';
 import Project from './Project';
 import ConfigWork from './ConfigWork';
@@ -7,9 +6,6 @@ import ConfigSyncTable from './ConfigSyncTable';
 import ConfigSync from './ConfigSync';
 import MacroRegister from './MacroRegister';
 import MacroDashboard from './MacroDashboard';
-import MacroCommandSetting from './MacroCommandSetting';
-import MacroCommandRegister from './MacroCommandRegister';
-import MacroCommandTest from './MacroCommandTest';
 
 /**
  * @param {String} title
@@ -104,26 +100,7 @@ export const DepthList1 = [
             title: '명령어',
             link: '/config/macro/command',
             routePath: 'command',
-            subMenu: [
-              {
-                title: '명령어 등록',
-                link: '/config/macro/command/register',
-                routePath: 'register',
-                component: <MacroCommandRegister />,
-              },
-              {
-                title: '명령어 설정',
-                link: '/config/macro/command/setting',
-                routePath: 'setting',
-                component: <MacroCommandSetting />,
-              },
-              {
-                title: '명령어 테스트',
-                link: '/config/macro/command/test',
-                routePath: 'test',
-                component: <MacroCommandTest />,
-              },
-            ],
+            component: <Work />,
           },
         ],
       },

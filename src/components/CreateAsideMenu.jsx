@@ -64,14 +64,38 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
 }
 
 const ASideMenuWrap = styled.ul`
-  & > li {
-    margin-bottom: 10px;
-  }
+  position: relative;
 `;
 
 const ASideMenuList = styled.li`
-  & li {
-    text-indent: ${props => `${props.depth * 15 + 15}px`};
+  position: relative;
+  text-indent: ${props => `${props.depth * 23 + 23}px`};
+
+  &:before {
+    background: #e8eefb;
+    bottom: auto;
+    content: '';
+    height: 8px;
+    left: ${props => `${props.depth * 23 + 20}px`};
+    margin-top: 15px;
+    position: absolute;
+    right: auto;
+    width: 8px;
+    z-index: 1;
+    border-radius: 50%;
+  }
+
+  &:after {
+    border-left: 1px solid #e8eefb;
+    bottom: 0;
+    content: '';
+    left: ${props => `${props.depth * 23 + 23}px`};
+    position: absolute;
+    top: 0;
+  }
+
+  &:last-of-type:after {
+    height: 20px;
   }
 
   & p {
