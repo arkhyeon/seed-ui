@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import {
-  BiArrowToLeft,
-  BiArrowToRight,
-  BiLeftArrowAlt,
-  BiRightArrowAlt,
-  MdOutlineArrowBackIosNew,
-  MdOutlineArrowForwardIos,
+  CgChevronDoubleLeft,
+  CgChevronDoubleRight,
+  MdOutlineFirstPage,
+  MdOutlineKeyboardArrowLeft,
+  MdOutlineKeyboardArrowRight,
+  MdOutlineLastPage,
 } from 'react-icons/all';
 
 function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
@@ -33,21 +33,17 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
     <>
       <PaginationWarp>
         <PaginationItem onClick={() => movePage(1)}>
-          <BiArrowToLeft />
+          <MdOutlineFirstPage />
         </PaginationItem>
-        <DivideLine />
         <PaginationItem
           onClick={() => movePage(currentPage - buttonLength)}
           className="rowBackPass"
         >
-          <MdOutlineArrowBackIosNew />
-          <BiLeftArrowAlt />
+          <CgChevronDoubleLeft />
         </PaginationItem>
-        <DivideLine />
         <PaginationItem onClick={() => movePage(currentPage - 1)}>
-          <BiLeftArrowAlt />
+          <MdOutlineKeyboardArrowLeft />
         </PaginationItem>
-        <DivideLine />
         {Array.from(Array(btnTotalLength), (_, i) => i + 1)
           .slice(offset, offset + buttonLength)
           .map(arr => (
@@ -59,21 +55,17 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
               {arr}
             </PaginationItem>
           ))}
-        <DivideLine />
         <PaginationItem onClick={() => movePage(currentPage + 1)}>
-          <BiRightArrowAlt />
+          <MdOutlineKeyboardArrowRight />
         </PaginationItem>
-        <DivideLine />
         <PaginationItem
           onClick={() => movePage(currentPage + buttonLength)}
           className="rowFrontPass"
         >
-          <BiRightArrowAlt />
-          <MdOutlineArrowForwardIos />
+          <CgChevronDoubleRight />
         </PaginationItem>
-        <DivideLine />
         <PaginationItem onClick={() => movePage(btnTotalLength)}>
-          <BiArrowToRight />
+          <MdOutlineLastPage />
         </PaginationItem>
       </PaginationWarp>
       <ResultWrap>
@@ -94,7 +86,7 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
 
 const PaginationWarp = styled.ul`
   width: fit-content;
-  height: 40px;
+  height: 30px;
   background-color: ${({ theme }) => theme.paginationStyle.backgroundColor};
   display: flex;
   justify-content: center;
@@ -104,18 +96,26 @@ const PaginationWarp = styled.ul`
 `;
 
 const PaginationItem = styled.li`
-  width: 43px;
-  height: 40px;
-  border-radius: 5px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   color: ${({ theme }) => theme.paginationStyle.fontColor};
+  transition: 0.3s;
+
+  &:nth-of-type(n + 2) {
+    border-left: 1px solid ${({ theme }) => theme.paginationStyle.divideLine};
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.paginationStyle.hoverBackgroundColor};
     color: ${({ theme }) => theme.paginationStyle.hoverFontColor};
+  }
+
+  &:active {
+    outline: 3px solid #b0bec5;
   }
 
   & svg {
@@ -123,50 +123,25 @@ const PaginationItem = styled.li`
   }
 
   &[aria-current] {
-    background-color: ${({ theme }) => theme.paginationStyle.hoverBackgroundColor};
-    color: ${({ theme }) => theme.paginationStyle.hoverFontColor};
+    background-color: ${({ theme }) => theme.paginationStyle.activeBackgroundColor};
+    color: ${({ theme }) => theme.paginationStyle.activeFontColor};
     font-weight: bold;
     cursor: revert;
     transform: revert;
   }
-
-  &.rowBackPass svg {
-    position: relative;
-
-    &:first-of-type {
-      left: 5px;
-      font-size: 18px;
-    }
-    &:last-of-type {
-      right: 5px;
-    }
-  }
-
-  &.rowFrontPass svg {
-    position: relative;
-
-    &:first-of-type {
-      left: 5px;
-    }
-    &:last-of-type {
-      font-size: 18px;
-      right: 5px;
-    }
-  }
-`;
-
-const DivideLine = styled.div`
-  width: 1px;
-  height: 40px;
-  background-color: ${({ theme }) => theme.paginationStyle.divideLine};
 `;
 
 const ResultWrap = styled.div`
-  margin-left: 5px;
+  margin-left: 15px;
 
   & select {
-    margin-left: 5px;
     width: 90px;
+    margin-left: 5px;
+    border: 1px solid #bdbdbd;
+    border-radius: 5px;
+    color: #212529;
+    font-size: 14px;
+    padding: 4px 18px 3px 6px;
   }
 `;
 
