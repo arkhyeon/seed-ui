@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { AiOutlineLeft } from 'react-icons/ai';
 import { DepthList1 } from './assets/DepthMenuList';
 import { HeaderCreator } from './components';
 import DateTimePicker from './components/DateTimePicker';
@@ -10,14 +9,12 @@ import DateBetweenPicker from './components/DateBetweenPicker';
 import TimePicker from './components/TimePicker';
 import Radio from './components/Radio';
 import Switch from './components/Switch';
-import alarm from './components/alarm';
 import Tooltip from './components/Tooltip';
 import Toggle from './components/Toggle';
 import Modal from './components/Modal';
 import InputGrid from './components/InputGrid';
-import WhiteButton from './components/Button/WhiteButton';
-import BlackButton from './components/Button/BlackButton';
 import Logo from './assets/Logo';
+import { BlackButton } from './components/Button/Button';
 
 function Index() {
   const [date1, setDate1] = useState(new Date());

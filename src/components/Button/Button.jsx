@@ -1,0 +1,58 @@
+import React from 'react';
+import styled from '@emotion/styled';
+
+export function BlackButton({ ...rootDOMAttributes }) {
+  return <BlackBtn {...rootDOMAttributes} />;
+}
+
+export function WhiteButton({ ...rootDOMAttributes }) {
+  return <WhiteBtn {...rootDOMAttributes} />;
+}
+
+const Button = styled.button`
+  font-size: 13px;
+  border-radius: 5px;
+  padding: 8.5px 13px;
+  transition: 0.3s;
+  cursor: pointer;
+  border: 1px solid #bdbdbd;
+  :hover {
+    background-color: #455a64;
+  }
+
+  :active {
+    outline: 3px solid #b0bec5;
+  }
+`;
+
+const BlackBtn = styled(Button)`
+  color: #ffffff;
+  background: #212529;
+`;
+
+const WhiteBtn = styled(Button)`
+  color: #212529;
+  background: #fff;
+  :hover,
+  :active {
+    color: #fff;
+  }
+`;
+
+// const Button = styled.button`
+//   font-size: 13px;
+//   color: #ffffff;
+//   background: #212529;
+//   border-radius: 5px;
+//   padding: 10px 15px;
+//   border: none;
+//   transition: 0.3s;
+//   :hover {
+//     background: #455a64;
+//   }
+//
+//   :active {
+//     background: #455a64;
+//     outline: 2px solid #cfd8dc;
+//   }
+// `;

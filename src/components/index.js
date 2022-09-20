@@ -18,6 +18,7 @@ import Pagination from './components/Pagination';
 import Toggle from './Toggle';
 import { TextInput } from './components/InputComponent';
 import InputGrid from './InputGrid';
+import { BlackButton, WhiteButton } from './Button/Button';
 
 export { HeaderCreator };
 
@@ -26,6 +27,8 @@ export { SetRoute };
 export { AsideCreator };
 
 export { Button };
+
+export { BlackButton, WhiteButton };
 
 export { Tooltip };
 

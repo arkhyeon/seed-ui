@@ -42,3 +42,14 @@ body, body * {
   width: 100%;
 }
 
+select{
+  outline: none;
+}
+#root{
+  min-width: 1300px;
+}
+
+p, button{
+  font-size: 14px;
+  white-space: nowrap;
+}
