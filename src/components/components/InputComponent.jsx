@@ -20,7 +20,7 @@ const TextInputComp = styled.input`
   border-radius: 5px;
   color: #212529;
   font-size: 14px;
-  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  padding: 8px 36px 6px 12px;
 `;
 
 export function DataListInput(props) {
