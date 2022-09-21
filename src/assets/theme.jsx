@@ -25,8 +25,8 @@ export const theme = {
   },
   modalStyle: {
     headBg: '#eee',
-    headFc: '#808080',
-    headBorder: '1px solid black',
+    headFc: '#212529',
+    headBorder: '1px solid #9e9e9e',
     modalBorder: 'none',
   },
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import styled from '@emotion/styled';
 import { DepthList1 } from './assets/DepthMenuList';
 import { HeaderCreator } from './components';
 import DateTimePicker from './components/DateTimePicker';
@@ -110,13 +111,22 @@ function Index() {
         <Tooltip>툴팁보기</Tooltip>
       </div>
       <Toggle
-        list={['테이블 설정', '레이아웃 설정', '테']}
-        setValue={setToggleValue}
+        list={['테이블 설정', '레이아웃 설정', '테이블 규칙']}
         value={toggleValue}
+        setValue={setToggleValue}
         style={{ fontSize: '0.9rem' }}
       />
       <BlackButton>등록</BlackButton>
-      {isModalOpen && <Modal modalState={isModalOpen} handleClose={handleClose} />}
+      <BlackButton
+        onClick={() => {
+          setIsModalOpen(true);
+        }}
+      >
+        열어봐라
+      </BlackButton>
+      {isModalOpen && (
+        <Modal modalTitle="삭제 SQL" modalState={isModalOpen} handleClose={handleClose} />
+      )}
       <InputGrid
         list={[
           { subject: 'test1', content: <input /> },
