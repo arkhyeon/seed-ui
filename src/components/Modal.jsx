@@ -198,6 +198,7 @@ const ModalBack = styled.div`
   background-color: black;
   position: fixed;
   top: 0px;
+  left: 0px;
   z-index: 90;
   opacity: 0.3;
 `;
