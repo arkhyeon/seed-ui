@@ -76,7 +76,7 @@ const ASideMenuList = styled.li`
     bottom: auto;
     content: '';
     height: 8px;
-    left: ${props => `${props.depth * 23 + 20}px`};
+    left: ${props => `${props.depth * 23 + 19.5}px`};
     margin-top: 15px;
     position: absolute;
     right: auto;
@@ -92,6 +92,7 @@ const ASideMenuList = styled.li`
     left: ${props => `${props.depth * 23 + 23}px`};
     position: absolute;
     top: 0;
+    margin-top: -5px;
   }
 
   &:last-of-type:after {

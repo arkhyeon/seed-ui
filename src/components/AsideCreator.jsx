@@ -96,6 +96,7 @@ const AsideWrap = styled.div`
     padding: 10px 15px;
     display: flex;
     align-items: center;
+    margin-top: 5px;
 
     & svg {
       font-size: 20px;
