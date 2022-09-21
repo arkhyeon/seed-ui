@@ -12,7 +12,7 @@ export function WhiteButton({ ...rootDOMAttributes }) {
 const Button = styled.button`
   font-size: 13px;
   border-radius: 5px;
-  padding: 8.5px 13px;
+  padding: 7.5px 13px;
   transition: 0.3s;
   cursor: pointer;
   border: 1px solid #bdbdbd;
