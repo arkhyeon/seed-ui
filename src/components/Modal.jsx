@@ -116,23 +116,25 @@ function Modal({
     [modalRef, initialPos, handleMove, removeEvents],
   );
 
-  return modalState ? (
-    <>
-      <ModalWrap ref={modalRef} style={{ left: `${pos.x}px`, top: `${pos.y}px` }} width={width}>
-        <ModalHeader ref={headRef} onMouseDown={handleDown} movable={movable}>
-          {modalTitle || null}
-          {isCloseBtn ? <GrClose onClick={handleClose} /> : null}
-        </ModalHeader>
-        <ChildrenWrapper> {children}</ChildrenWrapper>
-        <ModalFooter>
-          {buttonList.map(el => {
-            return <Fragment key={el.props.children}>{el}</Fragment>;
-          })}
-        </ModalFooter>
-      </ModalWrap>
-      <ModalBack onClick={handleClose} />
-    </>
-  ) : null;
+  return (
+    modalState && (
+      <>
+        <ModalWrap ref={modalRef} style={{ left: `${pos.x}px`, top: `${pos.y}px` }} width={width}>
+          <ModalHeader ref={headRef} onMouseDown={handleDown} movable={movable}>
+            {modalTitle || null}
+            {isCloseBtn ? <GrClose onClick={handleClose} /> : null}
+          </ModalHeader>
+          <ChildrenWrapper> {children}</ChildrenWrapper>
+          <ModalFooter>
+            {buttonList.map(el => {
+              return <Fragment key={el.props.children}>{el}</Fragment>;
+            })}
+          </ModalFooter>
+        </ModalWrap>
+        <ModalBack onClick={handleClose} />
+      </>
+    )
+  );
 }
 
 const ModalWrap = styled.div`

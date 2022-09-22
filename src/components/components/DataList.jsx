@@ -155,7 +155,7 @@ const DataListWrap = styled.div`
 
 const DataListItemWrap = styled.ul`
   width: 100%;
-  height: 400px;
+  max-height: 400px;
   display: none;
   position: absolute;
   top: 99%;
