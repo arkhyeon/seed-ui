@@ -9,7 +9,6 @@ import React, {
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineClose } from 'react-icons/ai';
-import Button from './Button.jsx';
 
 /**
  *
@@ -83,12 +82,12 @@ function Modal({
   style = {},
   callback = null,
   buttonList = [
-    <Button size="small" color="blue" onClick={callback}>
+    <button size="small" color="blue" onClick={callback}>
       확인
-    </Button>,
-    <Button size="small" onClick={handleClose}>
+    </button>,
+    <button size="small" onClick={handleClose}>
       닫기
-    </Button>,
+    </button>,
   ],
 }) {
   const modalRef = useRef(null);
