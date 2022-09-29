@@ -18,6 +18,7 @@ import Toggle from './Toggle';
 import { TextInput } from './components/InputComponent';
 import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton } from './Button/Button';
+import ItemList from './ItemList/ItemList';
 
 export { HeaderCreator };
 
@@ -58,3 +59,5 @@ export { Toggle };
 export { TextInput };
 
 export { InputGrid };
+
+export { ItemList };
