@@ -43,7 +43,7 @@ const Container = styled.div`
     z-index: 10;
     background-color: white;
     border-bottom: 1px solid #bdbdbd;
-    transition: 0.4s;
+    transition: 0.2s;
     color: black;
 
     ${({ hide }) => {
@@ -66,8 +66,8 @@ const Container = styled.div`
     top: 0;
     left: 275px;
     color: white;
-    font-size: 35px;
-    padding: 10px;
+    font-size: 26px;
+    padding: 14.5px;
     cursor: pointer;
   }
 `;
@@ -78,7 +78,7 @@ const AsideWrap = styled.div`
   min-width: 239px;
   padding: 16px 18px;
   font-size: 15px;
-  transition: 0.4s;
+  transition: 0.2s;
 
   ${({ hide }) => {
     return (
@@ -90,28 +90,35 @@ const AsideWrap = styled.div`
   }};
 
   & ul li a {
-    margin: 2px 0 0 0;
     color: #212529;
     text-align: left;
     border-radius: 5px;
     padding: 10px 15px;
     display: flex;
     align-items: center;
+    margin-top: 5px;
 
     & svg {
       font-size: 20px;
       min-width: 20px;
       display: block;
     }
-
     &:hover {
-      font-weight: bold;
-      background-color: #e8eefb;
+      background-color: #cfd8dc;
     }
+  }
+
+  & > ul > li > a {
     &.active {
       font-weight: bold;
       color: white;
       background-color: #212529 !important;
+    }
+  }
+
+  & ul li ul li:has(a.active) {
+    &:before {
+      background: black;
     }
   }
 `;
@@ -131,7 +138,7 @@ const SideTitle = styled.div`
 `;
 
 const MainWrap = styled.div`
-  flex: 1;
+  width: 100%;
 `;
 
 export default AsideCreator;

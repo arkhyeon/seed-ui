@@ -10,21 +10,23 @@ export const theme = {
     divideLine: '#ebebeb',
   },
   dataListStyle: {
-    hoverBackgroundColor: '#00ADB5',
+    hoverBackgroundColor: 'black',
+    hoverColor: 'white',
   },
   paginationStyle: {
     backgroundColor: 'white',
     fontColor: 'red',
     hoverBackgroundColor: '#e7434e',
     hoverFontColor: 'white',
+    activeBackgroundColor: '#212529',
+    activeFontColor: 'white',
     borderColor: '#737373',
     divideLine: '#737373',
   },
-
   modalStyle: {
     headBg: '#eee',
-    headFc: '#808080',
-    headBorder: '1px solid black',
+    headFc: '#212529',
+    headBorder: '1px solid #9e9e9e',
     modalBorder: 'none',
   },
 };

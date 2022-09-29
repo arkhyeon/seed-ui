@@ -25,15 +25,14 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
     return (
       <>
         {list.map((el, idx) => (
-          <Button
-            className="toggle-items"
-            key={`toggle-${idx}`}
-            btnValue={idx + 1}
-            value={value}
+          <ToggleButton
+            key={el}
+            aria-pressed={value === idx + 1 ? true : null}
+            value={idx + 1}
             onClick={() => handleToggle(idx + 1)}
           >
             {el}
-          </Button>
+          </ToggleButton>
         ))}
       </>
     );
@@ -43,31 +42,21 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
 }
 
 const Wrapper = styled.div`
-  display: inline-block;
-  border-radius: 4px;
-  background: transparent;
+  width: 100%;
+  display: flex;
 `;
 
-const Button = styled.button`
+const ToggleButton = styled.div`
   cursor: pointer;
-  background: transparent;
-  border: none;
-  outline: none;
-  border-radius: 4px;
   font-size: 14px;
   color: #545454;
-  margin-right: 18px;
+  padding: 10px 0;
+  margin-right: 50px;
 
   :hover,
-  :active {
+  &[aria-pressed] {
     font-weight: bold;
-
-    :after {
-      content: '';
-      display: block;
-      border-bottom: 2px solid #212529;
-      margin-top: 10px;
-    }
+    box-shadow: inset 0 -2px 0 #212529;
   }
 `;
 

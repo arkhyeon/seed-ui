@@ -14,7 +14,7 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
     document.addEventListener('mousedown', e => {
       exitDataList(e);
     });
-
+    setTextData(valueList[0]);
     return () => {
       document.removeEventListener('mousedown', e => {
         exitDataList(e);
@@ -113,7 +113,7 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
       <DataListWrap>
         <DataListInput
           id={id}
-          inputref={ref}
+          inputRef={ref}
           type="text"
           onChange={e => searchData(e.target.value)}
           autoComplete="off"
@@ -148,13 +148,14 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
 }
 
 const DataListWrap = styled.div`
+  width: 100%;
   position: relative;
   display: flex;
 `;
 
 const DataListItemWrap = styled.ul`
   width: 100%;
-  height: 400px;
+  max-height: 400px;
   display: none;
   position: absolute;
   top: 99%;
@@ -180,14 +181,16 @@ const DataListItemWrap = styled.ul`
 `;
 
 const DataListItem = styled.li`
-  height: 24px;
+  height: 16px;
   border-bottom: 1px solid #ced4da;
   outline: none;
   padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 14px;
   &:hover,
   &:focus,
   &.activeDataList {
     background-color: ${({ theme }) => theme.dataListStyle.hoverBackgroundColor};
+    color: ${({ theme }) => theme.dataListStyle.hoverColor};
   }
 `;
 

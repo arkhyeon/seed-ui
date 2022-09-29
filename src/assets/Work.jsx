@@ -6,8 +6,8 @@ import { DepthList1 } from './DepthMenuList';
 import DataList from '../components/components/DataList';
 import Pagination from '../components/components/Pagination';
 import { TextInput } from '../components/components/InputComponent';
-import BlackButton from '../components/Button/BlackButton';
 import Logo from './Logo';
+import { BlackButton, WhiteButton } from '../components/Button/Button';
 
 function Work() {
   const { pathname } = useLocation();
@@ -16,10 +16,7 @@ function Work() {
   const setDataListData = value => {
     setState({ id: value });
   };
-  const data1 = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
-    27, 28, 29, 30,
-  ];
+  const data1 = [1, 2, 3, 4, 5];
   const data2 = [
     'Andi',
     'Stern',
@@ -107,15 +104,9 @@ function Work() {
           onClick={componentClickFunc}
           onChange={e => componentChangeFunc(e.target.value)}
         />
-        <label>
-          상태
-          <select>
-            <option value={1}>신규</option>
-            <option value={2}>업데이트</option>
-          </select>
-        </label>
-        <BlackButton>검색</BlackButton>
       </SearchWrapper>
+      <BlackButton>검색</BlackButton>
+      <WhiteButton>검색</WhiteButton>
       <form
         onSubmit={e => {
           checkSubmit(e);
