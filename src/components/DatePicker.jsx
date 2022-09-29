@@ -208,6 +208,11 @@ function DatePicker({
     }
     const lastDay = new Date(year, month + 1, 0).getDate();
 
+    const dupSelectedDate = new Date(date.getTime());
+    const selectedYear = dupSelectedDate.getFullYear();
+    const selectedMonth = dupSelectedDate.getMonth();
+    const selectedDate = dupSelectedDate.getDate();
+
     const days = [];
 
     for (let i = 0; i < firstWeekDay; i++) {
@@ -226,18 +231,39 @@ function DatePicker({
 
     return (
       <DayWrapper>
-        {days.map((el, idx) => (
-          <Day
-            key={`day-${idx}`}
-            onClick={handleDayClick}
-            day={el}
-            date={date}
-            dateViewed={dateViewed}
-            selectedBg={selectedBg}
-          >
-            {el}
-          </Day>
-        ))}
+        {days.map((el, idx) => {
+          if (
+            selectedYear === year &&
+            selectedMonth === month &&
+            parseInt(el, 10) === selectedDate
+          ) {
+            return (
+              <Day
+                className="selected-day"
+                key={`day-${idx}`}
+                onClick={handleDayClick}
+                day={el}
+                date={date}
+                dateViewed={dateViewed}
+                selectedBg={selectedBg}
+              >
+                {el}
+              </Day>
+            );
+          }
+          return (
+            <Day
+              key={`day-${idx}`}
+              onClick={handleDayClick}
+              day={el}
+              date={date}
+              dateViewed={dateViewed}
+              selectedBg={selectedBg}
+            >
+              {el}
+            </Day>
+          );
+        })}
       </DayWrapper>
     );
   };
@@ -309,6 +335,7 @@ function DatePicker({
   return (
     <Wrapper>
       <Input
+        className="date-picker-input"
         width={width}
         ref={inputRef}
         onChange={handleInput}
@@ -319,8 +346,8 @@ function DatePicker({
       />
       {isOpen && (
         <PickerWrapper ref={pickerRef} pickerBg={pickerBg}>
-          <Head headBg={headBg}>
-            <Button pos="left" width={width} onClick={handlePrev}>
+          <Head headBg={headBg} className="date-picker-head">
+            <Button pos="left" width={width} onClick={handlePrev} className="date-picker-button">
               <AiOutlineLeft />
             </Button>
             <Button pos="right" width={width} onClick={handleNext}>
@@ -423,6 +450,10 @@ const DayWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  .selected-day {
+    background: #eee;
+  }
 `;
 
 const Day = styled.li`
@@ -440,29 +471,6 @@ const Day = styled.li`
   padding: 8px 0;
 
   border-radius: 4px;
-
-  ${({ day, date, dateViewed, selectedBg }) => {
-    if (
-      dateViewed.getFullYear() === date.getFullYear() &&
-      dateViewed.getMonth() === date.getMonth() &&
-      parseInt(day, 10) === date.getDate()
-    ) {
-      return css`
-        background: ${selectedBg};
-      `;
-    }
-    if (day !== '') {
-      return css`
-        background: transparent;
-        :hover {
-          background: #eee;
-        }
-      `;
-    }
-    return css`
-      background: transparent;
-    `;
-  }};
 `;
 
 export default DatePicker;
