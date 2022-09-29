@@ -1,7 +1,6 @@
 import HeaderCreator from './HeaderCreator';
 import { SetRoute } from './CreateMenu';
 import AsideCreator from './AsideCreator';
-import Button from './Button';
 import Tooltip from './Tooltip';
 import Modal from './Modal';
 import alarm from './alarm';
@@ -24,8 +23,6 @@ export { HeaderCreator };
 export { SetRoute };
 
 export { AsideCreator };
-
-export { Button };
 
 export { Tooltip };
 
