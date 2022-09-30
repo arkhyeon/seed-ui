@@ -1254,3 +1254,9 @@ function testItemList() {
    항목을 눌렀을 경우 실행될 함수  
    해당 함수는 첫 번째 인자로 항목의 id 값을 받음  
    default 값은 null
+
+4. <code> button {Component} </code>
+
+   itemList에 추가할 버튼 ex) 새로운 아이템 생성  
+   나열될 항목 위에 컴포넌트 생성  
+   default 값은 null

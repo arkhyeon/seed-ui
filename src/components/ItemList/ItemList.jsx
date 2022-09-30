@@ -15,10 +15,19 @@ import Item from './Item';
  * 항목 눌렀을 경우 실행될 함수
  * 해당 함수는 첫 번째 인자로 항목의 id 값을 받음
  * default 값은 null
+ * @param {Component} props.button
+ * itemList에 추가할 버튼 ex) 새로운 아이템 생성
+ * 나열될 항목 위에 컴포넌트 생성
+ * default 값은 null
  * @returns {JSX.Element} ItemList Component
  */
 
-function ItemList({ title = '제목', itemList = [{ id: 1, value: 'item_1' }], click = null }) {
+function ItemList({
+  title = '제목',
+  itemList = [{ id: 1, value: 'item_1' }],
+  click = null,
+  button = null,
+}) {
   const [isShow, setIsShow] = useState(true);
   const itemListRef = useRef(null);
   const containerRef = useRef(null);
@@ -65,6 +74,7 @@ function ItemList({ title = '제목', itemList = [{ id: 1, value: 'item_1' }], c
       <Wrapper ref={itemListRef}>
         <Head title={title} handleShow={handleShow} />
         <DividingLine />
+        <ButtonWrapper>{button}</ButtonWrapper>
         <Content>{renderItem()}</Content>
       </Wrapper>
     </Container>
@@ -110,6 +120,12 @@ const Content = styled.div`
       color: rgb(66, 130, 219);
     }
   }
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: 15px;
+  padding-right: 32px;
+  padding-left: 32px;
 `;
 
 export default ItemList;
