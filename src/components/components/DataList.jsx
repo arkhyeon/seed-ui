@@ -14,7 +14,7 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
     document.addEventListener('mousedown', e => {
       exitDataList(e);
     });
-    setTextData(valueList[0]);
+    setTextData(valueList[0], labelList[0] || valueList[0]);
     return () => {
       document.removeEventListener('mousedown', e => {
         exitDataList(e);
@@ -33,20 +33,21 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
     dataListWrapRef.current.style.display = 'none';
   };
 
-  const searchData = value => {
+  const searchData = (value, label) => {
     setData(value);
     if (select) {
       return;
     }
     const searchList = dataList.filter(data => {
       const stringLabel = data.label.toString();
-      return stringLabel.includes(value);
+      return stringLabel.includes(label);
     });
 
     dataListWrapRef.current.style.display = 'block';
 
     if (searchList[0] === undefined) {
       dataListWrapRef.current.style.display = 'none';
+      setDataListState([]);
       return;
     }
 
@@ -58,9 +59,9 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
     setDataListState(searchList);
   };
 
-  const setTextData = value => {
-    ref.current.value = value;
-    searchData(value);
+  const setTextData = (value, label) => {
+    ref.current.value = label;
+    searchData(value, label);
     dataListWrapRef.current.style.display = 'none';
   };
 
@@ -104,7 +105,10 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
       if (dataListWrapRef.current.children[moveCount]?.attributes.value.value === undefined) {
         return;
       }
-      setTextData(dataListWrapRef.current.children[moveCount]?.attributes.value.value);
+      setTextData(
+        dataListWrapRef.current.children[moveCount]?.attributes.value.value,
+        dataListWrapRef.current.children[moveCount]?.attributes.value.ownerElement.innerText,
+      );
     }
   };
 
@@ -115,7 +119,7 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
           id={id}
           inputRef={ref}
           type="text"
-          onChange={e => searchData(e.target.value)}
+          onChange={e => searchData(e.target.value, e.target.value)}
           autoComplete="off"
           onFocus={() => {
             dataListWrapRef.current.style.display = 'block';
@@ -132,7 +136,7 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
                 tabIndex={i}
                 key={data.value}
                 value={data.value}
-                onClick={() => setTextData(data.value)}
+                onClick={() => setTextData(data.value, data.label)}
                 onKeyDown={e => {
                   arrowMove(e);
                 }}

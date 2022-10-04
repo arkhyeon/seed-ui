@@ -16,7 +16,8 @@ function Work() {
   const setDataListData = value => {
     setState({ id: value });
   };
-  const data1 = [1, 2, 3, 4, 5];
+  const data1 = [0, 1, 2, 3, 4];
+  const data3 = ['a12', 'b34', 'c56', 'd67', 'e90'];
   const data2 = [
     'Andi',
     'Stern',
@@ -96,7 +97,7 @@ function Work() {
         <label>DBMS 명 :</label>
         <DataList id="DBMS" valueList={data2} setData={setDataListData} />
         <label htmlFor="HEY">DBMS 명 :</label>
-        <DataList id="HEY" valueList={data1} setData={setDataListData} select />
+        <DataList id="HEY" valueList={data1} labelList={data3} setData={setDataListData} />
 
         <label htmlFor="hello">테이블 명 :</label>
         <TextInput
@@ -105,7 +106,13 @@ function Work() {
           onChange={e => componentChangeFunc(e.target.value)}
         />
       </SearchWrapper>
-      <BlackButton>검색</BlackButton>
+      <BlackButton
+        onClick={() => {
+          console.log(state);
+        }}
+      >
+        검색
+      </BlackButton>
       <WhiteButton>검색</WhiteButton>
       <form
         onSubmit={e => {
