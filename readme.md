@@ -30,6 +30,7 @@
   - [[19] inputGrid](#19-inputGrid)
     - [[19-1] 그리드 내용 배열 생성](#19-1-그리드-내용-배열-생성)
     - [[19-2] InputGrid 생성](#19-1-InputGrid-생성)
+  - [[20] itemList](#20-itemList)
 
 ## 1. <a name='1'></a>[1] 소개
 
@@ -92,17 +93,17 @@ userRole[3] > menuRole[1] >> 메뉴 비활성
 ```
 
 6. <code>subMenu {Array} (All)</code>  
-    객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성  
-    1번째 SubMenu의 Link는 부모의 이동 경로가 된다.  
-    따라서 해당 부모 메뉴의 Index 메뉴 처리를 하고 싶으면 SubMenu의 1번째 작성
+   객체 배열 형태로 메뉴를 작성하면 재귀 함수로 해당 메뉴의 하위메뉴 및 하위 Route 생성  
+   1번째 SubMenu의 Link는 부모의 이동 경로가 된다.  
+   따라서 해당 부모 메뉴의 Index 메뉴 처리를 하고 싶으면 SubMenu의 1번째 작성
 
 7. <code>icon {component} (Side Menu Option)</code>  
-    사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
-    (react-icons / svg 태그 사용)
- 
+   사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
+   (react-icons / svg 태그 사용)
+
 8. <code>display {boolean} (default = true)</code>  
-    메뉴의 display 여부를 결정  
-    메뉴에 보이지 않고 내부 링크로만 사용할 시 해당 param을 false 처리 한다.
+   메뉴의 display 여부를 결정  
+   메뉴에 보이지 않고 내부 링크로만 사용할 시 해당 param을 false 처리 한다.
 
 ```JavaScript
 export const MenuList = [
@@ -390,8 +391,7 @@ const [dataListData, setDataListData] = useState();
    DataList에 설정된 Value 값 상태 관리 담당
 
 5. <code>select {boolean} (default = false)</code>  
-   DataList가 아닌 Select 사용 시 select 설정
-   select가 true라면 readOnly 설정됨.
+   DataList가 아닌 Select 사용 시 select 설정 select가 true라면 readOnly 설정됨.
 
 6. Style
 
@@ -439,48 +439,11 @@ export const theme = {
 
 ## 6. <a name='6-button'></a>[6] button
 
+BlackButton 컴포넌트와 WhiteButton 컴포넌트 중 선택하여 사용 가능
+
 ```javascript
-<Button>버튼<Button>
+<BlackButton>버튼<BlackButton>
 ```
-
-1. <code>type {String}</code>  
-   버튼 형태 결정 (색은 color 값에 따라 결정)  
-   'fill': 배경색 존재 (default)  
-   'border': 배경색 흰색, 테두리만 존재  
-   'text': 배경색 투명, 테두리 없이 텍스트만 존재
-
-2. <code>color {String}</code>  
-   버튼의 색깔 결정  
-   'success': 초록색  
-   'error': 빨간색  
-   'coral': 산호색  
-   'blue': 연한 파란색  
-   'gray': 회색 (default)
-
-3. <code>size {String}</code>  
-   버튼의 크기 결정  
-   'small': 작은 크기  
-   'medium': 중간 크기 (default)  
-   'big': 큰 크기
-
-4. <code>width {Int}</code>  
-   버튼의 너비 설정  
-   버튼이 특정한 너비를 가져야 할 때 길이 지정 가능  
-   default 값은 'auto'
-
-5. <code>disabled {Boolean}</code>  
-   버튼 활성화 여부  
-   true: 버튼 활성화 (default)  
-   false: 버튼 비활성화
-
-6. <code>isAnimation {Boolean}</code>  
-   버튼 클릭시 애니메이션 동작 여부 결정  
-   true: 애니메이션 동작 (default)  
-   false: 애니메이션 미동작
-
-7. <code>icon {Component}</code>  
-   값의 여부에 따라 아이콘 추가 여부 결정  
-   값이 존재할 시 텍스트 앞에 해당 아이콘 추가
 
 ## 7. <a name='7-tooltip'></a>[7] tooltip
 
@@ -1144,61 +1107,17 @@ function TestToggle () {
    토글에 들어갈 텍스트가 담긴 배열  
    default 값은 ['아이템 없음']
 
-2. <code> padding {String} </code>
-
-   버튼에서 텍스트가 가지는 여백 (버튼의 크기 관련)  
-   default 값은 '12px'
-
-3. <code> value {Number} </code>
+2. <code> value {Number} </code>
 
    선택된 버튼의 값  
    useState로 관리되는 상태값 이여야 함  
    default 값은 1
 
-4. <code> setValue {Function} </code>
+3. <code> setValue {Function} </code>
 
    선택된 버튼의 값을 바꾸는 함수  
    useState로 생성된 상태 관리 함수여야 함  
    default 값은 null
-
-5. <code> style {Object} </code>
-
-   토글의 css를 관리하는 객체
-
-   1. <code>bgColor {String} </code>
-
-   토글 버튼의 기본 색  
-   default 값은 '#eee'
-
-   2. <code>fontColor {Strimg} </code>
-
-   토글 버튼의 텍스트 기본 색  
-   default 값은 'black'
-
-   3. <code>fontSize {String} </code>
-
-   토글 버튼의 텍스트 크기  
-   default 값은 '1rem'
-
-   4. <code>hoverColor {String} </code>
-
-   토글 버튼에 커서 올렸을 때, 버튼의 색  
-   default 값은 'white'
-
-   5. <code>hoverFontColor {String} </code>
-
-   토글 버튼에 커서 올렸을 때, 텍스트의 색  
-   default 값은 'white'
-
-   6. <code>clickedColor {String} </code>
-
-   선택된 버튼의 색  
-   default 값은 '#3498db'
-
-   7. <code>clickedFontColor {String} </code>
-
-   선택된 버튼의 텍스트 색  
-   default 값은 'white'
 
 ## 19. <a name='19-inputGrid'></a>[18] inputGrid
 
@@ -1306,3 +1225,38 @@ function TestInputGrid () {
 
    내용 칸의 여백 값  
    default 값은 '12px'
+
+## 20. <a name='20-itemList'></a>[20] itemList
+
+```javascript
+function testItemList() {
+  const click = id => {
+    console.log(id);
+  };
+
+  return <ItemList title="그룹 목록" itemList={[{ id: 1, value: 'test 그룹1' }]} click={click} />;
+}
+```
+
+1. <code> title {String} </code>
+
+   ItemList 컴포넌트의 제목 (최상단에 표시 됨)  
+   default 값은 '제목'
+
+2. <code> itemList {Object []} </code>
+
+   나열될 항목  
+   Object의 형태는 {id: Number, value: String}  
+   default 값은 null
+
+3. <code> click {Function} </code>
+
+   항목을 눌렀을 경우 실행될 함수  
+   해당 함수는 첫 번째 인자로 항목의 id 값을 받음  
+   default 값은 null
+
+4. <code> button {Component} </code>
+
+   itemList에 추가할 버튼 ex) 새로운 아이템 생성  
+   나열될 항목 위에 컴포넌트 생성  
+   default 값은 null

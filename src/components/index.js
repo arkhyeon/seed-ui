@@ -1,7 +1,6 @@
 import HeaderCreator from './HeaderCreator';
 import { SetRoute } from './CreateMenu';
 import AsideCreator from './AsideCreator';
-import Button from './Button';
 import Tooltip from './Tooltip';
 import Modal from './Modal';
 import alarm from './alarm';
@@ -19,14 +18,13 @@ import Toggle from './Toggle';
 import { TextInput } from './components/InputComponent';
 import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton } from './Button/Button';
+import ItemList from './ItemList/ItemList';
 
 export { HeaderCreator };
 
 export { SetRoute };
 
 export { AsideCreator };
-
-export { Button };
 
 export { BlackButton, WhiteButton };
 
@@ -61,3 +59,5 @@ export { Toggle };
 export { TextInput };
 
 export { InputGrid };
+
+export { ItemList };
