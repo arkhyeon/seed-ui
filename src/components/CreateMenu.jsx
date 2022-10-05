@@ -205,7 +205,7 @@ SubMenuItem.Item = styled.li`
   & ul li.mainActive:active > a {
     color: #ffffff;
     font-weight: bold;
-    background-color: #212529 !important;
+    background-color: #3e3e3e !important;
   }
 
   & a {

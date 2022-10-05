@@ -8,11 +8,14 @@ import Pagination from '../components/components/Pagination';
 import { TextInput } from '../components/components/InputComponent';
 import Logo from './Logo';
 import { BlackButton, WhiteButton } from '../components/Button/Button';
+import { DatePicker, TimePicker } from '../components';
 
 function Work() {
   const { pathname } = useLocation();
   const [state, setState] = useState({});
-
+  const [check, setCheck] = useState(true);
+  const [time, setTime] = useState();
+  const [date, setDate] = useState(new Date());
   const setDataListData = value => {
     setState({ id: value });
   };
@@ -123,6 +126,9 @@ function Work() {
         <input id="b1" type="text" />
         <button type="submit">hi</button>
       </form>
+      <TimePicker time={time} setTime={setTime} />
+      <DatePicker date={date} setDate={setDate} />
+      <TextInput />
     </AsideCreator>
   );
 }

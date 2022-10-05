@@ -44,7 +44,7 @@ const HeaderWrap = styled.div`
   height: 55px;
   position: relative;
   z-index: 10;
-  background-color: black;
+  background-color: #3e3e3e;
 
   & > a {
     display: flex;

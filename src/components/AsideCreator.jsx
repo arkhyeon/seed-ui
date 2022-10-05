@@ -112,13 +112,13 @@ const AsideWrap = styled.div`
     &.active {
       font-weight: bold;
       color: white;
-      background-color: #212529 !important;
+      background-color: #3e3e3e !important;
     }
   }
 
   & ul li ul li:has(a.active) {
     &:before {
-      background: black;
+      background: #3e3e3e;
     }
   }
 `;
