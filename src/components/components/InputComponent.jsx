@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 export function TextInput(props) {
   return (
     <TextInputWrap>
-      <TextInputComp {...props} />
+      <TextInputComp ref={props.inputRef} {...props} />
     </TextInputWrap>
   );
 }
