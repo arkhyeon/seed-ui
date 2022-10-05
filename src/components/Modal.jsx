@@ -119,6 +119,7 @@ function Modal({
   return (
     modalState && (
       <>
+        <ModalBack onClick={handleClose} />
         <ModalWrap ref={modalRef} style={{ left: `${pos.x}px`, top: `${pos.y}px` }} width={width}>
           <ModalHeader ref={headRef} onMouseDown={handleDown} movable={movable}>
             {modalTitle || null}
@@ -131,7 +132,6 @@ function Modal({
             })}
           </ModalFooter>
         </ModalWrap>
-        <ModalBack onClick={handleClose} />
       </>
     )
   );
@@ -201,7 +201,7 @@ const ModalBack = styled.div`
   position: fixed;
   top: 0px;
   left: 0px;
-  z-index: 90;
+  z-index: 999;
   opacity: 0.3;
 `;
 
