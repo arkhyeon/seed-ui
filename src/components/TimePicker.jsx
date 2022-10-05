@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
+import { TextInput } from './components/InputComponent';
 
 /**
  * @param {String} props.time
@@ -206,10 +207,10 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
 
   return (
     <Wrapper>
-      <Input
+      <TextInput
         value={time}
         onChange={handleInput}
-        ref={inputRef}
+        inputRef={inputRef}
         width={width}
         onClick={handleOpen}
       />
@@ -232,14 +233,8 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
 }
 
 const Wrapper = styled.div`
+  width: 100%;
   position: relative;
-`;
-
-const Input = styled.input`
-  width: 50px;
-  text-align: center;
-
-  width: ${({ width }) => width};
 `;
 
 const TimeWrapper = styled.div`
