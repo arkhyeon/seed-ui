@@ -144,7 +144,7 @@ function SubMenuItem({
           onClick={() => handleMenuSelection('', 0)}
           className="mainActive"
         >
-          <NavLink to={link}>{title}</NavLink>
+          <NavLink to={subMenu.length !== 0 ? subMenu[0].link : link}>{title}</NavLink>
         </SubMenuItem.Item>
       )}
     </>
