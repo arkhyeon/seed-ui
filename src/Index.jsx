@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { DepthList1 } from './assets/DepthMenuList';
-import { HeaderCreator } from './components';
+import { DatePicker, HeaderCreator } from './components';
 
 import Logo from './assets/Logo';
 import ItemList from './components/ItemList/ItemList';
+import TypeList from './components/TypeList/TypeList';
 
 function Index() {
   const click = id => {
@@ -31,22 +32,16 @@ function Index() {
       <Outlet />
 
       <Container>
-        <ItemList
-          title="그룹"
-          itemList={[
-            { id: 1, value: 'item_1' },
-            { id: 2, value: 'item_2' },
-            { id: 3, value: 'item_3' },
-          ]}
-          click={click}
-        />
+        {/* <ItemList /> */}
+        <div style={{ width: '300px' }}>
+          <TypeList list={['그룹1', '그룹2', '그룹3']} />
+        </div>
       </Container>
     </div>
   );
 }
 
 const Container = styled.div`
-  background: orange;
   width: 1200px;
   height: 600px;
   position: absolute;
