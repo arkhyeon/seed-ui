@@ -144,7 +144,7 @@ function SubMenuItem({
           onClick={() => handleMenuSelection('', 0)}
           className="mainActive"
         >
-          <NavLink to={link}>{title}</NavLink>
+          <NavLink to={subMenu.length !== 0 ? subMenu[0].link : link}>{title}</NavLink>
         </SubMenuItem.Item>
       )}
     </>
@@ -205,7 +205,7 @@ SubMenuItem.Item = styled.li`
   & ul li.mainActive:active > a {
     color: #ffffff;
     font-weight: bold;
-    background-color: #212529 !important;
+    background-color: #3e3e3e !important;
   }
 
   & a {

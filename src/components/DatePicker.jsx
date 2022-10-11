@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { TextInput } from './components/InputComponent';
 
 /**
  * @param {Date} param.date
@@ -342,10 +343,10 @@ function DatePicker({
 
   return (
     <Wrapper>
-      <Input
+      <TextInput
         className="date-picker-input"
         width={width}
-        ref={inputRef}
+        inputRef={inputRef}
         onChange={handleInput}
         value={inputValue}
         onClick={() => {
@@ -373,11 +374,8 @@ function DatePicker({
 }
 
 const Wrapper = styled.div`
+  width: 100%;
   position: relative;
-`;
-
-const Input = styled.input`
-  width: ${({ width }) => width};
 `;
 
 const PickerWrapper = styled.div`

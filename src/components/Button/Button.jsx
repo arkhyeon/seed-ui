@@ -27,7 +27,7 @@ const Button = styled.button`
 
 const BlackBtn = styled(Button)`
   color: #ffffff;
-  background: #212529;
+  background: #3e3e3e;
 `;
 
 const WhiteBtn = styled(Button)`

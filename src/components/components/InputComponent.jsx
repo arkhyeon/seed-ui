@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 export function TextInput(props) {
   return (
     <TextInputWrap>
-      <TextInputComp {...props} />
+      <TextInputComp ref={props.inputRef} {...props} />
     </TextInputWrap>
   );
 }
@@ -20,7 +20,7 @@ const TextInputComp = styled.input`
   border-radius: 5px;
   color: #212529;
   font-size: 14px;
-  padding: 8px 36px 6px 12px;
+  padding: 8px 0px 6px 12px;
 `;
 
 export function DataListInput(props) {
@@ -33,4 +33,53 @@ const DataListInputComp = styled(TextInputComp)`
   background-repeat: no-repeat;
   background-size: 16px 12px;
   outline: none;
+  padding: 8px 36px 6px 12px;
+`;
+
+export function LabelInput(props) {
+  return (
+    <CheckBoxWrap>
+      <label htmlFor={props.id}>
+        <input id={props.id} type="checkbox" {...props} />
+        {props.label}
+      </label>
+    </CheckBoxWrap>
+  );
+}
+
+const CheckBoxWrap = styled.div`
+  width: 100%;
+  display: flex;
+
+  & label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+
+    & input {
+      width: 18px;
+      height: 18px;
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 0.15em;
+      border: 0.15em solid #545454;
+      outline: none;
+      cursor: pointer;
+
+      &:checked {
+        background-color: #545454;
+
+        &::before {
+          content: '\\2714';
+          color: #fff;
+          font-size: 14px;
+          position: relative;
+          left: 1px;
+          top: -3px;
+        }
+      }
+    }
+  }
 `;
