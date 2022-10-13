@@ -15,7 +15,7 @@ import Switch from './Switch';
 import DataList from './components/DataList';
 import Pagination from './components/Pagination';
 import Toggle from './Toggle';
-import { TextInput, LabelInput } from './components/InputComponent';
+import { TextInput, LabelCheckBox } from './components/InputComponent';
 import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton } from './Button/Button';
 import ItemList from './ItemList/ItemList';
@@ -56,7 +56,7 @@ export { Pagination };
 
 export { Toggle };
 
-export { TextInput, LabelInput };
+export { TextInput, LabelCheckBox };
 
 export { InputGrid };
 

@@ -9,11 +9,19 @@ import { TextInput } from '../components/components/InputComponent';
 import Logo from './Logo';
 import { BlackButton, WhiteButton } from '../components/Button/Button';
 import { DatePicker, TimePicker } from '../components';
+import { useForm } from 'react-hook-form';
 
 function Work() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm();
   const { pathname } = useLocation();
   const [state, setState] = useState({});
-  const [check, setCheck] = useState(true);
+  const [check, setCheck] = useState(false);
   const [time, setTime] = useState();
   const [date, setDate] = useState(new Date());
   const setDataListData = value => {
@@ -53,6 +61,10 @@ function Work() {
     'Marianne',
     'Dael',
   ];
+
+  const onSubmit = data => {
+    console.log(data);
+  };
 
   const pageFunction = (currentPage, dataLength) => {
     console.log(currentPage);
@@ -98,9 +110,23 @@ function Work() {
       </button>
       <SearchWrapper>
         <label>DBMS 명 :</label>
-        <DataList id="DBMS" valueList={data2} setData={setDataListData} />
+        <DataList
+          id="DBMS"
+          valueList={check ? data1 : data2}
+          setData={setDataListData}
+          defaultValue="Janee"
+        />
         <label htmlFor="HEY">DBMS 명 :</label>
-        <DataList id="HEY" valueList={data1} labelList={data3} setData={setDataListData} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DataList
+            id="HEY"
+            valueList={data1}
+            labelList={data3}
+            setData={setDataListData}
+            control={control}
+          />
+          <input type="submit" />
+        </form>
 
         <label htmlFor="hello">테이블 명 :</label>
         <TextInput
@@ -111,12 +137,15 @@ function Work() {
       </SearchWrapper>
       <BlackButton
         onClick={() => {
-          console.log(state);
+          console.log(check);
+          console.log(typeof check);
+          setDataListData(check ? data1[0] : data2[0]);
+          setCheck(!check);
         }}
       >
         검색
       </BlackButton>
-      <WhiteButton>검색</WhiteButton>
+      <WhiteButton onClick={() => {}}>검색</WhiteButton>
       <form
         onSubmit={e => {
           checkSubmit(e);
@@ -129,6 +158,18 @@ function Work() {
       <TimePicker time={time} setTime={setTime} />
       <DatePicker date={date} setDate={setDate} />
       <TextInput />
+      <TextBox>
+        <label htmlFor="ice-cream-choice">Choose a flavor:</label>
+        <input list="ice-cream-flavors" id="ice-cream-choice" name="ice-cream-choice" />
+
+        <datalist id="ice-cream-flavors">
+          <option value="Chocolate" />
+          <option value="Coconut" />
+          <option value="Mint" />
+          <option value="Strawberry" />
+          <option value="Vanilla" />
+        </datalist>
+      </TextBox>
     </AsideCreator>
   );
 }
@@ -148,6 +189,12 @@ const SearchWrapper = styled.div`
 
   & label {
     min-width: 80px;
+  }
+`;
+
+const TextBox = styled.div`
+  & option {
+    width: 200px;
   }
 `;
 

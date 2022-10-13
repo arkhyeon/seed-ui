@@ -36,7 +36,7 @@ const DataListInputComp = styled(TextInputComp)`
   padding: 8px 36px 6px 12px;
 `;
 
-export function LabelInput(props) {
+export function LabelCheckBox(props) {
   return (
     <CheckBoxWrap>
       <label htmlFor={props.id}>
