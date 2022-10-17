@@ -1247,7 +1247,6 @@ function testGroupList() {
   return (
     <GroupList
       unit="사용자"
-      unitType="명"
       groupList={[{ id: 1, value: '그룹 1', cnt: 5 }]}
       clickCreate={clickCreate}
       clickMenu={clickMenu}
@@ -1263,36 +1262,30 @@ function testGroupList() {
    그룹을 이루는 것이 사용자읹, 업무 인지 등에 대한 명칭을 기술  
    default 값은 '유닛'
 
-2. <code> unitType {String} </code>
-
-   그룹 구성 단위의 셈단위  
-   00개 인지, 00명 인지 구별하기 위한 인자  
-   default 값은 '개'
-
-3. <code> groupList {Object []} </code>
+2. <code> groupList {Object []} </code>
 
    생성된 그룹의 목록  
    {id: number, value: string, cnt: number}의 객체가 모인 배열  
    default 값은 [{ id: 1, value: 'item_1', cmt: 3}]
 
-4. <code> buttonList {String []} </code>
+3. <code> buttonList {String []} </code>
 
    그룹 리스트 하단에 생성될 버튼 목록  
    text만 입력하면 버튼은 양식에 따라 자동 완성  
    default 값은 ['설정']
 
-5. <code> clickCreate {Function} </code>
+4. <code> clickCreate {Function} </code>
 
    최상단 추가 버튼 클릭시 발생할 이벤트  
    default 값은 null
 
-6. <code> clickGroup {Function} </code>
+5. <code> clickGroup {Function} </code>
 
    1개의 그룹 클릭 시 발생할 이벤트  
    첫번재 인자로는 groupList에서 넣은 id값을 가짐  
    default 값은 null
 
-7. <code> clickMenu {Function} </code>
+6. <code> clickMenu {Function} </code>
 
    각 그룹을 제외한 메뉴를 클릭 시 발생할 이벤트  
    첫번째 인자로는 menu의 id 값을 가짐  

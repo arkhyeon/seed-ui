@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import Group from './Group';
 import CreateBtn from './CreateBtn';
@@ -10,10 +9,6 @@ import CreateBtn from './CreateBtn';
  * 그룹 구성 단위의 명칭
  * 그룹을 이루는 것이 사용자인지, 업무 인지 등에 대한 명칭을 기술
  * default 값은 '유닛'
- * @param {String} props.unitType
- * 그룹 구성 단위의 셈단위
- * 00개 인지, 00명 인지 구별하기 위한 인자
- * default 값은 '개'
  * @param {Object []} props.groupList
  * 생성된 그룹의 목록
  * {id: number, value: string, cnt: number}의 객체가 모인 배열
@@ -39,7 +34,6 @@ import CreateBtn from './CreateBtn';
 
 function GroupList({
   unit = '유닛',
-  unitType = '개',
   groupList = [{ id: 1, value: 'item_1', cnt: 3 }],
   buttonList = ['설정'],
   clickCreate = null,
@@ -95,7 +89,6 @@ function GroupList({
   const renderItem = useCallback(() => {
     return groupList.map((el, idx) => (
       <Group
-        unitType={unitType}
         key={`item-${el.value}`}
         idx={idx + 1}
         handleSelect={handleSelect}

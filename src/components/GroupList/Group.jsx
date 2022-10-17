@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { BsPencilSquare } from 'react-icons/bs';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
-function Group({ value, cnt, idx, handleSelect, clickGroup, id, menusRef, unitType }) {
+function Group({ value, cnt, idx, handleSelect, clickGroup, id, menusRef }) {
   const handleClick = useCallback(() => {
     handleSelect(idx);
     clickGroup(id);
@@ -19,10 +19,7 @@ function Group({ value, cnt, idx, handleSelect, clickGroup, id, menusRef, unitTy
     >
       {value}
       <Right>
-        <span>
-          {cnt}
-          {unitType}
-        </span>
+        <span>{cnt}</span>
         <Icons>
           <BsPencilSquare />
           <RiDeleteBinLine />
