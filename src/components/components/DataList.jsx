@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { DataListInput } from './InputComponent';
 
-function DataList({ id, valueList, labelList = [], setData, select = false }) {
+function DataList({ id, valueList, labelList = [], setData, select = false, defaultValue = '' }) {
   const ref = useRef();
   const dataListWrapRef = useRef();
   const dataList = valueList.map((value, i) => {
@@ -14,13 +14,27 @@ function DataList({ id, valueList, labelList = [], setData, select = false }) {
     document.addEventListener('mousedown', e => {
       exitDataList(e);
     });
-    setTextData(valueList[0], labelList[0] || valueList[0]);
     return () => {
       document.removeEventListener('mousedown', e => {
         exitDataList(e);
       });
     };
   }, []);
+
+  useEffect(() => {
+    setDataListState(dataList);
+    if (defaultValue === '') {
+      ref.current.value = labelList[0] || valueList[0];
+      // setTextData(valueList[0], labelList[0] || valueList[0]);
+    } else {
+      for (let i = 0; i < valueList.length; i++) {
+        if (valueList[i] === defaultValue) {
+          ref.current.value = labelList[i] || defaultValue;
+          // setTextData(defaultValue, labelList[i] || defaultValue);
+        }
+      }
+    }
+  }, [valueList]);
 
   const exitDataList = e => {
     if (
