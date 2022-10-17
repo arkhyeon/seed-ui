@@ -30,7 +30,9 @@
   - [[19] inputGrid](#19-inputGrid)
     - [[19-1] 그리드 내용 배열 생성](#19-1-그리드-내용-배열-생성)
     - [[19-2] InputGrid 생성](#19-1-InputGrid-생성)
-  - [[20] itemList](#20-itemList)
+  - [[20] groupList](#20-groupList)
+  - [[21] labelList](#21-labelList)
+  - [[22] uniqueLabelList](#22-uniqueLabelList)
 
 ## 1. <a name='1'></a>[1] 소개
 
@@ -1226,37 +1228,125 @@ function TestInputGrid () {
    내용 칸의 여백 값  
    default 값은 '12px'
 
-## 20. <a name='20-itemList'></a>[20] itemList
+## 20. <a name='20-groupList'></a>[20] groupList
 
 ```javascript
-function testItemList() {
-  const click = id => {
+function testGroupList() {
+  const clickCreate = () => {
+    console.log('create');
+  };
+
+  const clickGroup = id => {
     console.log(id);
   };
 
-  return <ItemList title="그룹 목록" itemList={[{ id: 1, value: 'test 그룹1' }]} click={click} />;
+  const clickMenu = id => {
+    console.log(id);
+  };
+
+  return (
+    <GroupList
+      unit="사용자"
+      unitType="명"
+      groupList={[{ id: 1, value: '그룹 1', cnt: 5 }]}
+      clickCreate={clickCreate}
+      clickMenu={clickMenu}
+      clickGroup={clickGroup}
+    />
+  );
 }
 ```
 
-1. <code> title {String} </code>
+1. <code> unit {String} </code>
 
-   ItemList 컴포넌트의 제목 (최상단에 표시 됨)  
-   default 값은 '제목'
+   그룹 구성 단위의 명칭  
+   그룹을 이루는 것이 사용자읹, 업무 인지 등에 대한 명칭을 기술  
+   default 값은 '유닛'
 
-2. <code> itemList {Object []} </code>
+2. <code> unitType {String} </code>
 
-   나열될 항목  
-   Object의 형태는 {id: Number, value: String}  
+   그룹 구성 단위의 셈단위  
+   00개 인지, 00명 인지 구별하기 위한 인자  
+   default 값은 '개'
+
+3. <code> groupList {Object []} </code>
+
+   생성된 그룹의 목록  
+   {id: number, value: string, cnt: number}의 객체가 모인 배열  
+   default 값은 [{ id: 1, value: 'item_1', cmt: 3}]
+
+4. <code> buttonList {String []} </code>
+
+   그룹 리스트 하단에 생성될 버튼 목록  
+   text만 입력하면 버튼은 양식에 따라 자동 완성  
+   default 값은 ['설정']
+
+5. <code> clickCreate {Function} </code>
+
+   최상단 추가 버튼 클릭시 발생할 이벤트  
    default 값은 null
 
-3. <code> click {Function} </code>
+6. <code> clickGroup {Function} </code>
 
-   항목을 눌렀을 경우 실행될 함수  
-   해당 함수는 첫 번째 인자로 항목의 id 값을 받음  
+   1개의 그룹 클릭 시 발생할 이벤트  
+   첫번재 인자로는 groupList에서 넣은 id값을 가짐  
    default 값은 null
 
-4. <code> button {Component} </code>
+7. <code> clickMenu {Function} </code>
 
-   itemList에 추가할 버튼 ex) 새로운 아이템 생성  
-   나열될 항목 위에 컴포넌트 생성  
+   각 그룹을 제외한 메뉴를 클릭 시 발생할 이벤트  
+   첫번째 인자로는 menu의 id 값을 가짐  
+   각 메뉴의 id는 미지정 그룹이 0, 그룹 리스트 하단에 추가되는 메뉴들은 그룹의 개수 + 1 부터 차례로 이어짐  
+   default 값은 (id) => console.log(id)
+
+## 21. <a name='21-labelList'></a>[21] labelList
+
+하나의 대상에 여러 라벨이 붙여질 수 있을 때 사용함
+
+```javascript
+function testLabelList() {
+  const [labelList, setLabelList] = useState(['그룹 1', '그룹 2']);
+
+  const createLabel = () => {
+    setLabelList(labelList.concat('test 그룹'));
+  };
+
+  return <LabelList labelList={labelList} createLabel={createLabel} />;
+}
+```
+
+1. <code> labelList {String[]} </code>
+
+   생성된 라벨의 리스트  
+   default 값은 ['그룹 1', '그룹 2']
+
+2. <code> createLabel {Function} </code>
+
+   '그룹 만들기' 버튼을 눌렀을 때 실행되는 이벤트  
+   default 값은 null
+
+## 22. <a name='22-uniqueLabelList'></a>[22] uniqueLabelList
+
+하나의 대상에 라벨이 한개만 붙여질 수 있을 때 사용함사용 방식은 21. labelList와 동일
+
+```javascript
+function testUniqueLabelList() {
+  const [labelList, setLabelList] = useState(['그룹 1', '그룹 2']);
+
+  const createLabel = () => {
+    setLabelList(labelList.concat('test 그룹'));
+  };
+
+  return <UniqueLabelList labelList={labelList} createLabel={createLabel} />;
+}
+```
+
+1. <code> labelList {String[]} </code>
+
+   생성된 라벨의 리스트  
+   default 값은 ['그룹 1', '그룹 2']
+
+2. <code> createLabel {Function} </code>
+
+   '그룹 만들기' 버튼을 눌렀을 때 실행되는 이벤트  
    default 값은 null
