@@ -42,7 +42,7 @@ function Radio({
   value = 0,
   setValue = null,
   list = ['항목 없음'],
-  text = '텍스트를 입력해주세요',
+  text = '',
   checkColor = 'rgb(144, 202, 249)',
   hoverColor = '#eee',
   labelInSpacing = '4px',
@@ -79,7 +79,7 @@ function Radio({
   };
   return (
     <Wrapper>
-      <Title>{text}</Title>
+      {/*<Title>{text}</Title>*/}
       {renderOption()}
     </Wrapper>
   );

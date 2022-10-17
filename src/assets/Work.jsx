@@ -25,7 +25,7 @@ function Work() {
   const [time, setTime] = useState();
   const [date, setDate] = useState(new Date());
   const setDataListData = value => {
-    setState({ id: value });
+    setState(value);
   };
   const data1 = [0, 1, 2, 3, 4];
   const data3 = ['a12', 'b34', 'c56', 'd67', 'e90'];
@@ -110,12 +110,7 @@ function Work() {
       </button>
       <SearchWrapper>
         <label>DBMS 명 :</label>
-        <DataList
-          id="DBMS"
-          valueList={check ? data1 : data2}
-          setData={setDataListData}
-          defaultValue="Janee"
-        />
+        <DataList id="DBMS" valueList={check ? data1 : data2} setData={setDataListData} />
         <label htmlFor="HEY">DBMS 명 :</label>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DataList
@@ -139,7 +134,6 @@ function Work() {
         onClick={() => {
           console.log(check);
           console.log(typeof check);
-          setDataListData(check ? data1[0] : data2[0]);
           setCheck(!check);
         }}
       >
