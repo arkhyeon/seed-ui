@@ -3,11 +3,37 @@ import styled from '@emotion/styled';
 import { BsPencilSquare } from 'react-icons/bs';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
-function Group({ value, cnt, idx, handleSelect, clickGroup, id, menusRef }) {
+function Group({
+  value,
+  cnt,
+  idx,
+  handleSelect,
+  clickGroup,
+  id,
+  menusRef,
+  clickModify,
+  clickDelete,
+}) {
   const handleClick = useCallback(() => {
     handleSelect(idx);
     clickGroup(id);
   }, [idx, handleSelect, id, clickGroup]);
+
+  const handleModify = useCallback(
+    event => {
+      event.stopPropagation();
+      clickModify(id);
+    },
+    [clickModify, id],
+  );
+
+  const handleDelete = useCallback(
+    event => {
+      event.stopPropagation();
+      clickDelete(id);
+    },
+    [clickDelete, id],
+  );
 
   return (
     <Wrapper
@@ -21,8 +47,8 @@ function Group({ value, cnt, idx, handleSelect, clickGroup, id, menusRef }) {
       <Right>
         <span>{cnt}</span>
         <Icons>
-          <BsPencilSquare />
-          <RiDeleteBinLine />
+          <BsPencilSquare onClick={handleModify} />
+          <RiDeleteBinLine onClick={handleDelete} />
         </Icons>
       </Right>
     </Wrapper>

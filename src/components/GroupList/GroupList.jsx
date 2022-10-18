@@ -29,6 +29,14 @@ import CreateBtn from './CreateBtn';
  * 첫번째 인자로는 menu의 id 값을 가짐
  * 각 메뉴의 id는 미지정 그룹이 0, 그룹 리스트 하단에 추가되는 메뉴들은 그룹의 개수 + 1 부터 차례로 이어짐.
  * default 값은 (id) => console.log(id)
+ * @param {Function} props.clickModify
+ * 각 그룹의 수정 버튼을 클릭 시 발생할 이벤트
+ * 첫번째 인자로는 groupList에서 넣은 id 값을 가짐
+ * default 값은 (id) => console.log(id)
+ * @param {Function} props.clickDelete
+ * 각 그룹의 삭제 버튼을 클릭 시 발생할 이벤트
+ * 첫번째 인자로는 groupList에서 넣은 id 값을 가짐
+ * default 값은 (id) => console.log(id)
  * @returns {JSX.Element} GroupList Component
  */
 
@@ -39,6 +47,8 @@ function GroupList({
   clickCreate = null,
   clickGroup = id => console.log(id),
   clickMenu = id => console.log(id),
+  clickModify = id => console.log(id),
+  clickDelete = id => console.log(id),
 }) {
   // const [isShow, setIsShow] = useState(true);
   const itemListRef = useRef(null);
@@ -98,6 +108,8 @@ function GroupList({
         value={el.value}
         cnt={el.cnt}
         menusRef={menusRef}
+        clickModify={clickModify}
+        clickDelete={clickDelete}
       />
     ));
   }, [groupList, handleSelect, selected, clickGroup]);
