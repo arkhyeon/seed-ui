@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 
-function CreateBtn({ clickCreate, unit }) {
+function CreateBtn({ clickCreate, unit, setSelected }) {
+  const handleClick = useCallback(() => {
+    setSelected(-1);
+    clickCreate();
+  }, [clickCreate, setSelected]);
+
   return (
-    <Button onClick={clickCreate}>
+    <Button onClick={handleClick}>
       <AiOutlineUserAdd />
       <Text>{unit} 추가</Text>
     </Button>

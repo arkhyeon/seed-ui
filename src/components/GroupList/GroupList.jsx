@@ -44,7 +44,7 @@ function GroupList({
   unit = '유닛',
   groupList = [{ id: 1, value: 'item_1', cnt: 3 }],
   buttonList = ['설정'],
-  clickCreate = null,
+  clickCreate = () => console.log('생성 버튼'),
   clickGroup = id => console.log(id),
   clickMenu = id => console.log(id),
   clickModify = id => console.log(id),
@@ -101,6 +101,10 @@ function GroupList({
   }, [selected, groupList]);
 
   useEffect(() => {
+    if (selected === -1) {
+      return;
+    }
+
     if (selected >= 1 && selected <= groupList.length) {
       return;
     }
@@ -161,7 +165,7 @@ function GroupList({
     <div style={{ display: 'flex', height: '100%' }}>
       <Container ref={containerRef}>
         <Wrapper ref={itemListRef}>
-          <CreateBtn clickCreate={clickCreate} unit={unit} />
+          <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
           <DividingLine />
           <NoneGroup
             onClick={() => handleSelect(0)}
