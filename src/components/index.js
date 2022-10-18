@@ -21,6 +21,7 @@ import { BlackButton, WhiteButton } from './Button/Button';
 import GroupList from './GroupList/GroupList';
 import LabelList from './LabelList/LabelList';
 import UniqueLabelList from './LabelList/UniqueLabelList';
+import Count from './Count/Count';
 
 export { HeaderCreator };
 
@@ -67,3 +68,5 @@ export { GroupList };
 export { LabelList };
 
 export { UniqueLabelList };
+
+export { Count };
