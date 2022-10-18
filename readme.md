@@ -33,6 +33,7 @@
   - [[20] groupList](#20-groupList)
   - [[21] labelList](#21-labelList)
   - [[22] uniqueLabelList](#22-uniqueLabelList)
+  - [[23] count](#23-count)
 
 ## 1. <a name='1'></a>[1] 소개
 
@@ -1342,7 +1343,8 @@ function testLabelList() {
 
 ## 22. <a name='22-uniqueLabelList'></a>[22] uniqueLabelList
 
-하나의 대상에 라벨이 한개만 붙여질 수 있을 때 사용함사용 방식은 21. labelList와 동일
+하나의 대상에 라벨이 한개만 붙여질 수 있을 때 사용함  
+사용 방식은 21. labelList와 동일
 
 ```javascript
 function testUniqueLabelList() {
@@ -1365,3 +1367,28 @@ function testUniqueLabelList() {
 
    '그룹 만들기' 버튼을 눌렀을 때 실행되는 이벤트  
    default 값은 null
+
+## 23. <a name='23-count'></a>[23]
+
+숫자 입력만 다룰 때 활용가능한 컴포넌트
+
+```javascript
+function testCount() {
+  return <Count initialValue={1} min={0} max={99} />;
+}
+```
+
+1. <code> initialValue {Number} </code>
+
+   inptbox에 가장 처음 표기될 숫자  
+   default 값은 1
+
+2. <code> max {Number} </code>
+
+   설정할 수 있는 숫자의 최댓값  
+   default 값은 99
+
+3. <code> min {Number} </code>
+
+   설정할 수 있는 숫자의 최솟값  
+   default 값은 0
