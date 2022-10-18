@@ -158,7 +158,7 @@ function GroupList({
   }, [buttonList, handleSelect, groupList.length]);
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', height: '100%' }}>
       <Container ref={containerRef}>
         <Wrapper ref={itemListRef}>
           <CreateBtn clickCreate={clickCreate} unit={unit} />
@@ -182,7 +182,9 @@ function GroupList({
           <ButtonWrapper>{renderBtns()}</ButtonWrapper>
         </Wrapper>
       </Container>
-      <BorderRight />
+      <div>
+        <BorderRight />
+      </div>
     </div>
   );
 }
