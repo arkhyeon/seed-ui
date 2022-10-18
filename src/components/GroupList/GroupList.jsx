@@ -72,9 +72,20 @@ function GroupList({
   useEffect(() => {
     if (selected >= 1 && selected <= groupList.length + 1) {
       titleRef.current.style.background = 'rgb(232, 238, 251)';
-    } else {
-      titleRef.current.style.background = 'transparent';
+
+      for (let i = 1; i <= groupList.length + 1; i++) {
+        if (!menusRef.current[i]) {
+          continue;
+        }
+        if (i === selected) {
+          menusRef.current[i].classList.add('selectedGroup');
+        } else {
+          menusRef.current[i].classList.remove('selectedGroup');
+        }
+      }
+      return;
     }
+    titleRef.current.style.background = '#eceff1';
 
     for (let i = 0; i < menusRef.current.length; i++) {
       if (!menusRef.current[i]) {
@@ -112,7 +123,7 @@ function GroupList({
         clickDelete={clickDelete}
       />
     ));
-  }, [groupList, handleSelect, selected, clickGroup]);
+  }, [groupList, handleSelect, selected, clickGroup, clickModify, clickDelete]);
 
   // useEffect(() => {
   //   if (isShow) {
@@ -147,29 +158,32 @@ function GroupList({
   }, [buttonList, handleSelect, groupList.length]);
 
   return (
-    <Container ref={containerRef}>
-      <Wrapper ref={itemListRef}>
-        <CreateBtn clickCreate={clickCreate} unit={unit} />
-        <DividingLine />
-        <NoneGroup
-          onClick={() => handleSelect(0)}
-          ref={el => {
-            menusRef.current[0] = el;
-          }}
-        >
-          미지정 그룹
-        </NoneGroup>
-        <Content>
-          <ItemTitle onClick={handleItem} ref={titleRef}>
-            <div>그룹</div>
-            {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />}
-          </ItemTitle>
-          {isItemOpen && renderItem()}
-        </Content>
-        <DividingLine />
-        <ButtonWrapper>{renderBtns()}</ButtonWrapper>
-      </Wrapper>
-    </Container>
+    <div style={{ display: 'flex' }}>
+      <Container ref={containerRef}>
+        <Wrapper ref={itemListRef}>
+          <CreateBtn clickCreate={clickCreate} unit={unit} />
+          <DividingLine />
+          <NoneGroup
+            onClick={() => handleSelect(0)}
+            ref={el => {
+              menusRef.current[0] = el;
+            }}
+          >
+            미지정 그룹
+          </NoneGroup>
+          <Content>
+            <ItemTitle onClick={handleItem} ref={titleRef}>
+              <div>그룹</div>
+              {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />}
+            </ItemTitle>
+            {isItemOpen && renderItem()}
+          </Content>
+          <DividingLine />
+          <ButtonWrapper>{renderBtns()}</ButtonWrapper>
+        </Wrapper>
+      </Container>
+      <BorderRight />
+    </div>
   );
 }
 
@@ -177,18 +191,17 @@ const Container = styled.div`
   position: relative;
   background: white;
   height: 100%;
-  width: 260px;
   /* overflow: hidden;
   transition: 0.4s; */
   /* .close {
     transform: translate(-190px, 0);
     transition: 0.4s;
   } */
-  border-right: 1px solid #eee;
 
   .selected {
     background: rgb(33, 37, 41);
     color: #eee;
+    font-weight: bold;
 
     :before {
       background: transparent;
@@ -203,44 +216,53 @@ const Container = styled.div`
       color: #eee;
     }
   }
+
+  .selectedGroup {
+    font-weight: bold;
+  }
 `;
 
 const Wrapper = styled.div`
-  position: absolute;
-  height: 100%;
-  width: 100%;
+  /* position: absolute; */
+  height: calc(100% - 34px);
+  width: 233px;
   transition: 0.4s;
-  padding: 10px 8px;
+  padding: 18px;
+  padding-top: 16px;
 `;
 
 const DividingLine = styled.div`
-  margin-top: 8px;
-  width: calc(100% - 16px);
+  width: 233px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   height: 1px;
-  background: #d2d2d2;
+  background: #bdbdbd;
 `;
 
 const Content = styled.div`
   margin-top: 4px;
+  width: 233px;
 `;
 
 const NoneGroup = styled.div`
   margin-top: 8px;
-  width: calc(100% - 28px);
-  padding-left: 12px;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  border-radius: 5px;
+  width: 223px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  background: #eceff1;
+
+  border-radius: 4px;
   cursor: pointer;
 `;
 
 const ItemTitle = styled.div`
-  padding-left: 12px;
-  padding-top: 4px;
-  padding-bottom: 4px;
   border-radius: 5px;
+  width: 223px;
+  height: 38px;
+  padding-left: 10px;
   cursor: pointer;
-  width: calc(100% - 28px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -250,21 +272,29 @@ const ItemTitle = styled.div`
   }
 `;
 
-const ButtonWrapper = styled.div`
-  margin-top: 15px;
-`;
+const ButtonWrapper = styled.div``;
 
 const Button = styled.button`
   border: none;
   outline: none;
-  width: calc(100% - 16px);
+  width: 233px;
+  height: 38px;
   display: flex;
   background: transparent;
-  padding-left: 12px;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+
   border-radius: 5px;
   cursor: pointer;
+`;
+
+const BorderRight = styled.div`
+  height: calc(100% - 32px);
+  width: 1px;
+  background: #bdbdbd;
+  margin-top: 16px;
+  margin-bottom: 16px;
 `;
 
 export default GroupList;

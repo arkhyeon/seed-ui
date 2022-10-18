@@ -14,15 +14,14 @@ function CreateBtn({ clickCreate, unit }) {
 const Button = styled.button`
   border: none;
   outline: none;
-  background: rgb(236, 239, 241);
+  background: #eceff1;
   border-radius: 4px;
-  width: calc(100% - 16px);
+  width: 233px;
+  height: 38px;
   display: flex;
   align-items: center;
-  padding-left: 8px;
-  padding-top: 6px;
-  padding-bottom: 6px;
   cursor: pointer;
+  padding-left: 10px;
 
   svg {
     width: 20px;
