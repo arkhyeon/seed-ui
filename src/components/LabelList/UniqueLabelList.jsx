@@ -32,7 +32,7 @@ function UniqueLabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = n
   return (
     <Wrapper>
       <Section>
-        {renderLabel()}
+        <LabelWrapper>{renderLabel()}</LabelWrapper>
         <div>
           <Icon onClick={handleOpen} />
           {isSelectorOpen && (
@@ -58,6 +58,14 @@ const Section = styled.div`
   svg {
     width: 30px;
     height: 30px;
+  }
+`;
+
+const LabelWrapper = styled.div`
+  display: flex;
+
+  & > div:last-of-type {
+    margin-right: 17px;
   }
 `;
 

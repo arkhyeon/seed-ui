@@ -56,7 +56,11 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.div`
-  padding-left: 8px;
+  padding-left: 15px;
+  height: 43px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
 `;
 
 const DividingLine = styled.div`
@@ -67,7 +71,10 @@ const DividingLine = styled.div`
 `;
 
 const CreateBtn = styled.div`
-  padding-left: 12px;
+  padding-left: 15px;
+  height: 32px;
+  font-size: 14px;
+
   :hover {
     background: rgb(62, 62, 62);
     color: white;
@@ -78,6 +85,11 @@ const CreateBtn = styled.div`
 
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+
+  svg {
+    height: 15px;
+    width: 15px;
+  }
 `;
 
 export default LabelSelector;

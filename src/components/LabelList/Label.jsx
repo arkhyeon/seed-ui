@@ -11,11 +11,12 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4px 8px;
-  border-radius: 8px;
+  border-radius: 15px;
 
-  margin-right: 4px;
-  margin-left: 4px;
+  margin-right: 10px;
+  font-size: 13px;
+  padding: 8px 20px;
+  background: #78909c;
 `;
 
 export default Label;

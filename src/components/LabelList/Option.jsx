@@ -54,9 +54,16 @@ function Option({ valueArr, setValueArr, value, valueStr, setValueStr }) {
 
 const Wrapper = styled.div`
   cursor: pointer;
-  padding-left: 12px;
+  padding-left: 15px;
   display: flex;
   align-items: center;
+  height: 32px;
+  font-size: 14px;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
 
   :hover {
     background: rgb(62, 62, 62);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { MdLabelOutline } from 'react-icons/md';
 import styled from '@emotion/styled';
-import LabelSelector from './LabelSelector';
 
 function Icon({ ...rootDOMAttributes }) {
   return (
@@ -19,8 +18,8 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   svg {
-    width: 25px;
-    height: 25px;
+    width: 28px;
+    height: 28px;
   }
   cursor: pointer;
 `;
