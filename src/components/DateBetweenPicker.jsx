@@ -113,42 +113,49 @@ function DateBetweenPicker({
     }
   }, [startDateViewed, endDateViewed]);
 
-  const handleStartPicker = () => {
+  const handleStartPicker = useCallback(() => {
     setIsOpenStart(!isOpenStart);
     setIsOpenEnd(false);
-  };
-  const handleEndPicker = () => {
+  }, [isOpenStart]);
+
+  const handleEndPicker = useCallback(() => {
     setIsOpenEnd(!isOpenEnd);
     setIsOpenStart(false);
-  };
+  }, [isOpenEnd]);
 
-  const handleNext = target => {
-    if (target === 'start') {
-      const dupDate = new Date(startDateViewed.getTime());
+  const handleNext = useCallback(
+    target => {
+      if (target === 'start') {
+        const dupDate = new Date(startDateViewed.getTime());
 
-      dupDate.setMonth(dupDate.getMonth() + 1);
-      setStartDateViewed(dupDate);
-    } else if (target === 'end') {
-      const dupDate = new Date(endDateViewed.getTime());
+        dupDate.setMonth(dupDate.getMonth() + 1);
+        setStartDateViewed(dupDate);
+      } else if (target === 'end') {
+        const dupDate = new Date(endDateViewed.getTime());
 
-      dupDate.setMonth(dupDate.getMonth() + 1);
-      setEndDateViewed(dupDate);
-    }
-  };
+        dupDate.setMonth(dupDate.getMonth() + 1);
+        setEndDateViewed(dupDate);
+      }
+    },
+    [endDateViewed, startDateViewed],
+  );
 
-  const handlePrev = target => {
-    if (target === 'start') {
-      const dupDate = new Date(startDateViewed.getTime());
+  const handlePrev = useCallback(
+    target => {
+      if (target === 'start') {
+        const dupDate = new Date(startDateViewed.getTime());
 
-      dupDate.setMonth(dupDate.getMonth() - 1);
-      setStartDateViewed(dupDate);
-    } else if (target === 'end') {
-      const dupDate = new Date(endDateViewed.getTime());
+        dupDate.setMonth(dupDate.getMonth() - 1);
+        setStartDateViewed(dupDate);
+      } else if (target === 'end') {
+        const dupDate = new Date(endDateViewed.getTime());
 
-      dupDate.setMonth(dupDate.getMonth() - 1);
-      setEndDateViewed(dupDate);
-    }
-  };
+        dupDate.setMonth(dupDate.getMonth() - 1);
+        setEndDateViewed(dupDate);
+      }
+    },
+    [endDateViewed, startDateViewed],
+  );
 
   const handleOutside = useCallback(
     e => {
@@ -179,7 +186,7 @@ function DateBetweenPicker({
     };
   }, [handleOutside]);
 
-  const renderWeekDays = () => {
+  const renderWeekDays = useCallback(() => {
     return (
       <WeekWrapper weekDaysBg={weekDaysBg}>
         {weekDays.map((el, idx) => (
@@ -187,181 +194,41 @@ function DateBetweenPicker({
         ))}
       </WeekWrapper>
     );
-  };
+  }, [weekDays, weekDaysBg]);
 
-  const renderDays = target => {
-    let dupDate;
+  const checkStartEnd = useCallback((startDate, endDate) => {
+    return endDate.getTime() - startDate.getTime() >= 0;
+  }, []);
 
-    if (target === 'start') {
-      dupDate = new Date(startDateViewed.getTime());
-    } else if (target === 'end') {
-      dupDate = new Date(endDateViewed.getTime());
-    }
+  const handleDayClick = useCallback(
+    (e, target) => {
+      if (e.target.textContent === '') {
+        return null;
+      }
 
-    const year = dupDate.getFullYear();
-    const month = dupDate.getMonth();
-    let firstWeekDay = new Date(year, month, 1).getDay();
-    if (firstWeekDay === 7) {
-      firstWeekDay = 0;
-    }
-    const lastDay = new Date(year, month + 1, 0).getDate();
+      let dupDate;
 
-    const days = [];
-
-    for (let i = 0; i < firstWeekDay; i++) {
-      days.push('');
-    }
-
-    for (let i = 1; i <= lastDay; i++) {
-      days.push(String(i));
-    }
-
-    const leftDays = 7 - (days.length % 7) === 7 ? 0 : 7 - (days.length % 7);
-
-    for (let i = 1; i <= leftDays; i++) {
-      days.push('');
-    }
-
-    return (
-      <DayWrapper>
-        {days.map((el, idx) => (
-          <Day
-            key={`day-${idx}`}
-            onClick={e => handleDayClick(e, target)}
-            day={el}
-            startDate={startDate}
-            dateViewed={target === 'start' ? startDateViewed : endDateViewed}
-            endDate={endDate}
-            selectedBg={selectedBg}
-            selectedFC={selectedFC}
-          >
-            {el}
-          </Day>
-        ))}
-      </DayWrapper>
-    );
-  };
-
-  const handleDayClick = (e, target) => {
-    if (e.target.textContent === '') {
-      return null;
-    }
-
-    let dupDate;
-
-    if (target === 'start') {
-      dupDate = new Date(startDateViewed.getTime());
-    } else if (target === 'end') {
-      dupDate = new Date(endDateViewed.getTime());
-    }
-
-    const year = dupDate.getFullYear();
-    const month = dupDate.getMonth() + 1;
-    const day = parseInt(e.target.textContent, 10);
-
-    let newStartDate;
-    let newEndDate;
-
-    if (target === 'start') {
-      newStartDate = new Date(`${year}-${month}-${day}`);
-      newEndDate = endDate;
-    } else {
-      newStartDate = startDate;
-      newEndDate = new Date(`${year}-${month}-${day}`);
-    }
-
-    if (!checkStartEnd(newStartDate, newEndDate)) {
       if (target === 'start') {
-        newEndDate = newStartDate;
-      } else {
-        newStartDate = newEndDate;
-      }
-    }
-
-    setStartDate(newStartDate);
-    setStartDateViewed(newStartDate);
-    setEndDate(newEndDate);
-    setEndDateViewed(newEndDate);
-
-    setIsOpenStart(false);
-    setIsOpenEnd(false);
-  };
-
-  const handleInput = (e, target) => {
-    let prevYear;
-    let prevMonth;
-    let prevDay;
-
-    if (target === 'start') {
-      [prevYear, prevMonth, prevDay] = startInputValue.split('-');
-    } else if (target === 'end') {
-      [prevYear, prevMonth, prevDay] = endInputValue.split('-');
-    }
-
-    const [year, month, day] = e.target.value.split('-');
-    let convertedYear = '';
-    const checkDiff = false;
-    let convertedMonth = '';
-    let convertedDay = '';
-    const cursorIdx = e.target.selectionStart;
-
-    for (let i = 0; i < year.length; i++) {
-      if (i !== cursorIdx) {
-        convertedYear += year[i];
-      }
-    }
-
-    for (let i = 0; i < month.length; i++) {
-      if (i + 5 !== cursorIdx) {
-        convertedMonth += month[i];
-      }
-    }
-
-    for (let i = 0; i < day.length; i++) {
-      if (i + 8 !== cursorIdx) {
-        convertedDay += day[i];
-      }
-    }
-
-    if (convertedMonth[0] === '1' && cursorIdx === 6) {
-      convertedMonth = `${convertedMonth[0]}0`;
-    } else if (convertedMonth[0] === '0' && cursorIdx === 6) {
-      convertedMonth = `${convertedMonth[0]}1`;
-    }
-
-    if (cursorIdx === 6 || cursorIdx === 7) {
-      convertedDay = '01';
-    }
-
-    if (convertedDay[0] === '3' && cursorIdx === 9) {
-      convertedDay = `${convertedDay[0]}0`;
-    } else if (convertedDay[0] === '0' && cursorIdx === 9) {
-      convertedDay = `${convertedDay[0]}1`;
-    }
-
-    if (
-      !checkValidate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
-      !checkValidDate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
-      checkDiff === 0
-    ) {
-      if (target === 'start') {
-        setTimeout(() => {
-          startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
+        dupDate = new Date(startDateViewed.getTime());
       } else if (target === 'end') {
-        endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+        dupDate = new Date(endDateViewed.getTime());
       }
-    } else {
+
+      const year = dupDate.getFullYear();
+      const month = dupDate.getMonth() + 1;
+      const day = parseInt(e.target.textContent, 10);
+
       let newStartDate;
       let newEndDate;
 
       if (target === 'start') {
-        newStartDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+        newStartDate = new Date(`${year}-${month}-${day}`);
         newEndDate = endDate;
       } else {
         newStartDate = startDate;
-        newEndDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+        newEndDate = new Date(`${year}-${month}-${day}`);
       }
+
       if (!checkStartEnd(newStartDate, newEndDate)) {
         if (target === 'start') {
           newEndDate = newStartDate;
@@ -375,27 +242,77 @@ function DateBetweenPicker({
       setEndDate(newEndDate);
       setEndDateViewed(newEndDate);
 
-      if (target === 'start') {
-        setTimeout(() => {
-          startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
-      } else if (target === 'end') {
-        setTimeout(() => {
-          endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
-      }
-    }
-  };
+      setIsOpenStart(false);
+      return setIsOpenEnd(false);
+    },
+    [endDate, endDateViewed, setEndDate, setStartDate, startDate, startDateViewed, checkStartEnd],
+  );
 
-  const checkValidate = input => {
+  const renderDays = useCallback(
+    target => {
+      let dupDate;
+
+      if (target === 'start') {
+        dupDate = new Date(startDateViewed.getTime());
+      } else if (target === 'end') {
+        dupDate = new Date(endDateViewed.getTime());
+      }
+
+      const year = dupDate.getFullYear();
+      const month = dupDate.getMonth();
+      let firstWeekDay = new Date(year, month, 1).getDay();
+      if (firstWeekDay === 7) {
+        firstWeekDay = 0;
+      }
+      const lastDay = new Date(year, month + 1, 0).getDate();
+
+      const days = [];
+
+      for (let i = 0; i < firstWeekDay; i++) {
+        days.push('');
+      }
+
+      for (let i = 1; i <= lastDay; i++) {
+        days.push(String(i));
+      }
+
+      const leftDays = 7 - (days.length % 7) === 7 ? 0 : 7 - (days.length % 7);
+
+      for (let i = 1; i <= leftDays; i++) {
+        days.push('');
+      }
+
+      return (
+        <DayWrapper>
+          {days.map((el, idx) => (
+            <Day
+              key={`day-${idx}`}
+              onClick={e => handleDayClick(e, target)}
+              day={el}
+              startDate={startDate}
+              dateViewed={target === 'start' ? startDateViewed : endDateViewed}
+              endDate={endDate}
+              selectedBg={selectedBg}
+              selectedFC={selectedFC}
+            >
+              {el}
+            </Day>
+          ))}
+        </DayWrapper>
+      );
+    },
+    [endDate, endDateViewed, handleDayClick, selectedBg, selectedFC, startDate, startDateViewed],
+  );
+
+  const checkValidate = useCallback(input => {
     const reg = /^\d{4}-\d{2}-\d{2}$/;
     if (reg.test(input)) {
       return true;
     }
     return false;
-  };
+  }, []);
 
-  function checkValidDate(value) {
+  const checkValidDate = useCallback(value => {
     let result = true;
     try {
       const date = value.split('-');
@@ -410,95 +327,216 @@ function DateBetweenPicker({
       result = false;
     }
     return result;
-  }
+  }, []);
 
-  const checkStartEnd = (startDate, endDate) => {
-    return endDate.getTime() - startDate.getTime() >= 0;
-  };
+  const handleInput = useCallback(
+    (e, target) => {
+      let prevYear;
+      let prevMonth;
+      let prevDay;
 
-  const renderYear = target => {
-    const temp = [];
+      if (target === 'start') {
+        [prevYear, prevMonth, prevDay] = startInputValue.split('-');
+      } else if (target === 'end') {
+        [prevYear, prevMonth, prevDay] = endInputValue.split('-');
+      }
 
-    for (let i = 2000; i <= 2040; i++) {
-      temp.push(`${i}년`);
-    }
+      const [year, month, day] = e.target.value.split('-');
+      let convertedYear = '';
+      const checkDiff = false;
+      let convertedMonth = '';
+      let convertedDay = '';
+      const cursorIdx = e.target.selectionStart;
 
-    return (
-      <select
-        defaultValue={
-          target === 'start' ? `${startDate.getFullYear()}년` : `${endDate.getFullYear()}년`
+      for (let i = 0; i < year.length; i++) {
+        if (i !== cursorIdx) {
+          convertedYear += year[i];
         }
-        onChange={e => changeYear(e, target)}
-        ref={target === 'start' ? startYearRef : endYearRef}
-      >
-        {temp.map(el => (
-          <option key={`year-${el}`} value={el}>
-            {el}
-          </option>
-        ))}
-      </select>
-    );
-  };
+      }
 
-  const renderMonth = target => {
-    const temp = [];
-
-    for (let i = 1; i <= 12; i++) {
-      temp.push(`${i}월`);
-    }
-
-    return (
-      <select
-        defaultValue={
-          target === 'start' ? `${startDate.getMonth() + 1}월` : `${endDate.getMonth() + 1}월`
+      for (let i = 0; i < month.length; i++) {
+        if (i + 5 !== cursorIdx) {
+          convertedMonth += month[i];
         }
-        onChange={e => changeMonth(e, target)}
-        ref={target === 'start' ? startMonthRef : endMonthRef}
-      >
-        {temp.map(el => (
-          <option key={`month-${el}`} value={el}>
-            {el}
-          </option>
-        ))}
-      </select>
-    );
-  };
+      }
 
-  const changeYear = (e, target) => {
-    let dupDate;
+      for (let i = 0; i < day.length; i++) {
+        if (i + 8 !== cursorIdx) {
+          convertedDay += day[i];
+        }
+      }
 
-    if (target === 'start') {
-      dupDate = new Date(startDateViewed);
-    } else {
-      dupDate = new Date(endDateViewed);
-    }
+      if (convertedMonth[0] === '1' && cursorIdx === 6) {
+        convertedMonth = `${convertedMonth[0]}0`;
+      } else if (convertedMonth[0] === '0' && cursorIdx === 6) {
+        convertedMonth = `${convertedMonth[0]}1`;
+      }
 
-    dupDate.setFullYear(e.target.value.slice(0, -1));
+      if (cursorIdx === 6 || cursorIdx === 7) {
+        convertedDay = '01';
+      }
 
-    if (target === 'start') {
-      setStartDateViewed(dupDate);
-    } else {
-      setEndDateViewed(dupDate);
-    }
-  };
+      if (convertedDay[0] === '3' && cursorIdx === 9) {
+        convertedDay = `${convertedDay[0]}0`;
+      } else if (convertedDay[0] === '0' && cursorIdx === 9) {
+        convertedDay = `${convertedDay[0]}1`;
+      }
 
-  const changeMonth = (e, target) => {
-    let dupDate;
+      if (
+        !checkValidate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
+        !checkValidDate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
+        checkDiff === 0
+      ) {
+        if (target === 'start') {
+          setTimeout(() => {
+            startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        } else if (target === 'end') {
+          endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+        }
+      } else {
+        let newStartDate;
+        let newEndDate;
 
-    if (target === 'start') {
-      dupDate = new Date(startDateViewed);
-    } else {
-      dupDate = new Date(endDateViewed);
-    }
+        if (target === 'start') {
+          newStartDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+          newEndDate = endDate;
+        } else {
+          newStartDate = startDate;
+          newEndDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+        }
+        if (!checkStartEnd(newStartDate, newEndDate)) {
+          if (target === 'start') {
+            newEndDate = newStartDate;
+          } else {
+            newStartDate = newEndDate;
+          }
+        }
 
-    dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+        setStartDate(newStartDate);
+        setStartDateViewed(newStartDate);
+        setEndDate(newEndDate);
+        setEndDateViewed(newEndDate);
 
-    if (target === 'start') {
-      setStartDateViewed(dupDate);
-    } else {
-      setEndDateViewed(dupDate);
-    }
-  };
+        if (target === 'start') {
+          setTimeout(() => {
+            startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        } else if (target === 'end') {
+          setTimeout(() => {
+            endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        }
+      }
+    },
+    [
+      endDate,
+      endInputValue,
+      setEndDate,
+      setStartDate,
+      startDate,
+      startInputValue,
+      checkStartEnd,
+      checkValidDate,
+      checkValidate,
+    ],
+  );
+
+  const changeYear = useCallback(
+    (e, target) => {
+      let dupDate;
+
+      if (target === 'start') {
+        dupDate = new Date(startDateViewed);
+      } else {
+        dupDate = new Date(endDateViewed);
+      }
+
+      dupDate.setFullYear(e.target.value.slice(0, -1));
+
+      if (target === 'start') {
+        setStartDateViewed(dupDate);
+      } else {
+        setEndDateViewed(dupDate);
+      }
+    },
+    [endDateViewed, startDateViewed],
+  );
+
+  const renderYear = useCallback(
+    target => {
+      const temp = [];
+
+      for (let i = 2000; i <= 2040; i++) {
+        temp.push(`${i}년`);
+      }
+
+      return (
+        <select
+          defaultValue={
+            target === 'start' ? `${startDate.getFullYear()}년` : `${endDate.getFullYear()}년`
+          }
+          onChange={e => changeYear(e, target)}
+          ref={target === 'start' ? startYearRef : endYearRef}
+        >
+          {temp.map(el => (
+            <option key={`year-${el}`} value={el}>
+              {el}
+            </option>
+          ))}
+        </select>
+      );
+    },
+    [changeYear, endDate, startDate],
+  );
+
+  const changeMonth = useCallback(
+    (e, target) => {
+      let dupDate;
+
+      if (target === 'start') {
+        dupDate = new Date(startDateViewed);
+      } else {
+        dupDate = new Date(endDateViewed);
+      }
+
+      dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+
+      if (target === 'start') {
+        setStartDateViewed(dupDate);
+      } else {
+        setEndDateViewed(dupDate);
+      }
+    },
+    [endDateViewed, startDateViewed],
+  );
+
+  const renderMonth = useCallback(
+    target => {
+      const temp = [];
+
+      for (let i = 1; i <= 12; i++) {
+        temp.push(`${i}월`);
+      }
+
+      return (
+        <select
+          defaultValue={
+            target === 'start' ? `${startDate.getMonth() + 1}월` : `${endDate.getMonth() + 1}월`
+          }
+          onChange={e => changeMonth(e, target)}
+          ref={target === 'start' ? startMonthRef : endMonthRef}
+        >
+          {temp.map(el => (
+            <option key={`month-${el}`} value={el}>
+              {el}
+            </option>
+          ))}
+        </select>
+      );
+    },
+    [changeMonth, endDate, startDate],
+  );
 
   return (
     <Wrapper>

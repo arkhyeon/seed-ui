@@ -188,7 +188,7 @@ function DatePicker({
     setDateViewed(dupDate);
   };
 
-  const renderWeekDays = () => {
+  const renderWeekDays = useCallback(() => {
     return (
       <WeekWrapper weekDaysBg={weekDaysBg}>
         {weekDays.map((el, idx) => (
@@ -196,9 +196,28 @@ function DatePicker({
         ))}
       </WeekWrapper>
     );
-  };
+  }, [weekDays, weekDaysBg]);
 
-  const renderDays = () => {
+  const handleDayClick = useCallback(
+    e => {
+      if (e.target.textContent === '') {
+        return null;
+      }
+
+      const dupDate = new Date(dateViewed.getTime());
+
+      const year = dupDate.getFullYear();
+      const month = dupDate.getMonth() + 1;
+      const day = parseInt(e.target.textContent, 10);
+      setDate(new Date(`${year}-${month}-${day}`));
+      setDateViewed(new Date(`${year}-${month}-${day}`));
+
+      return setIsOpen(false);
+    },
+    [dateViewed, setDate],
+  );
+
+  const renderDays = useCallback(() => {
     const dupDate = new Date(dateViewed.getTime());
     const year = dupDate.getFullYear();
     const month = dupDate.getMonth();
@@ -266,25 +285,18 @@ function DatePicker({
         })}
       </DayWrapper>
     );
-  };
+  }, [date, dateViewed, selectedBg, handleDayClick]);
 
-  const handleDayClick = e => {
-    if (e.target.textContent === '') {
-      return null;
-    }
+  const changeYear = useCallback(
+    e => {
+      const dupDate = new Date(dateViewed);
+      dupDate.setFullYear(e.target.value.slice(0, -1));
+      setDateViewed(dupDate);
+    },
+    [dateViewed],
+  );
 
-    const dupDate = new Date(dateViewed.getTime());
-
-    const year = dupDate.getFullYear();
-    const month = dupDate.getMonth() + 1;
-    const day = parseInt(e.target.textContent, 10);
-    setDate(new Date(`${year}-${month}-${day}`));
-    setDateViewed(new Date(`${year}-${month}-${day}`));
-
-    setIsOpen(false);
-  };
-
-  const renderYear = () => {
+  const renderYear = useCallback(() => {
     const temp = [];
 
     for (let i = 2000; i <= 2040; i++) {
@@ -300,9 +312,18 @@ function DatePicker({
         ))}
       </select>
     );
-  };
+  }, [changeYear, date]);
 
-  const renderMonth = () => {
+  const changeMonth = useCallback(
+    e => {
+      const dupDate = new Date(dateViewed);
+      dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+      setDateViewed(dupDate);
+    },
+    [dateViewed],
+  );
+
+  const renderMonth = useCallback(() => {
     const temp = [];
 
     for (let i = 1; i <= 12; i++) {
@@ -318,19 +339,7 @@ function DatePicker({
         ))}
       </select>
     );
-  };
-
-  const changeYear = e => {
-    const dupDate = new Date(dateViewed);
-    dupDate.setFullYear(e.target.value.slice(0, -1));
-    setDateViewed(dupDate);
-  };
-
-  const changeMonth = e => {
-    const dupDate = new Date(dateViewed);
-    dupDate.setMonth(e.target.value.slice(0, -1) - 1);
-    setDateViewed(dupDate);
-  };
+  }, [changeMonth, date]);
 
   return (
     <Wrapper>

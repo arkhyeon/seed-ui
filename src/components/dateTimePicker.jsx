@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react';
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
   AiOutlineLeft,
@@ -122,101 +121,15 @@ function DateTimePicker({
     };
   }, [handleClose]);
 
-  const handleInput = e => {
-    const [prevYear, prevMonth, prevDay] = inputValue.slice(0, 10).split('-');
-    const [year, month, day] = e.target.value.slice(0, 11).trim().split('-');
-    const [prevHour, prevMinute] = inputValue.slice(11, 16).split(':');
-    const [hour, minute] = e.target.value.slice(11, 17).trim().split(':');
-    let convertedYear = '';
-    const checkDiff = false;
-    let convertedMonth = '';
-    let convertedDay = '';
-    let convertedHour = '';
-    let convertedMinute = '';
-    const cursorIdx = e.target.selectionStart;
-
-    for (let i = 0; i < year.length; i++) {
-      if (i !== cursorIdx) {
-        convertedYear += year[i];
-      }
-    }
-
-    for (let i = 0; i < month.length; i++) {
-      if (i + 5 !== cursorIdx) {
-        convertedMonth += month[i];
-      }
-    }
-
-    for (let i = 0; i < day.length; i++) {
-      if (i + 8 !== cursorIdx) {
-        convertedDay += day[i];
-      }
-    }
-
-    for (let i = 0; i < hour.length; i++) {
-      if (i + 11 !== cursorIdx) {
-        convertedHour += `${hour[i]}`;
-      }
-    }
-
-    for (let i = 0; i < minute.length; i++) {
-      if (i + 14 !== cursorIdx) {
-        convertedMinute += `${minute[i]}`;
-      }
-    }
-
-    if (convertedMonth[0] === '1' && cursorIdx === 6) {
-      convertedMonth = `${convertedMonth[0]}0`;
-    } else if (convertedMonth[0] === '0' && cursorIdx === 6) {
-      convertedMonth = `${convertedMonth[0]}1`;
-    }
-
-    if (cursorIdx === 6 || cursorIdx === 7) {
-      convertedDay = '01';
-    }
-
-    if (convertedDay[0] === '3' && cursorIdx === 9) {
-      convertedDay = `${convertedDay[0]}0`;
-    } else if (convertedDay[0] === '0' && cursorIdx === 9) {
-      convertedDay = `${convertedDay[0]}1`;
-    }
-
-    if (convertedHour[0] === '2' && cursorIdx === 12) {
-      convertedHour = `${convertedHour[0]}0`;
-    }
-
-    if (
-      !checkValidate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
-      !checkValidDate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
-      !checkHour(convertedHour) ||
-      !checkMinute(convertedMinute) ||
-      checkDiff === 0
-    ) {
-      setTimeout(() => {
-        inputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-      }, 10);
-    } else {
-      const newDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
-      newDate.setHours(parseInt(convertedHour, 10));
-      newDate.setMinutes(parseInt(convertedMinute, 10));
-
-      setDate(newDate);
-      setDateViewed(newDate);
-      setTimeout(() => {
-        inputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-      }, 10);
-    }
-  };
-
-  const checkValidate = input => {
+  const checkValidate = useCallback(input => {
     const reg = /^\d{4}-\d{2}-\d{2}$/;
     if (reg.test(input)) {
       return true;
     }
     return false;
-  };
+  }, []);
 
-  function checkValidDate(value) {
+  const checkValidDate = useCallback(value => {
     let result = true;
     try {
       const date = value.slice(0, 10).split('-');
@@ -231,23 +144,124 @@ function DateTimePicker({
       result = false;
     }
     return result;
-  }
+  }, []);
 
-  const handlePrev = () => {
+  const checkHour = useCallback(input => {
+    const reg = /^([01][0-9]|2[0-3])$/;
+
+    return reg.test(input);
+  }, []);
+
+  const checkMinute = useCallback(input => {
+    const reg = /^([0-5][0-9])$/;
+
+    return reg.test(input);
+  }, []);
+
+  const handleInput = useCallback(
+    e => {
+      const [prevYear, prevMonth, prevDay] = inputValue.slice(0, 10).split('-');
+      const [year, month, day] = e.target.value.slice(0, 11).trim().split('-');
+      const [prevHour, prevMinute] = inputValue.slice(11, 16).split(':');
+      const [hour, minute] = e.target.value.slice(11, 17).trim().split(':');
+      let convertedYear = '';
+      const checkDiff = false;
+      let convertedMonth = '';
+      let convertedDay = '';
+      let convertedHour = '';
+      let convertedMinute = '';
+      const cursorIdx = e.target.selectionStart;
+
+      for (let i = 0; i < year.length; i++) {
+        if (i !== cursorIdx) {
+          convertedYear += year[i];
+        }
+      }
+
+      for (let i = 0; i < month.length; i++) {
+        if (i + 5 !== cursorIdx) {
+          convertedMonth += month[i];
+        }
+      }
+
+      for (let i = 0; i < day.length; i++) {
+        if (i + 8 !== cursorIdx) {
+          convertedDay += day[i];
+        }
+      }
+
+      for (let i = 0; i < hour.length; i++) {
+        if (i + 11 !== cursorIdx) {
+          convertedHour += `${hour[i]}`;
+        }
+      }
+
+      for (let i = 0; i < minute.length; i++) {
+        if (i + 14 !== cursorIdx) {
+          convertedMinute += `${minute[i]}`;
+        }
+      }
+
+      if (convertedMonth[0] === '1' && cursorIdx === 6) {
+        convertedMonth = `${convertedMonth[0]}0`;
+      } else if (convertedMonth[0] === '0' && cursorIdx === 6) {
+        convertedMonth = `${convertedMonth[0]}1`;
+      }
+
+      if (cursorIdx === 6 || cursorIdx === 7) {
+        convertedDay = '01';
+      }
+
+      if (convertedDay[0] === '3' && cursorIdx === 9) {
+        convertedDay = `${convertedDay[0]}0`;
+      } else if (convertedDay[0] === '0' && cursorIdx === 9) {
+        convertedDay = `${convertedDay[0]}1`;
+      }
+
+      if (convertedHour[0] === '2' && cursorIdx === 12) {
+        convertedHour = `${convertedHour[0]}0`;
+      }
+
+      if (
+        !checkValidate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
+        !checkValidDate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
+        !checkHour(convertedHour) ||
+        !checkMinute(convertedMinute) ||
+        checkDiff === 0
+      ) {
+        setTimeout(() => {
+          inputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+        }, 10);
+      } else {
+        const newDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+        newDate.setHours(parseInt(convertedHour, 10));
+        newDate.setMinutes(parseInt(convertedMinute, 10));
+
+        setDate(newDate);
+        setDateViewed(newDate);
+        setTimeout(() => {
+          inputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+        }, 10);
+      }
+    },
+    [inputValue, setDate, checkValidate, checkValidDate, checkHour, checkMinute],
+  );
+
+  const handlePrev = useCallback(() => {
     const dupDate = new Date(dateViewed.getTime());
 
     dupDate.setMonth(dupDate.getMonth() - 1);
     setDateViewed(dupDate);
-  };
+  }, [dateViewed]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     const dupDate = new Date(dateViewed.getTime());
 
     dupDate.setMonth(dupDate.getMonth() + 1);
     setDateViewed(dupDate);
-  };
+  }, [dateViewed]);
 
-  const renderWeekDays = () => {
+  const renderWeekDays = useCallback(() => {
     return (
       <WeekWrapper weekDaysBg={weekDaysBg}>
         {weekDays.map((el, idx) => (
@@ -255,9 +269,33 @@ function DateTimePicker({
         ))}
       </WeekWrapper>
     );
-  };
+  }, [weekDays, weekDaysBg]);
 
-  const renderDays = () => {
+  const handleDayClick = useCallback(
+    e => {
+      if (e.target.textContent === '') {
+        return null;
+      }
+
+      const dupDate = new Date(dateViewed.getTime());
+
+      const year = dupDate.getFullYear();
+      const month = dupDate.getMonth() + 1;
+      const day = parseInt(e.target.textContent, 10);
+
+      const newDate = new Date(`${year}-${month}-${day}`);
+      newDate.setHours(hourInput);
+      newDate.setMinutes(minuteInput);
+
+      setDate(newDate);
+      setDateViewed(newDate);
+
+      return setIsOpen(false);
+    },
+    [dateViewed, hourInput, minuteInput, setDate],
+  );
+
+  const renderDays = useCallback(() => {
     const dupDate = new Date(dateViewed.getTime());
     const year = dupDate.getFullYear();
     const month = dupDate.getMonth();
@@ -325,30 +363,9 @@ function DateTimePicker({
         })}
       </DayWrapper>
     );
-  };
+  }, [date, dateViewed, handleDayClick, selectedBg]);
 
-  const handleDayClick = e => {
-    if (e.target.textContent === '') {
-      return null;
-    }
-
-    const dupDate = new Date(dateViewed.getTime());
-
-    const year = dupDate.getFullYear();
-    const month = dupDate.getMonth() + 1;
-    const day = parseInt(e.target.textContent, 10);
-
-    const newDate = new Date(`${year}-${month}-${day}`);
-    newDate.setHours(hourInput);
-    newDate.setMinutes(minuteInput);
-
-    setDate(newDate);
-    setDateViewed(newDate);
-
-    setIsOpen(false);
-  };
-
-  const addHour = () => {
+  const addHour = useCallback(() => {
     const parsedHour = parseInt(hourInput, 10);
     const dupDate = new Date(date.getTime());
 
@@ -360,9 +377,9 @@ function DateTimePicker({
       dupDate.setHours(0);
     }
     setDate(dupDate);
-  };
+  }, [date, hourInput, setDate]);
 
-  const minusHour = () => {
+  const minusHour = useCallback(() => {
     const parsedHour = parseInt(hourInput, 10);
     const dupDate = new Date(date.getTime());
 
@@ -374,9 +391,9 @@ function DateTimePicker({
       dupDate.setHours(23);
     }
     setDate(dupDate);
-  };
+  }, [date, hourInput, setDate]);
 
-  const addMinute = () => {
+  const addMinute = useCallback(() => {
     const parsedMinute = parseInt(minuteInput, 10);
     const dupDate = new Date(date.getTime());
 
@@ -388,9 +405,9 @@ function DateTimePicker({
       dupDate.setMinutes(0);
     }
     setDate(dupDate);
-  };
+  }, [date, minuteInput, setDate]);
 
-  const minusMinute = () => {
+  const minusMinute = useCallback(() => {
     const parsedMinute = parseInt(minuteInput, 10);
     const dupDate = new Date(date.getTime());
 
@@ -402,77 +419,80 @@ function DateTimePicker({
       dupDate.setMinutes(59);
     }
     setDate(dupDate);
-  };
+  }, [date, minuteInput, setDate]);
 
-  const handleHourInput = e => {
-    const prevHour = String(hourInput);
-    const hour = e.target.value;
-    let convertedHour = '';
-    let checkDiff = false;
-    const cursorIdx = e.target.selectionStart;
-    const dupDate = new Date(date.getTime());
+  const handleHourInput = useCallback(
+    e => {
+      const prevHour = String(hourInput);
+      const hour = e.target.value;
+      let convertedHour = '';
+      let checkDiff = false;
+      const cursorIdx = e.target.selectionStart;
+      const dupDate = new Date(date.getTime());
 
-    for (let i = 0; i < hour.length; i++) {
-      if (hour[i - 1] !== prevHour[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
-        convertedHour += hour[i];
+      for (let i = 0; i < hour.length; i++) {
+        if (hour[i - 1] !== prevHour[i - 1] && !checkDiff) {
+          checkDiff = true;
+        } else {
+          convertedHour += hour[i];
+        }
       }
-    }
 
-    if (convertedHour[0] === '2' && cursorIdx === 1) {
-      convertedHour = `${convertedHour[0]}0`;
-    }
-
-    if (checkHour(convertedHour)) {
-      setHourInput(convertedHour);
-      dupDate.setHours(parseInt(convertedHour, 10));
-      setDate(dupDate);
-    }
-    setTimeout(() => {
-      hourRef.current.setSelectionRange(cursorIdx, cursorIdx);
-    }, 10);
-  };
-
-  const handleMinuteInput = e => {
-    const prevMinute = String(minuteInput);
-    const minute = e.target.value;
-    let convertedMinute = '';
-    let checkDiff = false;
-    const cursorIdx = e.target.selectionStart;
-    const dupDate = new Date(date.getTime());
-
-    for (let i = 0; i < minute.length; i++) {
-      if (minute[i - 1] !== prevMinute[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
-        convertedMinute += minute[i];
+      if (convertedHour[0] === '2' && cursorIdx === 1) {
+        convertedHour = `${convertedHour[0]}0`;
       }
-    }
 
-    if (checkMinute(convertedMinute)) {
-      setMinuteInput(convertedMinute);
-      dupDate.setMinutes(parseInt(convertedMinute, 10));
-      setDate(dupDate);
-    }
-    setTimeout(() => {
-      minuteRef.current.setSelectionRange(cursorIdx, cursorIdx);
-    }, 10);
-  };
+      if (checkHour(convertedHour)) {
+        setHourInput(convertedHour);
+        dupDate.setHours(parseInt(convertedHour, 10));
+        setDate(dupDate);
+      }
+      setTimeout(() => {
+        hourRef.current.setSelectionRange(cursorIdx, cursorIdx);
+      }, 10);
+    },
+    [date, hourInput, setDate, checkHour],
+  );
 
-  const checkHour = input => {
-    const reg = /^([01][0-9]|2[0-3])$/;
+  const handleMinuteInput = useCallback(
+    e => {
+      const prevMinute = String(minuteInput);
+      const minute = e.target.value;
+      let convertedMinute = '';
+      let checkDiff = false;
+      const cursorIdx = e.target.selectionStart;
+      const dupDate = new Date(date.getTime());
 
-    return reg.test(input);
-  };
+      for (let i = 0; i < minute.length; i++) {
+        if (minute[i - 1] !== prevMinute[i - 1] && !checkDiff) {
+          checkDiff = true;
+        } else {
+          convertedMinute += minute[i];
+        }
+      }
 
-  const checkMinute = input => {
-    const reg = /^([0-5][0-9])$/;
+      if (checkMinute(convertedMinute)) {
+        setMinuteInput(convertedMinute);
+        dupDate.setMinutes(parseInt(convertedMinute, 10));
+        setDate(dupDate);
+      }
+      setTimeout(() => {
+        minuteRef.current.setSelectionRange(cursorIdx, cursorIdx);
+      }, 10);
+    },
+    [date, minuteInput, setDate, checkMinute],
+  );
 
-    return reg.test(input);
-  };
+  const changeYear = useCallback(
+    e => {
+      const dupDate = new Date(dateViewed);
+      dupDate.setFullYear(e.target.value.slice(0, -1));
+      setDateViewed(dupDate);
+    },
+    [dateViewed],
+  );
 
-  const renderYear = () => {
+  const renderYear = useCallback(() => {
     const temp = [];
 
     for (let i = 2000; i <= 2040; i++) {
@@ -488,9 +508,18 @@ function DateTimePicker({
         ))}
       </select>
     );
-  };
+  }, [changeYear, date]);
 
-  const renderMonth = () => {
+  const changeMonth = useCallback(
+    e => {
+      const dupDate = new Date(dateViewed);
+      dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+      setDateViewed(dupDate);
+    },
+    [dateViewed],
+  );
+
+  const renderMonth = useCallback(() => {
     const temp = [];
 
     for (let i = 1; i <= 12; i++) {
@@ -506,19 +535,7 @@ function DateTimePicker({
         ))}
       </select>
     );
-  };
-
-  const changeYear = e => {
-    const dupDate = new Date(dateViewed);
-    dupDate.setFullYear(e.target.value.slice(0, -1));
-    setDateViewed(dupDate);
-  };
-
-  const changeMonth = e => {
-    const dupDate = new Date(dateViewed);
-    dupDate.setMonth(e.target.value.slice(0, -1) - 1);
-    setDateViewed(dupDate);
-  };
+  }, [changeMonth, date]);
 
   return (
     <Wrapper>

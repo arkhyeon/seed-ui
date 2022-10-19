@@ -151,42 +151,90 @@ function DateTimeBetweenPicker({
     setEndMinuteInput(`${endTimezoneDate.toISOString().slice(14, 16)}`);
   }, [startDate, endDate]);
 
-  const handleStartPicker = () => {
+  const checkStartEnd = useCallback((startDate, endDate) => {
+    return endDate.getTime() - startDate.getTime() >= 0;
+  }, []);
+
+  const checkHour = useCallback(input => {
+    const reg = /^([01][0-9]|2[0-3])$/;
+
+    return reg.test(input);
+  }, []);
+
+  const checkMinute = useCallback(input => {
+    const reg = /^([0-5][0-9])$/;
+
+    return reg.test(input);
+  }, []);
+
+  const checkValidate = useCallback(input => {
+    const reg = /^\d{4}-\d{2}-\d{2}$/;
+    if (reg.test(input)) {
+      return true;
+    }
+    return false;
+  }, []);
+
+  const checkValidDate = useCallback(value => {
+    let result = true;
+    try {
+      const date = value.split('-');
+      const y = parseInt(date[0], 10);
+      const m = parseInt(date[1], 10);
+      const d = parseInt(date[2], 10);
+
+      const dateRegex =
+        /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+      result = dateRegex.test(`${d}-${m}-${y}`);
+    } catch (err) {
+      result = false;
+    }
+    return result;
+  }, []);
+
+  const handleStartPicker = useCallback(() => {
     setIsOpenStart(!isOpenStart);
     setIsOpenEnd(false);
-  };
-  const handleEndPicker = () => {
+  }, [isOpenStart]);
+
+  const handleEndPicker = useCallback(() => {
     setIsOpenEnd(!isOpenEnd);
     setIsOpenStart(false);
-  };
+  }, [isOpenEnd]);
 
-  const handleNext = target => {
-    if (target === 'start') {
-      const dupDate = new Date(startDateViewed.getTime());
+  const handleNext = useCallback(
+    target => {
+      if (target === 'start') {
+        const dupDate = new Date(startDateViewed.getTime());
 
-      dupDate.setMonth(dupDate.getMonth() + 1);
-      setStartDateViewed(dupDate);
-    } else if (target === 'end') {
-      const dupDate = new Date(endDateViewed.getTime());
+        dupDate.setMonth(dupDate.getMonth() + 1);
+        setStartDateViewed(dupDate);
+      } else if (target === 'end') {
+        const dupDate = new Date(endDateViewed.getTime());
 
-      dupDate.setMonth(dupDate.getMonth() + 1);
-      setEndDateViewed(dupDate);
-    }
-  };
+        dupDate.setMonth(dupDate.getMonth() + 1);
+        setEndDateViewed(dupDate);
+      }
+    },
+    [endDateViewed, startDateViewed],
+  );
 
-  const handlePrev = target => {
-    if (target === 'start') {
-      const dupDate = new Date(startDateViewed.getTime());
+  const handlePrev = useCallback(
+    target => {
+      if (target === 'start') {
+        const dupDate = new Date(startDateViewed.getTime());
 
-      dupDate.setMonth(dupDate.getMonth() - 1);
-      setStartDateViewed(dupDate);
-    } else if (target === 'end') {
-      const dupDate = new Date(endDateViewed.getTime());
+        dupDate.setMonth(dupDate.getMonth() - 1);
+        setStartDateViewed(dupDate);
+      } else if (target === 'end') {
+        const dupDate = new Date(endDateViewed.getTime());
 
-      dupDate.setMonth(dupDate.getMonth() - 1);
-      setEndDateViewed(dupDate);
-    }
-  };
+        dupDate.setMonth(dupDate.getMonth() - 1);
+        setEndDateViewed(dupDate);
+      }
+    },
+    [endDateViewed, startDateViewed],
+  );
 
   const handleOutside = useCallback(
     e => {
@@ -231,7 +279,7 @@ function DateTimeBetweenPicker({
     }
   }, [startDateViewed, endDateViewed]);
 
-  const renderWeekDays = () => {
+  const renderWeekDays = useCallback(() => {
     return (
       <WeekWrapper weekDaysBg={weekDaysBg}>
         {weekDays.map((el, idx) => (
@@ -239,214 +287,41 @@ function DateTimeBetweenPicker({
         ))}
       </WeekWrapper>
     );
-  };
+  }, [weekDays, weekDaysBg]);
 
-  const renderDays = target => {
-    let dupDate;
+  const handleDayClick = useCallback(
+    (e, target) => {
+      if (e.target.textContent === '') {
+        return null;
+      }
 
-    if (target === 'start') {
-      dupDate = new Date(startDateViewed.getTime());
-    } else if (target === 'end') {
-      dupDate = new Date(endDateViewed.getTime());
-    }
+      let dupDate;
 
-    const year = dupDate.getFullYear();
-    const month = dupDate.getMonth();
-    let firstWeekDay = new Date(year, month, 1).getDay();
-    if (firstWeekDay === 7) {
-      firstWeekDay = 0;
-    }
-    const lastDay = new Date(year, month + 1, 0).getDate();
-
-    const days = [];
-
-    for (let i = 0; i < firstWeekDay; i++) {
-      days.push('');
-    }
-
-    for (let i = 1; i <= lastDay; i++) {
-      days.push(String(i));
-    }
-
-    const leftDays = 7 - (days.length % 7) === 7 ? 0 : 7 - (days.length % 7);
-
-    for (let i = 1; i <= leftDays; i++) {
-      days.push('');
-    }
-
-    return (
-      <DayWrapper>
-        {days.map((el, idx) => (
-          <Day
-            key={`day-${idx}`}
-            onClick={e => handleDayClick(e, target)}
-            day={el}
-            startDate={startDate}
-            dateViewed={target === 'start' ? startDateViewed : endDateViewed}
-            endDate={endDate}
-            selectedBg={selectedBg}
-            selectedFC={selectedFC}
-          >
-            {el}
-          </Day>
-        ))}
-      </DayWrapper>
-    );
-  };
-
-  const handleDayClick = (e, target) => {
-    if (e.target.textContent === '') {
-      return null;
-    }
-
-    let dupDate;
-
-    if (target === 'start') {
-      dupDate = new Date(startDateViewed.getTime());
-    } else if (target === 'end') {
-      dupDate = new Date(endDateViewed.getTime());
-    }
-
-    const year = dupDate.getFullYear();
-    const month = dupDate.getMonth() + 1;
-    const day = parseInt(e.target.textContent, 10);
-
-    let newStartDate;
-    let newEndDate;
-
-    if (target === 'start') {
-      newStartDate = new Date(`${year}-${month}-${day}`);
-      newStartDate.setHours(parseInt(startHourInput, 10));
-      newStartDate.setMinutes(parseInt(startMinuteInput, 10));
-      newEndDate = endDate;
-    } else {
-      newStartDate = startDate;
-      newEndDate = new Date(`${year}-${month}-${day}`);
-      newEndDate.setHours(parseInt(endHourInput, 10));
-      newEndDate.setMinutes(parseInt(endMinuteInput, 10));
-    }
-
-    if (!checkStartEnd(newStartDate, newEndDate)) {
       if (target === 'start') {
-        newEndDate = newStartDate;
-      } else {
-        newStartDate = newEndDate;
-      }
-    }
-
-    setStartDate(newStartDate);
-    setStartDateViewed(newStartDate);
-    setEndDate(newEndDate);
-    setEndDateViewed(newEndDate);
-
-    setIsOpenStart(false);
-    setIsOpenEnd(false);
-  };
-
-  const handleInput = (e, target) => {
-    let prevYear;
-    let prevMonth;
-    let prevDay;
-    let prevHour;
-    let prevMinute;
-
-    if (target === 'start') {
-      [prevYear, prevMonth, prevDay] = startInputValue.slice(0, 10).split('-');
-      [prevHour, prevMinute] = startInputValue.slice(11, 16).split(':');
-    } else if (target === 'end') {
-      [prevYear, prevMonth, prevDay] = endInputValue.slice(0, 10).split('-');
-      [prevHour, prevMinute] = endInputValue.slice(11, 16).split(':');
-    }
-
-    const [year, month, day] = e.target.value.slice(0, 11).trim().split('-');
-    const [hour, minute] = e.target.value.slice(11, 17).trim().split(':');
-    let convertedYear = '';
-    const checkDiff = false;
-    let convertedMonth = '';
-    let convertedDay = '';
-    let convertedHour = '';
-    let convertedMinute = '';
-    const cursorIdx = e.target.selectionStart;
-
-    for (let i = 0; i < year.length; i++) {
-      if (i !== cursorIdx) {
-        convertedYear += year[i];
-      }
-    }
-
-    for (let i = 0; i < month.length; i++) {
-      if (i + 5 !== cursorIdx) {
-        convertedMonth += month[i];
-      }
-    }
-
-    for (let i = 0; i < day.length; i++) {
-      if (i + 8 !== cursorIdx) {
-        convertedDay += day[i];
-      }
-    }
-
-    for (let i = 0; i < hour.length; i++) {
-      if (i + 11 !== cursorIdx) {
-        convertedHour += `${hour[i]}`;
-      }
-    }
-
-    for (let i = 0; i < minute.length; i++) {
-      if (i + 14 !== cursorIdx) {
-        convertedMinute += `${minute[i]}`;
-      }
-    }
-
-    if (convertedMonth[0] === '1' && cursorIdx === 6) {
-      convertedMonth = `${convertedMonth[0]}0`;
-    } else if (convertedMonth[0] === '0' && cursorIdx === 6) {
-      convertedMonth = `${convertedMonth[0]}1`;
-    }
-
-    if (cursorIdx === 6 || cursorIdx === 7) {
-      convertedDay = '01';
-    }
-
-    if (convertedDay[0] === '3' && cursorIdx === 9) {
-      convertedDay = `${convertedDay[0]}0`;
-    } else if (convertedDay[0] === '0' && cursorIdx === 9) {
-      convertedDay = `${convertedDay[0]}1`;
-    }
-
-    if (convertedHour[0] === '2' && cursorIdx === 12) {
-      convertedHour = `${convertedHour[0]}0`;
-    }
-
-    if (
-      !checkValidate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
-      !checkValidDate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
-      !checkHour(convertedHour) ||
-      !checkMinute(convertedMinute) ||
-      checkDiff === 0
-    ) {
-      if (target === 'start') {
-        setTimeout(() => {
-          startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
+        dupDate = new Date(startDateViewed.getTime());
       } else if (target === 'end') {
-        endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+        dupDate = new Date(endDateViewed.getTime());
       }
-    } else {
+
+      const year = dupDate.getFullYear();
+      const month = dupDate.getMonth() + 1;
+      const day = parseInt(e.target.textContent, 10);
+
       let newStartDate;
       let newEndDate;
 
       if (target === 'start') {
-        newStartDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
-        newStartDate.setHours(convertedHour);
-        newStartDate.setMinutes(convertedMinute);
+        newStartDate = new Date(`${year}-${month}-${day}`);
+        newStartDate.setHours(parseInt(startHourInput, 10));
+        newStartDate.setMinutes(parseInt(startMinuteInput, 10));
         newEndDate = endDate;
       } else {
         newStartDate = startDate;
-        newEndDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
-        newEndDate.setHours(convertedHour);
-        newEndDate.setMinutes(convertedMinute);
+        newEndDate = new Date(`${year}-${month}-${day}`);
+        newEndDate.setHours(parseInt(endHourInput, 10));
+        newEndDate.setMinutes(parseInt(endMinuteInput, 10));
       }
+
       if (!checkStartEnd(newStartDate, newEndDate)) {
         if (target === 'start') {
           newEndDate = newStartDate;
@@ -460,366 +335,561 @@ function DateTimeBetweenPicker({
       setEndDate(newEndDate);
       setEndDateViewed(newEndDate);
 
+      setIsOpenStart(false);
+      setIsOpenEnd(false);
+    },
+    [
+      endDate,
+      endDateViewed,
+      endHourInput,
+      endMinuteInput,
+      setEndDate,
+      setStartDate,
+      startDate,
+      startDateViewed,
+      startHourInput,
+      startMinuteInput,
+      checkStartEnd,
+    ],
+  );
+
+  const renderDays = useCallback(
+    target => {
+      let dupDate;
+
       if (target === 'start') {
-        setTimeout(() => {
-          startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
+        dupDate = new Date(startDateViewed.getTime());
       } else if (target === 'end') {
-        setTimeout(() => {
+        dupDate = new Date(endDateViewed.getTime());
+      }
+
+      const year = dupDate.getFullYear();
+      const month = dupDate.getMonth();
+      let firstWeekDay = new Date(year, month, 1).getDay();
+      if (firstWeekDay === 7) {
+        firstWeekDay = 0;
+      }
+      const lastDay = new Date(year, month + 1, 0).getDate();
+
+      const days = [];
+
+      for (let i = 0; i < firstWeekDay; i++) {
+        days.push('');
+      }
+
+      for (let i = 1; i <= lastDay; i++) {
+        days.push(String(i));
+      }
+
+      const leftDays = 7 - (days.length % 7) === 7 ? 0 : 7 - (days.length % 7);
+
+      for (let i = 1; i <= leftDays; i++) {
+        days.push('');
+      }
+
+      return (
+        <DayWrapper>
+          {days.map((el, idx) => (
+            <Day
+              key={`day-${idx}`}
+              onClick={e => handleDayClick(e, target)}
+              day={el}
+              startDate={startDate}
+              dateViewed={target === 'start' ? startDateViewed : endDateViewed}
+              endDate={endDate}
+              selectedBg={selectedBg}
+              selectedFC={selectedFC}
+            >
+              {el}
+            </Day>
+          ))}
+        </DayWrapper>
+      );
+    },
+    [endDate, endDateViewed, handleDayClick, selectedBg, selectedFC, startDate, startDateViewed],
+  );
+
+  const handleInput = useCallback(
+    (e, target) => {
+      let prevYear;
+      let prevMonth;
+      let prevDay;
+      let prevHour;
+      let prevMinute;
+
+      if (target === 'start') {
+        [prevYear, prevMonth, prevDay] = startInputValue.slice(0, 10).split('-');
+        [prevHour, prevMinute] = startInputValue.slice(11, 16).split(':');
+      } else if (target === 'end') {
+        [prevYear, prevMonth, prevDay] = endInputValue.slice(0, 10).split('-');
+        [prevHour, prevMinute] = endInputValue.slice(11, 16).split(':');
+      }
+
+      const [year, month, day] = e.target.value.slice(0, 11).trim().split('-');
+      const [hour, minute] = e.target.value.slice(11, 17).trim().split(':');
+      let convertedYear = '';
+      const checkDiff = false;
+      let convertedMonth = '';
+      let convertedDay = '';
+      let convertedHour = '';
+      let convertedMinute = '';
+      const cursorIdx = e.target.selectionStart;
+
+      for (let i = 0; i < year.length; i++) {
+        if (i !== cursorIdx) {
+          convertedYear += year[i];
+        }
+      }
+
+      for (let i = 0; i < month.length; i++) {
+        if (i + 5 !== cursorIdx) {
+          convertedMonth += month[i];
+        }
+      }
+
+      for (let i = 0; i < day.length; i++) {
+        if (i + 8 !== cursorIdx) {
+          convertedDay += day[i];
+        }
+      }
+
+      for (let i = 0; i < hour.length; i++) {
+        if (i + 11 !== cursorIdx) {
+          convertedHour += `${hour[i]}`;
+        }
+      }
+
+      for (let i = 0; i < minute.length; i++) {
+        if (i + 14 !== cursorIdx) {
+          convertedMinute += `${minute[i]}`;
+        }
+      }
+
+      if (convertedMonth[0] === '1' && cursorIdx === 6) {
+        convertedMonth = `${convertedMonth[0]}0`;
+      } else if (convertedMonth[0] === '0' && cursorIdx === 6) {
+        convertedMonth = `${convertedMonth[0]}1`;
+      }
+
+      if (cursorIdx === 6 || cursorIdx === 7) {
+        convertedDay = '01';
+      }
+
+      if (convertedDay[0] === '3' && cursorIdx === 9) {
+        convertedDay = `${convertedDay[0]}0`;
+      } else if (convertedDay[0] === '0' && cursorIdx === 9) {
+        convertedDay = `${convertedDay[0]}1`;
+      }
+
+      if (convertedHour[0] === '2' && cursorIdx === 12) {
+        convertedHour = `${convertedHour[0]}0`;
+      }
+
+      if (
+        !checkValidate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
+        !checkValidDate(`${convertedYear}-${convertedMonth}-${convertedDay}`) ||
+        !checkHour(convertedHour) ||
+        !checkMinute(convertedMinute) ||
+        checkDiff === 0
+      ) {
+        if (target === 'start') {
+          setTimeout(() => {
+            startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        } else if (target === 'end') {
           endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
-      }
-    }
-  };
-
-  const checkValidate = input => {
-    const reg = /^\d{4}-\d{2}-\d{2}$/;
-    if (reg.test(input)) {
-      return true;
-    }
-    return false;
-  };
-
-  function checkValidDate(value) {
-    let result = true;
-    try {
-      const date = value.split('-');
-      const y = parseInt(date[0], 10);
-      const m = parseInt(date[1], 10);
-      const d = parseInt(date[2], 10);
-
-      const dateRegex =
-        /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
-      result = dateRegex.test(`${d}-${m}-${y}`);
-    } catch (err) {
-      result = false;
-    }
-    return result;
-  }
-
-  const checkStartEnd = (startDate, endDate) => {
-    return endDate.getTime() - startDate.getTime() >= 0;
-  };
-
-  const addHour = (e, target) => {
-    let parsedHour;
-    let dupDate;
-
-    if (target === 'start') {
-      parsedHour = parseInt(startHourInput, 10);
-      dupDate = new Date(startDate.getTime());
-    } else {
-      parsedHour = parseInt(endHourInput, 10);
-      dupDate = new Date(endDate.getTime());
-    }
-
-    if (target === 'start') {
-      if (parsedHour + 1 < 24) {
-        setStartHourInput(parsedHour + 1 < 10 ? `0${parsedHour + 1}` : parsedHour + 1);
-        dupDate.setHours(parsedHour + 1);
-      } else {
-        setStartHourInput('00');
-        dupDate.setHours(0);
-      }
-      setStartDate(dupDate);
-    } else {
-      if (parsedHour + 1 < 24) {
-        setEndHourInput(parsedHour + 1 < 10 ? `0${parsedHour + 1}` : parsedHour + 1);
-        dupDate.setHours(parsedHour + 1);
-      } else {
-        setEndHourInput('00');
-        dupDate.setHours(0);
-      }
-      setEndDate(dupDate);
-    }
-  };
-
-  const minusHour = (e, target) => {
-    let parsedHour;
-    let dupDate;
-
-    if (target === 'start') {
-      parsedHour = parseInt(startHourInput, 10);
-      dupDate = new Date(startDate.getTime());
-    } else {
-      parsedHour = parseInt(endHourInput, 10);
-      dupDate = new Date(endDate.getTime());
-    }
-
-    if (target === 'start') {
-      if (parsedHour - 1 > 0) {
-        setStartHourInput(parsedHour - 1 < 10 ? `0${parsedHour - 1}` : parsedHour - 1);
-        dupDate.setHours(parsedHour - 1);
-      } else {
-        setStartHourInput('23');
-        dupDate.setHours(23);
-      }
-      setStartDate(dupDate);
-    } else {
-      if (parsedHour - 1 > 0) {
-        setEndHourInput(parsedHour - 1 < 10 ? `0${parsedHour - 1}` : parsedHour - 1);
-        dupDate.setHours(parsedHour - 1);
-      } else {
-        setEndHourInput('23');
-        dupDate.setHours(23);
-      }
-      setEndDate(dupDate);
-    }
-  };
-
-  const addMinute = (e, target) => {
-    let parsedMinute;
-    let dupDate;
-
-    if (target === 'start') {
-      parsedMinute = parseInt(startMinuteInput, 10);
-      dupDate = new Date(startDate.getTime());
-    } else {
-      parsedMinute = parseInt(endMinuteInput, 10);
-      dupDate = new Date(endDate.getTime());
-    }
-
-    if (target === 'start') {
-      if (parsedMinute + 1 < 60) {
-        setStartMinuteInput(parsedMinute + 1 < 10 ? `0${parsedMinute + 1}` : parsedMinute + 1);
-        dupDate.setMinutes(parsedMinute + 1);
-      } else {
-        setStartMinuteInput('00');
-        dupDate.setMinutes(0);
-      }
-      setStartDate(dupDate);
-    } else {
-      if (parsedMinute + 1 < 60) {
-        setEndMinuteInput(parsedMinute + 1 < 10 ? `0${parsedMinute + 1}` : parsedMinute + 1);
-        dupDate.setMinutes(parsedMinute + 1);
-      } else {
-        setEndMinuteInput('00');
-        dupDate.setMinutes(0);
-      }
-      setEndDate(dupDate);
-    }
-  };
-
-  const minusMinute = (e, target) => {
-    let parsedMinute;
-    let dupDate;
-
-    if (target === 'start') {
-      parsedMinute = parseInt(startMinuteInput, 10);
-      dupDate = new Date(startDate.getTime());
-    } else {
-      parsedMinute = parseInt(endMinuteInput, 10);
-      dupDate = new Date(endDate.getTime());
-    }
-
-    if (target === 'start') {
-      if (parsedMinute - 1 > 0) {
-        setStartMinuteInput(parsedMinute - 1 < 10 ? `0${parsedMinute - 1}` : parsedMinute - 1);
-        dupDate.setMinutes(parsedMinute - 1);
-      } else {
-        setStartMinuteInput('59');
-        dupDate.setMinutes(59);
-      }
-      setStartDate(dupDate);
-    } else {
-      if (parsedMinute - 1 > 0) {
-        setEndMinuteInput(parsedMinute - 1 < 10 ? `0${parsedMinute - 1}` : parsedMinute - 1);
-        dupDate.setMinutes(parsedMinute - 1);
-      } else {
-        setEndMinuteInput('59');
-        dupDate.setMinutes(59);
-      }
-      setEndDate(dupDate);
-    }
-  };
-
-  const handleHourInput = (e, target) => {
-    let prevHour;
-    let dupDate;
-
-    if (target === 'start') {
-      prevHour = String(startHourInput);
-      dupDate = new Date(startDate.getTime());
-    } else {
-      prevHour = String(endHourInput);
-      dupDate = new Date(endDate.getTime());
-    }
-
-    const hour = e.target.value;
-    let convertedHour = '';
-    let checkDiff = false;
-    const cursorIdx = e.target.selectionStart;
-
-    for (let i = 0; i < hour.length; i++) {
-      if (hour[i - 1] !== prevHour[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
-        convertedHour += hour[i];
-      }
-    }
-
-    if (convertedHour[0] === '2' && cursorIdx === 1) {
-      convertedHour = `${convertedHour[0]}0`;
-    }
-
-    if (checkHour(convertedHour)) {
-      if (target === 'start') {
-        setStartHourInput(convertedHour);
-        dupDate.setHours(parseInt(convertedHour, 10));
-        setStartDate(dupDate);
-        setTimeout(() => {
-          startHourRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
-      } else {
-        setEndHourInput(convertedHour);
-        dupDate.setHours(parseInt(convertedHour, 10));
-        setEndDate(dupDate);
-        setTimeout(() => {
-          endHourRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
-      }
-    }
-  };
-
-  const handleMinuteInput = (e, target) => {
-    let prevMinute;
-    let dupDate;
-
-    if (target === 'start') {
-      prevMinute = String(startMinuteInput);
-      dupDate = new Date(startDate.getTime());
-    } else {
-      prevMinute = String(endMinuteInput);
-      dupDate = new Date(endDate.getTime());
-    }
-
-    const minute = e.target.value;
-    let convertedMinute = '';
-    let checkDiff = false;
-    const cursorIdx = e.target.selectionStart;
-
-    for (let i = 0; i < minute.length; i++) {
-      if (minute[i - 1] !== prevMinute[i - 1] && !checkDiff) {
-        checkDiff = true;
-      } else {
-        convertedMinute += minute[i];
-      }
-    }
-
-    if (checkMinute(convertedMinute)) {
-      if (target === 'start') {
-        setStartMinuteInput(convertedMinute);
-        dupDate.setMinutes(parseInt(convertedMinute, 10));
-        setStartDate(dupDate);
-        setTimeout(() => {
-          startMinuteRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
-      } else {
-        setEndMinuteInput(convertedMinute);
-        dupDate.setMinutes(parseInt(convertedMinute, 10));
-        setEndDate(dupDate);
-        setTimeout(() => {
-          endMinuteRef.current.setSelectionRange(cursorIdx, cursorIdx);
-        }, 10);
-      }
-    }
-  };
-
-  const checkHour = input => {
-    const reg = /^([01][0-9]|2[0-3])$/;
-
-    return reg.test(input);
-  };
-
-  const checkMinute = input => {
-    const reg = /^([0-5][0-9])$/;
-
-    return reg.test(input);
-  };
-
-  const renderYear = target => {
-    const temp = [];
-
-    for (let i = 2000; i <= 2040; i++) {
-      temp.push(`${i}년`);
-    }
-
-    return (
-      <select
-        defaultValue={
-          target === 'start' ? `${startDate.getFullYear()}년` : `${endDate.getFullYear()}년`
         }
-        onChange={e => changeYear(e, target)}
-        ref={target === 'start' ? startYearRef : endYearRef}
-      >
-        {temp.map(el => (
-          <option key={`year-${el}`} value={el}>
-            {el}
-          </option>
-        ))}
-      </select>
-    );
-  };
+      } else {
+        let newStartDate;
+        let newEndDate;
 
-  const renderMonth = target => {
-    const temp = [];
-
-    for (let i = 1; i <= 12; i++) {
-      temp.push(`${i}월`);
-    }
-
-    return (
-      <select
-        defaultValue={
-          target === 'start' ? `${startDate.getMonth() + 1}월` : `${endDate.getMonth() + 1}월`
+        if (target === 'start') {
+          newStartDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+          newStartDate.setHours(convertedHour);
+          newStartDate.setMinutes(convertedMinute);
+          newEndDate = endDate;
+        } else {
+          newStartDate = startDate;
+          newEndDate = new Date(`${convertedYear}-${convertedMonth}-${convertedDay}`);
+          newEndDate.setHours(convertedHour);
+          newEndDate.setMinutes(convertedMinute);
         }
-        onChange={e => changeMonth(e, target)}
-        ref={target === 'start' ? startMonthRef : endMonthRef}
-      >
-        {temp.map(el => (
-          <option key={`month-${el}`} value={el}>
-            {el}
-          </option>
-        ))}
-      </select>
-    );
-  };
+        if (!checkStartEnd(newStartDate, newEndDate)) {
+          if (target === 'start') {
+            newEndDate = newStartDate;
+          } else {
+            newStartDate = newEndDate;
+          }
+        }
 
-  const changeYear = (e, target) => {
-    let dupDate;
+        setStartDate(newStartDate);
+        setStartDateViewed(newStartDate);
+        setEndDate(newEndDate);
+        setEndDateViewed(newEndDate);
 
-    if (target === 'start') {
-      dupDate = new Date(startDateViewed);
-    } else {
-      dupDate = new Date(endDateViewed);
-    }
+        if (target === 'start') {
+          setTimeout(() => {
+            startInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        } else if (target === 'end') {
+          setTimeout(() => {
+            endInputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        }
+      }
+    },
+    [
+      endDate,
+      endInputValue,
+      setEndDate,
+      setStartDate,
+      startDate,
+      startInputValue,
+      checkHour,
+      checkMinute,
+      checkStartEnd,
+      checkValidDate,
+      checkValidate,
+    ],
+  );
 
-    dupDate.setFullYear(e.target.value.slice(0, -1));
+  const addHour = useCallback(
+    (e, target) => {
+      let parsedHour;
+      let dupDate;
 
-    if (target === 'start') {
-      setStartDateViewed(dupDate);
-    } else {
-      setEndDateViewed(dupDate);
-    }
-  };
+      if (target === 'start') {
+        parsedHour = parseInt(startHourInput, 10);
+        dupDate = new Date(startDate.getTime());
+      } else {
+        parsedHour = parseInt(endHourInput, 10);
+        dupDate = new Date(endDate.getTime());
+      }
 
-  const changeMonth = (e, target) => {
-    let dupDate;
+      if (target === 'start') {
+        if (parsedHour + 1 < 24) {
+          setStartHourInput(parsedHour + 1 < 10 ? `0${parsedHour + 1}` : parsedHour + 1);
+          dupDate.setHours(parsedHour + 1);
+        } else {
+          setStartHourInput('00');
+          dupDate.setHours(0);
+        }
+        setStartDate(dupDate);
+      } else {
+        if (parsedHour + 1 < 24) {
+          setEndHourInput(parsedHour + 1 < 10 ? `0${parsedHour + 1}` : parsedHour + 1);
+          dupDate.setHours(parsedHour + 1);
+        } else {
+          setEndHourInput('00');
+          dupDate.setHours(0);
+        }
+        setEndDate(dupDate);
+      }
+    },
+    [endDate, endHourInput, setEndDate, setStartDate, startDate, startHourInput],
+  );
 
-    if (target === 'start') {
-      dupDate = new Date(startDateViewed);
-    } else {
-      dupDate = new Date(endDateViewed);
-    }
+  const minusHour = useCallback(
+    (e, target) => {
+      let parsedHour;
+      let dupDate;
 
-    dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+      if (target === 'start') {
+        parsedHour = parseInt(startHourInput, 10);
+        dupDate = new Date(startDate.getTime());
+      } else {
+        parsedHour = parseInt(endHourInput, 10);
+        dupDate = new Date(endDate.getTime());
+      }
 
-    if (target === 'start') {
-      setStartDateViewed(dupDate);
-    } else {
-      setEndDateViewed(dupDate);
-    }
-  };
+      if (target === 'start') {
+        if (parsedHour - 1 > 0) {
+          setStartHourInput(parsedHour - 1 < 10 ? `0${parsedHour - 1}` : parsedHour - 1);
+          dupDate.setHours(parsedHour - 1);
+        } else {
+          setStartHourInput('23');
+          dupDate.setHours(23);
+        }
+        setStartDate(dupDate);
+      } else {
+        if (parsedHour - 1 > 0) {
+          setEndHourInput(parsedHour - 1 < 10 ? `0${parsedHour - 1}` : parsedHour - 1);
+          dupDate.setHours(parsedHour - 1);
+        } else {
+          setEndHourInput('23');
+          dupDate.setHours(23);
+        }
+        setEndDate(dupDate);
+      }
+    },
+    [endDate, endHourInput, setEndDate, setStartDate, startDate, startHourInput],
+  );
+
+  const addMinute = useCallback(
+    (e, target) => {
+      let parsedMinute;
+      let dupDate;
+
+      if (target === 'start') {
+        parsedMinute = parseInt(startMinuteInput, 10);
+        dupDate = new Date(startDate.getTime());
+      } else {
+        parsedMinute = parseInt(endMinuteInput, 10);
+        dupDate = new Date(endDate.getTime());
+      }
+
+      if (target === 'start') {
+        if (parsedMinute + 1 < 60) {
+          setStartMinuteInput(parsedMinute + 1 < 10 ? `0${parsedMinute + 1}` : parsedMinute + 1);
+          dupDate.setMinutes(parsedMinute + 1);
+        } else {
+          setStartMinuteInput('00');
+          dupDate.setMinutes(0);
+        }
+        setStartDate(dupDate);
+      } else {
+        if (parsedMinute + 1 < 60) {
+          setEndMinuteInput(parsedMinute + 1 < 10 ? `0${parsedMinute + 1}` : parsedMinute + 1);
+          dupDate.setMinutes(parsedMinute + 1);
+        } else {
+          setEndMinuteInput('00');
+          dupDate.setMinutes(0);
+        }
+        setEndDate(dupDate);
+      }
+    },
+    [endDate, endMinuteInput, setEndDate, startDate, setStartDate, startMinuteInput],
+  );
+
+  const minusMinute = useCallback(
+    (e, target) => {
+      let parsedMinute;
+      let dupDate;
+
+      if (target === 'start') {
+        parsedMinute = parseInt(startMinuteInput, 10);
+        dupDate = new Date(startDate.getTime());
+      } else {
+        parsedMinute = parseInt(endMinuteInput, 10);
+        dupDate = new Date(endDate.getTime());
+      }
+
+      if (target === 'start') {
+        if (parsedMinute - 1 > 0) {
+          setStartMinuteInput(parsedMinute - 1 < 10 ? `0${parsedMinute - 1}` : parsedMinute - 1);
+          dupDate.setMinutes(parsedMinute - 1);
+        } else {
+          setStartMinuteInput('59');
+          dupDate.setMinutes(59);
+        }
+        setStartDate(dupDate);
+      } else {
+        if (parsedMinute - 1 > 0) {
+          setEndMinuteInput(parsedMinute - 1 < 10 ? `0${parsedMinute - 1}` : parsedMinute - 1);
+          dupDate.setMinutes(parsedMinute - 1);
+        } else {
+          setEndMinuteInput('59');
+          dupDate.setMinutes(59);
+        }
+        setEndDate(dupDate);
+      }
+    },
+    [endDate, endMinuteInput, setEndDate, setStartDate, startDate, startMinuteInput],
+  );
+
+  const handleHourInput = useCallback(
+    (e, target) => {
+      let prevHour;
+      let dupDate;
+
+      if (target === 'start') {
+        prevHour = String(startHourInput);
+        dupDate = new Date(startDate.getTime());
+      } else {
+        prevHour = String(endHourInput);
+        dupDate = new Date(endDate.getTime());
+      }
+
+      const hour = e.target.value;
+      let convertedHour = '';
+      let checkDiff = false;
+      const cursorIdx = e.target.selectionStart;
+
+      for (let i = 0; i < hour.length; i++) {
+        if (hour[i - 1] !== prevHour[i - 1] && !checkDiff) {
+          checkDiff = true;
+        } else {
+          convertedHour += hour[i];
+        }
+      }
+
+      if (convertedHour[0] === '2' && cursorIdx === 1) {
+        convertedHour = `${convertedHour[0]}0`;
+      }
+
+      if (checkHour(convertedHour)) {
+        if (target === 'start') {
+          setStartHourInput(convertedHour);
+          dupDate.setHours(parseInt(convertedHour, 10));
+          setStartDate(dupDate);
+          setTimeout(() => {
+            startHourRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        } else {
+          setEndHourInput(convertedHour);
+          dupDate.setHours(parseInt(convertedHour, 10));
+          setEndDate(dupDate);
+          setTimeout(() => {
+            endHourRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        }
+      }
+    },
+    [endDate, endHourInput, setEndDate, setStartDate, startDate, startHourInput, checkHour],
+  );
+
+  const handleMinuteInput = useCallback(
+    (e, target) => {
+      let prevMinute;
+      let dupDate;
+
+      if (target === 'start') {
+        prevMinute = String(startMinuteInput);
+        dupDate = new Date(startDate.getTime());
+      } else {
+        prevMinute = String(endMinuteInput);
+        dupDate = new Date(endDate.getTime());
+      }
+
+      const minute = e.target.value;
+      let convertedMinute = '';
+      let checkDiff = false;
+      const cursorIdx = e.target.selectionStart;
+
+      for (let i = 0; i < minute.length; i++) {
+        if (minute[i - 1] !== prevMinute[i - 1] && !checkDiff) {
+          checkDiff = true;
+        } else {
+          convertedMinute += minute[i];
+        }
+      }
+
+      if (checkMinute(convertedMinute)) {
+        if (target === 'start') {
+          setStartMinuteInput(convertedMinute);
+          dupDate.setMinutes(parseInt(convertedMinute, 10));
+          setStartDate(dupDate);
+          setTimeout(() => {
+            startMinuteRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        } else {
+          setEndMinuteInput(convertedMinute);
+          dupDate.setMinutes(parseInt(convertedMinute, 10));
+          setEndDate(dupDate);
+          setTimeout(() => {
+            endMinuteRef.current.setSelectionRange(cursorIdx, cursorIdx);
+          }, 10);
+        }
+      }
+    },
+    [endDate, endMinuteInput, setEndDate, setStartDate, startDate, startMinuteInput, checkMinute],
+  );
+
+  const changeYear = useCallback(
+    (e, target) => {
+      let dupDate;
+
+      if (target === 'start') {
+        dupDate = new Date(startDateViewed);
+      } else {
+        dupDate = new Date(endDateViewed);
+      }
+
+      dupDate.setFullYear(e.target.value.slice(0, -1));
+
+      if (target === 'start') {
+        setStartDateViewed(dupDate);
+      } else {
+        setEndDateViewed(dupDate);
+      }
+    },
+    [endDateViewed, startDateViewed],
+  );
+
+  const changeMonth = useCallback(
+    (e, target) => {
+      let dupDate;
+
+      if (target === 'start') {
+        dupDate = new Date(startDateViewed);
+      } else {
+        dupDate = new Date(endDateViewed);
+      }
+
+      dupDate.setMonth(e.target.value.slice(0, -1) - 1);
+
+      if (target === 'start') {
+        setStartDateViewed(dupDate);
+      } else {
+        setEndDateViewed(dupDate);
+      }
+    },
+    [endDateViewed, startDateViewed],
+  );
+
+  const renderYear = useCallback(
+    target => {
+      const temp = [];
+
+      for (let i = 2000; i <= 2040; i++) {
+        temp.push(`${i}년`);
+      }
+
+      return (
+        <select
+          defaultValue={
+            target === 'start' ? `${startDate.getFullYear()}년` : `${endDate.getFullYear()}년`
+          }
+          onChange={e => changeYear(e, target)}
+          ref={target === 'start' ? startYearRef : endYearRef}
+        >
+          {temp.map(el => (
+            <option key={`year-${el}`} value={el}>
+              {el}
+            </option>
+          ))}
+        </select>
+      );
+    },
+    [changeYear, endDate, startDate],
+  );
+
+  const renderMonth = useCallback(
+    target => {
+      const temp = [];
+
+      for (let i = 1; i <= 12; i++) {
+        temp.push(`${i}월`);
+      }
+
+      return (
+        <select
+          defaultValue={
+            target === 'start' ? `${startDate.getMonth() + 1}월` : `${endDate.getMonth() + 1}월`
+          }
+          onChange={e => changeMonth(e, target)}
+          ref={target === 'start' ? startMonthRef : endMonthRef}
+        >
+          {temp.map(el => (
+            <option key={`month-${el}`} value={el}>
+              {el}
+            </option>
+          ))}
+        </select>
+      );
+    },
+    [changeMonth, endDate, startDate],
+  );
 
   return (
     <Wrapper>

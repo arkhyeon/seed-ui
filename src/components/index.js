@@ -18,7 +18,10 @@ import Toggle from './Toggle';
 import { TextInput, LabelCheckBox } from './components/InputComponent';
 import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton } from './Button/Button';
-import ItemList from './ItemList/ItemList';
+import GroupList from './GroupList/GroupList';
+import LabelList from './LabelList/LabelList';
+import UniqueLabelList from './LabelList/UniqueLabelList';
+import Count from './Count/Count';
 
 export { HeaderCreator };
 
@@ -60,4 +63,10 @@ export { TextInput, LabelCheckBox };
 
 export { InputGrid };
 
-export { ItemList };
+export { GroupList };
+
+export { LabelList };
+
+export { UniqueLabelList };
+
+export { Count };
