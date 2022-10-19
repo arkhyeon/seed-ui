@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DataList } from '../components';
+import { DataList, Radio } from '../components';
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -11,7 +11,7 @@ function Project() {
     server: 2,
     encode: 4,
   });
-  const [encode, setEncode] = useState(1);
+  const [nullYn, setNullYn] = useState('y');
   const setDataListData = value => {
     setState(value);
   };
@@ -99,13 +99,25 @@ function Project() {
       </button>
       <DataList
         valueList={[1, 2, 3, 4]}
-        labelList={['true', 'UTF-8', 'EUC-KR', 'lover']}
         setData={value => {
           changeData({ name: 'encode', value });
         }}
         select
         defaultValue={data.encode}
       />
+      <Radio
+        checkColor="rgb(64, 64, 64)"
+        value={nullYn}
+        setValue={value => {
+          console.log(value);
+          setNullYn(value);
+        }}
+        list={[
+          { label: 'NULL', value: 'y' },
+          { label: 'NOT NULL', value: 'n' },
+        ]}
+        type="border"
+      ></Radio>
     </div>
   );
 }
