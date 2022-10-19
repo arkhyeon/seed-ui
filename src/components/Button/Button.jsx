@@ -1,13 +1,37 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-export function BlackButton({ ...rootDOMAttributes }) {
-  return <BlackBtn {...rootDOMAttributes} />;
+export function BlackButton(props) {
+  return (
+    <BlackBtn
+      {...props}
+      onClick={e => {
+        blockedDBClick(e);
+        props.onClick(e);
+      }}
+    />
+  );
 }
 
-export function WhiteButton({ ...rootDOMAttributes }) {
-  return <WhiteBtn {...rootDOMAttributes} />;
+export function WhiteButton(props) {
+  return (
+    <WhiteBtn
+      {...props}
+      onClick={e => {
+        blockedDBClick(e);
+        props.onClick(e);
+      }}
+    />
+  );
 }
+
+const blockedDBClick = e => {
+  e.target.setAttribute('disabled', true);
+
+  setTimeout(() => {
+    e.target.removeAttribute('disabled');
+  }, 500);
+};
 
 const Button = styled.button`
   font-size: 13px;

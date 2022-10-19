@@ -49,16 +49,16 @@ function Radio({
   labelOutSpacing = '8px',
   type = 'fill',
 }) {
-  const handleValue = idx => {
-    setValue(idx);
+  const handleValue = value => {
+    setValue(value);
   };
   const renderOption = () => {
     return (
       <OptionWrapper>
         {list.map((el, idx) => (
           <Label
-            key={`label-${el}`}
-            onClick={() => handleValue(idx)}
+            key={`label-${el.value}`}
+            onClick={() => handleValue(el.value)}
             labelOutSpacing={labelOutSpacing}
           >
             <CheckWrapper
@@ -66,12 +66,18 @@ function Radio({
               labelInSpacing={labelInSpacing}
               hoverColor={hoverColor}
               type={type}
-              value={value}
+              value={el.value}
+              checked={value === el.value}
               idx={idx}
             >
-              <Check value={value} idx={idx} checkColor={checkColor} type={type} />
+              <Check
+                value={el.value}
+                checked={value === el.value}
+                checkColor={checkColor}
+                type={type}
+              />
             </CheckWrapper>
-            <div>{el}</div>
+            <div>{el.label}</div>
           </Label>
         ))}
       </OptionWrapper>
@@ -116,8 +122,8 @@ const CheckWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    ${({ type, value, idx, checkColor }) => {
-      if (type === 'border' && value === idx) {
+    ${({ type, checked, checkColor }) => {
+      if (type === 'border' && checked) {
         return css`
           border: 2px solid ${checkColor};
           background: ${checkColor};
@@ -142,12 +148,12 @@ const Check = styled.div`
   transform: translate(-50%, -50%);
   border-radius: 50%;
 
-  background: ${({ value, idx, checkColor, type }) => {
-    if (value === idx && type === 'border') {
+  background: ${({ checked, checkColor, type }) => {
+    if (checked && type === 'border') {
       return 'white';
     }
 
-    if (value === idx) {
+    if (checked) {
       return checkColor;
     }
     return 'transparent';
