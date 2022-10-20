@@ -43,6 +43,7 @@ const Wrapper = styled.div`
   width: 250px;
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
+  background: white;
   /* margin-top: 4px; */
 
   & > div {
