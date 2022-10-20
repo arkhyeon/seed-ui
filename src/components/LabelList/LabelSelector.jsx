@@ -1,42 +1,49 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { MdOutlineNewLabel } from 'react-icons/md';
 import Option from './Option';
 
-function LabelSelector({ labelList, valueArr, setValueArr, valueStr, setValueStr, createLabel }) {
-  const renderOptions = useCallback(() => {
-    if (valueStr !== undefined) {
+const LabelSelector = forwardRef(
+  ({ labelList, valueArr, setValueArr, valueStr, setValueStr, createLabel }, ref) => {
+    const renderOptions = useCallback(() => {
+      if (valueStr !== undefined) {
+        return (
+          <>
+            {labelList.map((el, idx) => (
+              <Option
+                key={`label-${el}`}
+                value={el}
+                valueStr={valueStr}
+                setValueStr={setValueStr}
+              />
+            ))}
+          </>
+        );
+      }
+
       return (
         <>
           {labelList.map((el, idx) => (
-            <Option key={`label-${el}`} value={el} valueStr={valueStr} setValueStr={setValueStr} />
+            <Option key={`label-${el}`} value={el} valueArr={valueArr} setValueArr={setValueArr} />
           ))}
         </>
       );
-    }
+    }, [labelList, setValueArr, valueArr, valueStr, setValueStr]);
 
     return (
-      <>
-        {labelList.map((el, idx) => (
-          <Option key={`label-${el}`} value={el} valueArr={valueArr} setValueArr={setValueArr} />
-        ))}
-      </>
+      <Wrapper ref={ref}>
+        <Title>그룹 관리</Title>
+        <DividingLine />
+        {renderOptions()}
+        <DividingLine />
+        <CreateBtn onClick={createLabel}>
+          <MdOutlineNewLabel />
+          그룹 만들기
+        </CreateBtn>
+      </Wrapper>
     );
-  }, [labelList, setValueArr, valueArr, valueStr, setValueStr]);
-
-  return (
-    <Wrapper>
-      <Title>그룹 관리</Title>
-      <DividingLine />
-      {renderOptions()}
-      <DividingLine />
-      <CreateBtn onClick={createLabel}>
-        <MdOutlineNewLabel />
-        그룹 만들기
-      </CreateBtn>
-    </Wrapper>
-  );
-}
+  },
+);
 
 const Wrapper = styled.div`
   position: absolute;

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import Icon from './Icon';
 import LabelSelector from './LabelSelector';
@@ -17,6 +17,24 @@ import Label from './Label';
 function UniqueLabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = null }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [valueStr, setValueStr] = useState('');
+  const selectorRef = useRef(null);
+
+  const handleOut = useCallback(
+    e => {
+      if (isSelectorOpen && !selectorRef.current.contains(e.target)) {
+        setIsSelectorOpen(false);
+      }
+    },
+    [isSelectorOpen],
+  );
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOut);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOut);
+    };
+  }, [handleOut]);
 
   const handleOpen = useCallback(() => {
     setIsSelectorOpen(!isSelectorOpen);
@@ -41,6 +59,7 @@ function UniqueLabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = n
               valueStr={valueStr}
               setValueStr={setValueStr}
               createLabel={createLabel}
+              ref={selectorRef}
             />
           )}
         </div>
