@@ -207,6 +207,7 @@ const Container = styled.div`
   position: relative;
   background: white;
   height: 100%;
+  font-size: 14px;
   /* overflow: hidden;
   transition: 0.4s; */
   /* .close {
@@ -267,7 +268,7 @@ const NoneGroup = styled.div`
   display: flex;
   align-items: center;
   padding-left: 10px;
-  font-size: 1rem;
+  font-size: 14px;
   /* background: #eceff1; */
 
   border-radius: 4px;
