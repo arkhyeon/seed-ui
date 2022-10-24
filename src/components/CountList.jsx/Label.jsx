@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   align-items: center;
   border-radius: 15px;
 
-  margin-right: 10px;
+  margin-left: 10px;
   font-size: 13px;
   padding: 8px 20px;
   background: #78909c;

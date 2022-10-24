@@ -46,17 +46,27 @@ function Option({ valueArr, setValueArr, value, valueStr, setValueStr }) {
 
   return (
     <Wrapper ref={optionRef} onClick={handleCheck}>
-      {isCheck ? <MdLabel /> : <MdLabelOutline />}
-      {value}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {isCheck ? <MdLabel /> : <MdLabelOutline />}
+        {value}
+      </div>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
   cursor: pointer;
-  padding-left: 12px;
+  padding-left: 15px;
   display: flex;
   align-items: center;
+  height: 32px;
+  font-size: 14px;
+  justify-content: space-between;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
 
   :hover {
     background: rgb(62, 62, 62);
@@ -66,6 +76,12 @@ const Wrapper = styled.div`
   :first-of-type {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+  }
+
+  &:hover {
+    & > div > svg {
+      visibility: visible;
+    }
   }
 `;
 

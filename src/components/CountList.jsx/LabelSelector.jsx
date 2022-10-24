@@ -3,47 +3,36 @@ import styled from '@emotion/styled';
 import { MdOutlineNewLabel } from 'react-icons/md';
 import Option from './Option';
 
-const LabelSelector = forwardRef(
-  ({ labelList, valueArr, setValueArr, valueStr, setValueStr, createLabel }, ref) => {
-    const renderOptions = useCallback(() => {
-      if (valueStr !== undefined) {
-        return (
-          <>
-            {labelList.map((el, idx) => (
-              <Option
-                key={`label-${el}`}
-                value={el}
-                valueStr={valueStr}
-                setValueStr={setValueStr}
-              />
-            ))}
-          </>
-        );
-      }
-
-      return (
-        <>
-          {labelList.map((el, idx) => (
-            <Option key={`label-${el}`} value={el} valueArr={valueArr} setValueArr={setValueArr} />
-          ))}
-        </>
-      );
-    }, [labelList, setValueArr, valueArr, valueStr, setValueStr]);
-
+const LabelSelector = forwardRef(({ labelList, setLabelList, createLabel, modifyLabel }, ref) => {
+  const renderOptions = useCallback(() => {
     return (
-      <Wrapper ref={ref}>
-        <Title>그룹 관리</Title>
-        <DividingLine />
-        {renderOptions()}
-        <DividingLine />
-        <CreateBtn onClick={createLabel}>
-          <MdOutlineNewLabel />
-          그룹 만들기
-        </CreateBtn>
-      </Wrapper>
+      <>
+        {labelList.map((el, idx) => (
+          <Option
+            key={`label-${el}`}
+            value={el}
+            setLabelList={setLabelList}
+            labelList={labelList}
+            modifyLabel={modifyLabel}
+          />
+        ))}
+      </>
     );
-  },
-);
+  }, [labelList, setLabelList, modifyLabel]);
+
+  return (
+    <Wrapper ref={ref}>
+      <Title>그룹 관리</Title>
+      <DividingLine />
+      {renderOptions()}
+      <DividingLine />
+      <CreateBtn onClick={createLabel}>
+        <MdOutlineNewLabel />
+        그룹 만들기
+      </CreateBtn>
+    </Wrapper>
+  );
+});
 
 const Wrapper = styled.div`
   position: absolute;

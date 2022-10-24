@@ -110,6 +110,19 @@ const Wrapper = styled.div`
     }
   }
 
+  :last-of-type {
+    :before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 18.5px;
+      top: 0px;
+      width: 1px;
+      height: 50%;
+      background: rgb(232, 238, 251);
+    }
+  }
+
   /* .item {
     :hover {
       background: rgb(232, 238, 251);

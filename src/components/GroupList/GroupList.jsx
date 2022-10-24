@@ -56,7 +56,7 @@ function GroupList({
   const titleRef = useRef(null);
   const menusRef = useRef([]);
   const [selected, setSelected] = useState(-1);
-  const [isItemOpen, setIsItemOpen] = useState(false);
+  // const [isItemOpen, setIsItemOpen] = useState(false);
 
   // const handleShow = useCallback(() => {
   //   setIsShow(!isShow);
@@ -71,9 +71,11 @@ function GroupList({
 
   useEffect(() => {
     if (selected >= 1 && selected <= groupList.length + 1) {
-      titleRef.current.style.background = 'rgb(232, 238, 251)';
+      // titleRef.current.style.background = 'rgb(232, 238, 251)';
+      titleRef.current.style.background = 'rgb(33, 37, 41)';
+      titleRef.current.style.color = 'white';
 
-      for (let i = 1; i <= groupList.length + 1; i++) {
+      for (let i = 0; i <= menusRef.current.length + 1; i++) {
         if (!menusRef.current[i]) {
           continue;
         }
@@ -81,11 +83,14 @@ function GroupList({
           menusRef.current[i].classList.add('selectedGroup');
         } else {
           menusRef.current[i].classList.remove('selectedGroup');
+          menusRef.current[i].classList.remove('selected');
         }
       }
       return;
     }
-    titleRef.current.style.background = '#eceff1';
+    // titleRef.current.style.background = '#eceff1';
+    titleRef.current.style.background = 'rgb(232, 238, 251)';
+    titleRef.current.style.color = 'black';
 
     for (let i = 0; i < menusRef.current.length; i++) {
       if (!menusRef.current[i]) {
@@ -96,6 +101,7 @@ function GroupList({
         menusRef.current[i].classList.add('selected');
       } else {
         menusRef.current[i].classList.remove('selected');
+        menusRef.current[i].classList.remove('selectedGroup');
       }
     }
   }, [selected, groupList]);
@@ -139,9 +145,9 @@ function GroupList({
   //   }
   // }, [isShow]);
 
-  const handleItem = useCallback(() => {
-    setIsItemOpen(!isItemOpen);
-  }, [isItemOpen]);
+  // const handleItem = useCallback(() => {
+  //   setIsItemOpen(!isItemOpen);
+  // }, [isItemOpen]);
 
   const renderBtns = useCallback(() => {
     return (
@@ -176,11 +182,15 @@ function GroupList({
             미지정 그룹
           </NoneGroup>
           <Content>
-            <ItemTitle onClick={handleItem} ref={titleRef}>
+            <ItemTitle
+              // onClick={handleItem}
+              ref={titleRef}
+            >
               <div>그룹</div>
-              {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />}
+              {/* {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />} */}
             </ItemTitle>
-            {isItemOpen && renderItem()}
+            {/* {isItemOpen && renderItem()} */}
+            {renderItem()}
           </Content>
           <DividingLine />
           <ButtonWrapper>{renderBtns()}</ButtonWrapper>
@@ -257,7 +267,7 @@ const NoneGroup = styled.div`
   display: flex;
   align-items: center;
   padding-left: 10px;
-  background: #eceff1;
+  /* background: #eceff1; */
 
   border-radius: 4px;
   cursor: pointer;
@@ -272,6 +282,7 @@ const ItemTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* background: rgb(232, 238, 251); */
 
   svg {
     margin-right: 8px;
