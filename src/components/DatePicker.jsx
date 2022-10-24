@@ -36,6 +36,7 @@ function DatePicker({
   pickerBg = 'white',
   weekDaysBg = 'white',
   selectedBg = '#808080',
+  disabled = false,
 }) {
   const inputRef = useRef(null);
   const weekDays = useRef(['일', '월', '화', '수', '목', '금', '토']).current;
@@ -352,6 +353,7 @@ function DatePicker({
         onClick={() => {
           setIsOpen(!isOpen);
         }}
+        disabled={disabled}
       />
       {isOpen && (
         <PickerWrapper ref={pickerRef} pickerBg={pickerBg}>

@@ -9,8 +9,7 @@ import {
   MdOutlineLastPage,
 } from 'react-icons/all';
 
-function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
-  const [currentPage, setCurrentPage] = useState(1);
+function Pagination({ totalLength = 0, buttonLength = 10, pageEvent, currentPage = 1 }) {
   const [dataLength, setDataLength] = useState(20);
   const offset = Math.floor((currentPage - 1) / buttonLength) * buttonLength;
   const btnTotalLength = Math.ceil(totalLength / dataLength);
@@ -19,14 +18,12 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent }) {
       return;
     }
     pageEvent(pageNum, dataLength);
-    setCurrentPage(pageNum);
   };
 
   const changeDataLength = e => {
     const selectValue = parseInt(e.target.value, 10);
     setDataLength(selectValue);
     pageEvent(1, selectValue);
-    setCurrentPage(1);
   };
 
   return (
