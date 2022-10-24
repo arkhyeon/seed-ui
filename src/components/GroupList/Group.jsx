@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
-import { BsPencilSquare } from 'react-icons/bs';
-import { RiDeleteBinLine } from 'react-icons/ri';
+import { MdDeleteOutline, MdEditCalendar } from 'react-icons/md';
 
 function Group({
   value,
@@ -47,8 +46,8 @@ function Group({
       <Right>
         <span>{cnt}</span>
         <Icons>
-          <BsPencilSquare onClick={handleModify} />
-          <RiDeleteBinLine onClick={handleDelete} />
+          <MdDeleteOutline onClick={handleDelete} />
+          <MdEditCalendar onClick={handleModify} />
         </Icons>
       </Right>
     </Wrapper>
@@ -177,6 +176,10 @@ const Icons = styled.div`
   align-items: center;
   svg {
     margin-left: 10px;
+    font-size: 21px;
+    :hover {
+      fill: #e91e63;
+    }
   }
 `;
 
