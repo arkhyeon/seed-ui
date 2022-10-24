@@ -267,6 +267,7 @@ const NoneGroup = styled.div`
   display: flex;
   align-items: center;
   padding-left: 10px;
+  font-size: 1rem;
   /* background: #eceff1; */
 
   border-radius: 4px;
