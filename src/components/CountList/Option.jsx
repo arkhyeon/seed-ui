@@ -1,7 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import styled from '@emotion/styled';
-import { MdLabelOutline, MdDelete } from 'react-icons/md';
-import { BsPencilSquare } from 'react-icons/bs';
+import { MdLabelOutline, MdDeleteOutline, MdEditCalendar } from 'react-icons/md';
 
 function Option({ value, modifyLabel, setLabelList, labelList }) {
   const optionRef = useRef(null);
@@ -21,8 +20,8 @@ function Option({ value, modifyLabel, setLabelList, labelList }) {
         {value}
       </div>
       <ButtonWrapper>
-        <BsPencilSquare onClick={handleModify} />
-        <MdDelete onClick={handleDelete} />
+        <MdDeleteOutline onClick={handleDelete} />
+        <MdEditCalendar onClick={handleModify} />
       </ButtonWrapper>
     </Wrapper>
   );
@@ -62,6 +61,14 @@ const Wrapper = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   visibility: hidden;
+
+  svg {
+    width: 21px;
+    height: 21px;
+    &:hover {
+      fill: #e91e63;
+    }
+  }
 `;
 
 export default Option;
