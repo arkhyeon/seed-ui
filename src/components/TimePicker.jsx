@@ -23,7 +23,13 @@ import { TextInput } from './components/InputComponent';
  * @returns
  */
 
-function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width = '50px' }) {
+function TimePicker({
+  time = '00:00',
+  setTime = null,
+  svgColor = 'black',
+  width = '50px',
+  disabled = false,
+}) {
   const hourRef = useRef(null);
   const minuteRef = useRef(null);
   const inputRef = useRef(null);
@@ -213,6 +219,7 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
         inputRef={inputRef}
         width={width}
         onClick={handleOpen}
+        disabled={disabled}
       />
       {isOpen && (
         <TimeWrapper ref={pickerRef}>
