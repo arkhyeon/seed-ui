@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { MdDeleteOutline, MdEditCalendar } from 'react-icons/md';
 
@@ -42,6 +42,7 @@ function Group({
         menusRef.current[idx] = el;
       }}
       data-gname={value}
+      data-id={id}
     >
       {value}
       <Right>

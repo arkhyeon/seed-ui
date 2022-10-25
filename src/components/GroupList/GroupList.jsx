@@ -78,6 +78,7 @@ function GroupList({
     menusRef.current.forEach((el, idx) => {
       if (el.dataset.gname === selectedGroupName) {
         setSelected(idx);
+        clickGroup(el.dataset.id);
       }
     });
   }, [selectedGroupName]);
