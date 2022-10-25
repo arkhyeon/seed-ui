@@ -55,7 +55,7 @@ function GroupList({
   const containerRef = useRef(null);
   const titleRef = useRef(null);
   const menusRef = useRef([]);
-  const [selected, setSelected] = useState(-1);
+  const [selected, setSelected] = useState(0);
   // const [isItemOpen, setIsItemOpen] = useState(false);
 
   // const handleShow = useCallback(() => {
