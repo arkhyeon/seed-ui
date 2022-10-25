@@ -20,9 +20,10 @@ function LabelList({
   direction = 'left',
   canCreate = true,
   unit = '그룹',
+  valueArr = [],
+  setValueArr,
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
-  const [valueArr, setValueArr] = useState([]);
   const selectorRef = useRef(null);
 
   const handleOut = useCallback(

@@ -14,9 +14,14 @@ import Label from './Label';
  * @returns {JSX.Component} UniqueLabelList Component
  */
 
-function UniqueLabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = null, unit = '그룹' }) {
+function UniqueLabelList({
+  labelList = ['그룹 1', '그룹 2'],
+  createLabel = null,
+  unit = '그룹',
+  valueStr,
+  setValueStr,
+}) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
-  const [valueStr, setValueStr] = useState('');
   const selectorRef = useRef(null);
 
   const handleOut = useCallback(
