@@ -14,7 +14,7 @@ import Label from './Label';
  * @returns {JSX.Component} LabelList Component
  */
 
-function LabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = null }) {
+function LabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = null, direction = 'left' }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [valueArr, setValueArr] = useState([]);
   const selectorRef = useRef(null);
@@ -49,7 +49,11 @@ function LabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = null })
   return (
     <Wrapper>
       <Section>
-        <LabelWrapper> {renderLabel()}</LabelWrapper>
+        {direction === 'left' ? (
+          <LabelWrapper direction={direction}> {renderLabel()}</LabelWrapper>
+        ) : (
+          <></>
+        )}
         <div>
           <Icon onClick={handleOpen} />
           {isSelectorOpen && (
@@ -62,6 +66,11 @@ function LabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = null })
             />
           )}
         </div>
+        {direction === 'right' ? (
+          <LabelWrapper direction={direction}> {renderLabel()}</LabelWrapper>
+        ) : (
+          <></>
+        )}
       </Section>
     </Wrapper>
   );
@@ -84,6 +93,13 @@ const LabelWrapper = styled.div`
   & > div:last-of-type {
     margin-right: 17px;
   }
+
+  margin-left: ${({ direction }) => {
+    if (direction === 'right') {
+      return '10px';
+    }
+    return 0;
+  }};
 `;
 
 export default LabelList;
