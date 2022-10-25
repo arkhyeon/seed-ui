@@ -45,7 +45,7 @@ function GroupList({
   buttonList = ['설정'],
   clickCreate = () => console.log('생성 버튼'),
   clickGroup = id => console.log(id),
-  clickMenu = id => console.log(id),
+  clickMenu = id => console.log(`${id} 클릭메뉴`),
   clickModify = id => console.log(id),
   clickDelete = id => console.log(id),
   selectedGroupName = '',
@@ -82,7 +82,7 @@ function GroupList({
     if (currentGroup === '') {
       clickMenu(0);
       setSelected(0);
-      setCurrentGroup(undefined);
+      return;
     }
 
     let targetId = '';
@@ -95,7 +95,6 @@ function GroupList({
     });
     clickGroup(targetId);
     setSelected(targetIdx);
-    setCurrentGroup(undefined);
   }, [selectedGroupName, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
