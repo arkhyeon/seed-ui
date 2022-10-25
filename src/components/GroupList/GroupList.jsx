@@ -56,16 +56,16 @@ function GroupList({
   const titleRef = useRef(null);
   const menusRef = useRef([]);
   const [selected, setSelected] = useState(0);
-  const [currentGroup, setCurrentGroup] = useState(undefined);
+  const [currentGroup, setCurrentGroup] = useState('');
   // const [isItemOpen, setIsItemOpen] = useState(false);
 
   // const handleShow = useCallback(() => {
   //   setIsShow(!isShow);
   // }, [isShow]);
 
-  useEffect(() => {
-    setCurrentGroup(selectedGroupName);
-  }, [selectedGroupName]);
+  // useEffect(() => {
+  //   setCurrentGroup(selectedGroupName);
+  // }, [selectedGroupName]);
 
   const handleSelect = useCallback(
     idx => {
@@ -75,28 +75,30 @@ function GroupList({
   );
 
   useEffect(() => {
-    if (currentGroup === undefined) {
+    if (currentGroup === '') {
       return;
     }
 
-    if (currentGroup === '') {
-      clickMenu(0);
+    if (currentGroup === 0) {
+      // clickMenu(0);
+      console.log(currentGroup);
       setSelected(0);
-      setCurrentGroup(undefined);
+      setCurrentGroup('');
+
       return;
     }
 
     let targetId = '';
     let targetIdx = '';
     menusRef.current.forEach((el, idx) => {
-      if (el.dataset?.gname === currentGroup) {
+      if (el?.dataset?.gname === currentGroup) {
         targetIdx = idx;
         targetId = el.dataset.id;
       }
     });
     clickGroup(targetId);
     setSelected(targetIdx);
-    setCurrentGroup(undefined);
+    setCurrentGroup('');
   }, [selectedGroupName, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
@@ -136,17 +138,6 @@ function GroupList({
     }
   }, [selected, groupList]);
 
-  useEffect(() => {
-    if (selected === -1) {
-      return;
-    }
-
-    if (selected >= 1 && selected <= groupList.length) {
-      return;
-    }
-    clickMenu(selected);
-  }, [selected, clickMenu, groupList]);
-
   const renderItem = useCallback(() => {
     return groupList.map((el, idx) => (
       <Group
@@ -164,6 +155,19 @@ function GroupList({
       />
     ));
   }, [groupList, handleSelect, selected, clickGroup, clickModify, clickDelete]);
+
+  const handleMenu = useCallback(
+    (idx, type) => {
+      if (type === 'button') {
+        clickMenu(idx);
+        handleSelect(idx);
+      } else {
+        clickMenu(0);
+        handleSelect(0);
+      }
+    },
+    [clickMenu, handleSelect],
+  );
 
   // useEffect(() => {
   //   if (isShow) {
@@ -185,7 +189,7 @@ function GroupList({
         {buttonList.map((el, idx) => (
           <Button
             key={`itemListBtn-${el}`}
-            onClick={() => handleSelect(groupList.length + idx + 2)}
+            onClick={() => handleMenu(groupList.length + idx + 2, 'button')}
             ref={el => {
               menusRef.current[groupList.length + 2] = el;
             }}
@@ -195,7 +199,7 @@ function GroupList({
         ))}
       </>
     );
-  }, [buttonList, handleSelect, groupList.length]);
+  }, [buttonList, groupList.length, handleMenu]);
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
@@ -204,7 +208,7 @@ function GroupList({
           <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
           <DividingLine />
           <NoneGroup
-            onClick={() => handleSelect(0)}
+            onClick={() => handleMenu(0)}
             ref={el => {
               menusRef.current[0] = el;
             }}
