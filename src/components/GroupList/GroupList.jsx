@@ -76,12 +76,12 @@ function GroupList({
     }
 
     menusRef.current.forEach((el, idx) => {
-      if (el.dataset.gname === selectedGroupName) {
+      if (el.dataset?.gname === selectedGroupName) {
         setSelected(idx);
         clickGroup(el.dataset.id);
       }
     });
-  }, [selectedGroupName]);
+  }, [selectedGroupName, clickGroup]);
 
   useEffect(() => {
     if (selected >= 1 && selected <= groupList.length + 1) {
