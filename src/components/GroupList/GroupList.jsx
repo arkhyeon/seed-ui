@@ -48,7 +48,7 @@ function GroupList({
   clickMenu = id => console.log(`${id} 클릭메뉴`),
   clickModify = id => console.log(id),
   clickDelete = id => console.log(id),
-  selectedGroupName = '',
+  selectedGroupInfo = { gname: undefined },
 }) {
   // const [isShow, setIsShow] = useState(true);
   const itemListRef = useRef(null);
@@ -56,16 +56,17 @@ function GroupList({
   const titleRef = useRef(null);
   const menusRef = useRef([]);
   const [selected, setSelected] = useState(0);
-  const [currentGroup, setCurrentGroup] = useState('');
+  const [currentGroup, setCurrentGroup] = useState(undefined);
+  // const [selectUpdate, setSelectUpdate] = useState(false);
   // const [isItemOpen, setIsItemOpen] = useState(false);
 
   // const handleShow = useCallback(() => {
   //   setIsShow(!isShow);
   // }, [isShow]);
 
-  // useEffect(() => {
-  //   setCurrentGroup(selectedGroupName);
-  // }, [selectedGroupName]);
+  useEffect(() => {
+    setCurrentGroup(selectedGroupInfo.gname);
+  }, [selectedGroupInfo]);
 
   const handleSelect = useCallback(
     idx => {
@@ -75,15 +76,14 @@ function GroupList({
   );
 
   useEffect(() => {
-    if (currentGroup === '') {
+    if (currentGroup === undefined) {
       return;
     }
 
-    if (currentGroup === 0) {
+    if (currentGroup === '') {
       // clickMenu(0);
-      console.log(currentGroup);
       setSelected(0);
-      setCurrentGroup('');
+      setCurrentGroup(undefined);
 
       return;
     }
@@ -98,8 +98,8 @@ function GroupList({
     });
     clickGroup(targetId);
     setSelected(targetIdx);
-    setCurrentGroup('');
-  }, [selectedGroupName, clickGroup, currentGroup, clickMenu]);
+    setCurrentGroup(undefined);
+  }, [selectedGroupInfo, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
     if (selected >= 1 && selected <= groupList.length + 1) {
