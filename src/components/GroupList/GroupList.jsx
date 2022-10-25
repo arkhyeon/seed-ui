@@ -82,6 +82,7 @@ function GroupList({
     if (currentGroup === '') {
       clickMenu(0);
       setSelected(0);
+      setCurrentGroup(undefined);
       return;
     }
 
@@ -95,6 +96,7 @@ function GroupList({
     });
     clickGroup(targetId);
     setSelected(targetIdx);
+    setCurrentGroup(undefined);
   }, [selectedGroupName, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
