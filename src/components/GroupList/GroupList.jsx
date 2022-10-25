@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import Group from './Group';
 import CreateBtn from './CreateBtn';
 
@@ -49,6 +48,8 @@ function GroupList({
   clickMenu = id => console.log(id),
   clickModify = id => console.log(id),
   clickDelete = id => console.log(id),
+  changeGroup = gname => console.log(gname),
+  selectedGroupName = '',
 }) {
   // const [isShow, setIsShow] = useState(true);
   const itemListRef = useRef(null);
@@ -68,6 +69,18 @@ function GroupList({
     },
     [setSelected],
   );
+
+  useEffect(() => {
+    if (selectedGroupName === '') {
+      return;
+    }
+
+    menusRef.current.forEach((el, idx) => {
+      if (el.dataset.gname === selectedGroupName) {
+        setSelected(idx);
+      }
+    });
+  }, [selectedGroupName]);
 
   useEffect(() => {
     if (selected >= 1 && selected <= groupList.length + 1) {

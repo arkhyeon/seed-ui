@@ -41,6 +41,7 @@ function Group({
       ref={el => {
         menusRef.current[idx] = el;
       }}
+      data-gname={value}
     >
       {value}
       <Right>
