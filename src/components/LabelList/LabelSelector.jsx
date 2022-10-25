@@ -4,7 +4,10 @@ import { MdOutlineNewLabel } from 'react-icons/md';
 import Option from './Option';
 
 const LabelSelector = forwardRef(
-  ({ labelList, valueArr, setValueArr, valueStr, setValueStr, createLabel, canCreate }, ref) => {
+  (
+    { labelList, valueArr, setValueArr, valueStr, setValueStr, createLabel, canCreate, unit },
+    ref,
+  ) => {
     const renderOptions = useCallback(() => {
       if (valueStr !== undefined) {
         return (
@@ -32,7 +35,7 @@ const LabelSelector = forwardRef(
 
     return (
       <Wrapper ref={ref}>
-        <Title>그룹 관리</Title>
+        <Title>{unit} 관리</Title>
         <DividingLine />
         {renderOptions()}
 
@@ -41,7 +44,7 @@ const LabelSelector = forwardRef(
             <DividingLine />
             <CreateBtn onClick={createLabel}>
               <MdOutlineNewLabel />
-              그룹 만들기
+              {unit} 만들기
             </CreateBtn>
           </>
         )}

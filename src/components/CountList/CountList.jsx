@@ -27,6 +27,7 @@ function CountList({
   setLabelList = null,
   createLabel = null,
   modifyLabel = null,
+  unit = 'IP',
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
@@ -71,6 +72,7 @@ function CountList({
               ref={selectorRef}
               modifyLabel={modifyLabel}
               setLabelList={setLabelList}
+              unit={unit}
             />
           )}
         </div>

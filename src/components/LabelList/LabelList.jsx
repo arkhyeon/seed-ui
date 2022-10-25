@@ -19,6 +19,7 @@ function LabelList({
   createLabel = null,
   direction = 'left',
   canCreate = true,
+  unit = '그룹',
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [valueArr, setValueArr] = useState([]);
@@ -69,6 +70,7 @@ function LabelList({
               createLabel={createLabel}
               ref={selectorRef}
               canCreate={canCreate}
+              unit={unit}
             />
           )}
         </div>
