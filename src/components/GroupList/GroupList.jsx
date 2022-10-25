@@ -75,12 +75,14 @@ function GroupList({
       return;
     }
 
+    let targetId = '';
     menusRef.current.forEach((el, idx) => {
       if (el.dataset?.gname === selectedGroupName) {
         setSelected(idx);
-        clickGroup(el.dataset.id);
+        targetId = el.dataset.id;
       }
     });
+    clickGroup(targetId);
   }, [selectedGroupName, clickGroup]);
 
   useEffect(() => {
