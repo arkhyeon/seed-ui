@@ -44,7 +44,7 @@ function GroupList({
   groupList = [{ id: 1, value: 'item_1', cnt: 3 }],
   buttonList = ['설정'],
   clickCreate = () => console.log('생성 버튼'),
-  clickGroup = id => console.log(id),
+  clickGroup = id => console.log(`${id} 클릭 그룹`),
   clickMenu = id => console.log(`${id} 클릭메뉴`),
   clickModify = id => console.log(id),
   clickDelete = id => console.log(id),
@@ -81,7 +81,7 @@ function GroupList({
     }
 
     if (currentGroup === '') {
-      // clickMenu(0);
+      clickMenu(0);
       setSelected(0);
       setCurrentGroup(undefined);
 

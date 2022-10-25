@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 import { MdDeleteOutline, MdEditCalendar } from 'react-icons/md';
 
