@@ -14,7 +14,12 @@ import Label from './Label';
  * @returns {JSX.Component} LabelList Component
  */
 
-function LabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = null, direction = 'left' }) {
+function LabelList({
+  labelList = ['그룹 1', '그룹 2'],
+  createLabel = null,
+  direction = 'left',
+  canCreate = true,
+}) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [valueArr, setValueArr] = useState([]);
   const selectorRef = useRef(null);
@@ -63,6 +68,7 @@ function LabelList({ labelList = ['그룹 1', '그룹 2'], createLabel = null, d
               setValueArr={setValueArr}
               createLabel={createLabel}
               ref={selectorRef}
+              canCreate={canCreate}
             />
           )}
         </div>
