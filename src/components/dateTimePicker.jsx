@@ -17,30 +17,10 @@ import {
  * @param {String} param.width
  * input 박스의 너비
  * default 값은 '100px'
- * @param {String} param.headBg
- * datePicker의 상단 부분 배경색
- * default 값은 '#eee'
- * @param {String} param.pickerBg
- * datePicker의 전체 배경색
- * default 값은 'white'
- * @param {String} param.weekDaysBg
- * 요일 표시 줄의 배경색
- * default 값은 'white'
- * @param {String} param.selectedBg
- * 선택된 날짜의 배경색
- * default 값은 '#808080'
  * @returns {JSX.Element} dateTimePicker Component
  */
 
-function DateTimePicker({
-  date = new Date(),
-  setDate = null,
-  width = '130px',
-  headBg = '#eee',
-  pickerBg = 'white',
-  weekDaysBg = 'white',
-  selectedBg = '#808080',
-}) {
+function DateTimePicker({ date = new Date(), setDate = null, width = '130px' }) {
   const inputRef = useRef(null);
   const weekDays = useRef(['일', '월', '화', '수', '목', '금', '토']).current;
   const [dateViewed, setDateViewed] = useState(date);
@@ -160,9 +140,7 @@ function DateTimePicker({
 
   const handleInput = useCallback(
     e => {
-      const [prevYear, prevMonth, prevDay] = inputValue.slice(0, 10).split('-');
       const [year, month, day] = e.target.value.slice(0, 11).trim().split('-');
-      const [prevHour, prevMinute] = inputValue.slice(11, 16).split(':');
       const [hour, minute] = e.target.value.slice(11, 17).trim().split(':');
       let convertedYear = '';
       const checkDiff = false;
@@ -244,7 +222,7 @@ function DateTimePicker({
         }, 10);
       }
     },
-    [inputValue, setDate, checkValidate, checkValidDate, checkHour, checkMinute],
+    [setDate, checkValidate, checkValidDate, checkHour, checkMinute],
   );
 
   const handlePrev = useCallback(() => {
@@ -263,13 +241,15 @@ function DateTimePicker({
 
   const renderWeekDays = useCallback(() => {
     return (
-      <WeekWrapper weekDaysBg={weekDaysBg}>
+      <WeekWrapper>
         {weekDays.map((el, idx) => (
-          <WeekDay key={`weekday-${idx}`}>{el}</WeekDay>
+          <WeekDay key={`weekday-${idx}`} className="date-picker-week">
+            {el}
+          </WeekDay>
         ))}
       </WeekWrapper>
     );
-  }, [weekDays, weekDaysBg]);
+  }, [weekDays]);
 
   const handleDayClick = useCallback(
     e => {
@@ -336,26 +316,40 @@ function DateTimePicker({
           ) {
             return (
               <Day
-                className="selected-day"
+                className="selected-day day"
                 key={`day-${idx}`}
                 onClick={handleDayClick}
                 day={el}
                 date={date}
                 dateViewed={dateViewed}
-                selectedBg={selectedBg}
               >
                 {el}
               </Day>
             );
           }
+
+          if (el === '') {
+            return (
+              <Empty
+                key={`day-${idx}`}
+                onClick={handleDayClick}
+                day={el}
+                date={date}
+                dateViewed={dateViewed}
+              >
+                {el}
+              </Empty>
+            );
+          }
+
           return (
             <Day
               key={`day-${idx}`}
+              className="non-selected-day day"
               onClick={handleDayClick}
               day={el}
               date={date}
               dateViewed={dateViewed}
-              selectedBg={selectedBg}
             >
               {el}
             </Day>
@@ -363,7 +357,7 @@ function DateTimePicker({
         })}
       </DayWrapper>
     );
-  }, [date, dateViewed, handleDayClick, selectedBg]);
+  }, [date, dateViewed, handleDayClick]);
 
   const addHour = useCallback(() => {
     const parsedHour = parseInt(hourInput, 10);
@@ -547,15 +541,26 @@ function DateTimePicker({
         onClick={() => {
           setIsOpen(!isOpen);
         }}
+        className="date-picker-input"
       />
       {isOpen && (
         <>
-          <PickerWrapper ref={pickerRef} pickerBg={pickerBg}>
-            <Head headBg={headBg}>
-              <Button pos="left" width={width} onClick={handlePrev}>
+          <PickerWrapper ref={pickerRef}>
+            <Head className="date-picker-head">
+              <Button
+                pos="left"
+                width={width}
+                onClick={handlePrev}
+                className="date-picker-button date-picker-button-left"
+              >
                 <AiOutlineLeft />
               </Button>
-              <Button pos="right" width={width} onClick={handleNext}>
+              <Button
+                pos="right"
+                width={width}
+                onClick={handleNext}
+                className="date-picker-button date-picker-button-right"
+              >
                 <AiOutlineRight />
               </Button>
               {renderYear()}
@@ -566,15 +571,25 @@ function DateTimePicker({
           </PickerWrapper>
           <TimeWrapper ref={timeRef}>
             <LineWrapper>
-              <AiOutlineCaretUp onClick={addHour} />
-              <TimteInput value={hourInput} onChange={handleHourInput} ref={hourRef} />
-              <AiOutlineCaretDown onClick={minusHour} />
+              <AiOutlineCaretUp onClick={addHour} className="date-picker-time-button" />
+              <TimteInput
+                value={hourInput}
+                onChange={handleHourInput}
+                ref={hourRef}
+                className="date-picker-time-input"
+              />
+              <AiOutlineCaretDown onClick={minusHour} className="date-picker-time-button" />
             </LineWrapper>
 
             <LineWrapper>
-              <AiOutlineCaretUp onClick={addMinute} />
-              <TimteInput value={minuteInput} onChange={handleMinuteInput} ref={minuteRef} />
-              <AiOutlineCaretDown onClick={minusMinute} />
+              <AiOutlineCaretUp onClick={addMinute} className="date-picker-time-button" />
+              <TimteInput
+                value={minuteInput}
+                onChange={handleMinuteInput}
+                ref={minuteRef}
+                className="date-picker-time-input"
+              />
+              <AiOutlineCaretDown onClick={minusMinute} className="date-picker-time-button" />
             </LineWrapper>
           </TimeWrapper>
         </>
@@ -595,7 +610,7 @@ const PickerWrapper = styled.div`
   position: absolute;
 
   margin-top: 4px;
-  background: ${({ pickerBg }) => pickerBg};
+  background: white;
   width: 280px;
   height: 300px;
   z-index: 80;
@@ -620,7 +635,6 @@ const Head = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${({ headBg }) => headBg};
 `;
 
 const Button = styled.div`
@@ -653,7 +667,7 @@ const WeekWrapper = styled.ul`
   display: flex;
   margin-top: 8px;
   width: 224px;
-  background: ${({ weekDaysBg }) => weekDaysBg};
+  background: white;
   justify-content: space-between;
 `;
 
@@ -715,6 +729,14 @@ const LineWrapper = styled.div`
 const TimteInput = styled.input`
   width: 50px;
   text-align: center;
+`;
+
+const Empty = styled.li`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  background: white;
 `;
 
 export default DateTimePicker;
