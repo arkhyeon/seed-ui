@@ -65,13 +65,13 @@ function Count({ initialValue = 1, max = 99, min = 0 }) {
 
   return (
     <Wrapper>
-      <Icon onClick={handleMinus}>
+      <Icon onClick={handleMinus} className="count-btn count-btn-minus">
         <AiOutlineMinus />
       </Icon>
       <div style={{ textAlign: 'center' }}>
-        <Text value={cnt} onChange={handleChange} />
+        <Text value={cnt} onChange={handleChange} className="count-text" />
       </div>
-      <Icon onClick={handlePlus}>
+      <Icon onClick={handlePlus} className="count-btn count-btn-plus">
         <AiOutlinePlus />
       </Icon>
     </Wrapper>
