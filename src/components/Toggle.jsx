@@ -33,6 +33,7 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
             aria-pressed={value === idx + 1 ? true : null}
             value={idx + 1}
             onClick={() => handleToggle(idx + 1)}
+            classList="toggle-btn"
           >
             {el}
           </ToggleButton>
