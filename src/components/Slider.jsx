@@ -20,12 +20,6 @@ import { BsPlayFill, BsFillStopFill } from 'react-icons/bs';
  * @param {Number} props.autoTime
  * 자동 재생 시 페이지 넘어가는 시간
  * default 값은 5000
- * @param {String} props.border
- * Slider 컴포넌트의 테두리 스타일
- * default 값은 '1px solid black'
- * @param {String} props.background
- * 각 페이지의 배경색
- * default 값은 'transparent'
  * @returns {JSX.Element} Slider Component
  */
 
@@ -35,8 +29,6 @@ function Slider({
   itemList = null,
   autoPlay = false,
   autoTime = 5000,
-  border = '1px solid black',
-  background = 'transparent',
 }) {
   const [idx, setIdx] = useState(0);
   const lastIndex = useRef(itemList.length - 1).current;
@@ -89,7 +81,7 @@ function Slider({
       <div>
         <ItemWrapper ref={itemWrapperRef}>
           {itemList.map((el, idx) => (
-            <Item key={`item-${idx}`} width={width} height={height} background={background}>
+            <Item key={`item-${idx}`} width={width} height={height}>
               {el}
             </Item>
           ))}
@@ -112,11 +104,16 @@ function Slider({
         navHeight={navSize.height}
       >
         {itemList.map((el, idx) => (
-          <NavPoint key={`nav-${idx}`} data-idx={idx} onClick={handleNav} />
+          <NavPoint
+            key={`nav-${idx}`}
+            data-idx={idx}
+            onClick={handleNav}
+            className="slider-nav-point"
+          />
         ))}
       </Nav>
     );
-  }, [width, height, navSize, itemList]);
+  }, [width, height, navSize, itemList, handleNav]);
 
   useLayoutEffect(() => {
     if (isAutoPlay) {
@@ -139,21 +136,45 @@ function Slider({
   }, [idx, handleMove]);
 
   return (
-    <Wrapper width={width} height={height} border={border} bg={background}>
+    <Wrapper width={width} height={height} className="slider">
       {renderNavPoint()}
       {!isAutoPlay ? (
-        <Button pos="top" width={width} height={height} onClick={() => setIsAutoPlay(true)}>
+        <Button
+          pos="top"
+          width={width}
+          height={height}
+          onClick={() => setIsAutoPlay(true)}
+          className="slider-btn-top slider-btn"
+        >
           <BsPlayFill />
         </Button>
       ) : (
-        <Button pos="top" width={width} height={height} onClick={() => setIsAutoPlay(false)}>
+        <Button
+          pos="top"
+          width={width}
+          height={height}
+          onClick={() => setIsAutoPlay(false)}
+          className="slider-btn-top slider-btn"
+        >
           <BsFillStopFill />
         </Button>
       )}
-      <Button pos="left" width={width} height={height} onClick={handlePrev}>
+      <Button
+        pos="left"
+        width={width}
+        height={height}
+        onClick={handlePrev}
+        className="slider-btn-left slider-btn"
+      >
         <AiOutlineLeft />
       </Button>
-      <Button pos="right" width={width} height={height} onClick={handleNext}>
+      <Button
+        pos="right"
+        width={width}
+        height={height}
+        onClick={handleNext}
+        className="slider-btn-right slider-btn"
+      >
         <AiOutlineRight />
       </Button>
       {renderItem()}
@@ -162,13 +183,14 @@ function Slider({
 }
 
 const Wrapper = styled.div`
-  ${({ width, height, border }) => {
+  ${({ width, height }) => {
     return css`
       width: ${width};
       height: ${height};
-      border: ${border};
     `;
   }}
+  border: 1px solid black;
+  background: white;
 
   overflow: hidden;
   position: relative;
@@ -181,11 +203,10 @@ const ItemWrapper = styled.div`
 `;
 
 const Item = styled.div`
-  ${({ width, height, background }) => {
+  ${({ width, height }) => {
     return css`
       width: ${width};
       height: ${height};
-      background: ${background};
     `;
   }};
   display: flex;
@@ -202,8 +223,8 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
   z-index: 90;
-  width: 60px;
-  height: 60px;
+  width: 30px;
+  height: 30px;
   border-radius: 4px;
 
   :hover {
@@ -225,7 +246,7 @@ const Button = styled.button`
     }
     if (pos === 'right') {
       return css`
-        left: calc(${width} - 68px);
+        right: 8px;
         top: calc(${height} / 2 - 25px);
       `;
     }
@@ -233,8 +254,8 @@ const Button = styled.button`
   }};
 
   svg {
-    width: 50px;
-    height: 50px;
+    width: 20px;
+    height: 20px;
   }
 `;
 
@@ -252,8 +273,8 @@ const Nav = styled.ul`
 `;
 
 const NavPoint = styled.li`
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: rgba(128, 128, 128, 0.2);
   margin-right: 12px;
