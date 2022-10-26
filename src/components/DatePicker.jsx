@@ -250,6 +250,21 @@ function DatePicker({ date = new Date(), setDate = null, width = '100px', disabl
               </Day>
             );
           }
+
+          if (el === '') {
+            return (
+              <Empty
+                key={`day-${idx}`}
+                onClick={handleDayClick}
+                day={el}
+                date={date}
+                dateViewed={dateViewed}
+              >
+                {el}
+              </Empty>
+            );
+          }
+
           return (
             <Day
               key={`day-${idx}`}
@@ -467,6 +482,14 @@ const Day = styled.li`
   padding: 8px 0;
 
   border-radius: 4px;
+`;
+
+const Empty = styled.li`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  background: white;
 `;
 
 export default DatePicker;
