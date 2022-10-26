@@ -8,8 +8,7 @@ import { BlackButton, WhiteButton } from './Button/Button';
  *
  * @param {String} props.width
  * 모달의 너비
- * @param {Component} props.children
- * 모달 내에 들어갈 컴포넌트
+ * default 값은 '600px'
  * @param {Boolean} props.modalState
  * 모달 On, Off 여부
  * 상위 컴포넌트에서 useState 값 내려 받음
@@ -24,9 +23,6 @@ import { BlackButton, WhiteButton } from './Button/Button';
  * @param {Boolean} props.isCloseBtn
  * 모달창 오른쪽 상단에 닫기 버튼 존재 여부
  * default 값은 true
- * @param {Boolean} props.resizable
- * 모달창 크기 조절 가능 여부
- * default 값은 false
  * @param {Boolean} props.movable
  * 모달창 상단을 드래그 하여 이동 가능한 지 여부
  * default 값은 true
@@ -39,6 +35,8 @@ import { BlackButton, WhiteButton } from './Button/Button';
  * @param {Function} props.callback
  * 모달창 확인 버튼을 눌렀을 시, 실행되는 함수
  * default 값은 null
+ * @param {Component} props.children
+ * 모달 내에 들어갈 컴포넌트
  * @returns {JSX.Element} Button Component
  */
 function Modal({
@@ -70,7 +68,6 @@ function Modal({
     };
   }, []);
 
-  // (window.innerHeight - modalDialog[modalDialog.length - 1].offsetHeight) / 2 - 28;
   const handleMove = useCallback(
     e => {
       let posX = e.clientX - initialPos.current.x;
@@ -113,7 +110,7 @@ function Modal({
       document.addEventListener('mousemove', handleMove);
       document.addEventListener('mouseup', removeEvents);
     },
-    [modalRef, initialPos, handleMove, removeEvents],
+    [modalRef, initialPos, handleMove, removeEvents, movable],
   );
 
   return (
