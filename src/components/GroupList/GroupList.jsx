@@ -36,6 +36,11 @@ import CreateBtn from './CreateBtn';
  * 각 그룹의 삭제 버튼을 클릭 시 발생할 이벤트
  * 첫번째 인자로는 groupList에서 넣은 id 값을 가짐
  * default 값은 (id) => console.log(id)
+ * @param {Object} props.selectedGroupInfo
+ * 외부에서 선택된 그룹 값으로 변경 시켜야 할 때 사용되는 인자
+ * { gname: 선택한 그룹 이름}의 형태
+ * 필요한 것은 그룹의 이름 뿐이나, 문자열로 받을 경우 똑같은 그룹을 연이어 선택하면 해당 액션을 감지 못하게 되어 Objct 형태를 차선책으로 선택
+ * default 값은 {gname: undefined}
  * @returns {JSX.Element} GroupList Component
  */
 
@@ -193,6 +198,7 @@ function GroupList({
             ref={el => {
               menusRef.current[groupList.length + 2] = el;
             }}
+            className="group-list-menu"
           >
             {el}
           </Button>
@@ -204,14 +210,15 @@ function GroupList({
   return (
     <div style={{ display: 'flex', height: '100%' }}>
       <Container ref={containerRef}>
-        <Wrapper ref={itemListRef}>
+        <Wrapper ref={itemListRef} className="group-list">
           <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
-          <DividingLine />
+          <DividingLine className="group-list-divide" />
           <NoneGroup
             onClick={() => handleMenu(0)}
             ref={el => {
               menusRef.current[0] = el;
             }}
+            className="group-list-menu"
           >
             미지정 그룹
           </NoneGroup>
@@ -219,6 +226,7 @@ function GroupList({
             <ItemTitle
               // onClick={handleItem}
               ref={titleRef}
+              className="group-list-menu"
             >
               <div>그룹</div>
               {/* {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />} */}
@@ -226,7 +234,7 @@ function GroupList({
             {/* {isItemOpen && renderItem()} */}
             {renderItem()}
           </Content>
-          <DividingLine />
+          <DividingLine className="group-list-divide" />
           <ButtonWrapper>{renderBtns()}</ButtonWrapper>
         </Wrapper>
       </Container>

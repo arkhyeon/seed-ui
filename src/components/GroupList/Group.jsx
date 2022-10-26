@@ -36,7 +36,7 @@ function Group({
 
   return (
     <Wrapper
-      className="item"
+      className="item group-list-group"
       onClick={handleClick}
       ref={el => {
         menusRef.current[idx] = el;
