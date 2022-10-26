@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
@@ -39,9 +39,9 @@ const colorBg = {
  */
 
 function Switch({ size = 'middle', value = true, setValue = null, color = 'blue' }) {
-  const handleValue = () => {
+  const handleValue = useCallback(() => {
     setValue(!value);
-  };
+  }, [setValue, value]);
 
   return (
     <Wrapper size={size} value={value} onClick={handleValue} color={color}>
