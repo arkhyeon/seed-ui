@@ -18,7 +18,7 @@ import Label from './Label';
  * 라벨이 생성 가능한 지에 대한 여부
  * 해당 값이 false면 생성 버튼이 사라짐
  * default 값은 true
- * @param {String[]} params.unit
+ * @param {String} params.unit
  * 현재 LabelList의 단위
  * default 값은 '그룹'
  * @param {String[]} params.valueArr
