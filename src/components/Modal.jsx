@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { GrClose } from 'react-icons/all';
 import { BlackButton, WhiteButton } from './Button/Button';
+import { useThrottle } from '../assets/CustomHook';
 
 /**
  *
@@ -68,8 +69,36 @@ function Modal({
     };
   }, []);
 
+  // const handleMove = useCallback(
+  //   e => {
+  //     console.log('작동');
+  //     let posX = e.clientX - initialPos.current.x;
+  //     let posY = e.clientY - initialPos.current.y;
+
+  //     if (posX < 0) {
+  //       posX = 1;
+  //     }
+
+  //     if (posX + modalRef.current.offsetWidth > window.innerWidth) {
+  //       posX = window.innerWidth - modalRef.current.offsetWidth - 1;
+  //     }
+
+  //     if (posY < 0) {
+  //       posY = 1;
+  //     }
+
+  //     if (posY + modalRef.current.offsetHeight > window.innerHeight) {
+  //       posY = window.innerHeight - modalRef.current.offsetHeight - 1;
+  //     }
+
+  //     setPos({ x: posX, y: posY });
+  //   },
+  //   [modalRef, initialPos, setPos],
+  // );
+
   const handleMove = useCallback(
     e => {
+      console.log('작동');
       let posX = e.clientX - initialPos.current.x;
       let posY = e.clientY - initialPos.current.y;
 
@@ -94,23 +123,26 @@ function Modal({
     [modalRef, initialPos, setPos],
   );
 
+  const throttleMove = useThrottle(handleMove, 10);
+
   const removeEvents = useCallback(() => {
-    document.removeEventListener('mousemove', handleMove);
+    document.removeEventListener('mousemove', throttleMove);
     document.removeEventListener('mouseup', removeEvents);
-  }, [handleMove]);
+  }, [throttleMove]);
 
   const handleDown = useCallback(
     e => {
       if (!movable) {
         return;
       }
+
       const { left, top } = modalRef.current.getBoundingClientRect();
       initialPos.current.x = e.clientX - left;
       initialPos.current.y = e.clientY - top;
-      document.addEventListener('mousemove', handleMove);
+      document.addEventListener('mousemove', throttleMove);
       document.addEventListener('mouseup', removeEvents);
     },
-    [modalRef, initialPos, handleMove, removeEvents, movable],
+    [modalRef, initialPos, removeEvents, movable, throttleMove],
   );
 
   return (
