@@ -45,7 +45,7 @@ function Option({ valueArr, setValueArr, value, valueStr, setValueStr }) {
   }, [valueArr, setIsCheck, value, valueStr, setValueStr]);
 
   return (
-    <Wrapper ref={optionRef} onClick={handleCheck}>
+    <Wrapper ref={optionRef} onClick={handleCheck} className="label-selector-option">
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {isCheck ? <MdLabel /> : <MdLabelOutline />}
         {value}
