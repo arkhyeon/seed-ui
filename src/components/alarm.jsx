@@ -160,7 +160,7 @@ const setPosition = (position, div, width, height) => {
   }
   if (position === 'left-end') {
     Object.assign(div.style, {
-      top: `${window.innerHeight - height.slice(0, -2) - 16}px`,
+      top: `${window.innerHeight - height.slice(0, -2) - 50}px`,
       left: '1px',
     });
   }
@@ -178,12 +178,12 @@ const setPosition = (position, div, width, height) => {
   }
   if (position === 'center-end') {
     Object.assign(div.style, {
-      top: `${window.innerHeight - height.slice(0, -2) - 16}px`,
+      top: `${window.innerHeight - height.slice(0, -2) - 50}px`,
       left: `${window.innerWidth / 2 - width.slice(0, -2) / 2}px`,
     });
   }
   if (position === 'right-start') {
-    Object.assign(div.stlye, {
+    Object.assign(div.style, {
       top: `1px`,
       left: `${window.innerWidth - width.slice(0, -2) - 16}px`,
     });
@@ -196,7 +196,7 @@ const setPosition = (position, div, width, height) => {
   }
   if (position === 'right-end') {
     Object.assign(div.style, {
-      top: `${window.innerHeight - height.slice(0, -2) - 16}px`,
+      top: `${window.innerHeight - height.slice(0, -2) - 50}px`,
       left: `${window.innerWidth - width.slice(0, -2) - 16}px`,
     });
   }
@@ -409,6 +409,7 @@ const alarm = ({
     setTitleStyle(titleDiv, title);
     setTextStyle(textDiv, text);
     setProgressStyle(progressDiv, width, timeLimit);
+    progressDiv.classList.add('alarm-answer-progress');
     setCloseStyle(wrapper, closeBtn);
 
     Object.assign(btnWrapper.style, {
@@ -418,10 +419,11 @@ const alarm = ({
     });
 
     yesBtn.textContent = yBtnText;
+    yesBtn.classList.add('alarm-yesBtn');
 
     Object.assign(yesBtn.style, {
       background: '#eee',
-      borer: 'none',
+      border: 'none',
       outline: 'none',
       padding: '4px',
       borderRadius: '4px',
@@ -444,6 +446,7 @@ const alarm = ({
       width: '50px',
       cursor: 'pointer',
     });
+    noBtn.classList.add('alarm-noBtn');
 
     noBtn.addEventListener('click', handleN);
 
@@ -506,6 +509,7 @@ const alarm = ({
   setTitleStyle(titleDiv, title);
   setTextStyle(textDiv, text);
   setProgressStyle(progressDiv, width, timeLimit);
+  progressDiv.classList.add('alarm-progress');
   setCloseStyle(wrapper, closeBtn);
   setTypeStyle(wrapper, iconDiv, closeBtn, titleDiv, textDiv, progressDiv, type, name);
 
