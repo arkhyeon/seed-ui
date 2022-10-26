@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
@@ -49,10 +49,14 @@ function Radio({
   labelOutSpacing = '8px',
   type = 'fill',
 }) {
-  const handleValue = value => {
-    setValue(value);
-  };
-  const renderOption = () => {
+  const handleValue = useCallback(
+    value => {
+      setValue(value);
+    },
+    [setValue],
+  );
+
+  const renderOption = useCallback(() => {
     return (
       <OptionWrapper>
         {list.map((el, idx) => (
@@ -82,10 +86,11 @@ function Radio({
         ))}
       </OptionWrapper>
     );
-  };
+  }, [handleValue, hoverColor, labelInSpacing, labelOutSpacing, list, value, type, checkColor]);
+
   return (
     <Wrapper>
-      {/*<Title>{text}</Title>*/}
+      {/* <Title>{text}</Title> */}
       {renderOption()}
     </Wrapper>
   );
