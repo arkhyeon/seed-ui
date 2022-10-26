@@ -11,6 +11,19 @@ import Label from './Label';
  * @param {Function} params.createLabel
  * '그룹 만들기' 버튼을 눌렀을 때 실행되는 이벤트
  * default 값은 null
+ * @param {String} params.direction
+ * 라벨이 나열될 방향
+ * default 값은 'left'
+ * @param {String} params.unit
+ * 현재 LabelList의 단위
+ * default 값은 '그룹'
+ * @param {String[]} params.valueStr
+ * 선택된 라벨을 관리하는 문자열
+ * 상위 컴포넌트에서 생성된 state 값
+ * default 값은 ""
+ * @param {Funtion} params.setValueStr
+ * valueStr을 관리하는 setState 함수
+ * default 값은 null
  * @returns {JSX.Component} UniqueLabelList Component
  */
 
@@ -18,8 +31,9 @@ function UniqueLabelList({
   labelList = ['그룹 1', '그룹 2'],
   createLabel = null,
   unit = '그룹',
-  valueStr,
-  setValueStr,
+  direction = 'left',
+  valueStr = '',
+  setValueStr = null,
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
@@ -55,7 +69,13 @@ function UniqueLabelList({
   return (
     <Wrapper>
       <Section>
-        <LabelWrapper>{renderLabel()}</LabelWrapper>
+        {direction === 'left' ? (
+          <LabelWrapper direction={direction} className="labels">
+            {renderLabel()}
+          </LabelWrapper>
+        ) : (
+          <></>
+        )}
         <div>
           <Icon onClick={handleOpen} />
           {isSelectorOpen && (
@@ -69,6 +89,13 @@ function UniqueLabelList({
             />
           )}
         </div>
+        {direction === 'right' ? (
+          <LabelWrapper direction={direction} className="labels">
+            {renderLabel()}
+          </LabelWrapper>
+        ) : (
+          <></>
+        )}
       </Section>
     </Wrapper>
   );
