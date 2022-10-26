@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 
 function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
@@ -17,11 +17,14 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
    * @returns {JSX.Element} Toggle Component
    */
 
-  const handleToggle = btnValue => {
-    setValue(btnValue);
-  };
+  const handleToggle = useCallback(
+    btnValue => {
+      setValue(btnValue);
+    },
+    [setValue],
+  );
 
-  const renderBtn = () => {
+  const renderBtn = useCallback(() => {
     return (
       <>
         {list.map((el, idx) => (
@@ -36,7 +39,7 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
         ))}
       </>
     );
-  };
+  }, [handleToggle, list, value]);
 
   return <Wrapper>{renderBtn()}</Wrapper>;
 }
