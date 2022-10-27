@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useLayoutEffect, useRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { GrClose } from 'react-icons/all';
@@ -58,16 +58,44 @@ function Modal({
   const headRef = useRef(null);
   const initialPos = useRef({ x: 0, y: 0 });
   const [pos, setPos] = useState({ x: 0, y: 0 });
+  // const [browserSize, setBrowserSize] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
     const centerWidth = window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
     const centerHeight = window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
     setPos({ x: centerWidth, y: centerHeight });
-    document.querySelector('body').style.overflow = 'hidden';
-    return () => {
-      document.querySelector('body').style.overflow = '';
-    };
+    // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
   }, []);
+
+  const handleCenter = useCallback(() => {
+    // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
+
+    const temp = { ...pos };
+
+    if (modalRef.current.offsetWidth > window.innerWidth) {
+      temp.x = 0;
+    } else if (pos.x + modalRef.current.offsetWidth > window.innerWidth) {
+      temp.x = window.innerWidth - modalRef.current.offsetWidth;
+    }
+    if (modalRef.current.offsetHeight > window.innerHeight) {
+      temp.y = 0;
+    } else if (pos.y + modalRef.current.offsetHeight > window.innerHeight) {
+      temp.y = window.innerHeight - modalRef.current.offsetHeight;
+    }
+    setPos(temp);
+  }, [pos]);
+
+  useLayoutEffect(() => {
+    window.addEventListener('resize', handleCenter);
+
+    return () => {
+      window.removeEventListener('resize', handleCenter);
+    };
+  }, [handleCenter]);
+
+  // useEffect(() => {
+  //   if (modalRef.current.offsetWidth > )
+  // }, [browserSize]);
 
   // const handleMove = useCallback(
   //   e => {
@@ -98,9 +126,15 @@ function Modal({
 
   const handleMove = useCallback(
     e => {
-      console.log('작동');
       let posX = e.clientX - initialPos.current.x;
       let posY = e.clientY - initialPos.current.y;
+
+      if (
+        modalRef.current.offsetWidth > window.innerWidth ||
+        modalRef.current.offsetHeight > window.innerHeight
+      ) {
+        return setPos({ x: posX < 0 ? 0 : posX, y: posY < 0 ? 0 : posY });
+      }
 
       if (posX < 0) {
         posX = 1;
