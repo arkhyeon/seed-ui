@@ -22,12 +22,12 @@ const LabelSelector = forwardRef(
     }, [labelList, setLabelList, modifyLabel]);
 
     return (
-      <Wrapper ref={ref}>
-        <Title>{unit} 관리</Title>
-        <DividingLine />
+      <Wrapper ref={ref} className="label-selector">
+        <Title className="label-selector-title">{unit} 관리</Title>
+        <DividingLine className="label-selector-divide" />
         {renderOptions()}
-        <DividingLine />
-        <CreateBtn onClick={createLabel}>
+        <DividingLine className="label-selector-divide" />
+        <CreateBtn onClick={createLabel} className="label-selector-create">
           <MdOutlineNewLabel />
           {unit} 만들기
         </CreateBtn>

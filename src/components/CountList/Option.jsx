@@ -14,7 +14,7 @@ function Option({ value, modifyLabel, setLabelList, labelList }) {
   }, [setLabelList, value, labelList]);
 
   return (
-    <Wrapper ref={optionRef}>
+    <Wrapper ref={optionRef} className="label-selector-option">
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <MdLabelOutline />
         {value}

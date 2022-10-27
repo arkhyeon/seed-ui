@@ -19,6 +19,12 @@ import Label from './Label';
  * 첫번째 인자로 해당 라벨의 값을 가짐
  * 라벨 수정 버튼을 클릭 했을 때에 실행되는 함수
  * default 값은 null
+ * @param {String} params.unit
+ * CountList 컴포넌트가 다루는 기본 단위
+ * default 갑은 IP
+ * @param {String} params.direction
+ * 라벨이 나열될 방향
+ * default 값은 right
  * @returns {JSX.Component} CountList Component
  */
 
@@ -28,6 +34,7 @@ function CountList({
   createLabel = null,
   modifyLabel = null,
   unit = 'IP',
+  direction = 'right',
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
@@ -65,6 +72,11 @@ function CountList({
       <Section>
         <div>
           <Icon onClick={handleOpen} />
+          {direction === 'left' ? (
+            <LabelWrapper className="labels">
+              <Count>{labelList.length}개</Count> {renderLabel()}
+            </LabelWrapper>
+          ) : null}
           {isSelectorOpen && (
             <LabelSelector
               labelList={labelList}
@@ -76,9 +88,11 @@ function CountList({
             />
           )}
         </div>
-        <LabelWrapper>
-          <Count>{labelList.length}개</Count> {renderLabel()}
-        </LabelWrapper>
+        {direction === 'right' ? (
+          <LabelWrapper className="labels">
+            <Count>{labelList.length}개</Count> {renderLabel()}
+          </LabelWrapper>
+        ) : null}
       </Section>
     </Wrapper>
   );
