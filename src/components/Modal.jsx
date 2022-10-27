@@ -63,7 +63,7 @@ function Modal({
   useLayoutEffect(() => {
     const centerWidth = window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
     const centerHeight = window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
-    setPos({ x: centerWidth, y: centerHeight });
+    setPos({ x: centerWidth, y: centerHeight < 0 ? 0 : centerHeight });
     // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
   }, []);
 
@@ -133,6 +133,14 @@ function Modal({
         modalRef.current.offsetWidth > window.innerWidth ||
         modalRef.current.offsetHeight > window.innerHeight
       ) {
+        if (posX + modalRef.current.offsetWidth > document.documentElement.scrollWidth) {
+          posX = document.documentElement.scrollWidth - modalRef.current.offsetWidth - 1;
+        }
+
+        if (posY + modalRef.current.offsetHeight > document.documentElement.scrollHeight) {
+          posY = document.documentElement.scrollHeight - modalRef.current.offsetHeight - 1;
+        }
+
         return setPos({ x: posX < 0 ? 0 : posX, y: posY < 0 ? 0 : posY });
       }
 
@@ -140,16 +148,20 @@ function Modal({
         posX = 1;
       }
 
-      if (posX + modalRef.current.offsetWidth > window.innerWidth) {
-        posX = window.innerWidth - modalRef.current.offsetWidth - 1;
+      // if (posX + modalRef.current.offsetWidth > window.innerWidth) {
+      //   posX = window.innerWidth - modalRef.current.offsetWidth - 1;
+      // }
+
+      if (posX + modalRef.current.offsetWidth > document.documentElement.scrollWidth) {
+        posX = document.documentElement.scrollWidth - modalRef.current.offsetWidth - 1;
       }
 
       if (posY < 0) {
         posY = 1;
       }
 
-      if (posY + modalRef.current.offsetHeight > window.innerHeight) {
-        posY = window.innerHeight - modalRef.current.offsetHeight - 1;
+      if (posY + modalRef.current.offsetHeight > document.documentElement.scrollHeight) {
+        posY = document.documentElement.scrollHeight - modalRef.current.offsetHeight - 1;
       }
 
       setPos({ x: posX, y: posY });
@@ -171,8 +183,10 @@ function Modal({
       }
 
       const { left, top } = modalRef.current.getBoundingClientRect();
-      initialPos.current.x = e.clientX - left;
-      initialPos.current.y = e.clientY - top;
+      // initialPos.current.x = e.clientX - left;
+      initialPos.current.x = e.clientX - (left + window.pageXOffset);
+      initialPos.current.y = e.clientY - (top + window.pageYOffset);
+
       document.addEventListener('mousemove', throttleMove);
       document.addEventListener('mouseup', removeEvents);
     },
