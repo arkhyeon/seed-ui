@@ -1265,7 +1265,23 @@ function testGroupList() {
    선택하면 해당 액션을 감지 못하게 되어 Object 형태를 차선책으로 선택  
    default 값은 {gname: undefined}
 
-10. style
+10. <code> isUseNonSelect {Boolean} </code>
+
+미지정 그룹을 사용할 지 여부  
+ default 값은 []
+
+11. <code> labelIcons {Component[]} </code>
+
+각 그룹 밑에 들어갈 아이콘  
+ default 값은 []
+
+12. <code> clickLabelIcon {Function} </code>
+
+각 그룹 밑에 생긴 아이콘을 클릭 시 실행될 함수  
+ 첫번째 인자는 그룹의 id, 두번째 인자는 해당 아이콘의 인덱스  
+ default 값은 (id, idx) => console.log(id, idx)
+
+13. style
 
 GroupList의 가장 외부 컴포넌트, className => "group-list"  
 GroupList의 메뉴, className => "group-list-menu"  
