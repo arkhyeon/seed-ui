@@ -12,6 +12,8 @@ function Group({
   menusRef,
   clickModify,
   clickDelete,
+  clickLabelIcon,
+  labelIcons,
 }) {
   const handleClick = useCallback(() => {
     handleSelect(idx);
@@ -34,6 +36,28 @@ function Group({
     [clickDelete, id],
   );
 
+  const handleIcon = useCallback(
+    (e, idx) => {
+      e.stopPropagation();
+      clickLabelIcon(id, idx);
+    },
+    [clickLabelIcon, id],
+  );
+
+  const renderIcons = useCallback(() => {
+    return (
+      <Line>
+        <LabelIcons>
+          {labelIcons.map((el, idx) => (
+            <LabelIcon type="button" key={`icon-${idx}`} onClick={e => handleIcon(e, idx)}>
+              {el}
+            </LabelIcon>
+          ))}
+        </LabelIcons>
+      </Line>
+    );
+  }, [labelIcons, clickLabelIcon]);
+
   return (
     <Wrapper
       className="item group-list-group"
@@ -44,14 +68,17 @@ function Group({
       data-gname={value}
       data-id={id}
     >
-      {value}
-      <Right>
-        <span>{cnt}</span>
-        <Icons>
-          <MdDeleteOutline onClick={handleDelete} />
-          <MdEditCalendar onClick={handleModify} />
-        </Icons>
-      </Right>
+      <Line>
+        <div>{value}</div>
+        <Right>
+          <span>{cnt}</span>
+          <Icons>
+            <MdDeleteOutline onClick={handleDelete} />
+            <MdEditCalendar onClick={handleModify} />
+          </Icons>
+        </Right>
+      </Line>
+      {labelIcons.length > 0 ? renderIcons() : null}
     </Wrapper>
   );
 }
@@ -59,13 +86,20 @@ function Group({
 const Wrapper = styled.div`
   cursor: pointer;
   width: 197px;
-  height: 38px;
+  min-height: 38px;
   padding-left: 37px;
   position: relative;
   border-radius: 5px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+
+  svg {
+    margin-left: 10px;
+    font-size: 21px;
+    :hover {
+      fill: #e91e63;
+    }
+  }
 
   :hover {
     font-weight: bold;
@@ -74,41 +108,15 @@ const Wrapper = styled.div`
     }
   }
 
-  &:after {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 15px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgb(232, 238, 251);
-    top: 50%;
-    transform: translate(0, -50%);
-  }
-
   :before {
     content: '';
     display: block;
     position: absolute;
-    left: 18.5px;
-
+    left: 13.5px;
     width: 1px;
-    height: 100%;
-    background: rgb(232, 238, 251);
-  }
+    height: calc(100% + 10px);
 
-  :last-of-type:not(.selectedGroup) {
-    :before {
-      content: '';
-      display: block;
-      position: absolute;
-      left: 18.5px;
-      top: 0px;
-      width: 1px;
-      height: 50%;
-      background: rgb(232, 238, 251);
-    }
+    background: rgb(232, 238, 251);
   }
 
   :last-of-type {
@@ -116,53 +124,19 @@ const Wrapper = styled.div`
       content: '';
       display: block;
       position: absolute;
-      left: 18.5px;
-      top: 0px;
+      left: 13.5px;
       width: 1px;
-      height: 50%;
+      height: 20px;
+
       background: rgb(232, 238, 251);
     }
   }
 
-  /* .item {
+  .item {
     :hover {
       background: rgb(232, 238, 251);
     }
-
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      left: 15px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgb(232, 238, 251);
-      top: 50%;
-      transform: translate(0, -50%);
-    }
-
-    :before {
-      content: '';
-      display: block;
-      position: absolute;
-      left: 38.5px;
-      width: 1px;
-      height: 100%;
-      background: rgb(232, 238, 251);
-    }
-    :last-of-type {
-      :before {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 38.5px;
-        width: 1px;
-        height: 50%;
-        background: rgb(232, 238, 251);
-      }
-    }
-  } */
+  }
 `;
 
 const Right = styled.div`
@@ -175,14 +149,49 @@ const Icons = styled.div`
   visibility: hidden;
   align-items: center;
   display: flex;
+`;
+
+const Line = styled.div`
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  svg {
-    margin-left: 10px;
-    font-size: 21px;
-    :hover {
-      fill: #e91e63;
+  width: 197px;
+  position: relative;
+  padding: 0px;
+
+  &:first-of-type {
+    margin-top: 10px;
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      margin-left: -27px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgb(232, 238, 251);
+      top: 50%;
+      transform: translate(0, -50%);
     }
   }
+`;
+
+const LabelIcon = styled.button`
+  cursor: pointer;
+  border: none;
+  background: transparent;
+
+  svg {
+    margin-left: 0;
+    margin-right: 5px;
+  }
+`;
+
+const LabelIcons = styled.div`
+  display: flex;
+  align-items: center;
+  visibility: hidden;
+  margin-top: 5px;
 `;
 
 export default Group;

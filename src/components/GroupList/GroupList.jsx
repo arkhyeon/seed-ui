@@ -41,6 +41,16 @@ import CreateBtn from './CreateBtn';
  * { gname: 선택한 그룹 이름}의 형태
  * 필요한 것은 그룹의 이름 뿐이나, 문자열로 받을 경우 똑같은 그룹을 연이어 선택하면 해당 액션을 감지 못하게 되어 Objct 형태를 차선책으로 선택
  * default 값은 {gname: undefined}
+ * @param {Boolean} props.isUseNonSelect
+ * 미지정 그룹을 사용할 지 여부
+ * default 값은 true
+ * @param {Component[]} props.labelIcons
+ * 각 그룹 밑에 들어갈 아이콘
+ * default 값은 []
+ * @param {Function} props.clickLabelIcon
+ * 각 그룹 밑에 생긴 아이콘을 클릭 시 실행될 함수
+ * 첫번째 인자는 그룹의 id, 두번째 인자는 해당 아이콘의 인덱스
+ * default 값은 (id, idx) => console.log(id, idx)
  * @returns {JSX.Element} GroupList Component
  */
 
@@ -50,10 +60,13 @@ function GroupList({
   buttonList = ['설정'],
   clickCreate = () => console.log('생성 버튼'),
   clickGroup = id => console.log(`${id} 클릭 그룹`),
-  clickMenu = id => console.log(`${id} 클릭메뉴`),
+  clickMenu = idx => console.log(`${idx} 클릭메뉴`),
   clickModify = id => console.log(id),
   clickDelete = id => console.log(id),
   selectedGroupInfo = { gname: undefined },
+  isUseNonSelect = true,
+  labelIcons = [],
+  clickLabelIcon = (id, idx) => console.log(id, idx),
 }) {
   // const [isShow, setIsShow] = useState(true);
   const itemListRef = useRef(null);
@@ -107,12 +120,15 @@ function GroupList({
   }, [selectedGroupInfo, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
-    if (selected >= 1 && selected <= groupList.length + 1) {
+    if (
+      selected >= (isUseNonSelect ? 1 : 0) &&
+      selected <= groupList.length + (isUseNonSelect ? 1 : 0)
+    ) {
       // titleRef.current.style.background = 'rgb(232, 238, 251)';
       titleRef.current.style.background = 'rgb(33, 37, 41)';
       titleRef.current.style.color = 'white';
 
-      for (let i = 0; i <= menusRef.current.length + 1; i++) {
+      for (let i = 0; i <= menusRef.current.length + (isUseNonSelect ? 1 : 0); i++) {
         if (!menusRef.current[i]) {
           continue;
         }
@@ -141,7 +157,7 @@ function GroupList({
         menusRef.current[i].classList.remove('selectedGroup');
       }
     }
-  }, [selected, groupList]);
+  }, [selected, groupList, isUseNonSelect]);
 
   const renderItem = useCallback(() => {
     return groupList.map((el, idx) => (
@@ -157,21 +173,32 @@ function GroupList({
         menusRef={menusRef}
         clickModify={clickModify}
         clickDelete={clickDelete}
+        clickLabelIcon={clickLabelIcon}
+        labelIcons={labelIcons}
       />
     ));
-  }, [groupList, handleSelect, selected, clickGroup, clickModify, clickDelete]);
+  }, [
+    groupList,
+    handleSelect,
+    selected,
+    clickGroup,
+    clickModify,
+    clickDelete,
+    clickLabelIcon,
+    labelIcons,
+  ]);
 
   const handleMenu = useCallback(
     (idx, type) => {
       if (type === 'button') {
         clickMenu(idx);
         handleSelect(idx);
-      } else {
+      } else if (isUseNonSelect) {
         clickMenu(0);
         handleSelect(0);
       }
     },
-    [clickMenu, handleSelect],
+    [clickMenu, handleSelect, isUseNonSelect],
   );
 
   // useEffect(() => {
@@ -194,9 +221,9 @@ function GroupList({
         {buttonList.map((el, idx) => (
           <Button
             key={`itemListBtn-${el}`}
-            onClick={() => handleMenu(groupList.length + idx + 2, 'button')}
+            onClick={() => handleMenu(groupList.length + idx + (isUseNonSelect ? 2 : 1), 'button')}
             ref={el => {
-              menusRef.current[groupList.length + 2] = el;
+              menusRef.current[groupList.length + (isUseNonSelect ? 2 : 1)] = el;
             }}
             className="group-list-menu"
           >
@@ -205,7 +232,7 @@ function GroupList({
         ))}
       </>
     );
-  }, [buttonList, groupList.length, handleMenu]);
+  }, [buttonList, groupList.length, handleMenu, isUseNonSelect]);
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
@@ -213,15 +240,17 @@ function GroupList({
         <Wrapper ref={itemListRef} className="group-list">
           <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
           <DividingLine className="group-list-divide" />
-          <NoneGroup
-            onClick={() => handleMenu(0)}
-            ref={el => {
-              menusRef.current[0] = el;
-            }}
-            className="group-list-menu"
-          >
-            미지정 그룹
-          </NoneGroup>
+          {isUseNonSelect ? (
+            <NoneGroup
+              onClick={() => handleMenu(0)}
+              ref={el => {
+                menusRef.current[0] = el;
+              }}
+              className="group-list-menu"
+            >
+              미지정 그룹
+            </NoneGroup>
+          ) : null}
           <Content>
             <ItemTitle
               // onClick={handleItem}
