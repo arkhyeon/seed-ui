@@ -204,9 +204,9 @@ function GroupList({
         {buttonList.map((el, idx) => (
           <Button
             key={`itemListBtn-${el}`}
-            onClick={() => handleMenu(groupList.length + idx + (isUseTotal ? 2 : 1), 'button')}
+            onClick={() => handleMenu(groupList.length + idx + (isUseTotal ? 1 : 0), 'button')}
             ref={el => {
-              menusRef.current[groupList.length + (isUseTotal ? 2 : 1)] = el;
+              menusRef.current[groupList.length + (isUseTotal ? 1 : 0)] = el;
             }}
             className="group-list-menu"
           >
