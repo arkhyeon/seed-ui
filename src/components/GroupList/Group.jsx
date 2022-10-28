@@ -180,10 +180,10 @@ const LabelIcon = styled.button`
   cursor: pointer;
   border: none;
   background: transparent;
+  margin-right: 5px;
 
   svg {
     margin-left: 0;
-    margin-right: 5px;
   }
 `;
 

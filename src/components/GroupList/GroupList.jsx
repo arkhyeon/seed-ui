@@ -41,7 +41,7 @@ import CreateBtn from './CreateBtn';
  * { gname: 선택한 그룹 이름}의 형태
  * 필요한 것은 그룹의 이름 뿐이나, 문자열로 받을 경우 똑같은 그룹을 연이어 선택하면 해당 액션을 감지 못하게 되어 Objct 형태를 차선책으로 선택
  * default 값은 {gname: undefined}
- * @param {Boolean} props.isUseNonSelect
+ * @param {Boolean} props.isUseTotal
  * 미지정 그룹을 사용할 지 여부
  * default 값은 true
  * @param {Component[]} props.labelIcons
@@ -64,7 +64,7 @@ function GroupList({
   clickModify = id => console.log(id),
   clickDelete = id => console.log(id),
   selectedGroupInfo = { gname: undefined },
-  isUseNonSelect = true,
+  isUseTotal = true,
   labelIcons = [],
   clickLabelIcon = (id, idx) => console.log(id, idx),
 }) {
@@ -120,15 +120,12 @@ function GroupList({
   }, [selectedGroupInfo, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
-    if (
-      selected >= (isUseNonSelect ? 1 : 0) &&
-      selected <= groupList.length + (isUseNonSelect ? 1 : 0)
-    ) {
+    if (selected >= (isUseTotal ? 1 : 0) && selected <= groupList.length + (isUseTotal ? 1 : 0)) {
       // titleRef.current.style.background = 'rgb(232, 238, 251)';
       titleRef.current.style.background = 'rgb(33, 37, 41)';
       titleRef.current.style.color = 'white';
 
-      for (let i = 0; i <= menusRef.current.length + (isUseNonSelect ? 1 : 0); i++) {
+      for (let i = 0; i <= menusRef.current.length + (isUseTotal ? 1 : 0); i++) {
         if (!menusRef.current[i]) {
           continue;
         }
@@ -157,7 +154,7 @@ function GroupList({
         menusRef.current[i].classList.remove('selectedGroup');
       }
     }
-  }, [selected, groupList, isUseNonSelect]);
+  }, [selected, groupList, isUseTotal]);
 
   const renderItem = useCallback(() => {
     return groupList.map((el, idx) => (
@@ -193,27 +190,13 @@ function GroupList({
       if (type === 'button') {
         clickMenu(idx);
         handleSelect(idx);
-      } else if (isUseNonSelect) {
+      } else if (isUseTotal) {
         clickMenu(0);
         handleSelect(0);
       }
     },
-    [clickMenu, handleSelect, isUseNonSelect],
+    [clickMenu, handleSelect, isUseTotal],
   );
-
-  // useEffect(() => {
-  //   if (isShow) {
-  //     itemListRef.current.classList.remove('close');
-  //     containerRef.current.style.width = '220px';
-  //   } else {
-  //     itemListRef.current.classList.add('close');
-  //     containerRef.current.style.width = '30px';
-  //   }
-  // }, [isShow]);
-
-  // const handleItem = useCallback(() => {
-  //   setIsItemOpen(!isItemOpen);
-  // }, [isItemOpen]);
 
   const renderBtns = useCallback(() => {
     return (
@@ -221,9 +204,9 @@ function GroupList({
         {buttonList.map((el, idx) => (
           <Button
             key={`itemListBtn-${el}`}
-            onClick={() => handleMenu(groupList.length + idx + (isUseNonSelect ? 2 : 1), 'button')}
+            onClick={() => handleMenu(groupList.length + idx + (isUseTotal ? 2 : 1), 'button')}
             ref={el => {
-              menusRef.current[groupList.length + (isUseNonSelect ? 2 : 1)] = el;
+              menusRef.current[groupList.length + (isUseTotal ? 2 : 1)] = el;
             }}
             className="group-list-menu"
           >
@@ -232,7 +215,7 @@ function GroupList({
         ))}
       </>
     );
-  }, [buttonList, groupList.length, handleMenu, isUseNonSelect]);
+  }, [buttonList, groupList.length, handleMenu, isUseTotal]);
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
@@ -240,16 +223,16 @@ function GroupList({
         <Wrapper ref={itemListRef} className="group-list">
           <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
           <DividingLine className="group-list-divide" />
-          {isUseNonSelect ? (
-            <NoneGroup
+          {isUseTotal ? (
+            <TotalUnit
               onClick={() => handleMenu(0)}
               ref={el => {
                 menusRef.current[0] = el;
               }}
               className="group-list-menu"
             >
-              미지정 그룹
-            </NoneGroup>
+              전체 {unit}
+            </TotalUnit>
           ) : null}
           <Content>
             <ItemTitle
@@ -332,7 +315,7 @@ const Content = styled.div`
   width: 233px;
 `;
 
-const NoneGroup = styled.div`
+const TotalUnit = styled.div`
   margin-top: 8px;
   width: 223px;
   height: 38px;
