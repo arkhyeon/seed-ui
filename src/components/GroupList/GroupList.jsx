@@ -120,7 +120,7 @@ function GroupList({
   }, [selectedGroupInfo, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
-    if (selected >= (isUseTotal ? 1 : 0) && selected <= groupList.length + (isUseTotal ? 1 : 0)) {
+    if (selected >= (isUseTotal ? 1 : 0) && selected < groupList.length + (isUseTotal ? 1 : 0)) {
       // titleRef.current.style.background = 'rgb(232, 238, 251)';
       titleRef.current.style.background = 'rgb(33, 37, 41)';
       titleRef.current.style.color = 'white';
@@ -206,7 +206,7 @@ function GroupList({
             key={`itemListBtn-${el}`}
             onClick={() => handleMenu(groupList.length + idx + (isUseTotal ? 1 : 0), 'button')}
             ref={el => {
-              menusRef.current[groupList.length + (isUseTotal ? 1 : 0)] = el;
+              menusRef.current[groupList.length + idx + (isUseTotal ? 1 : 0)] = el;
             }}
             className="group-list-menu"
           >
