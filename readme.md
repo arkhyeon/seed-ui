@@ -962,11 +962,11 @@ function Test () {
    useState로 생성한 상태 관리 함수여야 함  
    default 값은 null
 
-3. <code>list {Stirng | Number []} </code>
+3. <code>list {Object []} </code>
 
    선택할 수 있는 값들로 이루어진 배열  
-   index를 통해 값이 선택 되므로 정해진 순서를 고려해 넣어야 함  
-   default 값은 ['항목 없음']
+   각 객체는 value와 label 속성을 가지고 있음  
+   default 값은 [{value: 1, label: "test1}, {value: 2, label: "test2}]
 
 4. <code>text {String} </code>
 
