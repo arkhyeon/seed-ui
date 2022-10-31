@@ -120,16 +120,17 @@ function GroupList({
   }, [selectedGroupInfo, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
-    if (selected >= (isUseTotal ? 1 : 0) && selected < groupList.length + (isUseTotal ? 1 : 0)) {
+    if (selected >= 1 && selected < groupList.length + 1) {
       // titleRef.current.style.background = 'rgb(232, 238, 251)';
       titleRef.current.style.background = 'rgb(33, 37, 41)';
       titleRef.current.style.color = 'white';
 
-      for (let i = 0; i <= menusRef.current.length + (isUseTotal ? 1 : 0); i++) {
+      for (let i = 0; i <= menusRef.current.length + 1; i++) {
         if (!menusRef.current[i]) {
           continue;
         }
         if (i === selected) {
+          console.log('hi');
           menusRef.current[i].classList.add('selectedGroup');
         } else {
           menusRef.current[i].classList.remove('selectedGroup');
@@ -204,9 +205,9 @@ function GroupList({
         {buttonList.map((el, idx) => (
           <Button
             key={`itemListBtn-${el}`}
-            onClick={() => handleMenu(groupList.length + idx + (isUseTotal ? 1 : 0), 'button')}
+            onClick={() => handleMenu(groupList.length + idx + 1, 'button')}
             ref={el => {
-              menusRef.current[groupList.length + idx + (isUseTotal ? 1 : 0)] = el;
+              menusRef.current[groupList.length + idx + 1] = el;
             }}
             className="group-list-menu"
           >
@@ -215,7 +216,7 @@ function GroupList({
         ))}
       </>
     );
-  }, [buttonList, groupList.length, handleMenu, isUseTotal]);
+  }, [buttonList, groupList.length, handleMenu]);
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
