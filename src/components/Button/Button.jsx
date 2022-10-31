@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useStore } from 'zustand';
 
 export function BlackButton(props) {
   return (
@@ -8,6 +9,7 @@ export function BlackButton(props) {
       onClick={e => {
         blockedDBClick(e);
         props.onClick(e);
+        console.log(useStore.getState().progressNow);
       }}
     />
   );
