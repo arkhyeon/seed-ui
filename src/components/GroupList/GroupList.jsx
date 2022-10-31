@@ -130,7 +130,6 @@ function GroupList({
           continue;
         }
         if (i === selected) {
-          console.log('hi');
           menusRef.current[i].classList.add('selectedGroup');
         } else {
           menusRef.current[i].classList.remove('selectedGroup');

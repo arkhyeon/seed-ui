@@ -37,11 +37,12 @@ function Group({
   );
 
   const handleIcon = useCallback(
-    (e, idx) => {
+    (e, iconIdx) => {
       e.stopPropagation();
-      clickLabelIcon(id, idx);
+      clickLabelIcon(id, iconIdx);
+      handleSelect(idx);
     },
-    [clickLabelIcon, id],
+    [clickLabelIcon, id, handleSelect, idx],
   );
 
   const renderIcons = useCallback(() => {
