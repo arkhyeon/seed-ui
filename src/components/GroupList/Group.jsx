@@ -56,7 +56,7 @@ function Group({
         </LabelIcons>
       </Line>
     );
-  }, [labelIcons, clickLabelIcon]);
+  }, [labelIcons, handleIcon]);
 
   return (
     <Wrapper

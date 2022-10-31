@@ -272,6 +272,7 @@ const Container = styled.div`
   .selected {
     background: rgb(33, 37, 41);
     color: #eee;
+    fill: white;
     font-weight: bold;
 
     :before {
