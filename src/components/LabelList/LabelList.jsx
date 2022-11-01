@@ -28,6 +28,10 @@ import Label from './Label';
  * @param {Funtion} params.setValueArr
  * valueArr을 관리하는 setState 함수
  * default 값은 null
+ * @param {Function} params.handleUpdate
+ * 라벨 선택 창이 열리고 닫힐 때, 실행 되는 함수
+ * 현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용
+ * default 값은 () => {}
  * @returns {JSX.Component} LabelList Component
  */
 
@@ -39,6 +43,7 @@ function LabelList({
   unit = '그룹',
   valueArr = [],
   setValueArr = null,
+  handleUpdate = () => {},
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
@@ -61,8 +66,9 @@ function LabelList({
   }, [handleOut]);
 
   const handleOpen = useCallback(() => {
+    handleUpdate();
     setIsSelectorOpen(!isSelectorOpen);
-  }, [isSelectorOpen]);
+  }, [isSelectorOpen, handleUpdate]);
 
   const renderLabel = useCallback(() => {
     return valueArr.map((el, idx) => {
