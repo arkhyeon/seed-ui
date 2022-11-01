@@ -1349,7 +1349,13 @@ function testLabelList() {
    valueArr을 관리하는 setState 함수  
    default 값은 null
 
-8. style
+8. <code> handleUpdate {Function} </code>
+
+   라벨 선택 창이 열릴 때 실행되는 함수  
+   현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용  
+   default 값은 () => {}
+
+9. style
 
    label들을 감싸고 있는 컴포넌트, className => "labels"  
    각각의 label, className => "label"  
@@ -1407,7 +1413,13 @@ function testUniqueLabelList() {
    valueStr을 관리하는 setState 함수  
    default 값은 null
 
-7. style
+7. <code> handleUpdate {Function} </code>
+
+   라벨 선택 창이 열릴 때 실행되는 함수  
+   현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용  
+   default 값은 () => {}
+
+8. style
 
    "21. LabelList"와 동일
 
