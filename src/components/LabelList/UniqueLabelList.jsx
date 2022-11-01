@@ -61,9 +61,9 @@ function UniqueLabelList({
   }, [handleOut]);
 
   const handleOpen = useCallback(() => {
-    handleOpen();
+    handleUpdate();
     setIsSelectorOpen(!isSelectorOpen);
-  }, [isSelectorOpen]);
+  }, [isSelectorOpen, handleUpdate]);
 
   const renderLabel = useCallback(() => {
     if (valueStr === '') {
