@@ -41,6 +41,19 @@ import CreateBtn from './CreateBtn';
  * { gname: 선택한 그룹 이름}의 형태
  * 필요한 것은 그룹의 이름 뿐이나, 문자열로 받을 경우 똑같은 그룹을 연이어 선택하면 해당 액션을 감지 못하게 되어 Objct 형태를 차선책으로 선택
  * default 값은 {gname: undefined}
+ * @param {Boolean} props.isUseTotal
+ * 미지정 그룹을 사용할 지 여부
+ * default 값은 true
+ * @param {Component[]} props.labelIcons
+ * 각 그룹 밑에 들어갈 아이콘
+ * default 값은 []
+ * @param {Function} props.clickLabelIcon
+ * 각 그룹 밑에 생긴 아이콘을 클릭 시 실행될 함수
+ * 첫번째 인자는 그룹의 id, 두번째 인자는 해당 아이콘의 인덱스
+ * default 값은 (id, idx) => console.log(id, idx)
+ * @param {Boolean} props.isUseTitle
+ * 전체 그룹을 묶는 메뉴를 만들 것인지에 대한 여부
+ * default 값은 true
  * @returns {JSX.Element} GroupList Component
  */
 
@@ -50,24 +63,21 @@ function GroupList({
   buttonList = ['설정'],
   clickCreate = () => console.log('생성 버튼'),
   clickGroup = id => console.log(`${id} 클릭 그룹`),
-  clickMenu = id => console.log(`${id} 클릭메뉴`),
+  clickMenu = idx => console.log(`${idx} 클릭메뉴`),
   clickModify = id => console.log(id),
   clickDelete = id => console.log(id),
   selectedGroupInfo = { gname: undefined },
+  isUseTotal = true,
+  labelIcons = [],
+  clickLabelIcon = (id, idx) => console.log(id, idx),
+  isUseTitle = true,
 }) {
-  // const [isShow, setIsShow] = useState(true);
   const itemListRef = useRef(null);
   const containerRef = useRef(null);
   const titleRef = useRef(null);
   const menusRef = useRef([]);
   const [selected, setSelected] = useState(0);
   const [currentGroup, setCurrentGroup] = useState(undefined);
-  // const [selectUpdate, setSelectUpdate] = useState(false);
-  // const [isItemOpen, setIsItemOpen] = useState(false);
-
-  // const handleShow = useCallback(() => {
-  //   setIsShow(!isShow);
-  // }, [isShow]);
 
   useEffect(() => {
     setCurrentGroup(selectedGroupInfo.gname);
@@ -107,18 +117,25 @@ function GroupList({
   }, [selectedGroupInfo, clickGroup, currentGroup, clickMenu]);
 
   useEffect(() => {
-    if (selected >= 1 && selected <= groupList.length + 1) {
+    if (selected >= 1 && selected < groupList.length + 1) {
       // titleRef.current.style.background = 'rgb(232, 238, 251)';
-      titleRef.current.style.background = 'rgb(33, 37, 41)';
-      titleRef.current.style.color = 'white';
+      if (titleRef.current) {
+        titleRef.current.style.background = 'rgb(33, 37, 41)';
+        titleRef.current.style.color = 'white';
+      }
 
       for (let i = 0; i <= menusRef.current.length + 1; i++) {
         if (!menusRef.current[i]) {
           continue;
         }
         if (i === selected) {
-          menusRef.current[i].classList.add('selectedGroup');
+          if (labelIcons.length !== 0) {
+            menusRef.current[i].classList.add('isOpenGroup-select');
+          } else {
+            menusRef.current[i].classList.add('selectedGroup');
+          }
         } else {
+          menusRef.current[i].classList.remove('isOpenGroup-select');
           menusRef.current[i].classList.remove('selectedGroup');
           menusRef.current[i].classList.remove('selected');
         }
@@ -126,8 +143,10 @@ function GroupList({
       return;
     }
     // titleRef.current.style.background = '#eceff1';
-    titleRef.current.style.background = 'rgb(232, 238, 251)';
-    titleRef.current.style.color = 'black';
+    if (titleRef.current) {
+      titleRef.current.style.background = 'rgb(232, 238, 251)';
+      titleRef.current.style.color = 'black';
+    }
 
     for (let i = 0; i < menusRef.current.length; i++) {
       if (!menusRef.current[i]) {
@@ -137,11 +156,12 @@ function GroupList({
       if (i === selected) {
         menusRef.current[i].classList.add('selected');
       } else {
+        menusRef.current[i].classList.remove('isOpenGroup-select');
         menusRef.current[i].classList.remove('selected');
         menusRef.current[i].classList.remove('selectedGroup');
       }
     }
-  }, [selected, groupList]);
+  }, [selected, groupList, isUseTotal, labelIcons]);
 
   const renderItem = useCallback(() => {
     return groupList.map((el, idx) => (
@@ -157,36 +177,33 @@ function GroupList({
         menusRef={menusRef}
         clickModify={clickModify}
         clickDelete={clickDelete}
+        clickLabelIcon={clickLabelIcon}
+        labelIcons={labelIcons}
       />
     ));
-  }, [groupList, handleSelect, selected, clickGroup, clickModify, clickDelete]);
+  }, [
+    groupList,
+    handleSelect,
+    selected,
+    clickGroup,
+    clickModify,
+    clickDelete,
+    clickLabelIcon,
+    labelIcons,
+  ]);
 
   const handleMenu = useCallback(
     (idx, type) => {
       if (type === 'button') {
         clickMenu(idx);
         handleSelect(idx);
-      } else {
+      } else if (isUseTotal) {
         clickMenu(0);
         handleSelect(0);
       }
     },
-    [clickMenu, handleSelect],
+    [clickMenu, handleSelect, isUseTotal],
   );
-
-  // useEffect(() => {
-  //   if (isShow) {
-  //     itemListRef.current.classList.remove('close');
-  //     containerRef.current.style.width = '220px';
-  //   } else {
-  //     itemListRef.current.classList.add('close');
-  //     containerRef.current.style.width = '30px';
-  //   }
-  // }, [isShow]);
-
-  // const handleItem = useCallback(() => {
-  //   setIsItemOpen(!isItemOpen);
-  // }, [isItemOpen]);
 
   const renderBtns = useCallback(() => {
     return (
@@ -194,9 +211,9 @@ function GroupList({
         {buttonList.map((el, idx) => (
           <Button
             key={`itemListBtn-${el}`}
-            onClick={() => handleMenu(groupList.length + idx + 2, 'button')}
+            onClick={() => handleMenu(groupList.length + idx + 1, 'button')}
             ref={el => {
-              menusRef.current[groupList.length + 2] = el;
+              menusRef.current[groupList.length + idx + 1] = el;
             }}
             className="group-list-menu"
           >
@@ -213,24 +230,28 @@ function GroupList({
         <Wrapper ref={itemListRef} className="group-list">
           <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
           <DividingLine className="group-list-divide" />
-          <NoneGroup
-            onClick={() => handleMenu(0)}
-            ref={el => {
-              menusRef.current[0] = el;
-            }}
-            className="group-list-menu"
-          >
-            미지정 그룹
-          </NoneGroup>
-          <Content>
-            <ItemTitle
-              // onClick={handleItem}
-              ref={titleRef}
+          {isUseTotal ? (
+            <TotalUnit
+              onClick={() => handleMenu(0)}
+              ref={el => {
+                menusRef.current[0] = el;
+              }}
               className="group-list-menu"
             >
-              <div>그룹</div>
-              {/* {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />} */}
-            </ItemTitle>
+              전체 {unit}
+            </TotalUnit>
+          ) : null}
+          <Content>
+            {isUseTitle && (
+              <ItemTitle
+                // onClick={handleItem}
+                ref={titleRef}
+                className="group-list-menu"
+              >
+                <div>그룹</div>
+                {/* {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />} */}
+              </ItemTitle>
+            )}
             {/* {isItemOpen && renderItem()} */}
             {renderItem()}
           </Content>
@@ -260,6 +281,7 @@ const Container = styled.div`
   .selected {
     background: rgb(33, 37, 41);
     color: #eee;
+    fill: white;
     font-weight: bold;
 
     :before {
@@ -278,6 +300,17 @@ const Container = styled.div`
 
   .selectedGroup {
     font-weight: bold;
+  }
+
+  .isOpenGroup {
+    background: rgb(232, 238, 251);
+    border: 1px solid rgb(232, 238, 251);
+  }
+
+  .isOpenGroup-select {
+    background: rgb(33, 37, 41);
+    color: white;
+    border: 1px solid rgb(33, 37, 41);
   }
 `;
 
@@ -303,7 +336,7 @@ const Content = styled.div`
   width: 233px;
 `;
 
-const NoneGroup = styled.div`
+const TotalUnit = styled.div`
   margin-top: 8px;
   width: 223px;
   height: 38px;

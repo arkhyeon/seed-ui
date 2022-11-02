@@ -7,15 +7,15 @@ import { css } from '@emotion/react';
  * 선택하고자 하는 값
  * 숫자 타입으로 인덱스 값으로 대상 분류한다고 가정
  * state로 관리하는 값이여야 함 (상태값)
- * default 값은 0
+ * default 값은 1
  * @param {Function} param.setValue
  * 선택 값을 바꾸는 함수
  * useState로 생성한 상태 관리 함수여야 함
  * default 값은 null
- * @param {String | Number [Array]} param.list
+ * @param {Object [Array]} param.list
  * 선택할 수 있는 값들로 이루어진 배열
- * index를 통해 값이 선택 되므로 정해진 순서를 고려해 넣어야 함
- * default 값은 ['항목 없음']
+ * 각 객체는 value와 label 속성을 가지고 있음
+ * default 값은 [{value: 1, label: 'test1'}, {value: 2, label: 'test2'}]
  * @param {String} param.text
  * 선택에 대한 제목
  * default 값은 '텍스트를 입력해주세요.'
@@ -39,9 +39,12 @@ import { css } from '@emotion/react';
  */
 
 function Radio({
-  value = 0,
+  value = 1,
   setValue = null,
-  list = ['항목 없음'],
+  list = [
+    { value: 1, label: 'test1' },
+    { value: 2, label: 'test2' },
+  ],
   text = '',
   checkColor = 'rgb(144, 202, 249)',
   hoverColor = '#eee',

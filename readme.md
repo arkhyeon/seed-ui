@@ -962,11 +962,11 @@ function Test () {
    useState로 생성한 상태 관리 함수여야 함  
    default 값은 null
 
-3. <code>list {Stirng | Number []} </code>
+3. <code>list {Object []} </code>
 
    선택할 수 있는 값들로 이루어진 배열  
-   index를 통해 값이 선택 되므로 정해진 순서를 고려해 넣어야 함  
-   default 값은 ['항목 없음']
+   각 객체는 value와 label 속성을 가지고 있음  
+   default 값은 [{value: 1, label: "test1}, {value: 2, label: "test2}]
 
 4. <code>text {String} </code>
 
@@ -1265,7 +1265,23 @@ function testGroupList() {
    선택하면 해당 액션을 감지 못하게 되어 Object 형태를 차선책으로 선택  
    default 값은 {gname: undefined}
 
-10. style
+10. <code> isUseNonSelect {Boolean} </code>
+
+미지정 그룹을 사용할 지 여부  
+ default 값은 []
+
+11. <code> labelIcons {Component[]} </code>
+
+각 그룹 밑에 들어갈 아이콘  
+ default 값은 []
+
+12. <code> clickLabelIcon {Function} </code>
+
+각 그룹 밑에 생긴 아이콘을 클릭 시 실행될 함수  
+ 첫번째 인자는 그룹의 id, 두번째 인자는 해당 아이콘의 인덱스  
+ default 값은 (id, idx) => console.log(id, idx)
+
+13. style
 
 GroupList의 가장 외부 컴포넌트, className => "group-list"  
 GroupList의 메뉴, className => "group-list-menu"  
@@ -1333,7 +1349,13 @@ function testLabelList() {
    valueArr을 관리하는 setState 함수  
    default 값은 null
 
-8. style
+8. <code> handleUpdate {Function} </code>
+
+   라벨 선택 창이 열릴 때 실행되는 함수  
+   현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용  
+   default 값은 () => {}
+
+9. style
 
    label들을 감싸고 있는 컴포넌트, className => "labels"  
    각각의 label, className => "label"  
@@ -1391,7 +1413,13 @@ function testUniqueLabelList() {
    valueStr을 관리하는 setState 함수  
    default 값은 null
 
-7. style
+7. <code> handleUpdate {Function} </code>
+
+   라벨 선택 창이 열릴 때 실행되는 함수  
+   현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용  
+   default 값은 () => {}
+
+8. style
 
    "21. LabelList"와 동일
 
