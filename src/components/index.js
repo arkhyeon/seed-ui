@@ -23,6 +23,7 @@ import LabelList from './LabelList/LabelList';
 import UniqueLabelList from './LabelList/UniqueLabelList';
 import Count from './Count/Count';
 import CountList from './CountList/CountList';
+import { useStore } from '../R2wZustand';
 
 export { HeaderCreator };
 
@@ -73,3 +74,5 @@ export { UniqueLabelList };
 export { Count };
 
 export { CountList };
+
+export { useStore };

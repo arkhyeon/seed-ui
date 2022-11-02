@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useStore } from 'zustand';
+import { useStore } from '../../R2wZustand';
 
 export function BlackButton(props) {
+  const { showComp } = useStore();
   return (
     <BlackBtn
       {...props}
       onClick={e => {
         blockedDBClick(e);
         props.onClick(e);
-        console.log(useStore.getState().progressNow);
+        useStore.setState({ showComp: true });
       }}
+      className={showComp ? 'showComp' : ''}
     />
   );
 }
@@ -54,6 +56,10 @@ const Button = styled.button`
 const BlackBtn = styled(Button)`
   color: #ffffff;
   background: #3e3e3e;
+
+  &.showComp {
+    background-color: #6674fe !important;
+  }
 `;
 
 const WhiteBtn = styled(Button)`
