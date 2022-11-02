@@ -51,6 +51,9 @@ import CreateBtn from './CreateBtn';
  * 각 그룹 밑에 생긴 아이콘을 클릭 시 실행될 함수
  * 첫번째 인자는 그룹의 id, 두번째 인자는 해당 아이콘의 인덱스
  * default 값은 (id, idx) => console.log(id, idx)
+ * @param {Boolean} props.isUseTitle
+ * 전체 그룹을 묶는 메뉴를 만들 것인지에 대한 여부
+ * default 값은 true
  * @returns {JSX.Element} GroupList Component
  */
 
@@ -67,20 +70,14 @@ function GroupList({
   isUseTotal = true,
   labelIcons = [],
   clickLabelIcon = (id, idx) => console.log(id, idx),
+  isUseTitle = true,
 }) {
-  // const [isShow, setIsShow] = useState(true);
   const itemListRef = useRef(null);
   const containerRef = useRef(null);
   const titleRef = useRef(null);
   const menusRef = useRef([]);
   const [selected, setSelected] = useState(0);
   const [currentGroup, setCurrentGroup] = useState(undefined);
-  // const [selectUpdate, setSelectUpdate] = useState(false);
-  // const [isItemOpen, setIsItemOpen] = useState(false);
-
-  // const handleShow = useCallback(() => {
-  //   setIsShow(!isShow);
-  // }, [isShow]);
 
   useEffect(() => {
     setCurrentGroup(selectedGroupInfo.gname);
@@ -122,16 +119,23 @@ function GroupList({
   useEffect(() => {
     if (selected >= 1 && selected < groupList.length + 1) {
       // titleRef.current.style.background = 'rgb(232, 238, 251)';
-      titleRef.current.style.background = 'rgb(33, 37, 41)';
-      titleRef.current.style.color = 'white';
+      if (titleRef.current) {
+        titleRef.current.style.background = 'rgb(33, 37, 41)';
+        titleRef.current.style.color = 'white';
+      }
 
       for (let i = 0; i <= menusRef.current.length + 1; i++) {
         if (!menusRef.current[i]) {
           continue;
         }
         if (i === selected) {
-          menusRef.current[i].classList.add('selectedGroup');
+          if (labelIcons.length !== 0) {
+            menusRef.current[i].classList.add('isOpenGroup-select');
+          } else {
+            menusRef.current[i].classList.add('selectedGroup');
+          }
         } else {
+          menusRef.current[i].classList.remove('isOpenGroup-select');
           menusRef.current[i].classList.remove('selectedGroup');
           menusRef.current[i].classList.remove('selected');
         }
@@ -139,8 +143,10 @@ function GroupList({
       return;
     }
     // titleRef.current.style.background = '#eceff1';
-    titleRef.current.style.background = 'rgb(232, 238, 251)';
-    titleRef.current.style.color = 'black';
+    if (titleRef.current) {
+      titleRef.current.style.background = 'rgb(232, 238, 251)';
+      titleRef.current.style.color = 'black';
+    }
 
     for (let i = 0; i < menusRef.current.length; i++) {
       if (!menusRef.current[i]) {
@@ -150,11 +156,12 @@ function GroupList({
       if (i === selected) {
         menusRef.current[i].classList.add('selected');
       } else {
+        menusRef.current[i].classList.remove('isOpenGroup-select');
         menusRef.current[i].classList.remove('selected');
         menusRef.current[i].classList.remove('selectedGroup');
       }
     }
-  }, [selected, groupList, isUseTotal]);
+  }, [selected, groupList, isUseTotal, labelIcons]);
 
   const renderItem = useCallback(() => {
     return groupList.map((el, idx) => (
@@ -235,14 +242,16 @@ function GroupList({
             </TotalUnit>
           ) : null}
           <Content>
-            <ItemTitle
-              // onClick={handleItem}
-              ref={titleRef}
-              className="group-list-menu"
-            >
-              <div>그룹</div>
-              {/* {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />} */}
-            </ItemTitle>
+            {isUseTitle && (
+              <ItemTitle
+                // onClick={handleItem}
+                ref={titleRef}
+                className="group-list-menu"
+              >
+                <div>그룹</div>
+                {/* {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />} */}
+              </ItemTitle>
+            )}
             {/* {isItemOpen && renderItem()} */}
             {renderItem()}
           </Content>
@@ -291,6 +300,17 @@ const Container = styled.div`
 
   .selectedGroup {
     font-weight: bold;
+  }
+
+  .isOpenGroup {
+    background: rgb(232, 238, 251);
+    border: 1px solid rgb(232, 238, 251);
+  }
+
+  .isOpenGroup-select {
+    background: rgb(33, 37, 41);
+    color: white;
+    border: 1px solid rgb(33, 37, 41);
   }
 `;
 
