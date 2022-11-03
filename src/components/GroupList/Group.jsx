@@ -1,8 +1,8 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi';
 import { MdDeleteOutline, MdEditCalendar } from 'react-icons/md';
-import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 
 function Group({
   value,
@@ -80,9 +80,9 @@ function Group({
 
   const renderOpenIcon = useCallback(() => {
     if (isOpen) {
-      return <AiOutlineUp />;
+      return <HiChevronUp />;
     }
-    return <AiOutlineDown />;
+    return <HiChevronDown />;
   }, [isOpen]);
 
   const renderIcons = useCallback(() => {
