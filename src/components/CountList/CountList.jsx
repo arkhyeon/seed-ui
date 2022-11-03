@@ -37,11 +37,16 @@ function CountList({
   direction = 'right',
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const iconRef = useRef(null);
   const selectorRef = useRef(null);
 
   const handleOut = useCallback(
     e => {
-      if (isSelectorOpen && !selectorRef.current.contains(e.target)) {
+      if (
+        isSelectorOpen &&
+        !selectorRef.current.contains(e.target) &&
+        !iconRef.current.contains(e.target)
+      ) {
         setIsSelectorOpen(false);
       }
     },
@@ -71,7 +76,7 @@ function CountList({
     <Wrapper>
       <Section>
         <div>
-          <Icon onClick={handleOpen} />
+          <Icon onClick={handleOpen} ref={iconRef} />
           {direction === 'left' ? (
             <LabelWrapper className="labels">
               <Count>{labelList.length}개</Count> {renderLabel()}

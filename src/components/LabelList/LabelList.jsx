@@ -47,10 +47,15 @@ function LabelList({
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
+  const iconRef = useRef(null);
 
   const handleOut = useCallback(
     e => {
-      if (isSelectorOpen && !selectorRef.current.contains(e.target)) {
+      if (
+        isSelectorOpen &&
+        !selectorRef.current.contains(e.target) &&
+        !iconRef.current.contains(e.target)
+      ) {
         setIsSelectorOpen(false);
       }
     },
@@ -87,7 +92,7 @@ function LabelList({
           <></>
         )}
         <div>
-          <Icon onClick={handleOpen} />
+          <Icon onClick={handleOpen} ref={iconRef} />
           {isSelectorOpen && (
             <LabelSelector
               labelList={labelList}
