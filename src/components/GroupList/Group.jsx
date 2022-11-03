@@ -215,11 +215,11 @@ const LabelIcon = styled.button`
   cursor: pointer;
   background: white;
   border: 1px solid #d2d2d2;
-  margin-right: 5px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
+  padding: 3px;
 
   svg {
     margin-left: 0;
@@ -234,6 +234,7 @@ const LabelIcons = styled.div`
   padding-left: 10px;
   padding-right: 10px;
   background: white;
+  justify-content: space-between;
   height: 38px;
 `;
 
