@@ -61,9 +61,12 @@ function Modal({
   // const [browserSize, setBrowserSize] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
-    const centerWidth = document.documentElement.scrollWidth / 2 - modalRef.current.offsetWidth / 2;
+    const centerWidth =
+      window.pageXOffset + window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
+
     const centerHeight =
-      document.documentElement.scrollHeight / 2 - modalRef.current.offsetHeight / 2;
+      window.pageYOffset + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
+
     setPos({ x: centerWidth, y: centerHeight < 0 ? 0 : centerHeight });
     // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
   }, []);
