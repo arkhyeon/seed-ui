@@ -120,7 +120,7 @@ function GroupList({
     if (selected >= 1 && selected < groupList.length + 1) {
       // titleRef.current.style.background = 'rgb(232, 238, 251)';
       if (titleRef.current) {
-        titleRef.current.style.background = 'rgb(33, 37, 41)';
+        titleRef.current.style.background = 'rgb(62, 62, 62);';
         titleRef.current.style.color = 'white';
       }
 
@@ -279,7 +279,7 @@ const Container = styled.div`
   } */
 
   .selected {
-    background: rgb(33, 37, 41);
+    background: rgb(62, 62, 62);
     color: #eee;
     fill: white;
 
@@ -292,13 +292,13 @@ const Container = styled.div`
     }
 
     :hover {
-      background: rgb(33, 37, 41);
+      background: rgb(62, 62, 62);
       color: #eee;
     }
   }
 
   .selectedGroup {
-    background: rgb(33, 37, 41) !important;
+    background: rgb(62, 62, 62); !important;
     color: white;
   }
 
@@ -313,9 +313,9 @@ const Container = styled.div`
   }
 
   .isOpenGroup-select {
-    background: rgb(33, 37, 41);
+    background: rgb(62, 62, 62);
     color: white;
-    border: 1px solid rgb(33, 37, 41);
+    border: 1px solid rgb(62, 62, 62);
   }
 `;
 
@@ -390,6 +390,7 @@ const Button = styled.button`
 
   border-radius: 5px;
   cursor: pointer;
+
   &:hover {
     background: rgb(232, 238, 251);
   }

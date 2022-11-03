@@ -160,7 +160,12 @@ const Wrapper = styled.div`
   }};
   overflow: hidden;
 
-  min-height: 38px;
+  min-height: ${({ isIcon }) => {
+    if (!isIcon) {
+      return '38px';
+    }
+    return '28px';
+  }};
 
   padding-left: 0;
 
@@ -190,6 +195,8 @@ const Icons = styled.div`
   display: flex;
   visibility: hidden;
   svg {
+    width: 18px;
+    height: 18px;
     :hover {
       fill: #e91e63;
     }
@@ -204,11 +211,20 @@ const Line = styled.div`
   padding: 0px;
 
   svg {
-    margin-left: 10px;
+    margin-left: 15px;
     font-size: 21px;
+
+    &:nth-of-type(2) {
+      margin-left: 10px;
+    }
   }
 
-  height: 38px;
+  height: ${({ isIcon }) => {
+    if (!isIcon) {
+      return '38px';
+    }
+    return '28px';
+  }};
 `;
 
 const LabelIcon = styled.button`
@@ -223,8 +239,8 @@ const LabelIcon = styled.button`
 
   svg {
     margin-left: 0;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 `;
 
@@ -233,9 +249,9 @@ const LabelIcons = styled.div`
   align-items: center;
   padding-left: 10px;
   padding-right: 10px;
-  background: white;
+  background: #ffffff;
   justify-content: space-between;
-  height: 38px;
+  height: 28px;
 `;
 
 export default Group;
