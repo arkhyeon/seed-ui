@@ -150,6 +150,8 @@ function Group({
 }
 
 const Wrapper = styled.div`
+  box-sizing: border-box;
+
   cursor: ${({ isIcon }) => {
     if (!isIcon) {
       return 'pointer';
@@ -160,12 +162,7 @@ const Wrapper = styled.div`
 
   min-height: 38px;
 
-  padding-left: ${({ isIcon }) => {
-    if (!isIcon) {
-      return '37px';
-    }
-    return 0;
-  }};
+  padding-left: 0;
 
   position: relative;
   border-radius: 5px;
@@ -178,58 +175,12 @@ const Wrapper = styled.div`
     }
   }
 
-  ${({ isIcon }) => {
-    if (!isIcon) {
-      return css`
-        width: 197px;
-        :hover {
-          font-weight: bold;
-        }
-
-        :before {
-          content: '';
-          display: block;
-          position: absolute;
-          left: 13.5px;
-          width: 1px;
-          height: calc(100% + 10px);
-
-          background: rgb(232, 238, 251);
-        }
-
-        :last-of-type {
-          :before {
-            content: '';
-            display: block;
-            position: absolute;
-            left: 13.5px;
-            width: 1px;
-            height: 20px;
-
-            background: rgb(232, 238, 251);
-          }
-        }
-      `;
-    }
-    return css`
-      margin-bottom: 10px;
-    `;
-  }}
-
-  .item {
-    :hover {
-      background: rgb(232, 238, 251);
-    }
-  }
+  margin-bottom: 10px;
 `;
 
 const Right = styled.div`
-  margin-right: ${({ isIcon }) => {
-    if (!isIcon) {
-      return '26px';
-    }
-    return 0;
-  }};
+  margin-right: 0;
+
   display: flex;
   align-items: center;
 `;
@@ -257,30 +208,7 @@ const Line = styled.div`
     font-size: 21px;
   }
 
-  ${({ isIcon }) => {
-    if (!isIcon) {
-      return css`
-        &:first-of-type {
-          margin-top: 10px;
-          &:after {
-            content: '';
-            display: block;
-            position: absolute;
-            margin-left: -27px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgb(232, 238, 251);
-            top: 50%;
-            transform: translate(0, -50%);
-          }
-        }
-      `;
-    }
-    return css`
-      height: 38px;
-    `;
-  }};
+  height: 38px;
 `;
 
 const LabelIcon = styled.button`

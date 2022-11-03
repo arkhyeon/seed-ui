@@ -226,7 +226,7 @@ function GroupList({
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
-      <Container ref={containerRef}>
+      <Container ref={containerRef} isIcon={labelIcons.length !== 0}>
         <Wrapper ref={itemListRef} className="group-list">
           <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
           <DividingLine className="group-list-divide" />
@@ -282,7 +282,6 @@ const Container = styled.div`
     background: rgb(33, 37, 41);
     color: #eee;
     fill: white;
-    font-weight: bold;
 
     :before {
       background: transparent;
@@ -299,12 +298,18 @@ const Container = styled.div`
   }
 
   .selectedGroup {
-    font-weight: bold;
+    background: rgb(33, 37, 41) !important;
+    color: white;
   }
 
   .isOpenGroup {
     background: rgb(232, 238, 251);
-    border: 1px solid rgb(232, 238, 251);
+    border: ${({ isIcon }) => {
+      if (isIcon) {
+        return '1px solid rgb(232, 238, 251);';
+      }
+      return 'none;';
+    }};
   }
 
   .isOpenGroup-select {
@@ -348,6 +353,10 @@ const TotalUnit = styled.div`
 
   border-radius: 4px;
   cursor: pointer;
+
+  &:hover {
+    background: rgb(232, 238, 251);
+  }
 `;
 
 const ItemTitle = styled.div`
@@ -381,6 +390,9 @@ const Button = styled.button`
 
   border-radius: 5px;
   cursor: pointer;
+  &:hover {
+    background: rgb(232, 238, 251);
+  }
 `;
 
 const BorderRight = styled.div`
