@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import Group from './Group';
 import CreateBtn from './CreateBtn';
 
@@ -37,6 +36,24 @@ import CreateBtn from './CreateBtn';
  * 각 그룹의 삭제 버튼을 클릭 시 발생할 이벤트
  * 첫번째 인자로는 groupList에서 넣은 id 값을 가짐
  * default 값은 (id) => console.log(id)
+ * @param {Object} props.selectedGroupInfo
+ * 외부에서 선택된 그룹 값으로 변경 시켜야 할 때 사용되는 인자
+ * { gname: 선택한 그룹 이름}의 형태
+ * 필요한 것은 그룹의 이름 뿐이나, 문자열로 받을 경우 똑같은 그룹을 연이어 선택하면 해당 액션을 감지 못하게 되어 Objct 형태를 차선책으로 선택
+ * default 값은 {gname: undefined}
+ * @param {Boolean} props.isUseTotal
+ * 미지정 그룹을 사용할 지 여부
+ * default 값은 true
+ * @param {Component[]} props.labelIcons
+ * 각 그룹 밑에 들어갈 아이콘
+ * default 값은 []
+ * @param {Function} props.clickLabelIcon
+ * 각 그룹 밑에 생긴 아이콘을 클릭 시 실행될 함수
+ * 첫번째 인자는 그룹의 id, 두번째 인자는 해당 아이콘의 인덱스
+ * default 값은 (id, idx) => console.log(id, idx)
+ * @param {Boolean} props.isUseTitle
+ * 전체 그룹을 묶는 메뉴를 만들 것인지에 대한 여부
+ * default 값은 true
  * @returns {JSX.Element} GroupList Component
  */
 
@@ -45,22 +62,26 @@ function GroupList({
   groupList = [{ id: 1, value: 'item_1', cnt: 3 }],
   buttonList = ['설정'],
   clickCreate = () => console.log('생성 버튼'),
-  clickGroup = id => console.log(id),
-  clickMenu = id => console.log(id),
+  clickGroup = id => console.log(`${id} 클릭 그룹`),
+  clickMenu = idx => console.log(`${idx} 클릭메뉴`),
   clickModify = id => console.log(id),
   clickDelete = id => console.log(id),
+  selectedGroupInfo = { gname: undefined },
+  isUseTotal = true,
+  labelIcons = [],
+  clickLabelIcon = (id, idx) => console.log(id, idx),
+  isUseTitle = true,
 }) {
-  // const [isShow, setIsShow] = useState(true);
   const itemListRef = useRef(null);
   const containerRef = useRef(null);
   const titleRef = useRef(null);
   const menusRef = useRef([]);
-  const [selected, setSelected] = useState(-1);
-  const [isItemOpen, setIsItemOpen] = useState(false);
+  const [selected, setSelected] = useState(0);
+  const [currentGroup, setCurrentGroup] = useState(undefined);
 
-  // const handleShow = useCallback(() => {
-  //   setIsShow(!isShow);
-  // }, [isShow]);
+  useEffect(() => {
+    setCurrentGroup(selectedGroupInfo.gname);
+  }, [selectedGroupInfo]);
 
   const handleSelect = useCallback(
     idx => {
@@ -70,22 +91,62 @@ function GroupList({
   );
 
   useEffect(() => {
-    if (selected >= 1 && selected <= groupList.length + 1) {
-      titleRef.current.style.background = 'rgb(232, 238, 251)';
+    if (currentGroup === undefined) {
+      return;
+    }
 
-      for (let i = 1; i <= groupList.length + 1; i++) {
+    if (currentGroup === '') {
+      clickMenu(0);
+      setSelected(0);
+      setCurrentGroup(undefined);
+
+      return;
+    }
+
+    let targetId = '';
+    let targetIdx = '';
+    menusRef.current.forEach((el, idx) => {
+      if (el?.dataset?.gname === currentGroup) {
+        targetIdx = idx;
+        targetId = el.dataset.id;
+      }
+    });
+    clickGroup(targetId);
+    setSelected(targetIdx);
+    setCurrentGroup(undefined);
+  }, [selectedGroupInfo, clickGroup, currentGroup, clickMenu]);
+
+  useEffect(() => {
+    if (selected >= 1 && selected < groupList.length + 1) {
+      // titleRef.current.style.background = 'rgb(232, 238, 251)';
+      if (titleRef.current) {
+        titleRef.current.style.background = 'rgb(62, 62, 62);';
+        titleRef.current.style.color = 'white';
+      }
+
+      for (let i = 0; i <= menusRef.current.length + 1; i++) {
         if (!menusRef.current[i]) {
           continue;
         }
         if (i === selected) {
-          menusRef.current[i].classList.add('selectedGroup');
+          if (labelIcons.length !== 0) {
+            menusRef.current[i].classList.add('isOpenGroup-select');
+          } else {
+            menusRef.current[i].classList.add('selectedGroup');
+          }
         } else {
+          menusRef.current[i].classList.remove('isOpenGroup-select');
           menusRef.current[i].classList.remove('selectedGroup');
+          menusRef.current[i].classList.remove('selected');
         }
       }
       return;
     }
-    titleRef.current.style.background = '#eceff1';
+    // titleRef.current.style.background = '#eceff1';
+    if (titleRef.current) {
+      titleRef.current.style.background = 'rgb(232, 238, 251)';
+      titleRef.current.style.color = 'black';
+    }
 
     for (let i = 0; i < menusRef.current.length; i++) {
       if (!menusRef.current[i]) {
@@ -95,21 +156,12 @@ function GroupList({
       if (i === selected) {
         menusRef.current[i].classList.add('selected');
       } else {
+        menusRef.current[i].classList.remove('isOpenGroup-select');
         menusRef.current[i].classList.remove('selected');
+        menusRef.current[i].classList.remove('selectedGroup');
       }
     }
-  }, [selected, groupList]);
-
-  useEffect(() => {
-    if (selected === -1) {
-      return;
-    }
-
-    if (selected >= 1 && selected <= groupList.length) {
-      return;
-    }
-    clickMenu(selected);
-  }, [selected, clickMenu, groupList]);
+  }, [selected, groupList, isUseTotal, labelIcons]);
 
   const renderItem = useCallback(() => {
     return groupList.map((el, idx) => (
@@ -125,23 +177,33 @@ function GroupList({
         menusRef={menusRef}
         clickModify={clickModify}
         clickDelete={clickDelete}
+        clickLabelIcon={clickLabelIcon}
+        labelIcons={labelIcons}
       />
     ));
-  }, [groupList, handleSelect, selected, clickGroup, clickModify, clickDelete]);
+  }, [
+    groupList,
+    handleSelect,
+    selected,
+    clickGroup,
+    clickModify,
+    clickDelete,
+    clickLabelIcon,
+    labelIcons,
+  ]);
 
-  // useEffect(() => {
-  //   if (isShow) {
-  //     itemListRef.current.classList.remove('close');
-  //     containerRef.current.style.width = '220px';
-  //   } else {
-  //     itemListRef.current.classList.add('close');
-  //     containerRef.current.style.width = '30px';
-  //   }
-  // }, [isShow]);
-
-  const handleItem = useCallback(() => {
-    setIsItemOpen(!isItemOpen);
-  }, [isItemOpen]);
+  const handleMenu = useCallback(
+    (idx, type) => {
+      if (type === 'button') {
+        clickMenu(idx);
+        handleSelect(idx);
+      } else if (isUseTotal) {
+        clickMenu(0);
+        handleSelect(0);
+      }
+    },
+    [clickMenu, handleSelect, isUseTotal],
+  );
 
   const renderBtns = useCallback(() => {
     return (
@@ -149,40 +211,51 @@ function GroupList({
         {buttonList.map((el, idx) => (
           <Button
             key={`itemListBtn-${el}`}
-            onClick={() => handleSelect(groupList.length + idx + 2)}
+            onClick={() => handleMenu(groupList.length + idx + 1, 'button')}
             ref={el => {
-              menusRef.current[groupList.length + 2] = el;
+              menusRef.current[groupList.length + idx + 1] = el;
             }}
+            className="group-list-menu"
           >
             {el}
           </Button>
         ))}
       </>
     );
-  }, [buttonList, handleSelect, groupList.length]);
+  }, [buttonList, groupList.length, handleMenu]);
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
-      <Container ref={containerRef}>
-        <Wrapper ref={itemListRef}>
+      <Container ref={containerRef} isIcon={labelIcons.length !== 0}>
+        <Wrapper ref={itemListRef} className="group-list">
           <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
-          <DividingLine />
-          <NoneGroup
-            onClick={() => handleSelect(0)}
-            ref={el => {
-              menusRef.current[0] = el;
-            }}
-          >
-            미지정 그룹
-          </NoneGroup>
+          <DividingLine className="group-list-divide" />
+          {isUseTotal ? (
+            <TotalUnit
+              onClick={() => handleMenu(0)}
+              ref={el => {
+                menusRef.current[0] = el;
+              }}
+              className="group-list-menu"
+            >
+              전체 {unit}
+            </TotalUnit>
+          ) : null}
           <Content>
-            <ItemTitle onClick={handleItem} ref={titleRef}>
-              <div>그룹</div>
-              {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />}
-            </ItemTitle>
-            {isItemOpen && renderItem()}
+            {isUseTitle && (
+              <ItemTitle
+                // onClick={handleItem}
+                ref={titleRef}
+                className="group-list-menu"
+              >
+                <div>그룹</div>
+                {/* {isItemOpen ? <AiOutlineUp /> : <AiOutlineDown />} */}
+              </ItemTitle>
+            )}
+            {/* {isItemOpen && renderItem()} */}
+            {renderItem()}
           </Content>
-          <DividingLine />
+          <DividingLine className="group-list-divide" />
           <ButtonWrapper>{renderBtns()}</ButtonWrapper>
         </Wrapper>
       </Container>
@@ -197,6 +270,7 @@ const Container = styled.div`
   position: relative;
   background: white;
   height: 100%;
+  font-size: 14px;
   /* overflow: hidden;
   transition: 0.4s; */
   /* .close {
@@ -205,9 +279,9 @@ const Container = styled.div`
   } */
 
   .selected {
-    background: rgb(33, 37, 41);
+    background: rgb(62, 62, 62);
     color: #eee;
-    font-weight: bold;
+    fill: white;
 
     :before {
       background: transparent;
@@ -218,13 +292,30 @@ const Container = styled.div`
     }
 
     :hover {
-      background: rgb(33, 37, 41);
+      background: rgb(62, 62, 62);
       color: #eee;
     }
   }
 
   .selectedGroup {
-    font-weight: bold;
+    background: rgb(62, 62, 62); !important;
+    color: white;
+  }
+
+  .isOpenGroup {
+    background: rgb(232, 238, 251);
+    border: ${({ isIcon }) => {
+      if (isIcon) {
+        return '1px solid rgb(232, 238, 251);';
+      }
+      return 'none;';
+    }};
+  }
+
+  .isOpenGroup-select {
+    background: rgb(62, 62, 62);
+    color: white;
+    border: 1px solid rgb(62, 62, 62);
   }
 `;
 
@@ -250,17 +341,22 @@ const Content = styled.div`
   width: 233px;
 `;
 
-const NoneGroup = styled.div`
+const TotalUnit = styled.div`
   margin-top: 8px;
   width: 223px;
   height: 38px;
   display: flex;
   align-items: center;
   padding-left: 10px;
-  background: #eceff1;
+  font-size: 14px;
+  /* background: #eceff1; */
 
   border-radius: 4px;
   cursor: pointer;
+
+  &:hover {
+    background: rgb(232, 238, 251);
+  }
 `;
 
 const ItemTitle = styled.div`
@@ -272,6 +368,7 @@ const ItemTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* background: rgb(232, 238, 251); */
 
   svg {
     margin-right: 8px;
@@ -293,6 +390,10 @@ const Button = styled.button`
 
   border-radius: 5px;
   cursor: pointer;
+
+  &:hover {
+    background: rgb(232, 238, 251);
+  }
 `;
 
 const BorderRight = styled.div`

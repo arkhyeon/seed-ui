@@ -22,6 +22,7 @@ import GroupList from './GroupList/GroupList';
 import LabelList from './LabelList/LabelList';
 import UniqueLabelList from './LabelList/UniqueLabelList';
 import Count from './Count/Count';
+import CountList from './CountList/CountList';
 
 export { HeaderCreator };
 
@@ -70,3 +71,5 @@ export { LabelList };
 export { UniqueLabelList };
 
 export { Count };
+
+export { CountList };

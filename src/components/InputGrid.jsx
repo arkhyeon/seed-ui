@@ -3,12 +3,6 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
 /**
- * @param {String} param.subjectBorder
- * 한 라인 내에서 제목과 내용 사이의 테두리 선 설정
- * default 값은 '1px solid '#d2d2d2'
- * @param {String} param.subjectBg
- * 제목 칸의 배경 색
- * default 값은 '#eee'
  * @param {Array} param.list
  * 그리드 안에 들어갈 내용
  * 한 줄에 하나의 내용만 들어갈 경우,
@@ -35,7 +29,6 @@ import { css } from '@emotion/react';
  */
 
 function InputGrid({
-  subjectBg = '#F6F9FC',
   list = [{ subject: '내용 없음', content: <input /> }],
   location = 'top',
   contentPadding = '10%',
@@ -46,14 +39,16 @@ function InputGrid({
         {list.map((el, idx) => {
           return (
             <LineWrapper key={`line-${idx}`}>
-              <Subject subjectBg={subjectBg}>{el.subject}</Subject>
-              <Content contentPadding={contentPadding}>{el.content}</Content>
+              <Subject className="input-grid-subject">{el.subject}</Subject>
+              <Content contentPadding={contentPadding} className="input-grid-content">
+                {el.content}
+              </Content>
             </LineWrapper>
           );
         })}
       </>
     );
-  }, [list, subjectBg]);
+  }, [list, contentPadding]);
 
   return <Wrapper location={location}>{renderLine()}</Wrapper>;
 }
@@ -86,7 +81,6 @@ const LineWrapper = styled.div`
 
 const Subject = styled.div`
   width: 30%;
-  background: ${({ subjectBg }) => subjectBg};
   display: flex;
   align-items: center;
   justify-content: center;

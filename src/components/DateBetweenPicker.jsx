@@ -23,21 +23,6 @@ import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
  * @param {String} param.width
  * input 박스의 너비
  * default 값은 '100px'
- * @param {String} param.pickerBg
- * datePicker의 전체 배경 색
- * default 값은 'white'
- * @param {String} param.headBg
- * datePicker의 제일 상단 배경 색
- * default 값은 '#eee'
- * @param {String} param.weekDaysBg
- * 요일 표시줄 배경색
- * default 값은 'white'
- * @param {String} param.selectedBg
- * 선택된 날짜들 배경 색
- * default 값은 '#808080'
- * @param {String} param.selectedFC
- * 선택된 날짜들 글씨 색
- * default 값은 'white'
  * @returns {JSX.Element} DateBetweenPicker Component
  */
 
@@ -47,11 +32,6 @@ function DateBetweenPicker({
   setStartDate = null,
   setEndDate = null,
   width = '100px',
-  pickerBg = 'white',
-  headBg = '#eee',
-  weekDaysBg = 'white',
-  selectedBg = '#808080',
-  selectedFC = 'white',
 }) {
   const [isOpenStart, setIsOpenStart] = useState(false);
   const [isOpenEnd, setIsOpenEnd] = useState(false);
@@ -188,13 +168,15 @@ function DateBetweenPicker({
 
   const renderWeekDays = useCallback(() => {
     return (
-      <WeekWrapper weekDaysBg={weekDaysBg}>
+      <WeekWrapper>
         {weekDays.map((el, idx) => (
-          <WeekDay key={`weekday-${idx}`}>{el}</WeekDay>
+          <WeekDay key={`weekday-${idx}`} className="date-picker-week">
+            {el}
+          </WeekDay>
         ))}
       </WeekWrapper>
     );
-  }, [weekDays, weekDaysBg]);
+  }, [weekDays]);
 
   const checkStartEnd = useCallback((startDate, endDate) => {
     return endDate.getTime() - startDate.getTime() >= 0;
@@ -284,24 +266,129 @@ function DateBetweenPicker({
 
       return (
         <DayWrapper>
-          {days.map((el, idx) => (
-            <Day
-              key={`day-${idx}`}
-              onClick={e => handleDayClick(e, target)}
-              day={el}
-              startDate={startDate}
-              dateViewed={target === 'start' ? startDateViewed : endDateViewed}
-              endDate={endDate}
-              selectedBg={selectedBg}
-              selectedFC={selectedFC}
-            >
-              {el}
-            </Day>
-          ))}
+          {days.map((el, idx) => {
+            if (el === '') {
+              return <Empty />;
+            }
+
+            const dateViewed = target === 'start' ? startDateViewed : endDateViewed;
+
+            if (dateViewed.getFullYear() < startDate.getFullYear()) {
+              return (
+                <Day
+                  key={`day-${idx}`}
+                  onClick={e => handleDayClick(e, target)}
+                  day={el}
+                  startDate={startDate}
+                  endDate={endDate}
+                  className="non-selected-day day"
+                >
+                  {el}
+                </Day>
+              );
+            }
+            if (
+              dateViewed.getFullYear() === startDate.getFullYear() &&
+              dateViewed.getMonth() < startDate.getMonth()
+            ) {
+              return (
+                <Day
+                  key={`day-${idx}`}
+                  onClick={e => handleDayClick(e, target)}
+                  day={el}
+                  startDate={startDate}
+                  endDate={endDate}
+                  className="non-selected-day day"
+                >
+                  {el}
+                </Day>
+              );
+            }
+            if (
+              dateViewed.getFullYear() === startDate.getFullYear() &&
+              dateViewed.getMonth() === startDate.getMonth() &&
+              el < startDate.getDate()
+            ) {
+              return (
+                <Day
+                  key={`day-${idx}`}
+                  onClick={e => handleDayClick(e, target)}
+                  day={el}
+                  startDate={startDate}
+                  endDate={endDate}
+                  className="non-selected-day day"
+                >
+                  {el}
+                </Day>
+              );
+            }
+            if (dateViewed.getFullYear() > endDate.getFullYear()) {
+              return (
+                <Day
+                  key={`day-${idx}`}
+                  onClick={e => handleDayClick(e, target)}
+                  day={el}
+                  startDate={startDate}
+                  endDate={endDate}
+                  className="non-selected-day day"
+                >
+                  {el}
+                </Day>
+              );
+            }
+            if (
+              dateViewed.getFullYear() === endDate.getFullYear() &&
+              dateViewed.getMonth() > endDate.getMonth()
+            ) {
+              return (
+                <Day
+                  key={`day-${idx}`}
+                  onClick={e => handleDayClick(e, target)}
+                  day={el}
+                  startDate={startDate}
+                  endDate={endDate}
+                  className="non-selected-day day"
+                >
+                  {el}
+                </Day>
+              );
+            }
+            if (
+              dateViewed.getFullYear() === endDate.getFullYear() &&
+              dateViewed.getMonth() === endDate.getMonth() &&
+              el > endDate.getDate()
+            ) {
+              return (
+                <Day
+                  key={`day-${idx}`}
+                  onClick={e => handleDayClick(e, target)}
+                  day={el}
+                  startDate={startDate}
+                  endDate={endDate}
+                  className="non-selected-day day"
+                >
+                  {el}
+                </Day>
+              );
+            }
+
+            return (
+              <Day
+                key={`day-${idx}`}
+                onClick={e => handleDayClick(e, target)}
+                day={el}
+                startDate={startDate}
+                endDate={endDate}
+                className="selected-day day"
+              >
+                {el}
+              </Day>
+            );
+          })}
         </DayWrapper>
       );
     },
-    [endDate, endDateViewed, handleDayClick, selectedBg, selectedFC, startDate, startDateViewed],
+    [endDate, endDateViewed, handleDayClick, startDate, startDateViewed],
   );
 
   const checkValidate = useCallback(input => {
@@ -547,14 +634,25 @@ function DateBetweenPicker({
           ref={startInputRef}
           value={startInputValue}
           onChange={e => handleInput(e, 'start')}
+          className="date-picker-input"
         />
         {isOpenStart && (
-          <PickWrapper ref={startPickerRef} pickerBg={pickerBg}>
-            <Head headBg={headBg}>
-              <Button pos="left" width={width} onClick={() => handlePrev('start')}>
+          <PickWrapper ref={startPickerRef}>
+            <Head className="date-picker-head">
+              <Button
+                pos="left"
+                width={width}
+                onClick={() => handlePrev('start')}
+                className="date-picker-button date-picker-button-left"
+              >
                 <AiOutlineLeft />
               </Button>
-              <Button pos="right" width={width} onClick={() => handleNext('start')}>
+              <Button
+                pos="right"
+                width={width}
+                onClick={() => handleNext('start')}
+                className="date-picker-button date-picker-button-right"
+              >
                 <AiOutlineRight />
               </Button>
               {renderYear('start')}
@@ -573,14 +671,25 @@ function DateBetweenPicker({
           ref={endInputRef}
           value={endInputValue}
           onChange={e => handleInput(e, 'end')}
+          className="date-picker-input"
         />
         {isOpenEnd && (
-          <PickWrapper ref={endPickerRef} pickerBg={pickerBg}>
-            <Head headBg={headBg}>
-              <Button pos="left" width={width} onClick={() => handlePrev('end')}>
+          <PickWrapper ref={endPickerRef}>
+            <Head className="date-picker-head">
+              <Button
+                pos="left"
+                width={width}
+                onClick={() => handlePrev('end')}
+                className="date-picker-button date-picker-button-left"
+              >
                 <AiOutlineLeft />
               </Button>
-              <Button pos="right" width={width} onClick={() => handleNext('end')}>
+              <Button
+                pos="right"
+                width={width}
+                onClick={() => handleNext('end')}
+                className="date-picker-button date-picker-button-right"
+              >
                 <AiOutlineRight />
               </Button>
               {renderYear('end')}
@@ -618,7 +727,7 @@ const PickWrapper = styled.div`
   overflow: hidden;
   border-radius: 4px;
   border: 1px solid black;
-  background: ${({ pickerBg }) => pickerBg};
+  background: white;
 
   -webkit-touch-callout: none;
   user-select: none;
@@ -630,7 +739,7 @@ const PickWrapper = styled.div`
 const Head = styled.div`
   height: 40px;
   width: 100%;
-  background: ${({ headBg }) => headBg};
+  background: #eee;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -667,7 +776,7 @@ const WeekWrapper = styled.ul`
   margin-top: 8px;
   width: 224px;
   justify-content: space-between;
-  background: ${({ weekDaysBg }) => weekDaysBg};
+  background: white;
 `;
 
 const WeekDay = styled.li`
@@ -682,6 +791,10 @@ const DayWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  .selected-day {
+    background: #eee;
+  }
 `;
 
 const Day = styled.li`
@@ -699,82 +812,14 @@ const Day = styled.li`
   padding: 8px 0;
 
   border-radius: 4px;
+`;
 
-  ${({ day, startDate, endDate, dateViewed, selectedBg, selectedFC }) => {
-    if (day === '') {
-      return css`
-        background: transparent;
-      `;
-    }
-
-    if (dateViewed.getFullYear() < startDate.getFullYear()) {
-      return css`
-        background: transparent;
-        :hover {
-          background: #eee;
-        }
-      `;
-    }
-    if (
-      dateViewed.getFullYear() === startDate.getFullYear() &&
-      dateViewed.getMonth() < startDate.getMonth()
-    ) {
-      return css`
-        background: transparent;
-        :hover {
-          background: #eee;
-        }
-      `;
-    }
-    if (
-      dateViewed.getFullYear() === startDate.getFullYear() &&
-      dateViewed.getMonth() === startDate.getMonth() &&
-      day < startDate.getDate()
-    ) {
-      return css`
-        background: transparent;
-        :hover {
-          background: #eee;
-        }
-      `;
-    }
-    if (dateViewed.getFullYear() > endDate.getFullYear()) {
-      return css`
-        background: transparent;
-        :hover {
-          background: #eee;
-        }
-      `;
-    }
-    if (
-      dateViewed.getFullYear() === endDate.getFullYear() &&
-      dateViewed.getMonth() > endDate.getMonth()
-    ) {
-      return css`
-        background: transparent;
-        :hover {
-          background: #eee;
-        }
-      `;
-    }
-    if (
-      dateViewed.getFullYear() === endDate.getFullYear() &&
-      dateViewed.getMonth() === endDate.getMonth() &&
-      day > endDate.getDate()
-    ) {
-      return css`
-        background: transparent;
-        :hover {
-          background: #eee;
-        }
-      `;
-    }
-
-    return css`
-      background: ${selectedBg};
-      color: ${selectedFC};
-    `;
-  }};
+const Empty = styled.li`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  background: white;
 `;
 
 export default DateBetweenPicker;

@@ -34,6 +34,7 @@
   - [[21] labelList](#21-labelList)
   - [[22] uniqueLabelList](#22-uniqueLabelList)
   - [[23] count](#23-count)
+  - [[24] countList](#24-countList)
 
 ## 1. <a name='1'></a>[1] 소개
 
@@ -475,21 +476,17 @@ BlackButton 컴포넌트와 WhiteButton 컴포넌트 중 선택하여 사용 가
    'left-center'  
    'left-end'
 
-3. <code>bgColor {String}</code>  
+3. <code>color {String}</code>  
    툴팁의 배경색  
-   default 값은 '#808080'
+   default 값은 '#d2d2d2'
 
-4. <code>fontColor {String}</code>  
-   툴팁 텍스트의 색  
-   default 값은 'white'
+4. Style
 
-5. <code>textSize {String}</code>  
-   툴팁 텍스트의 크기  
-   default 값은 '1rem'
+   세부 css 지정은 className을 통해 설정 가능
 
-6. <code>fontSize {String}</code>  
-   일반 텍스트의 크기  
-   default 값은 '1rem'
+   4-1. 툴팁의 className => 'tooltip'
+
+   4-2. 텍스트의 className => 'tooltip-text'
 
 ## 8. <a name='8-modal'></a>[8] modal
 
@@ -517,96 +514,48 @@ function TestModal() {
 1. <code>width {String} </code>
 
    모달의 너비  
-   default 값은 '600px';
-
-2. <code>height {String} </code>
-
-   모달의 높이  
    default 값은 '600px'
 
-3. <code>position {String} </code>
+2. <code>modalState {Boolean} </code>
 
-   모달 생성 위치  
-   default 값은 'center'
-
-<div style="text-align: center;">
-    <img src="./readmeImg/modalPos.jpg" />
-</div>
-
-4. <code>modalState {Boolean} </code>
-
-   모달 on, off 여부  
+   모달 On, Off 여부  
    상위 컴포넌트에서 useState 값 내려 받음  
    default 값은 false
 
-5. <code>handleClose {Function} </code>
+3. <code>handleClose {Function} </code>
 
-   모달을 닫는 (상태를 변경 하는 ) 함수  
+   모달을 닫는(상태를 변경하는) 함수  
    상위 컴포넌트에서 상태변경 기능이 포함된 함수를 내려 받음  
    default 값은 null
 
-6. <code>modalTitle {String} </code>
+4. <code>modalTitle {String} </code>
 
-   모달 제목  
-   default 값은 'undefined'로 ''로 표시됨
+   모달의 제목  
+   default 값은 'undefined'로 ""로 표시됨
 
-7. <code>isCloseBtn {Boolean} </code>
+5. <code>isCloseBtn {Boolean} </code>
 
-   모달창 오른족 상단에 닫기 버튼 존재 여부  
+   모달창 오른쪽 상단에 닫기 버튼 존재 여부  
    default 값은 true
 
-8. <code>resizable {Boolean} </code>
+6. <code>movable {Boolean} </code>
 
-   모달창 크기 조절 가능 여부  
-   default 값은 false
+   모달창 상단을 드래그하여 이동 가능하는 지 여부  
+   default 값은 true
 
-9. <code>movable {Boolean} </code>
+7. <code>buttonList {Component[]} </code>
 
-   모달창 상단을 드래그 하여 이동 가능한 지 여부 default 값은 true
+   모달창 하단에 표시된 버튼 목록  
+   default 값은 [ <Button size="small" color="blue" onClick={callback}> 확인 </Button>, <Button size="small" onClick={handleClose}>닫기</Button> ]
 
-10. <code>buttonList {Component[]} </code>
+8. <code>callback {Function} </code>
 
-    모달창 하단에 표시될 버튼 목록  
-    default 값은 [ <Button size="small" color="blue" onClick={callback}> 확인 </Button>, <Button size="small" onClick={handleClose}>닫기</Button> ]
+   모달창 확인 버튼을 눌렀을 시, 실행되는 함수  
+   default 값은 null
 
-11. <code>callback {Function} </code>
+9. <code>children {Component} </code>
 
-    모달창 확인 버튼을 눌렀을 시, 실행되는 함수  
-    default 값은 null
-
-12. <code>style {Object} </code>
-
-모달창 세부 스타일 지정
-
-<code>headBg {String} </code>
-
-- 모달창 상단 배경 색상
-- default 값은 '#eee'
-
-<code>headFc {String} </code>
-
-- 모달창 상단의 글씨, 아이콘의 색상
-- default 값은 '#808080'
-
-<code>headBorder {String} </code>
-
-- 모달창 상단의 하단 테두리 스타일 지정
-- default 값은 'none'
-
-<code>closeBtn {Component} </code>
-
-- 모달창 상단의 닫기 버튼에 들어갈 컴포넌트
-- default 값은 react-icons의 <AiOutlineClose />
-
-<code>modalBorder {String} </code>
-
-- 모달창의 테두리 스타일 지정
-- default 값은 'none'
-
-<code>isShadow {String} </code>
-
-- 모달창의 그림자 여부
-- default 값은 true
+   모달 내에 들어갈 컴포넌트
 
 ## 9. <a name='9-alarm'></a>[9] alarm
 
@@ -691,6 +640,19 @@ function checkValid(input) {
     (name === 'answer'일 때) 취소 버튼에 들어갈 텍스트  
      default 값은 '취소'
 
+12. style
+
+일부 요소의 경우 className을 사용하여 css 지정 가능  
+ 단, 해당 요소들에 기본 값이 있으므로 !important를 사용해서 기존 값에 덮어씌워야 함
+
+12-1. type === 'answer'일 때, 확인 버튼의 className => 'alarm-yesBtn'
+
+12-2. type === 'answer'일 때, 취소 버튼의 className => 'alarm-noBtn'
+
+12-3. type !== 'answer'일 때, progress bar의 className = > 'alarm-progress'
+
+12-4. type === 'answer'일 때, progress bar의 className = > 'alarm-answer-progress'
+
 ## 10. <a name='10-slider'></a>[10] slider
 
 Slider 컴포넌트를 통해, 슬라이더(넘기면서 조회)를 생성
@@ -726,15 +688,22 @@ function TestComponent () {
    자동 재생 시 페이지 넘어가는 시간  
    default 값은 5000
 
-6. <code>border {String}</code>
+6. style
 
-   Slider 컴포넌트의 테두리 스타일  
-   default 값은 '1px solid black'
+   일부 요소의 경우 className을 사용하여 css 지정 가능  
+   단, 해당 요소들에 기본 값이 있는 경우 !important를 사용해서 기존 값에 덮어씌워야 함
 
-7. <code>background {String}</code>
+   6-1. Slider 컴포넌트의 가장 상위 태그의 className => "slider"
 
-   각 페이지의 배경색  
-   default 값은 'transparent'
+   6-2. Slider 컴포넌트 상단에 위치한 버튼(재생, 멈춤 버튼)의 className => "slider-btn-top"
+
+   6-3. Slider 컴포넌트 좌측에 위치한 버튼(왼쪽으로 이동 버튼)의 className => "slider-btn-left"
+
+   6-4. Slider 컴포넌트 우측에 위치한 버튼(오른쪽으로 이동 버튼)의 className => "slider-btn-right"
+
+   6-5. Slider 컴포넌트의 상,좌,우 버튼 모두의 className => "slider-btn"
+
+   6-6. Slider 컴포넌트의 하단 네비게이션 버튼의 className => "slider-nav-point"
 
 ## 11. <a name='11-datePicker'></a>[11] datePicker
 
@@ -762,25 +731,28 @@ function Test() {
    input 박스의 너비  
    default 값은 '100px'
 
-4. <code>headBg {String}</code>
+4. style
 
-   datePicker의 상단 부분 배경색  
-   default 값은 '#eee'
+   일부 컴포넌트의 경우 className을 부여하여 css 직접 수정 가능  
+   단, 기본 값이 존재할 경우 !important를 사용해 기본 값에 덮어씌워야 함
 
-5. <code>pickerBg {String}</code>
+   4-1. 날짜를 수정, 조회할 수 있는 input 컴포넌트, className => "date-picker-input"
 
-   datePicker의 전체 배경색  
-   default 값은 'white'
+   4-2. 날짜 선택 창의 상단 부분, className => "date-picker-head"
 
-6. <code>weekDaysBg {String}</code>
+   4-3. 날짜 선택 창의 달 넘기기 버튼(양쪽 모두), className => "date-picker-button"
 
-   요일 표시 줄의 배경색  
-   default 값은 'white'
+   4-4. 날짜 선택 창의 이전 달로 넘기기 버튼(왼쪽), className => "date-picker-button-left"
 
-7. <code>selectedBg {String}</code>
+   4-5. 날짜 선택 창의 다음 달로 넘기기 버튼(오른쪽), className => "date-picker-button-right"
 
-   선택된 날짜의 배경색  
-   default 값은 '#808080'
+   4-6. 날짜 선택 창의 각 일, className className => 'day'
+
+   4-7. 날짜 선택 창의 선택된 날짜, className => 'selected-day'
+
+   4-8. 날짜 선택 창의 선택되지 않은 날짜, classname => 'non-selected-day'
+
+   4-9. 날짜 선택 창의 요일, className => 'date-picker-week'
 
 ## 12. <a name='12-dateBetweenPicker'></a>[12] dateBetweenPicker
 
@@ -815,29 +787,9 @@ function Test() {
    input 박스의 너비  
    default 값은 '100px'
 
-6. <code>pickerBg {String}</code>
+6. style
 
-   datePicker의 전체 배경 색  
-   default 값은 'white'
-
-7. <code>headBg {String}</code>
-
-   datePicker의 제일 상단 배경 색  
-   default 값은 '#eee'
-
-8. <code>weekDaysBg {String}</code>
-
-   요일 표시줄 배경색  
-   default 값은 'white'
-
-9. <code>selectedBg {String}</code>
-
-   선택된 날짜들 배경 색  
-   default 값은 '#808080'
-
-10. <code>selectedFC {String}</code>  
-    선택된 날짜들 글씨 색  
-    default 값은 'white'
+   "11. DatePicker 컴포넌트와 동일"
 
 ## 13. <a name='13-dateTimePicker'></a>[13] dateTimePicker
 
@@ -867,25 +819,29 @@ function Test() {
    input 박스의 너비  
    default 값은 '100px'
 
-4. <code>headBg {String}</code>
+4. style
 
-   dateTimePicker의 상단 부분 배경색  
-   default 값은 '#eee'
+   4-1. 날짜를 수정, 조회할 수 있는 input 컴포넌트, className => "date-picker-input"
 
-5. <code>pickerBg {String}</code>
+   4-2. 날짜 선택 창의 상단 부분, className => "date-picker-head"
 
-   dateTimePicker의 전체 배경색  
-   default 값은 'white'
+   4-3. 날짜 선택 창의 달 넘기기 버튼(양쪽 모두), className => "date-picker-button"
 
-6. <code>weekDaysBg {String}</code>
+   4-4. 날짜 선택 창의 이전 달로 넘기기 버튼(왼쪽), className => "date-picker-button-left"
 
-   요일 표시 줄의 배경색  
-   default 값은 'white'
+   4-5. 날짜 선택 창의 다음 달로 넘기기 버튼(오른쪽), className => "date-picker-button-right"
 
-7. <code>selectedBg {String}</code>
+   4-6. 날짜 선택 창의 각 일, className className => 'day'
 
-   선택된 날짜의 배경색  
-   default 값은 '#808080'
+   4-7. 날짜 선택 창의 선택된 날짜, className => 'selected-day'
+
+   4-8. 날짜 선택 창의 선택되지 않은 날짜, classname => 'non-selected-day'
+
+   4-9. 날짜 선택 창의 요일, className => 'date-picker-week'
+
+   4-10. 시간 선택 창의 시간 조절 버튼, className => 'date-picker-time-button'
+
+   4-11. 시간 선택 창의 시간 입력 input box, className => 'date-picker-time-input'
 
 ## 14. <a name='14-dateTimeBetweenPicker'></a>[14] dateTimeBetweenPicker
 
@@ -936,30 +892,9 @@ function Test() {
    input 박스의 너비  
    default 값은 '100px'
 
-6. <code>pickerBg {String}</code>
+6. style
 
-   datePicker의 전체 배경 색  
-   default 값은 'white'
-
-7. <code>headBg {String}</code>
-
-   datePicker의 제일 상단 배경 색  
-   default 값은 '#eee'
-
-8. <code>weekDaysBg {String}</code>
-
-   요일 표시줄 배경색  
-   default 값은 'white'
-
-9. <code>selectedBg {String}</code>
-
-   선택된 날짜들 배경 색  
-   default 값은 '#808080'
-
-10. <code>selectedFC {String}</code>
-
-    선택된 날짜들 글씨 색  
-    default 값은 'white'
+   "13.DateTimePicker" 컴포넌트와 동일
 
 ## 15. <a name='15-timePicker'></a>[15] timePicker
 
@@ -984,15 +919,23 @@ function Test() {
    useState를 통해 생성된 상태 관리 함수여야 함  
    default 값은 null
 
-3. <code>svgColor {String} </code>
-
-   아이콘들의 색상  
-   default 값은 'black'
-
-4. <code>width {String} </code>
+3. <code>width {String} </code>
 
    기본 input 태그의 너비  
    default 값은 '50px'
+
+4. <code>disabled {Boolean} </code>
+
+   input box를 수정할 수 있는 지 여부  
+   default 값은 false
+
+5. style
+
+   5-1. 전체 시간을 다루는 input, className => "time-picker-input"
+
+   5-2. 시간, 분을 다루는 input, className => "time-picker-time-input"
+
+   5-3. 시간을 조절하는 버튼, className => "time-picker-button"
 
 ## 16. <a name='16-radio'></a>[16] radio
 
@@ -1019,11 +962,11 @@ function Test () {
    useState로 생성한 상태 관리 함수여야 함  
    default 값은 null
 
-3. <code>list {Stirng | Number []} </code>
+3. <code>list {Object []} </code>
 
    선택할 수 있는 값들로 이루어진 배열  
-   index를 통해 값이 선택 되므로 정해진 순서를 고려해 넣어야 함  
-   default 값은 ['항목 없음']
+   각 객체는 value와 label 속성을 가지고 있음  
+   default 값은 [{value: 1, label: "test1}, {value: 2, label: "test2}]
 
 4. <code>text {String} </code>
 
@@ -1122,6 +1065,10 @@ function TestToggle () {
    useState로 생성된 상태 관리 함수여야 함  
    default 값은 null
 
+4. style
+
+   각 토글 버튼의 className => 'toggle-btn'
+
 ## 19. <a name='19-inputGrid'></a>[18] inputGrid
 
 입력 값이 많을 때 사용하는 그리드를 컴포넌트로 간편하게 사용 가능
@@ -1189,45 +1136,40 @@ function TestInputGrid () {
 }
 ```
 
-1. <code> border {String} </code>
+1. <code> list {Object[]} </code>
 
-   전체 그리드의 테두리 선 설정  
-   default 값은 '2px solid #d2d2d2'
+그리드 안에 들어갈 내용  
+한 줄에 하나의 내용만 들어갈 경우,  
+Object 형태로 작성  
+{ subject: {String} 넣고자 하는 제목, content: {Component} 내용 안에 들어갈 컴포넌트 }  
+한 줄에 여러 내용이 들어갈 경우,  
+Array 형태로 작성
 
-2. <code> lineHeight {String} </code>
+```javascript
+[
+   [
+      {  subject: {String} 넣고자 하는 제목, content: {Component} 내용 안에 들어갈 컴포넌트, flex: {Number} 1(생략 가능, default 값은 1)  },
+      {  subject: {String} 넣고자 하는 제목, content: {Component} 내용 안에 들어갈 컴포넌트, flex: {Number} 1(생략 가능, default 값은 1)  },
+   ]
+]
+```
 
-   한 라인의 높이  
-   default 값은 '2rem'
+2. <code> location {String} </code>
 
-3. <code> subjectBorder {String} </code>
+해당 컴포넌트가 여러개 들어갈 시 border 겹침으로 인해 생기는 문제를 방지하기 위함  
+top: default 값, 위 아래 모두 테두리 생김  
+bottom: 아래에만 테두리 생김
 
-   한 라인 내에서 제목과 내용 사이의 테두리 선 설정  
-   default 값은 '1px solid #d2d2d2'
+3. <code> contentPadding {String} </code>
 
-4. <code> subjectBg {String} </code>
+content 부분에서 오른쪽 padding 값을 설정  
+페이지 디자인에 따라 오른쪽 여백이 달라질 수 있기 때문  
+default 값은 '10%'
 
-   제목 칸의 배경 색  
-   default 값은 '#eee'
+4. style
 
-5. <code> subjectPadding {String} </code>
-
-   제목 칸의 여백 값  
-   default 값은 '12px'
-
-6. <code> subjectWidth {String} </code>
-
-   제목 칸의 너비  
-   default 값은 '200px'
-
-7. <code> subjectJustify {String} </code>
-
-   제목 칸의 가로 정렬 속성  
-   default 값은 'center'
-
-8. <code> contentPadding {String} </code>
-
-   내용 칸의 여백 값  
-   default 값은 '12px'
+InputGrid의 Subejct 부분, className = "input-grid-subject"  
+InputGrid의 Content 부분, className = "input-grid-content"
 
 ## 20. <a name='20-groupList'></a>[20] groupList
 
@@ -1315,6 +1257,37 @@ function testGroupList() {
    첫번째 인자로는 groupList에서 넣은 id 값을 가짐  
    default 값은 (id) => console.log(id)
 
+9. <code> selectedGroupInfo {Object} </code>
+
+   외부에서 선택된 그룹 값으로 변경 시켜야 할 때 사용되는 인자  
+   { gname: 선택한 그룹 이름 }의 형태  
+   필요한 것은 그룹의 이름 뿐이나, 문자열로 받을 경우 똑같은 그룹을 연이어  
+   선택하면 해당 액션을 감지 못하게 되어 Object 형태를 차선책으로 선택  
+   default 값은 {gname: undefined}
+
+10. <code> isUseNonSelect {Boolean} </code>
+
+미지정 그룹을 사용할 지 여부  
+ default 값은 []
+
+11. <code> labelIcons {Component[]} </code>
+
+각 그룹 밑에 들어갈 아이콘  
+ default 값은 []
+
+12. <code> clickLabelIcon {Function} </code>
+
+각 그룹 밑에 생긴 아이콘을 클릭 시 실행될 함수  
+ 첫번째 인자는 그룹의 id, 두번째 인자는 해당 아이콘의 인덱스  
+ default 값은 (id, idx) => console.log(id, idx)
+
+13. style
+
+GroupList의 가장 외부 컴포넌트, className => "group-list"  
+GroupList의 메뉴, className => "group-list-menu"  
+GroupList의 추가 버튼, className => "group-list-create"  
+GroupList의 각 그룹, className => "group-list-group"
+
 ## 21. <a name='21-labelList'></a>[21] labelList
 
 하나의 대상에 여러 라벨이 붙여질 수 있을 때 사용함
@@ -1322,12 +1295,20 @@ function testGroupList() {
 ```javascript
 function testLabelList() {
   const [labelList, setLabelList] = useState(['그룹 1', '그룹 2']);
+  const [valueArr, setValueArr] = useState(['그룹 1']);
 
   const createLabel = () => {
     setLabelList(labelList.concat('test 그룹'));
   };
 
-  return <LabelList labelList={labelList} createLabel={createLabel} />;
+  return (
+    <LabelList
+      labelList={labelList}
+      createLabel={createLabel}
+      valueArr={valueArr}
+      setValueArr={setValueArr}
+    />
+  );
 }
 ```
 
@@ -1340,6 +1321,49 @@ function testLabelList() {
 
    '그룹 만들기' 버튼을 눌렀을 때 실행되는 이벤트  
    default 값은 null
+
+3. <code> direction {String} </code>
+
+   라벨이 나열될 방향  
+   default 값은 'left'
+
+4. <code> canCreate {Boolean} </code>
+
+   라벨이 생성 가능한 지에 대한 여부  
+   해당 값이 false면 생성 버튼 사라짐  
+   default 값은 true
+
+5. <code> unit {String} </code>
+
+   현재 LabelList의 단위  
+   default 값은 '그룹'
+
+6. <code> valueArr {String[]} </code>
+
+   선택된 라벨들을 관리하는 배열  
+   상위 컴포넌트에서 생성된 state 값  
+   default 값은 []
+
+7. <code> setValueArr {Function} </code>
+
+   valueArr을 관리하는 setState 함수  
+   default 값은 null
+
+8. <code> handleUpdate {Function} </code>
+
+   라벨 선택 창이 열릴 때 실행되는 함수  
+   현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용  
+   default 값은 () => {}
+
+9. style
+
+   label들을 감싸고 있는 컴포넌트, className => "labels"  
+   각각의 label, className => "label"  
+   라벨을 선택하는 창, className => "label-selector"  
+   라벨을 생성하는 버튼, className => "label-selector-create"  
+   라벨 선택 창 제목(가장 상단 텍스트), className => "label-selector-title"  
+   라벨 선택 창의 구분 선, className => "label-selector-divide"  
+   라벨 선택 창의 각 옵션, className = > "label-selector-option"
 
 ## 22. <a name='22-uniqueLabelList'></a>[22] uniqueLabelList
 
@@ -1368,6 +1392,37 @@ function testUniqueLabelList() {
    '그룹 만들기' 버튼을 눌렀을 때 실행되는 이벤트  
    default 값은 null
 
+3. <code> direction {String} </code>
+
+   라벨이 나열될 방향  
+   default 값은 'left'
+
+4. <code> unit {String} </code>
+
+   현재 LabelList의 단위  
+   default 값은 '그룹'
+
+5. <code> valueStr {String} </code>
+
+   선택된 라벨을 관리하는 문자열  
+   상위 컴포넌트에서 생성된 state 값  
+   default 값은 ""
+
+6. <code> setValueStr {Funtion} </code>
+
+   valueStr을 관리하는 setState 함수  
+   default 값은 null
+
+7. <code> handleUpdate {Function} </code>
+
+   라벨 선택 창이 열릴 때 실행되는 함수  
+   현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용  
+   default 값은 () => {}
+
+8. style
+
+   "21. LabelList"와 동일
+
 ## 23. <a name='23-count'></a>[23]
 
 숫자 입력만 다룰 때 활용가능한 컴포넌트
@@ -1392,3 +1447,72 @@ function testCount() {
 
    설정할 수 있는 숫자의 최솟값  
    default 값은 0
+
+4. style
+
+   Count 컴포넌트의 input, className => "count-text"  
+   Count 컴포넌트의 증감소 버튼, className => "count-btn"  
+   Count 컴포넌트의 증가 버튼, className => "count-btn-plus"  
+   Count 컴포넌트의 감소 버튼, className => "count-btn-minus"
+
+## 24. <a name='24-countList'></a>[24]
+
+선택된 라벨의 갯수만 보여주는 컴포넌트
+
+```javascript
+function testCountList() {
+  const [labelList, setLabelList] = useState(['예시 1', '예시 2']);
+  const createLabel = () => {
+    setLabelList(labelList.concat('예시 3'));
+  };
+
+  const modifyLabel = value => {
+    console.log(value);
+  };
+
+  return (
+    <CountList
+      labelList={labelList}
+      setLabelList={setLabelList}
+      createLabel={createLabel}
+      modifyLabel={modifyLabel}
+    />
+  );
+}
+```
+
+1.  <code> labelList {String[]} </code>
+
+    현재 라벨의 리스트  
+    useState로 생성된 상태 값  
+    default 값은 ['000.000.000.000', '000.000.000.001']
+
+2.  <code> setLabelList {Function} </code>
+
+    라벨의 리스트를 변화시키는 상태 변화 함수  
+    default 값은 null
+
+3.  <code> createLabel {Function} </code>
+
+    라벨 생성 버튼을 클릭 했을 때에 실행되는 함수  
+    default 값은 null
+
+4.  <code> modifyLabel {Function} </code>
+
+    첫번째 인자로 해당 라벨의 값을 가짐  
+    라벨 수정 버튼을 클릭 했을 때에 실행되는 함수  
+    default 값은 null
+
+5.  <code> unit {String} </code>
+
+    CountList 컴포넌트가 다루는 기본 단위  
+    default 값은 'IP'
+
+6.  <code> direction {String} </code>
+
+    라벨이 나열 될 방향  
+    default 값은 'right'
+
+7.  style
+
+    '21. LabelList'와 동일

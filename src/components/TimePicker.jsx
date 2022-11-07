@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 import { TextInput } from './components/InputComponent';
 
@@ -14,31 +13,34 @@ import { TextInput } from './components/InputComponent';
  * 시간을 관리하는 함수
  * useState를 통해 생성된 상태 관리 함수여야 함
  * default 값은 null
- * @param {String} props.svgColor
- * 아이콘들의 색상
- * default 값은 'black'
  * @param {String} props.width
  * 기본 input 태그의 너비
  * default 값은 '50px'
- * @returns
+ * @param {Boolean} props.disabled
+ * input box를 수정할 수 있는 지 여부
+ * default 값은 false
+ * @returns {JSX.Element} TimePikcer Component
  */
 
-function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width = '50px' }) {
+function TimePicker({ time = '00:00', setTime = null, width = '50px', disabled = false }) {
   const hourRef = useRef(null);
   const minuteRef = useRef(null);
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const pickerRef = useRef(null);
 
-  const handleOutside = e => {
-    if (inputRef.current.contains(e.target)) {
-      return;
-    }
+  const handleOutside = useCallback(
+    e => {
+      if (inputRef.current.contains(e.target)) {
+        return;
+      }
 
-    if (isOpen && !pickerRef.current.contains(e.target)) {
-      setIsOpen(false);
-    }
-  };
+      if (isOpen && !pickerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    },
+    [isOpen],
+  );
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutside);
@@ -48,86 +50,95 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
     };
   }, [handleOutside]);
 
-  const handleHour = e => {
-    const prevMinute = time.slice(3, 5);
-    const hour = e.target.value;
-    let convertedHour = '';
-    const cursorIdx = e.target.selectionStart;
+  const handleHour = useCallback(
+    e => {
+      const prevMinute = time.slice(3, 5);
+      const hour = e.target.value;
+      let convertedHour = '';
+      const cursorIdx = e.target.selectionStart;
 
-    for (let i = 0; i < hour.length; i++) {
-      if (cursorIdx !== i) {
-        convertedHour += hour[i];
+      for (let i = 0; i < hour.length; i++) {
+        if (cursorIdx !== i) {
+          convertedHour += hour[i];
+        }
       }
-    }
 
-    if (convertedHour[0] === '2' && cursorIdx === 1) {
-      convertedHour = `${convertedHour[0]}0`;
-    }
-
-    if (checkHour(convertedHour)) {
-      setTime(`${convertedHour}:${prevMinute}`);
-    }
-    setTimeout(() => {
-      hourRef.current.setSelectionRange(cursorIdx, cursorIdx);
-    }, 10);
-  };
-
-  const handleMinute = e => {
-    const prevHour = time.slice(0, 2);
-    const minute = e.target.value;
-    let convertedMinute = '';
-    const cursorIdx = e.target.selectionStart;
-
-    for (let i = 0; i < minute.length; i++) {
-      if (cursorIdx !== i) {
-        convertedMinute += minute[i];
+      if (convertedHour[0] === '2' && cursorIdx === 1) {
+        convertedHour = `${convertedHour[0]}0`;
       }
-    }
 
-    if (checkMinute(convertedMinute)) {
-      setTime(`${prevHour}:${convertedMinute}`);
-    }
-    setTimeout(() => {
-      minuteRef.current.setSelectionRange(cursorIdx, cursorIdx);
-    }, 10);
-  };
-
-  const handleInput = e => {
-    const [hour, minute] = e.target.value.split(':');
-    const checkDiff = false;
-    let convertedHour = '';
-    let convertedMinute = '';
-    const cursorIdx = e.target.selectionStart;
-
-    for (let i = 0; i < hour.length; i++) {
-      if (cursorIdx !== i) {
-        convertedHour += hour[i];
+      if (checkHour(convertedHour)) {
+        setTime(`${convertedHour}:${prevMinute}`);
       }
-    }
-
-    for (let i = 0; i < minute.length; i++) {
-      if (cursorIdx !== i + 3) {
-        convertedMinute += minute[i];
-      }
-    }
-
-    if (convertedHour[0] === '2' && cursorIdx === 1) {
-      convertedHour = `${convertedHour[0]}0`;
-    }
-
-    if (!checkHour(convertedHour) || !checkMinute(convertedMinute) || checkDiff === 0) {
       setTimeout(() => {
-        inputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+        hourRef.current.setSelectionRange(cursorIdx, cursorIdx);
       }, 10);
-    } else {
-      setTime(`${convertedHour}:${convertedMinute}`);
-      setTimeout(() => {
-        inputRef.current.setSelectionRange(cursorIdx, cursorIdx);
-      }, 10);
-    }
-  };
+    },
+    [setTime, time],
+  );
 
-  const plusHour = () => {
+  const handleMinute = useCallback(
+    e => {
+      const prevHour = time.slice(0, 2);
+      const minute = e.target.value;
+      let convertedMinute = '';
+      const cursorIdx = e.target.selectionStart;
+
+      for (let i = 0; i < minute.length; i++) {
+        if (cursorIdx !== i) {
+          convertedMinute += minute[i];
+        }
+      }
+
+      if (checkMinute(convertedMinute)) {
+        setTime(`${prevHour}:${convertedMinute}`);
+      }
+      setTimeout(() => {
+        minuteRef.current.setSelectionRange(cursorIdx, cursorIdx);
+      }, 10);
+    },
+    [setTime, time],
+  );
+
+  const handleInput = useCallback(
+    e => {
+      const [hour, minute] = e.target.value.split(':');
+      const checkDiff = false;
+      let convertedHour = '';
+      let convertedMinute = '';
+      const cursorIdx = e.target.selectionStart;
+
+      for (let i = 0; i < hour.length; i++) {
+        if (cursorIdx !== i) {
+          convertedHour += hour[i];
+        }
+      }
+
+      for (let i = 0; i < minute.length; i++) {
+        if (cursorIdx !== i + 3) {
+          convertedMinute += minute[i];
+        }
+      }
+
+      if (convertedHour[0] === '2' && cursorIdx === 1) {
+        convertedHour = `${convertedHour[0]}0`;
+      }
+
+      if (!checkHour(convertedHour) || !checkMinute(convertedMinute) || checkDiff === 0) {
+        setTimeout(() => {
+          inputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+        }, 10);
+      } else {
+        setTime(`${convertedHour}:${convertedMinute}`);
+        setTimeout(() => {
+          inputRef.current.setSelectionRange(cursorIdx, cursorIdx);
+        }, 10);
+      }
+    },
+    [setTime],
+  );
+
+  const plusHour = useCallback(() => {
     let [hour, minute] = time.split(':');
     hour = parseInt(hour, 10);
 
@@ -142,9 +153,9 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
     }
 
     setTime(`${hour}:${minute}`);
-  };
+  }, [setTime, time]);
 
-  const minusHour = () => {
+  const minusHour = useCallback(() => {
     let [hour, minute] = time.split(':');
     hour = parseInt(hour, 10);
 
@@ -157,9 +168,9 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
     }
 
     setTime(`${hour}:${minute}`);
-  };
+  }, [setTime, time]);
 
-  const plusMinute = () => {
+  const plusMinute = useCallback(() => {
     let [hour, minute] = time.split(':');
     minute = parseInt(minute, 10);
 
@@ -174,9 +185,9 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
     }
 
     setTime(`${hour}:${minute}`);
-  };
+  }, [time, setTime]);
 
-  const minusMinute = () => {
+  const minusMinute = useCallback(() => {
     let [hour, minute] = time.split(':');
     minute = parseInt(minute, 10);
 
@@ -189,21 +200,23 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
     }
 
     setTime(`${hour}:${minute}`);
-  };
+  }, [time, setTime]);
 
-  const checkHour = input => {
+  const checkHour = useCallback(input => {
     const reg = /^([01][0-9]|2[0-3])$/;
 
     return reg.test(input);
-  };
+  }, []);
 
-  const checkMinute = input => {
+  const checkMinute = useCallback(input => {
     const reg = /^([0-5][0-9])$/;
 
     return reg.test(input);
-  };
+  }, []);
 
-  const handleOpen = () => [setIsOpen(!isOpen)];
+  const handleOpen = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
   return (
     <Wrapper>
@@ -213,18 +226,30 @@ function TimePicker({ time = '00:00', setTime = null, svgColor = 'black', width 
         inputRef={inputRef}
         width={width}
         onClick={handleOpen}
+        disabled={disabled}
+        className="time-picker-input"
       />
-      {isOpen && (
+      {isOpen && !disabled && (
         <TimeWrapper ref={pickerRef}>
-          <LineWrapper svgColor={svgColor}>
-            <AiOutlineCaretUp onClick={plusHour} />
-            <TimeInput value={time.slice(0, 2)} onChange={handleHour} ref={hourRef} />
-            <AiOutlineCaretDown onClick={minusHour} />
+          <LineWrapper>
+            <AiOutlineCaretUp onClick={plusHour} className="time-picker-button" />
+            <TimeInput
+              value={time.slice(0, 2)}
+              onChange={handleHour}
+              ref={hourRef}
+              className="time-picker-time-input"
+            />
+            <AiOutlineCaretDown onClick={minusHour} className="time-picker-button" />
           </LineWrapper>
-          <LineWrapper svgColor={svgColor}>
-            <AiOutlineCaretUp onClick={plusMinute} />
-            <TimeInput value={time.slice(3, 5)} onChange={handleMinute} ref={minuteRef} />
-            <AiOutlineCaretDown onClick={minusMinute} />
+          <LineWrapper>
+            <AiOutlineCaretUp onClick={plusMinute} className="time-picker-button" />
+            <TimeInput
+              value={time.slice(3, 5)}
+              onChange={handleMinute}
+              ref={minuteRef}
+              className="time-picker-time-input"
+            />
+            <AiOutlineCaretDown onClick={minusMinute} className="time-picker-button" />
           </LineWrapper>
         </TimeWrapper>
       )}
@@ -257,7 +282,6 @@ const LineWrapper = styled.div`
   cursor: pointer;
 
   svg {
-    color: ${({ svgColor }) => svgColor};
     :hover {
       cursor: pointer;
     }

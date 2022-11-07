@@ -1,15 +1,15 @@
-import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useLayoutEffect, useRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { GrClose } from 'react-icons/all';
 import { BlackButton, WhiteButton } from './Button/Button';
+import { useThrottle } from '../assets/CustomHook';
 
 /**
  *
  * @param {String} props.width
  * 모달의 너비
- * @param {Component} props.children
- * 모달 내에 들어갈 컴포넌트
+ * default 값은 '600px'
  * @param {Boolean} props.modalState
  * 모달 On, Off 여부
  * 상위 컴포넌트에서 useState 값 내려 받음
@@ -24,9 +24,6 @@ import { BlackButton, WhiteButton } from './Button/Button';
  * @param {Boolean} props.isCloseBtn
  * 모달창 오른쪽 상단에 닫기 버튼 존재 여부
  * default 값은 true
- * @param {Boolean} props.resizable
- * 모달창 크기 조절 가능 여부
- * default 값은 false
  * @param {Boolean} props.movable
  * 모달창 상단을 드래그 하여 이동 가능한 지 여부
  * default 값은 true
@@ -39,6 +36,8 @@ import { BlackButton, WhiteButton } from './Button/Button';
  * @param {Function} props.callback
  * 모달창 확인 버튼을 눌렀을 시, 실행되는 함수
  * default 값은 null
+ * @param {Component} props.children
+ * 모달 내에 들어갈 컴포넌트
  * @returns {JSX.Element} Button Component
  */
 function Modal({
@@ -59,37 +58,114 @@ function Modal({
   const headRef = useRef(null);
   const initialPos = useRef({ x: 0, y: 0 });
   const [pos, setPos] = useState({ x: 0, y: 0 });
+  // const [browserSize, setBrowserSize] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
-    const centerWidth = window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
-    const centerHeight = window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
-    setPos({ x: centerWidth, y: centerHeight });
-    document.querySelector('body').style.overflow = 'hidden';
-    return () => {
-      document.querySelector('body').style.overflow = '';
-    };
+    const centerWidth =
+      window.pageXOffset + window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
+
+    const centerHeight =
+      window.pageYOffset + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
+
+    setPos({ x: centerWidth, y: centerHeight < 0 ? 0 : centerHeight });
+    // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
   }, []);
 
-  // (window.innerHeight - modalDialog[modalDialog.length - 1].offsetHeight) / 2 - 28;
+  const handleCenter = useCallback(() => {
+    // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
+
+    const temp = { ...pos };
+
+    if (modalRef.current.offsetWidth > window.innerWidth) {
+      temp.x = 0;
+    } else if (pos.x + modalRef.current.offsetWidth > window.innerWidth) {
+      temp.x = window.innerWidth - modalRef.current.offsetWidth;
+    }
+    if (modalRef.current.offsetHeight > window.innerHeight) {
+      temp.y = 0;
+    } else if (pos.y + modalRef.current.offsetHeight > window.innerHeight) {
+      temp.y = window.innerHeight - modalRef.current.offsetHeight;
+    }
+    setPos(temp);
+  }, [pos]);
+
+  useLayoutEffect(() => {
+    window.addEventListener('resize', handleCenter);
+
+    return () => {
+      window.removeEventListener('resize', handleCenter);
+    };
+  }, [handleCenter]);
+
+  // useEffect(() => {
+  //   if (modalRef.current.offsetWidth > )
+  // }, [browserSize]);
+
+  // const handleMove = useCallback(
+  //   e => {
+  //     console.log('작동');
+  //     let posX = e.clientX - initialPos.current.x;
+  //     let posY = e.clientY - initialPos.current.y;
+
+  //     if (posX < 0) {
+  //       posX = 1;
+  //     }
+
+  //     if (posX + modalRef.current.offsetWidth > window.innerWidth) {
+  //       posX = window.innerWidth - modalRef.current.offsetWidth - 1;
+  //     }
+
+  //     if (posY < 0) {
+  //       posY = 1;
+  //     }
+
+  //     if (posY + modalRef.current.offsetHeight > window.innerHeight) {
+  //       posY = window.innerHeight - modalRef.current.offsetHeight - 1;
+  //     }
+
+  //     setPos({ x: posX, y: posY });
+  //   },
+  //   [modalRef, initialPos, setPos],
+  // );
+
   const handleMove = useCallback(
     e => {
       let posX = e.clientX - initialPos.current.x;
       let posY = e.clientY - initialPos.current.y;
 
+      if (
+        modalRef.current.offsetWidth > window.innerWidth ||
+        modalRef.current.offsetHeight > window.innerHeight
+      ) {
+        if (posX + modalRef.current.offsetWidth > document.documentElement.scrollWidth) {
+          posX = document.documentElement.scrollWidth - modalRef.current.offsetWidth - 1;
+        }
+
+        if (posY + modalRef.current.offsetHeight > document.documentElement.scrollHeight) {
+          posY = document.documentElement.scrollHeight - modalRef.current.offsetHeight - 1;
+        }
+
+        return setPos({ x: posX < 0 ? 0 : posX, y: posY < 0 ? 0 : posY });
+      }
+
       if (posX < 0) {
         posX = 1;
       }
 
-      if (posX + modalRef.current.offsetWidth > window.innerWidth) {
-        posX = window.innerWidth - modalRef.current.offsetWidth - 1;
+      // if (posX + modalRef.current.offsetWidth > window.innerWidth) {
+      //   posX = window.innerWidth - modalRef.current.offsetWidth - 1;
+      // }
+
+      if (posX + modalRef.current.offsetWidth > document.documentElement.scrollWidth) {
+        posX = document.documentElement.scrollWidth - modalRef.current.offsetWidth - 1;
       }
 
       if (posY < 0) {
         posY = 1;
       }
 
-      if (posY + modalRef.current.offsetHeight > window.innerHeight) {
-        posY = window.innerHeight - modalRef.current.offsetHeight - 1;
+      if (posY + modalRef.current.offsetHeight > document.documentElement.scrollHeight) {
+        posY = document.documentElement.scrollHeight - modalRef.current.offsetHeight - 1;
       }
 
       setPos({ x: posX, y: posY });
@@ -97,23 +173,28 @@ function Modal({
     [modalRef, initialPos, setPos],
   );
 
+  const throttleMove = useThrottle(handleMove, 10);
+
   const removeEvents = useCallback(() => {
-    document.removeEventListener('mousemove', handleMove);
+    document.removeEventListener('mousemove', throttleMove);
     document.removeEventListener('mouseup', removeEvents);
-  }, [handleMove]);
+  }, [throttleMove]);
 
   const handleDown = useCallback(
     e => {
       if (!movable) {
         return;
       }
+
       const { left, top } = modalRef.current.getBoundingClientRect();
-      initialPos.current.x = e.clientX - left;
-      initialPos.current.y = e.clientY - top;
-      document.addEventListener('mousemove', handleMove);
+      // initialPos.current.x = e.clientX - left;
+      initialPos.current.x = e.clientX - (left + window.pageXOffset);
+      initialPos.current.y = e.clientY - (top + window.pageYOffset);
+
+      document.addEventListener('mousemove', throttleMove);
       document.addEventListener('mouseup', removeEvents);
     },
-    [modalRef, initialPos, handleMove, removeEvents],
+    [modalRef, initialPos, removeEvents, movable, throttleMove],
   );
 
   return (

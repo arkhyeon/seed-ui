@@ -9,7 +9,7 @@ function CreateBtn({ clickCreate, unit, setSelected }) {
   }, [clickCreate, setSelected]);
 
   return (
-    <Button onClick={handleClick}>
+    <Button onClick={handleClick} className="group-list-create">
       <AiOutlineUserAdd />
       <Text>{unit} 추가</Text>
     </Button>

@@ -4,50 +4,33 @@ import { MdOutlineNewLabel } from 'react-icons/md';
 import Option from './Option';
 
 const LabelSelector = forwardRef(
-  (
-    { labelList, valueArr, setValueArr, valueStr, setValueStr, createLabel, canCreate, unit },
-    ref,
-  ) => {
+  ({ labelList, setLabelList, createLabel, modifyLabel, unit }, ref) => {
     const renderOptions = useCallback(() => {
-      if (valueStr !== undefined) {
-        return (
-          <>
-            {labelList.map((el, idx) => (
-              <Option
-                key={`label-${el}`}
-                value={el}
-                valueStr={valueStr}
-                setValueStr={setValueStr}
-              />
-            ))}
-          </>
-        );
-      }
-
       return (
         <>
           {labelList.map((el, idx) => (
-            <Option key={`label-${el}`} value={el} valueArr={valueArr} setValueArr={setValueArr} />
+            <Option
+              key={`label-${el}`}
+              value={el}
+              setLabelList={setLabelList}
+              labelList={labelList}
+              modifyLabel={modifyLabel}
+            />
           ))}
         </>
       );
-    }, [labelList, setValueArr, valueArr, valueStr, setValueStr]);
+    }, [labelList, setLabelList, modifyLabel]);
 
     return (
       <Wrapper ref={ref} className="label-selector">
         <Title className="label-selector-title">{unit} 관리</Title>
         <DividingLine className="label-selector-divide" />
         {renderOptions()}
-
-        {canCreate && (
-          <>
-            <DividingLine className="label-selector-divide" />
-            <CreateBtn onClick={createLabel} className="label-selector-create">
-              <MdOutlineNewLabel />
-              {unit} 만들기
-            </CreateBtn>
-          </>
-        )}
+        <DividingLine className="label-selector-divide" />
+        <CreateBtn onClick={createLabel} className="label-selector-create">
+          <MdOutlineNewLabel />
+          {unit} 만들기
+        </CreateBtn>
       </Wrapper>
     );
   },

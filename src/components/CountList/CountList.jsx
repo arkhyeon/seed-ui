@@ -6,43 +6,39 @@ import Label from './Label';
 
 /**
  * @param {String[]} params.labelList
- * 생성된 라벨의 리스트
- * default 값은 ['그룹 1', '그룹 2']
- * @param {Function} params.createLabel
- * '그룹 만들기' 버튼을 눌렀을 때 실행되는 이벤트
+ * 현재 라벨의 리스트
+ * useState로 생성된 상태 값
+ * default 값은 ['000.000.000.000', '000.000.000.001']
+ * @param {Function} params.setLabelList
+ * 라벨의 리스트를 변화시키는 상태 변화 함수
  * default 값은 null
+ * @param {Function} params.createLabel
+ * 라벨 생성 버튼을 클릭 했을 때에 실행되는 함수
+ * default 값은 null
+ * @param {Function} params.modifyLabel
+ * 첫번째 인자로 해당 라벨의 값을 가짐
+ * 라벨 수정 버튼을 클릭 했을 때에 실행되는 함수
+ * default 값은 null
+ * @param {String} params.unit
+ * CountList 컴포넌트가 다루는 기본 단위
+ * default 갑은 IP
  * @param {String} params.direction
  * 라벨이 나열될 방향
- * default 값은 'left'
- * @param {String} params.unit
- * 현재 LabelList의 단위
- * default 값은 '그룹'
- * @param {String[]} params.valueStr
- * 선택된 라벨을 관리하는 문자열
- * 상위 컴포넌트에서 생성된 state 값
- * default 값은 ""
- * @param {Funtion} params.setValueStr
- * valueStr을 관리하는 setState 함수
- * default 값은 null
- * @param {Function} params.handleUpdate
- * 라벨 선택 창이 열리고 닫힐 때, 실행 되는 함수
- * 현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용
- * default 값은 () => {}
- * @returns {JSX.Component} UniqueLabelList Component
+ * default 값은 right
+ * @returns {JSX.Component} CountList Component
  */
 
-function UniqueLabelList({
-  labelList = ['그룹 1', '그룹 2'],
+function CountList({
+  labelList = ['000.000.000.000', '000.000.000.001'],
+  setLabelList = null,
   createLabel = null,
-  unit = '그룹',
-  direction = 'left',
-  valueStr = '',
-  setValueStr = null,
-  handleUpdate = () => {},
+  modifyLabel = null,
+  unit = 'IP',
+  direction = 'right',
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
-  const selectorRef = useRef(null);
   const iconRef = useRef(null);
+  const selectorRef = useRef(null);
 
   const handleOut = useCallback(
     e => {
@@ -66,47 +62,42 @@ function UniqueLabelList({
   }, [handleOut]);
 
   const handleOpen = useCallback(() => {
-    setIsSelectorOpen(prevState => !prevState);
-    handleUpdate();
-  }, [handleUpdate]);
+    setIsSelectorOpen(!isSelectorOpen);
+  }, [isSelectorOpen]);
 
   const renderLabel = useCallback(() => {
-    if (valueStr === '') {
-      return <Label>미지정</Label>;
+    if (labelList.length === 0) {
+      return null;
     }
-    return <Label>{valueStr}</Label>;
-  }, [valueStr]);
+    return <Label>{labelList[0]}</Label>;
+  }, [labelList]);
 
   return (
     <Wrapper>
       <Section>
-        {direction === 'left' ? (
-          <LabelWrapper direction={direction} className="labels">
-            {renderLabel()}
-          </LabelWrapper>
-        ) : (
-          <></>
-        )}
         <div>
           <Icon onClick={handleOpen} ref={iconRef} />
+          {direction === 'left' ? (
+            <LabelWrapper className="labels">
+              <Count>{labelList.length}개</Count> {renderLabel()}
+            </LabelWrapper>
+          ) : null}
           {isSelectorOpen && (
             <LabelSelector
               labelList={labelList}
-              valueStr={valueStr}
-              setValueStr={setValueStr}
               createLabel={createLabel}
               ref={selectorRef}
+              modifyLabel={modifyLabel}
+              setLabelList={setLabelList}
               unit={unit}
             />
           )}
         </div>
         {direction === 'right' ? (
-          <LabelWrapper direction={direction} className="labels">
-            {renderLabel()}
+          <LabelWrapper className="labels">
+            <Count>{labelList.length}개</Count> {renderLabel()}
           </LabelWrapper>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </Section>
     </Wrapper>
   );
@@ -126,10 +117,14 @@ const Section = styled.div`
 
 const LabelWrapper = styled.div`
   display: flex;
-
   & > div:last-of-type {
     margin-right: 17px;
   }
+  align-items: center;
 `;
 
-export default UniqueLabelList;
+const Count = styled.div`
+  margin-left: 10px;
+`;
+
+export default CountList;
