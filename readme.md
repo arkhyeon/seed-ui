@@ -1281,12 +1281,20 @@ function testGroupList() {
  첫번째 인자는 그룹의 id, 두번째 인자는 해당 아이콘의 인덱스  
  default 값은 (id, idx) => console.log(id, idx)
 
-13. style
+13. <code> isUseTitle {Boolean} </code>
+
+전체 그룹을 묶는 메뉴를 만들 것인지에 대한 여부  
+ default 값은 true
+
+14. style
 
 GroupList의 가장 외부 컴포넌트, className => "group-list"  
 GroupList의 메뉴, className => "group-list-menu"  
 GroupList의 추가 버튼, className => "group-list-create"  
-GroupList의 각 그룹, className => "group-list-group"
+GroupList의 각 그룹, className => "group-list-group"  
+GrouList의 선택된 그룹, className => "selectedGroup"  
+GroupList의 아이콘이 열려진 그룹, className => "isOpenGroup"  
+GroupLIst의 아이콘이 열려있으면서 선택된 그룹, className => "isOpenGroup-select"
 
 ## 21. <a name='21-labelList'></a>[21] labelList
 
