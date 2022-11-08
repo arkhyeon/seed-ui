@@ -298,7 +298,7 @@ const Container = styled.div`
   }
 
   .selectedGroup {
-    background: rgb(62, 62, 62); !important;
+    background: rgb(62, 62, 62) !important;
     color: white;
   }
 
