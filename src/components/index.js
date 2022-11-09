@@ -17,7 +17,7 @@ import Pagination from './components/Pagination';
 import Toggle from './Toggle';
 import { TextInput, LabelCheckBox } from './components/InputComponent';
 import InputGrid from './InputGrid';
-import { BlackButton, WhiteButton } from './Button/Button';
+import { BlackButton, WhiteButton, SwitchButton } from './Button/Button';
 import GroupList from './GroupList/GroupList';
 import LabelList from './LabelList/LabelList';
 import UniqueLabelList from './LabelList/UniqueLabelList';
@@ -31,7 +31,7 @@ export { SetRoute };
 
 export { AsideCreator };
 
-export { BlackButton, WhiteButton };
+export { BlackButton, WhiteButton, SwitchButton };
 
 export { Tooltip };
 
