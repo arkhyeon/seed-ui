@@ -120,7 +120,7 @@ function GroupList({
     if (selected >= 1 && selected < groupList.length + 1) {
       // titleRef.current.style.background = 'rgb(232, 238, 251)';
       if (titleRef.current) {
-        titleRef.current.style.background = 'rgb(33, 37, 41)';
+        titleRef.current.style.background = 'rgb(62, 62, 62);';
         titleRef.current.style.color = 'white';
       }
 
@@ -226,7 +226,7 @@ function GroupList({
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
-      <Container ref={containerRef}>
+      <Container ref={containerRef} isIcon={labelIcons.length !== 0}>
         <Wrapper ref={itemListRef} className="group-list">
           <CreateBtn clickCreate={clickCreate} unit={unit} setSelected={setSelected} />
           <DividingLine className="group-list-divide" />
@@ -279,10 +279,9 @@ const Container = styled.div`
   } */
 
   .selected {
-    background: rgb(33, 37, 41);
+    background: rgb(62, 62, 62);
     color: #eee;
     fill: white;
-    font-weight: bold;
 
     :before {
       background: transparent;
@@ -293,24 +292,30 @@ const Container = styled.div`
     }
 
     :hover {
-      background: rgb(33, 37, 41);
+      background: rgb(62, 62, 62);
       color: #eee;
     }
   }
 
   .selectedGroup {
-    font-weight: bold;
+    background: rgb(62, 62, 62) !important;
+    color: white;
   }
 
   .isOpenGroup {
     background: rgb(232, 238, 251);
-    border: 1px solid rgb(232, 238, 251);
+    border: ${({ isIcon }) => {
+      if (isIcon) {
+        return '1px solid rgb(232, 238, 251);';
+      }
+      return 'none;';
+    }};
   }
 
   .isOpenGroup-select {
-    background: rgb(33, 37, 41);
+    background: rgb(62, 62, 62);
     color: white;
-    border: 1px solid rgb(33, 37, 41);
+    border: 1px solid rgb(62, 62, 62);
   }
 `;
 
@@ -348,6 +353,10 @@ const TotalUnit = styled.div`
 
   border-radius: 4px;
   cursor: pointer;
+
+  &:hover {
+    background: rgb(232, 238, 251);
+  }
 `;
 
 const ItemTitle = styled.div`
@@ -381,6 +390,10 @@ const Button = styled.button`
 
   border-radius: 5px;
   cursor: pointer;
+
+  &:hover {
+    background: rgb(232, 238, 251);
+  }
 `;
 
 const BorderRight = styled.div`

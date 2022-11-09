@@ -1,8 +1,8 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi';
 import { MdDeleteOutline, MdEditCalendar } from 'react-icons/md';
-import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 
 function Group({
   value,
@@ -80,9 +80,9 @@ function Group({
 
   const renderOpenIcon = useCallback(() => {
     if (isOpen) {
-      return <AiOutlineUp />;
+      return <HiChevronUp />;
     }
-    return <AiOutlineDown />;
+    return <HiChevronDown />;
   }, [isOpen]);
 
   const renderIcons = useCallback(() => {
@@ -150,6 +150,8 @@ function Group({
 }
 
 const Wrapper = styled.div`
+  box-sizing: border-box;
+
   cursor: ${({ isIcon }) => {
     if (!isIcon) {
       return 'pointer';
@@ -158,14 +160,14 @@ const Wrapper = styled.div`
   }};
   overflow: hidden;
 
-  min-height: 38px;
-
-  padding-left: ${({ isIcon }) => {
+  min-height: ${({ isIcon }) => {
     if (!isIcon) {
-      return '37px';
+      return '38px';
     }
-    return 0;
+    return '28px';
   }};
+
+  padding-left: 0;
 
   position: relative;
   border-radius: 5px;
@@ -178,58 +180,12 @@ const Wrapper = styled.div`
     }
   }
 
-  ${({ isIcon }) => {
-    if (!isIcon) {
-      return css`
-        width: 197px;
-        :hover {
-          font-weight: bold;
-        }
-
-        :before {
-          content: '';
-          display: block;
-          position: absolute;
-          left: 13.5px;
-          width: 1px;
-          height: calc(100% + 10px);
-
-          background: rgb(232, 238, 251);
-        }
-
-        :last-of-type {
-          :before {
-            content: '';
-            display: block;
-            position: absolute;
-            left: 13.5px;
-            width: 1px;
-            height: 20px;
-
-            background: rgb(232, 238, 251);
-          }
-        }
-      `;
-    }
-    return css`
-      margin-bottom: 10px;
-    `;
-  }}
-
-  .item {
-    :hover {
-      background: rgb(232, 238, 251);
-    }
-  }
+  margin-bottom: 10px;
 `;
 
 const Right = styled.div`
-  margin-right: ${({ isIcon }) => {
-    if (!isIcon) {
-      return '26px';
-    }
-    return 0;
-  }};
+  margin-right: 0;
+
   display: flex;
   align-items: center;
 `;
@@ -239,6 +195,8 @@ const Icons = styled.div`
   display: flex;
   visibility: hidden;
   svg {
+    width: 18px;
+    height: 18px;
     :hover {
       fill: #e91e63;
     }
@@ -253,33 +211,19 @@ const Line = styled.div`
   padding: 0px;
 
   svg {
-    margin-left: 10px;
+    margin-left: 15px;
     font-size: 21px;
+
+    &:nth-of-type(2) {
+      margin-left: 10px;
+    }
   }
 
-  ${({ isIcon }) => {
+  height: ${({ isIcon }) => {
     if (!isIcon) {
-      return css`
-        &:first-of-type {
-          margin-top: 10px;
-          &:after {
-            content: '';
-            display: block;
-            position: absolute;
-            margin-left: -27px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgb(232, 238, 251);
-            top: 50%;
-            transform: translate(0, -50%);
-          }
-        }
-      `;
+      return '38px';
     }
-    return css`
-      height: 38px;
-    `;
+    return '28px';
   }};
 `;
 
@@ -287,16 +231,16 @@ const LabelIcon = styled.button`
   cursor: pointer;
   background: white;
   border: 1px solid #d2d2d2;
-  margin-right: 5px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
+  padding: 3px;
 
   svg {
     margin-left: 0;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 `;
 
@@ -305,8 +249,9 @@ const LabelIcons = styled.div`
   align-items: center;
   padding-left: 10px;
   padding-right: 10px;
-  background: white;
-  height: 38px;
+  background: #ffffff;
+  justify-content: space-between;
+  height: 28px;
 `;
 
 export default Group;

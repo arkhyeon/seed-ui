@@ -42,10 +42,15 @@ function UniqueLabelList({
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
+  const iconRef = useRef(null);
 
   const handleOut = useCallback(
     e => {
-      if (isSelectorOpen && !selectorRef.current.contains(e.target)) {
+      if (
+        isSelectorOpen &&
+        !selectorRef.current.contains(e.target) &&
+        !iconRef.current.contains(e.target)
+      ) {
         setIsSelectorOpen(false);
       }
     },
@@ -61,9 +66,9 @@ function UniqueLabelList({
   }, [handleOut]);
 
   const handleOpen = useCallback(() => {
+    setIsSelectorOpen(prevState => !prevState);
     handleUpdate();
-    setIsSelectorOpen(!isSelectorOpen);
-  }, [isSelectorOpen, handleUpdate]);
+  }, [handleUpdate]);
 
   const renderLabel = useCallback(() => {
     if (valueStr === '') {
@@ -83,7 +88,7 @@ function UniqueLabelList({
           <></>
         )}
         <div>
-          <Icon onClick={handleOpen} />
+          <Icon onClick={handleOpen} ref={iconRef} />
           {isSelectorOpen && (
             <LabelSelector
               labelList={labelList}
