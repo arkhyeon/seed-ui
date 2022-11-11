@@ -17,13 +17,14 @@ import Pagination from './components/Pagination';
 import Toggle from './Toggle';
 import { TextInput, LabelCheckBox } from './components/InputComponent';
 import InputGrid from './InputGrid';
-import { BlackButton, WhiteButton } from './Button/Button';
+import { BlackButton, WhiteButton, SwitchButton } from './Button/Button';
 import GroupList from './GroupList/GroupList';
 import LabelList from './LabelList/LabelList';
 import TmpLabelList from './TmpLabelList/TmpLabelList';
 import UniqueLabelList from './LabelList/UniqueLabelList';
 import Count from './Count/Count';
 import CountList from './CountList/CountList';
+import { useStore } from '../R2wZustand';
 
 export { HeaderCreator };
 
@@ -31,7 +32,7 @@ export { SetRoute };
 
 export { AsideCreator };
 
-export { BlackButton, WhiteButton };
+export { BlackButton, WhiteButton, SwitchButton };
 
 export { Tooltip };
 
@@ -76,3 +77,5 @@ export { UniqueLabelList };
 export { Count };
 
 export { CountList };
+
+export { useStore };

@@ -1,14 +1,18 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useStore } from '../../R2wZustand';
 
 export function BlackButton(props) {
+  const { showComp } = useStore();
   return (
     <BlackBtn
       {...props}
       onClick={e => {
         blockedDBClick(e);
         props.onClick(e);
+        useStore.setState({ showComp: true });
       }}
+      className={showComp ? 'showComp' : ''}
     />
   );
 }
@@ -33,6 +37,20 @@ const blockedDBClick = e => {
   }, 500);
 };
 
+export const SwitchButton = props => {
+  return (
+    <SwitchWrap>
+      <input type="checkbox" id="switch" {...props} />
+      <label htmlFor="switch" className="switch_label">
+        <span className="onf_btn"></span>
+      </label>
+      <label htmlFor="switch" className="switch_text">
+        {props.label}
+      </label>
+    </SwitchWrap>
+  );
+};
+
 const Button = styled.button`
   font-size: 13px;
   border-radius: 5px;
@@ -52,6 +70,10 @@ const Button = styled.button`
 const BlackBtn = styled(Button)`
   color: #ffffff;
   background: #3e3e3e;
+
+  &.showComp {
+    background-color: #6674fe !important;
+  }
 `;
 
 const WhiteBtn = styled(Button)`
@@ -63,20 +85,56 @@ const WhiteBtn = styled(Button)`
   }
 `;
 
-// const Button = styled.button`
-//   font-size: 13px;
-//   color: #ffffff;
-//   background: #212529;
-//   border-radius: 5px;
-//   padding: 10px 15px;
-//   border: none;
-//   transition: 0.3s;
-//   :hover {
-//     background: #455a64;
-//   }
-//
-//   :active {
-//     background: #455a64;
-//     outline: 2px solid #cfd8dc;
-//   }
-// `;
+const SwitchWrap = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 10px;
+
+  .switch_text {
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  #switch {
+    position: absolute;
+    /* hidden */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  .switch_label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 38px;
+    height: 16px;
+    background: #fff;
+    border: 2px solid #545454;
+    border-radius: 20px;
+    transition: 0.2s;
+  }
+  .switch_label:hover {
+    background: #efefef;
+  }
+  .onf_btn {
+    position: absolute;
+    left: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 12px;
+    background: #545454;
+    transition: 0.2s;
+  }
+
+  /* checking style */
+  #switch:checked + .switch_label {
+    background: #545454;
+  }
+
+  /* move */
+  #switch:checked + .switch_label .onf_btn {
+    left: 26px;
+    background: #fff;
+  }
+`;
