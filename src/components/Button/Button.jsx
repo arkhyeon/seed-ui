@@ -118,7 +118,7 @@ const SwitchWrap = styled.div`
     background: #efefef;
   }
   .onf_btn {
-    position: absolute;
+    position: relative;
     left: 4px;
     width: 12px;
     height: 12px;
@@ -134,7 +134,7 @@ const SwitchWrap = styled.div`
 
   /* move */
   #switch:checked + .switch_label .onf_btn {
-    left: 26px;
+    left: 22px;
     background: #fff;
   }
 `;
