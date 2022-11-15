@@ -22,9 +22,16 @@ import Label from './Label';
  * @returns {JSX.Component} LabelList Component
  */
 
-function TmpLabelList({ labelList = [], createLabel = null, title = null, labelListStyle = null }) {
+function TmpLabelList({
+  valueArr = [],
+  setValueArr,
+  labelList = [],
+  createLabel = null,
+  title = null,
+  labelListStyle = null,
+  readOnly = false,
+}) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
-  const [valueArr, setValueArr] = useState([]);
 
   /* handleOpen : open시에만 동작토록 (무조건 열기)
   const handleOpen = useCallback(() => {
@@ -56,7 +63,7 @@ function TmpLabelList({ labelList = [], createLabel = null, title = null, labelL
         {renderLabel()}
         <div>
           {/* <Icon onClick={handleOpen} /> */}
-          <Icon onClick={handleOpen} />
+          {!readOnly && <Icon onClick={handleOpen} />}
           {isSelectorOpen && (
             <LabelSelector
               labelList={labelList}
