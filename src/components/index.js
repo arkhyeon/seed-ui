@@ -24,6 +24,7 @@ import TmpLabelList from './TmpLabelList/TmpLabelList';
 import UniqueLabelList from './LabelList/UniqueLabelList';
 import Count from './Count/Count';
 import CountList from './CountList/CountList';
+import Article from './Article';
 import { useStore } from '../R2wZustand';
 
 export { HeaderCreator };
@@ -79,3 +80,5 @@ export { Count };
 export { CountList };
 
 export { useStore };
+
+export { Article };
