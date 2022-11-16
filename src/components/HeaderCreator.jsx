@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
-import { NavLink, useLocation } from 'react-router-dom';
-import { MdMenu, MdReorder } from 'react-icons/all';
+import { NavLink } from 'react-router-dom';
 import CreateMenu from './CreateMenu';
 
 /**
@@ -36,7 +35,7 @@ function HeaderCreator({
   );
 }
 
-const HeaderWrap = styled.div`
+const HeaderWrap = styled.header`
   width: 100%;
   display: flex;
   justify-content: space-between;
