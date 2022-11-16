@@ -73,8 +73,6 @@ export { TextInput, LabelCheckBox };
 
 export { InputGrid };
 
-export { GroupList };
-
 export { LabelList };
 
 export { TmpLabelList };
