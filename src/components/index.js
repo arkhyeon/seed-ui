@@ -18,12 +18,18 @@ import Toggle from './Toggle';
 import { TextInput, LabelCheckBox } from './components/InputComponent';
 import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton, SwitchButton } from './Button/Button';
-import GroupList from './GroupList/GroupList';
 import LabelList from './LabelList/LabelList';
 import TmpLabelList from './TmpLabelList/TmpLabelList';
 import UniqueLabelList from './LabelList/UniqueLabelList';
 import Count from './Count/Count';
 import CountList from './CountList/CountList';
+import {
+  DividingLine,
+  MainTabButton,
+  SideScrollWrap,
+  SideTabs,
+  TabButton,
+} from '../components/SideTabs/SideTabs';
 import { useStore } from '../R2wZustand';
 
 export { HeaderCreator };
@@ -66,8 +72,6 @@ export { TextInput, LabelCheckBox };
 
 export { InputGrid };
 
-export { GroupList };
-
 export { LabelList };
 
 export { TmpLabelList };
@@ -79,3 +83,5 @@ export { Count };
 export { CountList };
 
 export { useStore };
+
+export { DividingLine, MainTabButton, SideScrollWrap, SideTabs, TabButton };
