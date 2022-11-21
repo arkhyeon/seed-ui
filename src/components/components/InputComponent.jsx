@@ -2,9 +2,20 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 export function TextInput(props) {
+  const enterEvent = e => {
+    if (e.key === 'Enter') {
+      props.enterEvent();
+    }
+  };
   return (
     <TextInputWrap>
-      <TextInputComp ref={props.inputRef} {...props} />
+      <TextInputComp
+        ref={props.inputRef}
+        {...props}
+        onKeyDown={e => {
+          enterEvent(e);
+        }}
+      />
     </TextInputWrap>
   );
 }
