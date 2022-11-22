@@ -29,6 +29,7 @@ import {
   SideScrollWrap,
   SideTabs,
   TabButton,
+  selectSideTab,
 } from '../components/SideTabs/SideTabs';
 import Article from './Article';
 import { useStore } from '../R2wZustand';
@@ -85,6 +86,6 @@ export { CountList };
 
 export { useStore };
 
-export { DividingLine, MainTabButton, SideScrollWrap, SideTabs, TabButton };
+export { DividingLine, MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab };
 
 export { Article };

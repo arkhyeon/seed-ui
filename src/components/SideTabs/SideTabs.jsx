@@ -84,6 +84,22 @@ const selectedButton = e => {
 };
 
 /**
+ * Tab의 value 넣어주면 사이드 탭의 버튼을 강제 선택해준다.
+ * @param value
+ */
+export const selectSideTab = value => {
+  const tabButtonList = document.querySelectorAll('[aria-label="side-tab-button"]');
+  const tabButtonListLength = tabButtonList.length;
+  for (let i = 0; i < tabButtonListLength; i++) {
+    if (String(value) === arr.value) {
+      tabButtonList[i].classList.add('selectedTab');
+    } else {
+      tabButtonList[i].classList.remove('selectedTab');
+    }
+  }
+};
+
+/**
  * SideTab의 메인 기능 버튼
  * @param props
  * @returns {JSX.Element}
