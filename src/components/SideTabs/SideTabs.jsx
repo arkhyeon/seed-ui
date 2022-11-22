@@ -91,7 +91,7 @@ export const selectSideTab = value => {
   const tabButtonList = document.querySelectorAll('[aria-label="side-tab-button"]');
   const tabButtonListLength = tabButtonList.length;
   for (let i = 0; i < tabButtonListLength; i++) {
-    if (String(value) === arr.value) {
+    if (String(value) === tabButtonList[i].value) {
       tabButtonList[i].classList.add('selectedTab');
     } else {
       tabButtonList[i].classList.remove('selectedTab');
