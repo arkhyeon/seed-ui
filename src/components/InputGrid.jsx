@@ -72,7 +72,6 @@ const Wrapper = styled.div`
 
 const LineWrapper = styled.div`
   display: flex;
-  height: 50px;
   border-bottom: 1px solid #bdbdbd;
   &:last-of-type {
     border-bottom: none;
@@ -86,11 +85,12 @@ const Subject = styled.div`
   justify-content: center;
   font-size: 13px;
   color: #545454;
+  padding: 17.5px 0;
 `;
 
 const Content = styled.div`
   width: 70%;
-  padding: 0 ${({ contentPadding }) => contentPadding} 0 10px;
+  padding: 8.5px ${({ contentPadding }) => contentPadding} 8.5px 10px;
   display: flex;
   align-items: center;
   gap: 10px;
