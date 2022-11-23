@@ -61,15 +61,6 @@ export const SideScrollWrap = props => {
 };
 
 /**
- * SideTab 내부 분할선
- * @returns {JSX.Element}
- * @constructor
- */
-export const DividingLine = () => {
-  return <Line />;
-};
-
-/**
  * 버튼들 클릭 시 CSS 변경 기능
  * @param e
  */
@@ -92,9 +83,7 @@ export const selectSideTab = value => {
   const tabButtonListLength = tabButtonList.length;
   for (let i = 0; i < tabButtonListLength; i++) {
     if (String(value) === tabButtonList[i].value) {
-      tabButtonList[i].classList.add('selectedTab');
-    } else {
-      tabButtonList[i].classList.remove('selectedTab');
+      tabButtonList[i].click();
     }
   }
 };
@@ -130,14 +119,16 @@ export const MainTabButton = props => {
  * @constructor
  */
 export const TabButton = props => {
-  const { deleteFunction, updateFunction } = props;
+  const { deleteFunction, updateFunction, selectOption = true } = props;
   return (
     <ButtonWrap>
       <Button
         {...props}
         aria-label="side-tab-button"
         onClick={e => {
-          selectedButton(e);
+          if (selectOption) {
+            selectedButton(e);
+          }
           props.onClick(e);
         }}
       />
@@ -181,12 +172,6 @@ const ScrollTab = styled.div`
     border-radius: 10px;
     background-color: #d3d3d3;
   }
-`;
-
-const Line = styled.div`
-  width: 100%;
-  height: 1px;
-  background: #bdbdbd;
 `;
 
 const ButtonWrap = styled.div`

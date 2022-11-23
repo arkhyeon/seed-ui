@@ -1,23 +1,19 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import Icon from './Icon';
-import LabelSelector from './LabelSelector';
-import Label from './Label';
+import LabelWrapper from './LabelWrapper';
+import { MdLabelOutline } from 'react-icons/md';
+import { css } from '@emotion/react';
 
 /**
  * @param {String[]} params.labelList
  * 생성된 라벨의 리스트
  * default 값은 ['그룹 1', '그룹 2']
- * @param {Function} params.createLabel
+ * @param {Function} params.createFunction
  * '그룹 만들기' 버튼을 눌렀을 때 실행되는 이벤트
  * default 값은 null
  * @param {String} params.direction
  * 라벨이 나열될 방향
  * default 값은 'left'
- * @param {Boolean} params.canCreate
- * 라벨이 생성 가능한 지에 대한 여부
- * 해당 값이 false면 생성 버튼이 사라짐
- * default 값은 true
  * @param {String} params.unit
  * 현재 LabelList의 단위
  * default 값은 '그룹'
@@ -37,9 +33,8 @@ import Label from './Label';
 
 function LabelList({
   labelList = ['그룹 1', '그룹 2'],
-  createLabel = null,
+  createFunction = null,
   direction = 'left',
-  canCreate = true,
   unit = '그룹',
   valueArr = [],
   setValueArr = null,
@@ -47,15 +42,10 @@ function LabelList({
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
-  const iconRef = useRef(null);
 
   const handleOut = useCallback(
     e => {
-      if (
-        isSelectorOpen &&
-        !selectorRef.current.contains(e.target) &&
-        !iconRef.current.contains(e.target)
-      ) {
+      if (isSelectorOpen && !selectorRef.current.contains(e.target) && e.target.tagName !== 'svg') {
         setIsSelectorOpen(false);
       }
     },
@@ -64,7 +54,6 @@ function LabelList({
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOut);
-
     return () => {
       document.removeEventListener('mousedown', handleOut);
     };
@@ -77,70 +66,72 @@ function LabelList({
 
   const renderLabel = useCallback(() => {
     return valueArr.map((el, idx) => {
-      return <Label key={`label-${el}`}>{el}</Label>;
+      return <LabelView key={`label-${el}`}>{el}</LabelView>;
     });
   }, [valueArr]);
 
   return (
-    <Wrapper>
-      <Section>
-        {direction === 'left' ? (
-          <LabelWrapper direction={direction} className="labels">
-            {renderLabel()}
-          </LabelWrapper>
-        ) : (
-          <></>
+    <Section>
+      {direction === 'left' && (
+        <LabelViewWrapper className="labels">{renderLabel()}</LabelViewWrapper>
+      )}
+      <SelectorWrap direction={direction} ref={selectorRef}>
+        <MdLabelOutline onClick={handleOpen} />
+        {isSelectorOpen && (
+          <LabelWrapper
+            labelList={labelList}
+            valueArr={valueArr}
+            setValueArr={setValueArr}
+            createFunction={createFunction}
+            unit={unit}
+          />
         )}
-        <div>
-          <Icon onClick={handleOpen} ref={iconRef} />
-          {isSelectorOpen && (
-            <LabelSelector
-              labelList={labelList}
-              valueArr={valueArr}
-              setValueArr={setValueArr}
-              createLabel={createLabel}
-              ref={selectorRef}
-              canCreate={canCreate}
-              unit={unit}
-            />
-          )}
-        </div>
-        {direction === 'right' ? (
-          <LabelWrapper direction={direction} className="labels">
-            {renderLabel()}
-          </LabelWrapper>
-        ) : (
-          <></>
-        )}
-      </Section>
-    </Wrapper>
+      </SelectorWrap>
+      {direction === 'right' && (
+        <LabelViewWrapper className="labels">{renderLabel()}</LabelViewWrapper>
+      )}
+    </Section>
   );
 }
-
-const Wrapper = styled.div``;
 
 const Section = styled.div`
   display: flex;
   align-items: center;
+  gap: 17px;
+`;
 
+const SelectorWrap = styled.div`
+  position: relative;
   svg {
-    width: 30px;
-    height: 30px;
+    font-size: 33px;
+    cursor: pointer;
+  }
+
+  & .label-selector {
+    ${({ direction }) => {
+      if (direction === 'left') {
+        return css`
+          top: 45px;
+          left: -220px;
+        `;
+      }
+    }}
   }
 `;
 
-const LabelWrapper = styled.div`
+const LabelViewWrapper = styled.div`
   display: flex;
-  & > div:last-of-type {
-    margin-right: 17px;
-  }
+  gap: 10px;
+`;
 
-  margin-left: ${({ direction }) => {
-    if (direction === 'right') {
-      return '10px';
-    }
-    return 0;
-  }};
+const LabelView = styled.div`
+  display: flex;
+  border-radius: 15px;
+  font-size: 13px;
+  padding: 8px 20px;
+  background: #78909c;
+  color: white;
+  cursor: default;
 `;
 
 export default LabelList;

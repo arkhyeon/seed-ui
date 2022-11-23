@@ -1,22 +1,29 @@
-import React from 'react';
-import styled from '@emotion/styled';
+import React, { useCallback, useEffect, useState } from 'react';
+import { MdLabel, MdLabelOutline } from 'react-icons/md';
 
-function Label({ children }) {
-  return <Wrapper className="label">{children}</Wrapper>;
+function Label({ valueArr, setValueArr, value, LabelButton }) {
+  const [isCheck, setIsCheck] = useState(false);
+
+  const handleCheck = useCallback(() => {
+    setIsCheck(!isCheck);
+
+    if (isCheck) {
+      setValueArr(valueArr.filter(el => el !== value));
+    } else {
+      setValueArr(valueArr.concat(value));
+    }
+  }, [isCheck, value, valueArr, setValueArr]);
+
+  useEffect(() => {
+    setIsCheck(valueArr.includes(value));
+  }, [valueArr, value]);
+
+  return (
+    <LabelButton onClick={handleCheck} className="label-selector-option">
+      {isCheck ? <MdLabel /> : <MdLabelOutline />}
+      {value}
+    </LabelButton>
+  );
 }
-
-const Wrapper = styled.div`
-  background: rgb(120, 144, 156);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-
-  margin-right: 10px;
-  font-size: 13px;
-  padding: 8px 20px;
-  background: #78909c;
-`;
 
 export default Label;

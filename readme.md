@@ -69,18 +69,18 @@ src="./readmeImg/1title.jpg"
 />
 </center>
 
-2.  <code>link {String} (Header, Side Menu Option)</code>  
+2.  <code>link {String} (Header, Side Menu Label)</code>  
     메뉴 클릭 시 이동할 URL 주소
 
 ```javascript
 <NavLink to={link} />
 ```
 
-3.  <code>routePath {String} (Route Option)</code>  
+3.  <code>routePath {String} (Route Label)</code>  
     link에 따른 Route의 경로 설정  
     routePath가 없다면 link가 routePath로 설정
 
-4.  <code>component {component} (Route Option)</code>  
+4.  <code>component {component} (Route Label)</code>  
     해당 Route에 보여줄 컴포넌트
 
 ```javascript
@@ -101,7 +101,7 @@ userRole[3] > menuRole[1] >> 메뉴 비활성
    1번째 SubMenu의 Link는 부모의 이동 경로가 된다.  
    따라서 해당 부모 메뉴의 Index 메뉴 처리를 하고 싶으면 SubMenu의 1번째 작성
 
-7. <code>icon {component} (Side Menu Option)</code>  
+7. <code>icon {component} (Side Menu Label)</code>  
    사이드 메뉴 사용 시 상위 메뉴의 아이콘 지정  
    (react-icons / svg 태그 사용)
 

@@ -20,17 +20,16 @@ import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton, SwitchButton } from './Button/Button';
 import LabelList from './LabelList/LabelList';
 import TmpLabelList from './TmpLabelList/TmpLabelList';
-import UniqueLabelList from './LabelList/UniqueLabelList';
 import Count from './Count/Count';
 import CountList from './CountList/CountList';
 import {
-  DividingLine,
   MainTabButton,
   SideScrollWrap,
   SideTabs,
   TabButton,
   selectSideTab,
 } from '../components/SideTabs/SideTabs';
+import { DividingLine } from './Line/DividingLine';
 import Article from './Article';
 import { useStore } from '../R2wZustand';
 
@@ -78,14 +77,14 @@ export { LabelList };
 
 export { TmpLabelList };
 
-export { UniqueLabelList };
-
 export { Count };
 
 export { CountList };
 
 export { useStore };
 
-export { DividingLine, MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab };
+export { MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab };
+
+export { DividingLine };
 
 export { Article };
