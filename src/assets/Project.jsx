@@ -88,11 +88,9 @@ function Project() {
         <LabelList
           labelList={_.map(data1, 'gname')}
           valueList={_.map(data1, 'gid')}
-          setLabelData={setSelectedValueList}
+          setSelectedValueList={setSelectedValueList}
           selectedValueList={selectedValueList}
           createFunction={createLabel}
-          valueArr={valueArr}
-          setValueArr={setValueArr}
         />
       </Wrapper>
     </Wrap>

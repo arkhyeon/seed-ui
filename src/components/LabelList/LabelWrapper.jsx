@@ -7,7 +7,7 @@ import DividingLine from '../Line/DividingLine';
 const LabelWrapper = ({
   dataList,
   valueArr,
-  setLabelData,
+  setSelectedValueList,
   createFunction,
   unit,
   selectedValueList,
@@ -19,14 +19,14 @@ const LabelWrapper = ({
           <Label
             key={`label-${data.value}`}
             data={data}
-            setLabelData={setLabelData}
+            setSelectedValueList={setSelectedValueList}
             selectedValueList={selectedValueList}
             LabelButton={LabelButton}
           />
         ))}
       </>
     );
-  }, [dataList, setLabelData, valueArr]);
+  }, [dataList, setSelectedValueList, valueArr]);
 
   return (
     <LabelSelectorWrap className="label-selector">

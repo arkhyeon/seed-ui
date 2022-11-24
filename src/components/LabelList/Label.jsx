@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdLabel, MdLabelOutline } from 'react-icons/md';
 
-function Label({ setLabelData, data, LabelButton, selectedValueList }) {
+function Label({ setSelectedValueList, data, LabelButton, selectedValueList }) {
   const [isCheck, setIsCheck] = useState(false);
 
   const handleCheck = useCallback(() => {
     setIsCheck(!isCheck);
     if (isCheck) {
-      setLabelData(prevState => {
+      setSelectedValueList(prevState => {
         return prevState.filter(state => state !== data.value);
       });
     } else {
-      setLabelData(prevState => {
+      setSelectedValueList(prevState => {
         return [...prevState, data.value];
       });
     }

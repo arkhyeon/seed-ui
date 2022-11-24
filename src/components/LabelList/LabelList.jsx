@@ -36,8 +36,7 @@ function LabelList({
   labelList = [],
   valueList = [],
   selectedValueList = [],
-  valueArr = [],
-  setLabelData = null,
+  setSelectedValueList = null,
   createFunction = null,
   direction = 'left',
   unit = '그룹',
@@ -95,7 +94,7 @@ function LabelList({
         {isSelectorOpen && (
           <LabelWrapper
             dataList={dataList}
-            setLabelData={setLabelData}
+            setSelectedValueList={setSelectedValueList}
             selectedValueList={selectedValueList}
             createFunction={createFunction}
             unit={unit}
