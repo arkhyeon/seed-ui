@@ -4,29 +4,35 @@ import { MdOutlineNewLabel } from 'react-icons/md';
 import Label from './Label';
 import DividingLine from '../Line/DividingLine';
 
-const LabelWrapper = ({ labelList, valueArr, setValueArr, createFunction, unit }) => {
+const LabelWrapper = ({
+  dataList,
+  valueArr,
+  setLabelData,
+  createFunction,
+  unit,
+  selectedValueList,
+}) => {
   const renderOptions = useCallback(() => {
     return (
       <>
-        {labelList.map(el => (
+        {dataList.map((data, i) => (
           <Label
-            key={`label-${el}`}
-            value={el}
-            valueArr={valueArr}
-            setValueArr={setValueArr}
+            key={`label-${data.value}`}
+            data={data}
+            setLabelData={setLabelData}
+            selectedValueList={selectedValueList}
             LabelButton={LabelButton}
           />
         ))}
       </>
     );
-  }, [labelList, setValueArr, valueArr]);
+  }, [dataList, setLabelData, valueArr]);
 
   return (
     <LabelSelectorWrap className="label-selector">
       <Title className="label-selector-title">{unit} 관리</Title>
       <DividingLine className="label-selector-divide" />
-      {renderOptions()}
-
+      <LabelWrap>{renderOptions()}</LabelWrap>
       {createFunction && (
         <>
           <DividingLine className="label-selector-divide" />
@@ -55,6 +61,30 @@ const LabelSelectorWrap = styled.div`
 const Title = styled.div`
   padding: 12.5px 0 12.5px 15px;
   font-size: 14px;
+`;
+
+const LabelWrap = styled.div`
+  height: 320px;
+  overflow: auto;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: white;
+    border: 1px solid #eee;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #d3d3d3;
+  }
 `;
 
 const LabelButton = styled.div`

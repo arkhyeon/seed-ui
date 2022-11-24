@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import LabelWrapper from './LabelWrapper';
 import { MdLabelOutline } from 'react-icons/md';
 import { css } from '@emotion/react';
+import _ from 'lodash';
 
 /**
  * @param {String[]} params.labelList
@@ -32,16 +33,21 @@ import { css } from '@emotion/react';
  */
 
 function LabelList({
-  labelList = ['그룹 1', '그룹 2'],
+  labelList = [],
+  valueList = [],
+  selectedValueList = [],
+  valueArr = [],
+  setLabelData = null,
   createFunction = null,
   direction = 'left',
   unit = '그룹',
-  valueArr = [],
-  setValueArr = null,
   handleUpdate = () => {},
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
+  const dataList = valueList.map((value, i) => {
+    return { value, label: labelList[i] || value };
+  });
 
   const handleOut = useCallback(
     e => {
@@ -65,10 +71,19 @@ function LabelList({
   }, [isSelectorOpen, handleUpdate]);
 
   const renderLabel = useCallback(() => {
-    return valueArr.map((el, idx) => {
-      return <LabelView key={`label-${el}`}>{el}</LabelView>;
+    const LabelViewList = [];
+    for (let i = 0; i < selectedValueList.length; i++) {
+      dataList.forEach(data => {
+        if (selectedValueList[i] === data.value) {
+          LabelViewList.push(data);
+        }
+      });
+    }
+
+    return LabelViewList.map(data => {
+      return <LabelView key={`label-${data.value}`}>{data.label}</LabelView>;
     });
-  }, [valueArr]);
+  }, [selectedValueList]);
 
   return (
     <Section>
@@ -79,9 +94,9 @@ function LabelList({
         <MdLabelOutline onClick={handleOpen} />
         {isSelectorOpen && (
           <LabelWrapper
-            labelList={labelList}
-            valueArr={valueArr}
-            setValueArr={setValueArr}
+            dataList={dataList}
+            setLabelData={setLabelData}
+            selectedValueList={selectedValueList}
             createFunction={createFunction}
             unit={unit}
           />

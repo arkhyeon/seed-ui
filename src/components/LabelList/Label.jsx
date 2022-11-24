@@ -1,27 +1,30 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdLabel, MdLabelOutline } from 'react-icons/md';
 
-function Label({ valueArr, setValueArr, value, LabelButton }) {
+function Label({ setLabelData, data, LabelButton, selectedValueList }) {
   const [isCheck, setIsCheck] = useState(false);
 
   const handleCheck = useCallback(() => {
     setIsCheck(!isCheck);
-
     if (isCheck) {
-      setValueArr(valueArr.filter(el => el !== value));
+      setLabelData(prevState => {
+        return prevState.filter(state => state !== data.value);
+      });
     } else {
-      setValueArr(valueArr.concat(value));
+      setLabelData(prevState => {
+        return [...prevState, data.value];
+      });
     }
-  }, [isCheck, value, valueArr, setValueArr]);
+  }, [isCheck, data]);
 
   useEffect(() => {
-    setIsCheck(valueArr.includes(value));
-  }, [valueArr, value]);
+    setIsCheck(selectedValueList.includes(data.value));
+  }, [selectedValueList, data]);
 
   return (
     <LabelButton onClick={handleCheck} className="label-selector-option">
       {isCheck ? <MdLabel /> : <MdLabelOutline />}
-      {value}
+      {data.label} : {data.value}
     </LabelButton>
   );
 }
