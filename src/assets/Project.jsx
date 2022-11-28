@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import LabelList from '../components/LabelList/LabelList';
 import _ from 'lodash';
+import { DatePicker } from '../components';
 
 function Project() {
   const data2 = [
@@ -82,16 +83,30 @@ function Project() {
 
   const [selectedValueList, setSelectedValueList] = useState([1, 2]);
 
+  const getGroupList = () => {
+    console.log(selectedValueList);
+  };
+
+  const [date, setDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date('2024-3-14'));
   return (
     <Wrap>
+      <button onClick={getGroupList}>검사</button>
       <Wrapper>
-        <LabelList
-          labelList={_.map(data1, 'gname')}
-          valueList={_.map(data1, 'gid')}
-          setSelectedValueList={setSelectedValueList}
-          selectedValueList={selectedValueList}
-          createFunction={createLabel}
+        <DatePicker
+          date={date}
+          setDate={setDate}
+          startDate={new Date('2022-11-10')}
+          endDate={endDate}
         />
+        <DatePicker date={endDate} setDate={setEndDate} startDate={date} />
+        {/*<LabelList*/}
+        {/*  labelList={_.map(data1, 'gname')}*/}
+        {/*  valueList={_.map(data1, 'gid')}*/}
+        {/*  setSelectedValueList={setSelectedValueList}*/}
+        {/*  selectedValueList={selectedValueList}*/}
+        {/*  createFunction={createLabel}*/}
+        {/*/>*/}
       </Wrapper>
     </Wrap>
   );
