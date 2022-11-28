@@ -6,16 +6,16 @@ function Label({ setSelectedValueList, data, LabelButton, selectedValueList }) {
 
   const handleCheck = useCallback(() => {
     setIsCheck(!isCheck);
+    console.log(isCheck);
+    console.log(selectedValueList);
     if (isCheck) {
       setSelectedValueList(prevState => {
         return prevState.filter(state => state !== data.value);
       });
     } else {
-      setSelectedValueList(prevState => {
-        return [...prevState, data.value];
-      });
+      setSelectedValueList([...selectedValueList, data.value]);
     }
-  }, [isCheck, data]);
+  }, [selectedValueList, isCheck, data]);
 
   useEffect(() => {
     setIsCheck(selectedValueList.includes(data.value));

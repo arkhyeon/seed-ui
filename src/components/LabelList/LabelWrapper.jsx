@@ -26,7 +26,7 @@ const LabelWrapper = ({
         ))}
       </>
     );
-  }, [dataList, setSelectedValueList, valueArr]);
+  }, [dataList, selectedValueList, setSelectedValueList, valueArr]);
 
   return (
     <LabelSelectorWrap className="label-selector">

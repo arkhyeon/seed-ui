@@ -82,7 +82,7 @@ function LabelList({
     return LabelViewList.map(data => {
       return <LabelView key={`label-${data.value}`}>{data.label}</LabelView>;
     });
-  }, [selectedValueList]);
+  }, [selectedValueList, labelList, valueList]);
 
   return (
     <Section>
@@ -136,6 +136,8 @@ const SelectorWrap = styled.div`
 const LabelViewWrapper = styled.div`
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 `;
 
 const LabelView = styled.div`

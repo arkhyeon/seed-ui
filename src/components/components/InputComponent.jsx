@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 export function TextInput(props) {
   const enterEvent = e => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && props.enterEvent) {
       props.enterEvent();
     }
   };
