@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import LabelList from '../components/LabelList/LabelList';
 import _ from 'lodash';
 import { DatePicker } from '../components';
+import TimePicker from '../components/TimePicker';
 
 function Project() {
   const data2 = [
@@ -88,7 +89,8 @@ function Project() {
   };
 
   const [date, setDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date('2024-3-14'));
+  const [endDate, setEndDate] = useState(new Date('2023-3-14'));
+  const [time, setTime] = useState('17:53');
   return (
     <Wrap>
       <button onClick={getGroupList}>검사</button>
@@ -100,6 +102,7 @@ function Project() {
           endDate={endDate}
         />
         <DatePicker date={endDate} setDate={setEndDate} startDate={date} />
+        <TimePicker time={time} setTime={setTime} />
         {/*<LabelList*/}
         {/*  labelList={_.map(data1, 'gname')}*/}
         {/*  valueList={_.map(data1, 'gid')}*/}

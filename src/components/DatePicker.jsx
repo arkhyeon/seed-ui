@@ -46,6 +46,7 @@ function DatePicker({
 
   useEffect(() => {
     setInputValue(new Date(+date + TIME_ZONE).toISOString().split('T')[0]);
+    setDateViewed(date);
   }, [date, startDate, endDate]);
 
   const handleClose = useCallback(
@@ -73,6 +74,10 @@ function DatePicker({
       return;
     }
 
+    if (startYear > prevDate.getFullYear()) {
+      return;
+    }
+
     setDateViewed(prevDate);
   };
 
@@ -81,6 +86,10 @@ function DatePicker({
     nextDate.setMonth(nextDate.getMonth() + 1);
 
     if (endYear === nextDate.getFullYear() && endMonth < nextDate.getMonth() + 1) {
+      return;
+    }
+
+    if (endYear < nextDate.getFullYear()) {
       return;
     }
 
@@ -181,7 +190,7 @@ function DatePicker({
         defaultValue={dateViewed.getFullYear()}
       />
     );
-  }, [changeYear, date]);
+  }, [changeYear, date, startDate, endDate]);
 
   const changeMonth = useCallback(
     value => {
@@ -210,7 +219,7 @@ function DatePicker({
         defaultValue={dateViewed.getMonth() + 1}
       />
     );
-  }, [changeMonth, date]);
+  }, [changeMonth, date, startDate, endDate]);
 
   return (
     <Wrapper>
