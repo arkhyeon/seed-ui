@@ -5,11 +5,8 @@ import Tooltip from './Tooltip';
 import Modal from './Modal';
 import alarm from './alarm';
 import Slider from './Slider';
-import DatePicker from './DatePicker';
-import DateBetweenPicker from './DateBetweenPicker';
-import DateTimePicker from './DateTimePicker';
-import DateTimeBetweenPicker from './DateTimeBetweenPicker';
-import TimePicker from './TimePicker';
+import DatePicker from './DateTime/DatePicker';
+import TimePicker from './DateTime/TimePicker';
 import Radio from './Radio';
 import Switch from './Switch';
 import DataList from './components/DataList';
@@ -28,7 +25,7 @@ import {
   SideTabs,
   TabButton,
   selectSideTab,
-} from '../components/SideTabs/SideTabs';
+} from './SideTabs/SideTabs';
 import { DividingLine } from './Line/DividingLine';
 import Article from './Article';
 import { useStore } from '../R2wZustand';
@@ -49,15 +46,7 @@ export { alarm };
 
 export { Slider };
 
-export { DatePicker };
-
-export { DateBetweenPicker };
-
-export { DateTimePicker };
-
-export { DateTimeBetweenPicker };
-
-export { TimePicker };
+export { DatePicker, TimePicker };
 
 export { Radio };
 

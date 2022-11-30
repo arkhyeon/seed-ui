@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import LabelList from '../components/LabelList/LabelList';
 import _ from 'lodash';
+import LabelList from '../components/LabelList/LabelList';
 import { DatePicker } from '../components';
-import TimePicker from '../components/TimePicker';
+import TimePicker from '../components/DateTime/TimePicker';
 
 function Project() {
   const data2 = [
@@ -103,14 +103,15 @@ function Project() {
         />
         <DatePicker date={endDate} setDate={setEndDate} startDate={date} />
         <TimePicker time={time} setTime={setTime} />
-        {/*<LabelList*/}
-        {/*  labelList={_.map(data1, 'gname')}*/}
-        {/*  valueList={_.map(data1, 'gid')}*/}
-        {/*  setSelectedValueList={setSelectedValueList}*/}
-        {/*  selectedValueList={selectedValueList}*/}
-        {/*  createFunction={createLabel}*/}
-        {/*/>*/}
+        {/* <LabelList */}
+        {/*  labelList={_.map(data1, 'gname')} */}
+        {/*  valueList={_.map(data1, 'gid')} */}
+        {/*  setSelectedValueList={setSelectedValueList} */}
+        {/*  selectedValueList={selectedValueList} */}
+        {/*  createFunction={createLabel} */}
+        {/* /> */}
       </Wrapper>
+      <input type="text" />
     </Wrap>
   );
 }
@@ -123,7 +124,7 @@ const Wrap = styled.div`
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 720px;
+  height: 920px;
   margin: 16px 0;
   display: flex;
   justify-content: flex-end;

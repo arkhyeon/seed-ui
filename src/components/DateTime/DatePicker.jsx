@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
-import { TextInput } from './components/InputComponent';
-import DataList from './components/DataList';
 import { css } from '@emotion/react';
 import _ from 'lodash';
+import { TextInput } from '../components/InputComponent';
+import DataList from '../components/DataList';
 
 /**
  * @param {Date} param.date
@@ -186,7 +186,7 @@ function DatePicker({
       <DataList
         valueList={temp}
         setData={changeYear}
-        select={true}
+        select
         defaultValue={dateViewed.getFullYear()}
       />
     );
@@ -215,7 +215,7 @@ function DatePicker({
       <DataList
         valueList={month}
         setData={changeMonth}
-        select={true}
+        select
         defaultValue={dateViewed.getMonth() + 1}
       />
     );
@@ -262,7 +262,7 @@ function DatePicker({
 }
 
 const Wrapper = styled.div`
-  width: 100%;
+  width: 100% !important;
   position: relative;
 `;
 
@@ -270,7 +270,7 @@ const PickerWrapper = styled.div`
   position: absolute;
   margin-top: 4px;
   background: white;
-  width: 250px;
+  width: 250px !important;
   z-index: 80;
   display: flex;
   flex-direction: column;
@@ -288,7 +288,7 @@ const PickerWrapper = styled.div`
 
 const PickerHeader = styled.div`
   height: 40px;
-  width: 100%;
+  width: 100% !important;
   background: #3e3e3e;
   display: flex;
   justify-content: space-evenly;
@@ -296,13 +296,14 @@ const PickerHeader = styled.div`
 `;
 
 const SelectWrapper = styled.div`
+  width: auto !important;
   display: flex;
   gap: 5px;
 
   & div {
-    width: 70px;
+    width: 70px !important;
     &:last-of-type {
-      width: 55px;
+      width: 55px !important;
     }
     & input {
       padding: 3.5px 7px;
@@ -315,7 +316,7 @@ const SelectWrapper = styled.div`
 `;
 
 const Button = styled.div`
-  width: 25px;
+  width: 25px !important;
   height: 25px;
   display: flex;
   justify-content: center;
@@ -331,14 +332,14 @@ const Button = styled.div`
 
 const WeekWrapper = styled.ul`
   display: flex;
-  width: 100%;
+  width: 100% !important;
   background: #3e3e3e;
   color: white;
   justify-content: center;
 
   & li {
     font-weight: bolder;
-    width: 32px;
+    width: 32px !important;
     height: 32px;
     display: flex;
     justify-content: center;
@@ -347,7 +348,7 @@ const WeekWrapper = styled.ul`
 `;
 
 const DayWrapper = styled.ul`
-  width: 100%;
+  width: 100% !important;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -361,7 +362,7 @@ const DayWrapper = styled.ul`
 `;
 
 const Day = styled.li`
-  width: 32px;
+  width: 32px !important;
   height: 32px;
   display: flex;
   justify-content: center;
