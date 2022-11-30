@@ -128,7 +128,7 @@ function DatePicker({
     const days = [];
 
     days.push(...Array(startEmptyDays).fill(''));
-    days.push(..._.range(1, mainDays));
+    days.push(..._.range(1, mainDays + 1));
     const endEmptyDays = 7 - (days.length % 7) === 7 ? 0 : 7 - (days.length % 7);
     days.push(...Array(endEmptyDays).fill(''));
 
