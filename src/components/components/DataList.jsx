@@ -204,6 +204,10 @@ const DataListItem = styled.li`
   outline: none;
   padding: 0.375rem 2.25rem 0.375rem 0.75rem;
   font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
   &:hover,
   &:focus,
   &.activeDataList {
