@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import DataList from './components/DataList';
 import { TextInput } from './components/InputComponent';
 
-export default function Card({ idx, common, action, data, list }) {
+function Card({ idx, common, action, data, list }) {
   const card = useCallback(() => {
     let content;
 
@@ -84,3 +84,5 @@ const CardContent = styled.div`
   align-items: center;
   justify-content: flex-end;
 `;
+
+export default Card;
