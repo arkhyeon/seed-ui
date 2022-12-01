@@ -40,7 +40,7 @@ function CreateMenu(props) {
   };
 
   return (
-    <CreateMenu.List onMouseLeave={() => setSelectedMenus([])}>
+    <CreateMenu.List>
       {menus.map(menu => {
         return (
           <SubMenuItem
@@ -183,15 +183,16 @@ SubMenuItem.List = styled.ul`
   flex-direction: column;
   display: flex;
   padding: 10px 0;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #d2d2d2;
   border-radius: 5px;
   background-color: white;
+  box-shadow: 1px 1px 3px 0px #d2d2d2;
 
   .subMenuItem {
     width: 100%;
     left: 100%;
     float: left;
-    margin-top: -1px;
+    margin-top: -11px;
   }
 `;
 
@@ -213,13 +214,13 @@ SubMenuItem.Item = styled.li`
   }
 
   & ul li a {
-    width: 220px;
+    width: 190px;
     height: 38px;
     font-size: 14px;
     color: #212529;
     display: flex;
-    justify-content: center;
     align-items: center;
+    padding: 0 15px;
   }
 `;
 

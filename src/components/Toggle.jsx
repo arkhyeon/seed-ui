@@ -54,8 +54,8 @@ const ToggleButton = styled.div`
   cursor: pointer;
   font-size: 14px;
   color: #545454;
-  padding: 10px 0;
-  margin-right: 50px;
+  padding-bottom: 10px;
+  margin-right: 30px;
 
   :hover,
   &[aria-pressed] {

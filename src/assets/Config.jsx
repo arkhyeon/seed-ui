@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { DepthList1 } from './DepthMenuList';
-import AsideCreator from '../components/AsideCreator';
+import AsideCreator from '../components/Menu/AsideCreator';
 
 function Config() {
   const { pathname } = useLocation();

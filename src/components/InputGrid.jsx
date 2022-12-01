@@ -57,13 +57,13 @@ const Wrapper = styled.div`
   ${({ location }) => {
     if (location === 'top') {
       return css`
-        border-top: 1px solid #bdbdbd;
-        border-bottom: 1px solid #bdbdbd;
+        border-top: 1px solid #d2d2d2;
+        border-bottom: 1px solid #d2d2d2;
       `;
     }
     if (location === 'bottom') {
       return css`
-        border-bottom: 1px solid #bdbdbd;
+        border-bottom: 1px solid #d2d2d2;
       `;
     }
     return '';
@@ -72,7 +72,7 @@ const Wrapper = styled.div`
 
 const LineWrapper = styled.div`
   display: flex;
-  border-bottom: 1px solid #bdbdbd;
+  border-bottom: 1px solid #d2d2d2;
   &:last-of-type {
     border-bottom: none;
   }

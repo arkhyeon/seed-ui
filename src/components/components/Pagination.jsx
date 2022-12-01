@@ -66,8 +66,6 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent, currentPage
         </PaginationItem>
       </PaginationWarp>
       <ResultWrap>
-        Results: {btnTotalLength === currentPage ? totalLength : currentPage * dataLength} of{' '}
-        {totalLength}
         <select onChange={e => changeDataLength(e)}>
           <option value="20">20</option>
           <option value="50">50</option>
@@ -76,6 +74,8 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent, currentPage
           <option value="1000">1000</option>
           <option value="999999">전체</option>
         </select>
+        Results: {btnTotalLength === currentPage ? totalLength : currentPage * dataLength} of{' '}
+        {totalLength}
       </ResultWrap>
     </>
   );
@@ -129,15 +129,16 @@ const PaginationItem = styled.li`
 `;
 
 const ResultWrap = styled.div`
-  margin-left: 15px;
+  margin-left: 10px;
+  font-size: 14px;
 
   & select {
     width: 90px;
-    margin-left: 5px;
-    border: 1px solid #bdbdbd;
+    height: 32px;
+    margin-right: 15px;
+    border: 1px solid #d2d2d2;
     border-radius: 5px;
     color: #212529;
-    font-size: 14px;
     padding: 4px 18px 3px 6px;
   }
 `;

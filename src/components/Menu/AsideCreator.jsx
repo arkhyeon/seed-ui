@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { MdExpandMore } from 'react-icons/md';
 import { MdMenu } from 'react-icons/all';
 import { css } from '@emotion/react';
 import CreateAsideMenu from './CreateAsideMenu';
@@ -23,7 +22,7 @@ function AsideCreator({ menuList, title, logoSetting = {}, children }) {
       <MdMenu onClick={SideHide} />
       <AsideWrap hide={hide}>
         <SideTitle>
-          <span>{targetMenu.title}</span> <MdExpandMore />
+          <span>{targetMenu.title}</span>
         </SideTitle>
         <CreateAsideMenu currentSideMenu={targetMenu.subMenu} />
       </AsideWrap>
@@ -42,7 +41,7 @@ const Container = styled.div`
     left: 0;
     z-index: 10;
     background-color: white;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid #d2d2d2;
     transition: 0.2s;
     color: black;
 

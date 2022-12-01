@@ -80,6 +80,15 @@ const TimeWrapper = styled.div`
 
   display: flex;
   background: #c9c9c9;
+  box-shadow: 1px 3px 3px 0 #c3c3c3;
+  border: 1px solid #d2d2d2;
+  background: linear-gradient(
+    0deg,
+    rgba(227, 227, 227, 1) 0%,
+    rgba(255, 255, 255, 1) 20%,
+    rgba(255, 255, 255, 1) 80%,
+    rgba(227, 227, 227, 1) 100%
+  );
 `;
 
 export default TimePicker;

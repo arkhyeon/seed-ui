@@ -188,6 +188,7 @@ function DatePicker({
         setData={changeYear}
         select
         defaultValue={dateViewed.getFullYear()}
+        height="200px"
       />
     );
   }, [changeYear, date, startDate, endDate]);
@@ -217,6 +218,7 @@ function DatePicker({
         setData={changeMonth}
         select
         defaultValue={dateViewed.getMonth() + 1}
+        height="200px"
       />
     );
   }, [changeMonth, date, startDate, endDate]);
@@ -262,7 +264,7 @@ function DatePicker({
 }
 
 const Wrapper = styled.div`
-  width: 100% !important;
+  width: 100%;
   position: relative;
 `;
 
@@ -301,7 +303,7 @@ const SelectWrapper = styled.div`
   gap: 5px;
 
   & div {
-    width: 70px !important;
+    width: 75px !important;
     &:last-of-type {
       width: 55px !important;
     }

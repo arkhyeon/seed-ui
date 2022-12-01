@@ -24,23 +24,23 @@ function HourMin({ time, setTime, pickerRef, isOpen }) {
 
     return (
       <LineWrapper onWheel={hourWheeling}>
-        <Time rotate={60} onClick={e => settingHour(e.target.textContent)}>
+        <Time rotate={35} onClick={e => settingHour(e.target.textContent)}>
           {numHour - 3 < 0 ? makeDoubleDigit(numHour + 21) : makeDoubleDigit(numHour - 3)}
         </Time>
-        <Time rotate={40} onClick={e => settingHour(e.target.textContent)}>
+        <Time rotate={26} onClick={e => settingHour(e.target.textContent)}>
           {numHour - 2 < 0 ? makeDoubleDigit(numHour + 22) : makeDoubleDigit(numHour - 2)}
         </Time>
-        <Time rotate={20} onClick={e => settingHour(e.target.textContent)}>
+        <Time rotate={13} onClick={e => settingHour(e.target.textContent)}>
           {numHour - 1 < 0 ? makeDoubleDigit(numHour + 23) : makeDoubleDigit(numHour - 1)}
         </Time>
         <Time className="activeTime">{hour}</Time>
-        <Time rotate={-20} onClick={e => settingHour(e.target.textContent)}>
+        <Time rotate={-13} onClick={e => settingHour(e.target.textContent)}>
           {numHour + 1 > 23 ? makeDoubleDigit(numHour - 23) : makeDoubleDigit(numHour + 1)}
         </Time>
-        <Time rotate={-40} onClick={e => settingHour(e.target.textContent)}>
+        <Time rotate={-26} onClick={e => settingHour(e.target.textContent)}>
           {numHour + 2 > 23 ? makeDoubleDigit(numHour - 22) : makeDoubleDigit(numHour + 2)}
         </Time>
-        <Time rotate={-60} onClick={e => settingHour(e.target.textContent)}>
+        <Time rotate={-35} onClick={e => settingHour(e.target.textContent)}>
           {numHour + 3 > 23 ? makeDoubleDigit(numHour - 21) : makeDoubleDigit(numHour + 3)}
         </Time>
       </LineWrapper>
@@ -70,23 +70,23 @@ function HourMin({ time, setTime, pickerRef, isOpen }) {
 
     return (
       <LineWrapper onWheel={minWheeling}>
-        <Time rotate={60} onClick={e => settingMin(e.target.textContent)}>
+        <Time rotate={35} onClick={e => settingMin(e.target.textContent)}>
           {numMin - 3 < 0 ? makeDoubleDigit(numMin + 57) : makeDoubleDigit(numMin - 3)}
         </Time>
-        <Time rotate={40} onClick={e => settingMin(e.target.textContent)}>
+        <Time rotate={26} onClick={e => settingMin(e.target.textContent)}>
           {numMin - 2 < 0 ? makeDoubleDigit(numMin + 58) : makeDoubleDigit(numMin - 2)}
         </Time>
-        <Time rotate={20} onClick={e => settingMin(e.target.textContent)}>
+        <Time rotate={13} onClick={e => settingMin(e.target.textContent)}>
           {numMin - 1 < 0 ? makeDoubleDigit(numMin + 59) : makeDoubleDigit(numMin - 1)}
         </Time>
         <Time className="activeTime">{min}</Time>
-        <Time rotate={-20} onClick={e => settingMin(e.target.textContent)}>
+        <Time rotate={-13} onClick={e => settingMin(e.target.textContent)}>
           {numMin + 1 > 59 ? makeDoubleDigit(numMin - 59) : makeDoubleDigit(numMin + 1)}
         </Time>
-        <Time rotate={-40} onClick={e => settingMin(e.target.textContent)}>
+        <Time rotate={-26} onClick={e => settingMin(e.target.textContent)}>
           {numMin + 2 > 59 ? makeDoubleDigit(numMin - 58) : makeDoubleDigit(numMin + 2)}
         </Time>
-        <Time rotate={-60} onClick={e => settingMin(e.target.textContent)}>
+        <Time rotate={-35} onClick={e => settingMin(e.target.textContent)}>
           {numMin + 3 > 59 ? makeDoubleDigit(numMin - 57) : makeDoubleDigit(numMin + 3)}
         </Time>
       </LineWrapper>

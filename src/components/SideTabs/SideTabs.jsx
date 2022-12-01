@@ -46,9 +46,9 @@ import { BiTrash, FaRegEdit } from 'react-icons/all';
  * @returns {JSX.Element}
  * @constructor
  */
-export const SideTabs = props => {
+export function SideTabs(props) {
   return <SideTabsWrap {...props} />;
-};
+}
 
 /**
  * SideTabs 내부의 스크롤 가능한 틀
@@ -56,9 +56,9 @@ export const SideTabs = props => {
  * @returns {JSX.Element}
  * @constructor
  */
-export const SideScrollWrap = props => {
+export function SideScrollWrap(props) {
   return <ScrollTab {...props} />;
-};
+}
 
 /**
  * 버튼들 클릭 시 CSS 변경 기능
@@ -94,7 +94,7 @@ export const selectSideTab = value => {
  * @returns {JSX.Element}
  * @constructor
  */
-export const MainTabButton = props => {
+export function MainTabButton(props) {
   return (
     <MainButton
       {...props}
@@ -105,7 +105,7 @@ export const MainTabButton = props => {
       }}
     />
   );
-};
+}
 
 /**
  * SideTab의 일반 기능 버튼
@@ -118,7 +118,7 @@ export const MainTabButton = props => {
  * @returns {JSX.Element}
  * @constructor
  */
-export const TabButton = props => {
+export function TabButton(props) {
   const { deleteFunction, updateFunction, selectOption = true } = props;
   return (
     <ButtonWrap>
@@ -138,14 +138,14 @@ export const TabButton = props => {
       </AddOn>
     </ButtonWrap>
   );
-};
+}
 
 const SideTabsWrap = styled.div`
   width: 233px;
   height: 100%;
   padding-right: 18px;
   font-size: 14px;
-  border-right: 1px solid #bdbdbd;
+  border-right: 1px solid #d2d2d2;
 
   display: flex;
   flex-direction: column;
@@ -159,18 +159,13 @@ const ScrollTab = styled.div`
   gap: 10px;
 
   &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background-color: white;
-    border: 1px solid #eee;
+    width: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
     background-color: #d3d3d3;
+    border-left: 5px solid white;
+    background-clip: padding-box;
   }
 `;
 

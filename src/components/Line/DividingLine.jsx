@@ -6,14 +6,14 @@ import styled from '@emotion/styled';
  * @returns {JSX.Element}
  * @constructor
  */
-export const DividingLine = props => {
+export function DividingLine(props) {
   return <Line {...props} />;
-};
+}
 
 const Line = styled.div`
   width: 100%;
   height: 1px;
-  background: #bdbdbd;
+  background: #d2d2d2;
 `;
 
 export default DividingLine;

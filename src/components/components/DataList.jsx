@@ -2,7 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { DataListInput } from './InputComponent';
 
-function DataList({ id, valueList, labelList = [], setData, select = false, defaultValue = '' }) {
+function DataList({
+  id,
+  valueList,
+  labelList = [],
+  setData,
+  select = false,
+  defaultValue = '',
+  height = '400px',
+}) {
   const ref = useRef();
   const dataListWrapRef = useRef();
   const dataList = valueList.map((value, i) => {
@@ -143,7 +151,7 @@ function DataList({ id, valueList, labelList = [], setData, select = false, defa
           }}
           readOnly={select}
         />
-        <DataListItemWrap ref={dataListWrapRef}>
+        <DataListItemWrap ref={dataListWrapRef} height={height}>
           {dataListState.map((data, i) => {
             return (
               <DataListItem
@@ -173,12 +181,12 @@ const DataListWrap = styled.div`
 
 const DataListItemWrap = styled.ul`
   width: 100%;
-  max-height: 400px;
+  max-height: ${({ height }) => height};
   display: none;
   position: absolute;
   top: 99%;
   background: white;
-  z-index: 50;
+  z-index: 9999;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
   overflow-y: scroll;

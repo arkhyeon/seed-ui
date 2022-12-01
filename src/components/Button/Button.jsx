@@ -37,19 +37,19 @@ const blockedDBClick = e => {
   }, 500);
 };
 
-export const SwitchButton = props => {
+export function SwitchButton(props) {
   return (
     <SwitchWrap>
       <input type="checkbox" id="switch" {...props} />
       <label htmlFor="switch" className="switch_label">
-        <span className="onf_btn"></span>
+        <span className="onf_btn" />
       </label>
       <label htmlFor="switch" className="switch_text">
         {props.label}
       </label>
     </SwitchWrap>
   );
-};
+}
 
 const Button = styled.button`
   font-size: 13px;
@@ -57,7 +57,7 @@ const Button = styled.button`
   padding: 7.5px 13px;
   transition: 0.3s;
   cursor: pointer;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #d2d2d2;
   :hover {
     background-color: #455a64;
   }

@@ -27,7 +27,7 @@ const TextInputWrap = styled.div`
 
 const TextInputComp = styled.input`
   width: 100%;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #d2d2d2;
   border-radius: 5px;
   color: #212529;
   font-size: 14px;
