@@ -28,6 +28,7 @@ import {
 } from './SideTabs/SideTabs';
 import { DividingLine } from './Line/DividingLine';
 import Article from './Article';
+import Card from './Card';
 import { useStore } from '../R2wZustand';
 
 export { HeaderCreator };
@@ -77,3 +78,5 @@ export { MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab };
 export { DividingLine };
 
 export { Article };
+
+export { Card };
