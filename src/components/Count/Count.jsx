@@ -15,28 +15,22 @@ import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
  * @returns {JSXComponent} Count Component
  */
 
-function Count({ initialValue = 1, max = 99, min = 0 }) {
-  const [cnt, setCnt] = useState(1);
-
-  useLayoutEffect(() => {
-    setCnt(initialValue);
-  }, [initialValue]);
-
+function Count({ value = 1, onChange = () => {}, max = 2147483647, min = 0 }) {
   const handleMinus = useCallback(() => {
-    if (cnt - 1 < min) {
+    if (value - 1 < min) {
       return;
     }
 
-    setCnt(cnt - 1);
-  }, [cnt, min]);
+    onChange(value - 1);
+  }, [value, min]);
 
   const handlePlus = useCallback(() => {
-    if (cnt + 1 > max) {
+    if (value + 1 > max) {
       return;
     }
 
-    setCnt(cnt + 1);
-  }, [cnt, max]);
+    onChange(value + 1);
+  }, [value, max]);
 
   const checkOnlyNum = useCallback(str => {
     const reg = /^[0-9]+$/;
@@ -47,16 +41,16 @@ function Count({ initialValue = 1, max = 99, min = 0 }) {
   const handleChange = useCallback(
     e => {
       if (e.target.value === '') {
-        setCnt(min);
+        onChange(min);
         return;
       }
 
       if (checkOnlyNum(e.target.value)) {
         if (Number(e.target.value) <= max && Number(e.target.value) >= min)
-          setCnt(parseInt(e.target.value, 10));
+          onChange(parseInt(e.target.value, 10));
 
         if (Number(e.target.value) > max) {
-          setCnt(max);
+          onChange(max);
         }
       }
     },
@@ -65,7 +59,7 @@ function Count({ initialValue = 1, max = 99, min = 0 }) {
 
   return (
     <Wrapper>
-      <Text value={cnt} onChange={handleChange} className="count-text" />
+      <Text value={value} onChange={handleChange} className="count-text" />
       <IconWrap>
         <Icon onClick={handlePlus} className="count-btn count-btn-plus">
           <AiOutlinePlus />

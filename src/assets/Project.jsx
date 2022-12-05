@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import _ from 'lodash';
 import LabelList from '../components/LabelList/LabelList';
@@ -94,6 +94,13 @@ function Project() {
   const [endDate, setEndDate] = useState(new Date('2023-3-14'));
   const [time, setTime] = useState('17:53');
   const [time2, setTime2] = useState('17:53');
+  const [cnt, setCnt] = useState(3);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCnt(7);
+    }, 300);
+  }, []);
   return (
     <Wrap>
       <button onClick={getGroupList}>검사</button>
@@ -116,7 +123,7 @@ function Project() {
         {/* /> */}
       </Wrapper>
       <Wrapper>
-        <Count initialValue={3} max={55} min={1} />
+        <Count value={cnt} onChange={value => setCnt(value)} max={55} />
       </Wrapper>
     </Wrap>
   );
