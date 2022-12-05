@@ -40,7 +40,7 @@ function CreateMenu(props) {
   };
 
   return (
-    <CreateMenu.List>
+    <CreateMenu.List onMouseLeave={() => setSelectedMenus([])}>
       {menus.map(menu => {
         return (
           <SubMenuItem

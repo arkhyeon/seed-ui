@@ -1,67 +1,31 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
+import TimePickerSelection from './components/TimePickerSelection';
 import { TextInput } from '../components/InputComponent';
-import HourMin from './component/HourMin';
 
-/**
- * @param {String} props.time
- * 다루고자 하는 시간
- * '00:00' 양식
- * state로 관리되는 값 이여야 함
- * default 값은 '00:00'
- * @param {Function} props.setTime
- * 시간을 관리하는 함수
- * useState를 통해 생성된 상태 관리 함수여야 함
- * default 값은 null
- * @param {Boolean} props.disabled
- * input box를 수정할 수 있는 지 여부
- * default 값은 false
- * @returns {JSX.Element} TimePikcer Component
- */
-function TimePicker({ time = '00:00', setTime = null, disabled = false }) {
+function TimePicker({ time = '00:00', itemHeight = 32, onChange = () => {}, disabled = false }) {
   const [isOpen, setIsOpen] = useState(false);
-  const inputRef = useRef(null);
-  const pickerRef = useRef(null);
-
-  const handleOutside = useCallback(
-    e => {
-      if (inputRef.current.contains(e.target)) {
-        return;
-      }
-
-      if (isOpen && !pickerRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    },
-    [isOpen],
-  );
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleOutside);
-    };
-  }, [handleOutside]);
-
-  const handleOpen = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen]);
+  const [inputValue, setInputValue] = useState(time);
 
   return (
     <Wrapper>
       <TextInput
-        value={time}
-        inputRef={inputRef}
-        onClick={handleOpen}
-        disabled={disabled}
-        className="time-picker-input"
+        value={inputValue === null ? '' : inputValue}
         readOnly
+        disabled={disabled}
+        onClick={() => setIsOpen(!isOpen)}
       />
       {isOpen && !disabled && (
-        <TimeWrapper ref={pickerRef}>
-          <HourMin time={time} setTime={setTime} pickerRef={pickerRef} isOpen={isOpen} />
-        </TimeWrapper>
+        <TimeWrap>
+          <TimeWrapOverlay onClick={() => setIsOpen(!isOpen)} />
+          <TimePickerSelection
+            onChange={onChange}
+            itemHeight={itemHeight}
+            setInputValue={setInputValue}
+            time={time}
+            isOpen={isOpen}
+          />
+        </TimeWrap>
       )}
     </Wrapper>
   );
@@ -72,23 +36,20 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const TimeWrapper = styled.div`
-  position: absolute;
-  margin-top: 4px;
-  border-radius: 4px;
-  z-index: 80;
-
+const TimeWrap = styled.div`
   display: flex;
-  background: #c9c9c9;
-  box-shadow: 1px 3px 3px 0 #c3c3c3;
-  border: 1px solid #d2d2d2;
-  background: linear-gradient(
-    0deg,
-    rgba(227, 227, 227, 1) 0%,
-    rgba(255, 255, 255, 1) 20%,
-    rgba(255, 255, 255, 1) 80%,
-    rgba(227, 227, 227, 1) 100%
-  );
+  justify-content: start;
+  align-items: flex-end;
+  z-index: 99998;
+  margin-top: 3px;
+`;
+
+const TimeWrapOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `;
 
 export default TimePicker;
