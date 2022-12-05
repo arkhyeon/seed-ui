@@ -6,6 +6,7 @@ import Minute from './Minute';
 function TimePickerSelection({ time, onChange, itemHeight, setInputValue, isOpen }) {
   const [value, setValue] = useState(time);
   const pickerRef = useRef(null);
+
   useEffect(() => {
     document.addEventListener('wheel', preventWheelEvent, { passive: false });
     return () => {

@@ -7,6 +7,11 @@ function TimePicker({ time = '00:00', itemHeight = 32, onChange = () => {}, disa
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(time);
 
+  useEffect(() => {
+    setInputValue(time);
+  }, [time]);
+
+
   return (
     <Wrapper>
       <TextInput
@@ -42,6 +47,8 @@ const TimeWrap = styled.div`
   align-items: flex-end;
   z-index: 99998;
   margin-top: 3px;
+  position: absolute;
+  background-color: white;
 `;
 
 const TimeWrapOverlay = styled.div`
