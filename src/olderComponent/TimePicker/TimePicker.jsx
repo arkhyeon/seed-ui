@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { TextInput } from '../../components/components/InputComponent';
+import { TextInput } from '../../components/InputComp/InputComponent';
 import HourMin from './component/HourMin';
 
 /**

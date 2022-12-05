@@ -5,6 +5,7 @@ import LabelList from '../components/LabelList/LabelList';
 import { DatePicker } from '../components';
 import TimePicker from '../olderComponent/TimePicker/TimePicker';
 import TestTimePicker from '../components/DateTime/TimePicker';
+import Count from '../components/Count/Count';
 
 function Project() {
   const data2 = [
@@ -114,7 +115,9 @@ function Project() {
         {/*  createFunction={createLabel} */}
         {/* /> */}
       </Wrapper>
-      <input type="text" />
+      <Wrapper>
+        <Count initialValue={3} max={55} min={1} />
+      </Wrapper>
     </Wrap>
   );
 }
@@ -123,12 +126,11 @@ export default Project;
 
 const Wrap = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 920px;
   margin: 16px 0;
   display: flex;
-  justify-content: flex-end;
 `;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import TimePickerSelection from './components/TimePickerSelection';
-import { TextInput } from '../components/InputComponent';
+import { TextInput } from '../InputComp/InputComponent';
 
 function TimePicker({ time = '00:00', itemHeight = 32, onChange = () => {}, disabled = false }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +10,6 @@ function TimePicker({ time = '00:00', itemHeight = 32, onChange = () => {}, disa
   useEffect(() => {
     setInputValue(time);
   }, [time]);
-
 
   return (
     <Wrapper>

@@ -3,8 +3,8 @@ import styled from '@emotion/styled';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import { css } from '@emotion/react';
 import _ from 'lodash';
-import { TextInput } from '../components/InputComponent';
-import DataList from '../components/DataList';
+import { TextInput } from '../InputComp/InputComponent';
+import DataList from '../InputComp/DataList';
 
 /**
  * @param {Date} param.date

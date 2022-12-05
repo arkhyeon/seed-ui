@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
-import DataList from './components/DataList';
-import { TextInput } from './components/InputComponent';
+import DataList from './InputComp/DataList';
+import { TextInput } from './InputComp/InputComponent';
 
 function Card({ idx, common, action, data, list }) {
   const card = useCallback(() => {
