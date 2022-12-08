@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import LabelWrapper from './LabelWrapper';
 import { MdLabelOutline } from 'react-icons/md';
 import { css } from '@emotion/react';
 import _ from 'lodash';
+import LabelWrapper from './LabelWrapper';
 
 /**
  * @param {String[]} params.labelList
@@ -18,13 +18,6 @@ import _ from 'lodash';
  * @param {String} params.unit
  * 현재 LabelList의 단위
  * default 값은 '그룹'
- * @param {String[]} params.valueArr
- * 선택된 라벨들을 관리하는 배열
- * 상위 컴포넌트에서 생성된 state 값
- * default 값은 []
- * @param {Funtion} params.setValueArr
- * valueArr을 관리하는 setState 함수
- * default 값은 null
  * @param {Function} params.handleUpdate
  * 라벨 선택 창이 열리고 닫힐 때, 실행 되는 함수
  * 현재 컴포넌트의 외부에서 labelList 값이 변경되었을 때, 해당 값을 업데이트 시키기 위해 사용
@@ -87,7 +80,9 @@ function LabelList({
   return (
     <Section>
       {direction === 'left' && (
-        <LabelViewWrapper className="labels">{renderLabel()}</LabelViewWrapper>
+        <LabelViewWrapper direction={direction} className="labels">
+          {renderLabel()}
+        </LabelViewWrapper>
       )}
       <SelectorWrap direction={direction} ref={selectorRef}>
         <MdLabelOutline onClick={handleOpen} />
@@ -102,7 +97,9 @@ function LabelList({
         )}
       </SelectorWrap>
       {direction === 'right' && (
-        <LabelViewWrapper className="labels">{renderLabel()}</LabelViewWrapper>
+        <LabelViewWrapper direction={direction} className="labels">
+          {renderLabel()}
+        </LabelViewWrapper>
       )}
     </Section>
   );
@@ -116,6 +113,7 @@ const Section = styled.div`
 
 const SelectorWrap = styled.div`
   position: relative;
+  height: 33px;
   svg {
     font-size: 33px;
     cursor: pointer;
@@ -137,7 +135,7 @@ const LabelViewWrapper = styled.div`
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: ${({ direction }) => (direction === 'left' ? 'flex-end' : 'flex-start')};
 `;
 
 const LabelView = styled.div`

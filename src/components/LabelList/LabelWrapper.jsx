@@ -4,18 +4,18 @@ import { MdOutlineNewLabel } from 'react-icons/md';
 import Label from './Label';
 import DividingLine from '../Line/DividingLine';
 
-const LabelWrapper = ({
+function LabelWrapper({
   dataList,
   valueArr,
   setSelectedValueList,
   createFunction,
   unit,
   selectedValueList,
-}) => {
+}) {
   const renderOptions = useCallback(() => {
     return (
       <>
-        {dataList.map((data, i) => (
+        {dataList.map(data => (
           <Label
             key={`label-${data.value}`}
             data={data}
@@ -44,7 +44,7 @@ const LabelWrapper = ({
       )}
     </LabelSelectorWrap>
   );
-};
+}
 const LabelSelectorWrap = styled.div`
   position: absolute;
   width: 250px;
@@ -89,11 +89,13 @@ const LabelWrap = styled.div`
 
 const LabelButton = styled.div`
   cursor: pointer;
-  padding: 7px 0 7px 15px;
+  padding: 8px 0 8px 15px;
   font-size: 14px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 
   svg {
     font-size: 15px;
