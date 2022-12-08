@@ -96,11 +96,10 @@ function Project() {
   const [time2, setTime2] = useState('17:53');
   const [cnt, setCnt] = useState(3);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setCnt(7);
-    }, 300);
-  }, []);
+  const setCount = value => {
+    setCnt(value);
+  };
+
   return (
     <Wrap>
       <button onClick={getGroupList}>검사</button>
@@ -123,7 +122,7 @@ function Project() {
         {/* /> */}
       </Wrapper>
       <Wrapper>
-        <Count value={cnt} onChange={value => setCnt(value)} max={55} />
+        <Count value={cnt} onChange={value => setCount(value)} max={55} />
       </Wrapper>
     </Wrap>
   );

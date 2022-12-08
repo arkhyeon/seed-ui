@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useCallback } from 'react';
+import React, { useState, useLayoutEffect, useCallback, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 
@@ -15,22 +15,66 @@ import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
  * @returns {JSXComponent} Count Component
  */
 
+const clickHolding = btnEl => {
+  let timerId;
+  const DURATION = 150;
+
+  const onMouseDown = e => {
+    if (e.button === 0 && btnEl) {
+      timerId = setInterval(() => {
+        btnEl.click();
+      }, DURATION);
+    }
+  };
+
+  const clearTimer = () => {
+    if (timerId) {
+      clearInterval(timerId);
+    }
+  };
+
+  btnEl.addEventListener('mousedown', onMouseDown);
+  btnEl.addEventListener('mouseup', clearTimer);
+  btnEl.addEventListener('mouseout', clearTimer);
+  btnEl.addEventListener('contextmenu', clearTimer);
+
+  return () => {
+    btnEl.removeEventListener('mousedown', onMouseDown);
+    btnEl.removeEventListener('contextmenu', clearTimer);
+    btnEl.removeEventListener('mouseup', clearTimer);
+    btnEl.removeEventListener('mouseout', clearTimer);
+  };
+};
+
 function Count({ value = 1, onChange = () => {}, max = 2147483647, min = 0 }) {
-  const handleMinus = useCallback(() => {
-    if (value - 1 < min) {
-      return;
-    }
+  const btnUpRef = useRef(null);
+  const btnDownRef = useRef(null);
+  const counter = useRef(value);
 
-    onChange(value - 1);
-  }, [value, min]);
+  useLayoutEffect(() => {
+    const removeListenerUp = clickHolding(btnUpRef.current);
+    const removeListenerDown = clickHolding(btnDownRef.current);
+    return () => {
+      removeListenerUp();
+      removeListenerDown();
+    };
+  }, []);
 
-  const handlePlus = useCallback(() => {
-    if (value + 1 > max) {
-      return;
-    }
+  useLayoutEffect(() => {
+    counter.current = value;
+  }, [value]);
 
-    onChange(value + 1);
-  }, [value, max]);
+  const clickPlus = () => {
+    if (max <= counter.current) return;
+    counter.current++;
+    onChange(counter.current);
+  };
+
+  const clickMinus = () => {
+    if (min >= counter.current) return;
+    counter.current--;
+    onChange(counter.current);
+  };
 
   const checkOnlyNum = useCallback(str => {
     const reg = /^[0-9]+$/;
@@ -40,17 +84,22 @@ function Count({ value = 1, onChange = () => {}, max = 2147483647, min = 0 }) {
 
   const handleChange = useCallback(
     e => {
-      if (e.target.value === '') {
+      const targetValue = Number(e.target.value);
+      if (!targetValue) {
         onChange(min);
+        counter.current = min;
         return;
       }
 
       if (checkOnlyNum(e.target.value)) {
-        if (Number(e.target.value) <= max && Number(e.target.value) >= min)
-          onChange(parseInt(e.target.value, 10));
+        if (targetValue <= max && targetValue >= min) {
+          onChange(targetValue);
+          counter.current = targetValue;
+        }
 
-        if (Number(e.target.value) > max) {
+        if (targetValue > max) {
           onChange(max);
+          counter.current = max;
         }
       }
     },
@@ -61,10 +110,10 @@ function Count({ value = 1, onChange = () => {}, max = 2147483647, min = 0 }) {
     <Wrapper>
       <Text value={value} onChange={handleChange} className="count-text" />
       <IconWrap>
-        <Icon onClick={handlePlus} className="count-btn count-btn-plus">
+        <Icon ref={btnUpRef} onClick={clickPlus} className="count-btn count-btn-plus">
           <AiOutlinePlus />
         </Icon>
-        <Icon onClick={handleMinus} className="count-btn count-btn-minus">
+        <Icon ref={btnDownRef} onClick={clickMinus} className="count-btn count-btn-minus">
           <AiOutlineMinus />
         </Icon>
       </IconWrap>
