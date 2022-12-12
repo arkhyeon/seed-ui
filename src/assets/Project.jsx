@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import _ from 'lodash';
-import LabelList from '../components/LabelList/LabelList';
-import { DatePicker } from '../components';
-import TimePicker from '../olderComponent/TimePicker/TimePicker';
-import TestTimePicker from '../components/DateTime/TimePicker';
-import Count from '../components/Count/Count';
+import { AiOutlineUser, BsClipboardCheck, CgUserList, TbUsers } from 'react-icons/all';
+import { DividingLine, MainTabButton, SideScrollWrap, SideTabs, TabButton } from '../components';
+import { TabOptionButton } from '../components/SideTabs/SideTabs';
+import UserFilter from '../icon/UserFilter';
+import ContractFilter from '../icon/ContractFilter';
 
 function Project() {
   const data2 = [
@@ -100,31 +99,71 @@ function Project() {
     setCnt(value);
   };
 
+  const getOrderByUser = () => {
+    console.log('getOrderByUser');
+  };
+
   return (
-    <Wrap>
-      <button onClick={getGroupList}>검사</button>
-      <Wrapper>
-        <DatePicker
-          date={date}
-          setDate={setDate}
-          startDate={new Date('2022-11-10')}
-          endDate={endDate}
-        />
-        <DatePicker date={endDate} setDate={setEndDate} startDate={date} />
-        <TimePicker time={time} setTime={setTime} />
-        <TestTimePicker onChange={val => setTime2(val)} time={time2} />
-        {/* <LabelList */}
-        {/*  labelList={_.map(data1, 'gname')} */}
-        {/*  valueList={_.map(data1, 'gid')} */}
-        {/*  setSelectedValueList={setSelectedValueList} */}
-        {/*  selectedValueList={selectedValueList} */}
-        {/*  createFunction={createLabel} */}
-        {/* /> */}
-      </Wrapper>
-      <Wrapper>
-        <Count value={cnt} onChange={value => setCount(value)} max={55} />
-      </Wrapper>
-    </Wrap>
+    <div>
+      {' '}
+      -- 전체 사이즈 설정
+      <SideTabs>
+        <MainTabButton onClick={() => console.log('a')}>메인버튼</MainTabButton>
+        <DividingLine />
+        <SideScrollWrap>
+          <TabButton onClick={() => console.log('a')}>전체 사용자</TabButton>
+          <TabOptionButton
+            onClick={() => console.log('a')}
+            deleteFunction={() => console.log('a')}
+            updateFunction={() => console.log('a')}
+            value={1}
+            option={{
+              iconList: [
+                <AiOutlineUser />,
+                <BsClipboardCheck />,
+                <TbUsers />,
+                <UserFilter />,
+                <ContractFilter />,
+              ],
+              funcList: [
+                getOrderByUser,
+                getOrderByUser,
+                getOrderByUser,
+                getOrderByUser,
+                getOrderByUser,
+              ],
+            }}
+          >
+            버트은
+          </TabOptionButton>
+        </SideScrollWrap>
+        <DividingLine />
+      </SideTabs>
+    </div>
+    // <Wrap>
+    //   <button onClick={getGroupList}>검사</button>
+    //   <Wrapper>
+    //     <DatePicker
+    //       date={date}
+    //       setDate={setDate}
+    //       startDate={new Date('2022-11-10')}
+    //       endDate={endDate}
+    //     />
+    //     <DatePicker date={endDate} setDate={setEndDate} startDate={date} />
+    //     <TimePicker time={time} setTime={setTime} />
+    //     <TestTimePicker onChange={val => setTime2(val)} time={time2} />
+    //     <LabelList
+    //       labelList={_.map(data1, 'gname')}
+    //       valueList={_.map(data1, 'gid')}
+    //       setSelectedValueList={setSelectedValueList}
+    //       selectedValueList={selectedValueList}
+    //       createFunction={createLabel}
+    //     />
+    //   </Wrapper>
+    //   <Wrapper>
+    //     <Count value={cnt} onChange={value => setCount(value)} max={55} />
+    //   </Wrapper>
+    // </Wrap>
   );
 }
 

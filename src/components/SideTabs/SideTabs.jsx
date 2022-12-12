@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { BiTrash, FaRegEdit } from 'react-icons/all';
+import {
+  AiOutlineUser,
+  BiTrash,
+  FaRegEdit,
+  IoIosArrowDown,
+  IoIosArrowUp,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+} from 'react-icons/all';
+import { css } from '@emotion/react';
 
 /**
  * ## 기본적인 사용법 ##
@@ -140,6 +149,62 @@ export function TabButton(props) {
   );
 }
 
+/**
+ * SideTab의 일반 기능 버튼
+ *
+ * AddOn(아이콘에 onClickFunction 지원)
+ * deleteFunction : 삭제 아이콘
+ * updateFunction : 업데이트 아이콘
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export function TabOptionButton(props) {
+  const { deleteFunction, updateFunction, selectOption = true, option } = props;
+  return (
+    <TabOptionButtonWrap onClick={e => console.log(e)}>
+      <Button
+        {...props}
+        aria-label="side-tab-button"
+        onClick={e => {
+          if (selectOption) {
+            selectedButton(e);
+          }
+          props.onClick(e);
+        }}
+      />
+      <AddOn>
+        {deleteFunction && <BiTrash onClick={deleteFunction} />}
+        {updateFunction && <FaRegEdit onClick={updateFunction} />}
+        {option && (
+          <ViewAddOn>
+            {/* <IoIosArrowUp /> */}
+            <IoIosArrowDown />
+          </ViewAddOn>
+        )}
+      </AddOn>
+      {option && (
+        <OptionWrap>
+          {option.iconList.map((icon, i) => {
+            return (
+              <Option
+                key={icon.type.name}
+                onClick={() => {
+                  selectSideTab(props.value);
+                  option.funcList[i]();
+                }}
+              >
+                {icon}
+              </Option>
+            );
+          })}
+        </OptionWrap>
+      )}
+    </TabOptionButtonWrap>
+  );
+}
+
 const SideTabsWrap = styled.div`
   width: 233px;
   height: 100%;
@@ -174,7 +239,9 @@ const ButtonWrap = styled.div`
   position: relative;
 
   &:hover div {
-    display: flex;
+    & svg {
+      display: block;
+    }
   }
 
   &:hover button {
@@ -211,21 +278,73 @@ const MainButton = styled(Button)`
 
 const AddOn = styled.div`
   position: absolute;
-  top: calc(50% - 10px);
+  top: 10px;
   right: 15px;
   align-items: center;
   gap: 5px;
-  display: none;
+  display: flex;
 
   & svg {
-    font-size: 19px;
+    display: none;
+    font-size: 18px;
     cursor: pointer;
-    &:first-of-type {
-      font-size: 20px;
-    }
 
     &:hover {
       fill: #e91e63 !important;
     }
+  }
+`;
+
+const TabOptionButtonWrap = styled(ButtonWrap)`
+  &:hover div {
+    display: flex;
+  }
+
+  & > button {
+    border-radius: 5px 5px 0 0;
+  }
+  & > button:hover {
+    background: #e8eefb;
+  }
+`;
+
+const OptionWrap = styled.div`
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #e8eefb;
+  box-sizing: border-box;
+  border-radius: 0 0 5px 5px;
+  display: none;
+  justify-content: space-around;
+  align-items: center;
+
+  button.selectedTab ~ & {
+    display: flex;
+    border-color: #9e9e9e;
+  }
+`;
+
+const Option = styled.div`
+  width: 32px;
+  height: 24px;
+  border: 1px solid #bdbdbd;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  cursor: pointer;
+
+  & svg {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+const ViewAddOn = styled.div`
+  margin-left: 5px;
+  & svg {
+    display: block !important;
   }
 `;
