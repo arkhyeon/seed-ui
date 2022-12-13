@@ -113,7 +113,7 @@ function Project() {
         <SideScrollWrap>
           <TabButton onClick={() => console.log('a')}>전체 사용자</TabButton>
           <TabOptionButton
-            onClick={() => console.log('a')}
+            onClick={e => console.log(e)}
             deleteFunction={() => console.log('a')}
             updateFunction={() => console.log('a')}
             value={1}

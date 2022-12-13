@@ -163,7 +163,7 @@ export function TabButton(props) {
 export function TabOptionButton(props) {
   const { deleteFunction, updateFunction, selectOption = true, option } = props;
   return (
-    <TabOptionButtonWrap onClick={e => console.log(e)}>
+    <TabOptionButtonWrap>
       <Button
         {...props}
         aria-label="side-tab-button"
@@ -178,7 +178,7 @@ export function TabOptionButton(props) {
         {deleteFunction && <BiTrash onClick={deleteFunction} />}
         {updateFunction && <FaRegEdit onClick={updateFunction} />}
         {option && (
-          <ViewAddOn>
+          <ViewAddOn onClick={() => selectSideTab(props.value)}>
             {/* <IoIosArrowUp /> */}
             <IoIosArrowDown />
           </ViewAddOn>
@@ -283,10 +283,10 @@ const AddOn = styled.div`
   align-items: center;
   gap: 5px;
   display: flex;
+  font-size: 18px;
 
-  & svg {
+  & > svg {
     display: none;
-    font-size: 18px;
     cursor: pointer;
 
     &:hover {
@@ -343,8 +343,7 @@ const Option = styled.div`
 `;
 
 const ViewAddOn = styled.div`
+  display: flex;
+  align-items: center;
   margin-left: 5px;
-  & svg {
-    display: block !important;
-  }
 `;
