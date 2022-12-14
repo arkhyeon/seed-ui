@@ -45,7 +45,6 @@ function Radio({
     { value: 1, label: 'test1' },
     { value: 2, label: 'test2' },
   ],
-  text = '',
   checkColor = 'rgb(144, 202, 249)',
   hoverColor = '#eee',
   labelInSpacing = '4px',
@@ -91,15 +90,8 @@ function Radio({
     );
   }, [handleValue, hoverColor, labelInSpacing, labelOutSpacing, list, value, type, checkColor]);
 
-  return (
-    <Wrapper>
-      {/* <Title>{text}</Title> */}
-      {renderOption()}
-    </Wrapper>
-  );
+  return renderOption();
 }
-
-const Wrapper = styled.div``;
 
 const OptionWrapper = styled.div`
   display: flex;
