@@ -13,6 +13,7 @@ import DataList from './InputComp/DataList';
 import Pagination from './InputComp/Pagination';
 import Toggle from './Toggle';
 import { TextInput, LabelCheckBox } from './InputComp/InputComponent';
+import TextArea from './InputComp/TextArea';
 import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton, SwitchButton } from './Button/Button';
 import LabelList from './LabelList/LabelList';
@@ -30,6 +31,7 @@ import {
 import { DividingLine } from './Line/DividingLine';
 import Article from './Article';
 import Card from './Card';
+import { Accordion } from './Accordion/Accordion';
 import { useStore } from '../R2wZustand';
 
 export { HeaderCreator };
@@ -61,6 +63,7 @@ export { Pagination };
 export { Toggle };
 
 export { TextInput, LabelCheckBox };
+export { TextArea };
 
 export { InputGrid };
 
@@ -81,3 +84,5 @@ export { DividingLine };
 export { Article };
 
 export { Card };
+
+export { Accordion };
