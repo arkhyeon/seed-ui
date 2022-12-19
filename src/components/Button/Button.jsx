@@ -40,11 +40,11 @@ const blockedDBClick = e => {
 export function SwitchButton(props) {
   return (
     <SwitchWrap>
-      <input type="checkbox" id="switch" {...props} />
-      <label htmlFor="switch" className="switch_label">
+      <input type="checkbox" id={props.id || 'switch'} {...props} />
+      <label htmlFor={props.id || 'switch'} className="switch_label">
         <span className="onf_btn" />
       </label>
-      <label htmlFor="switch" className="switch_text">
+      <label htmlFor={props.id || 'switch'} className="switch_text">
         {props.label}
       </label>
     </SwitchWrap>
@@ -95,7 +95,7 @@ const SwitchWrap = styled.div`
     font-size: 14px;
   }
 
-  #switch {
+  & input {
     position: absolute;
     /* hidden */
     appearance: none;
@@ -128,12 +128,12 @@ const SwitchWrap = styled.div`
   }
 
   /* checking style */
-  #switch:checked + .switch_label {
+  & input:checked + .switch_label {
     background: #545454;
   }
 
   /* move */
-  #switch:checked + .switch_label .onf_btn {
+  & input:checked + .switch_label .onf_btn {
     left: 22px;
     background: #fff;
   }
