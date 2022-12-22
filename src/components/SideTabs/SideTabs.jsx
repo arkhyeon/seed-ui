@@ -1,15 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
-import {
-  AiOutlineUser,
-  BiTrash,
-  FaRegEdit,
-  IoIosArrowDown,
-  IoIosArrowUp,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowUp,
-} from 'react-icons/all';
-import { css } from '@emotion/react';
+import { BiTrash, FaRegEdit } from 'react-icons/all';
 
 /**
  * ## 기본적인 사용법 ##
