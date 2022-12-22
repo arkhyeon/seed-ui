@@ -26,7 +26,6 @@ import {
   SideTabs,
   TabButton,
   selectSideTab,
-  TabOptionButton,
 } from './SideTabs/SideTabs';
 import { DividingLine } from './Line/DividingLine';
 import Article from './Article';
@@ -77,7 +76,7 @@ export { CountList };
 
 export { useStore };
 
-export { MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab, TabOptionButton };
+export { MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab };
 
 export { DividingLine };
 

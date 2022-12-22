@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { AiOutlineUser, BsClipboardCheck, CgUserList, TbUsers } from 'react-icons/all';
+import { AiOutlineUser, BsClipboardCheck, TbUsers } from 'react-icons/all';
 import { DividingLine, MainTabButton, SideScrollWrap, SideTabs, TabButton } from '../components';
-import { TabOptionButton } from '../components/SideTabs/SideTabs';
 import UserFilter from '../icon/UserFilter';
 import ContractFilter from '../icon/ContractFilter';
 
@@ -112,7 +111,7 @@ function Project() {
         <DividingLine />
         <SideScrollWrap>
           <TabButton onClick={() => console.log('a')}>전체 사용자</TabButton>
-          <TabOptionButton
+          <TabButton
             onClick={e => console.log(e)}
             deleteFunction={() => console.log('a')}
             updateFunction={() => console.log('a')}
@@ -135,7 +134,7 @@ function Project() {
             }}
           >
             버트은
-          </TabOptionButton>
+          </TabButton>
         </SideScrollWrap>
         <DividingLine />
       </SideTabs>

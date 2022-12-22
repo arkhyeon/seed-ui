@@ -128,42 +128,9 @@ export function MainTabButton(props) {
  * @constructor
  */
 export function TabButton(props) {
-  const { deleteFunction, updateFunction, selectOption = true } = props;
-  return (
-    <ButtonWrap>
-      <Button
-        {...props}
-        aria-label="side-tab-button"
-        onClick={e => {
-          if (selectOption) {
-            selectedButton(e);
-          }
-          props.onClick(e);
-        }}
-      />
-      <AddOn>
-        {deleteFunction && <BiTrash onClick={deleteFunction} />}
-        {updateFunction && <FaRegEdit onClick={updateFunction} />}
-      </AddOn>
-    </ButtonWrap>
-  );
-}
-
-/**
- * SideTab의 일반 기능 버튼
- *
- * AddOn(아이콘에 onClickFunction 지원)
- * deleteFunction : 삭제 아이콘
- * updateFunction : 업데이트 아이콘
- *
- * @param props
- * @returns {JSX.Element}
- * @constructor
- */
-export function TabOptionButton(props) {
   const { deleteFunction, updateFunction, selectOption = true, option } = props;
   return (
-    <TabOptionButtonWrap>
+    <ButtonWrap className={option && 'option-button'}>
       <Button
         {...props}
         aria-label="side-tab-button"
@@ -177,12 +144,6 @@ export function TabOptionButton(props) {
       <AddOn>
         {deleteFunction && <BiTrash onClick={deleteFunction} />}
         {updateFunction && <FaRegEdit onClick={updateFunction} />}
-        {option && (
-          <ViewAddOn onClick={() => selectSideTab(props.value)}>
-            {/* <IoIosArrowUp /> */}
-            <IoIosArrowDown />
-          </ViewAddOn>
-        )}
       </AddOn>
       {option && (
         <OptionWrap>
@@ -201,7 +162,7 @@ export function TabOptionButton(props) {
           })}
         </OptionWrap>
       )}
-    </TabOptionButtonWrap>
+    </ButtonWrap>
   );
 }
 
@@ -238,10 +199,13 @@ const ButtonWrap = styled.div`
   width: 100%;
   position: relative;
 
-  &:hover div {
-    & svg {
-      display: block;
-    }
+  &.option-button > button {
+    border-radius: 5px 5px 0 0;
+  }
+
+  &:hover div,
+  &:hover svg {
+    display: flex;
   }
 
   &:hover button {
@@ -295,19 +259,6 @@ const AddOn = styled.div`
   }
 `;
 
-const TabOptionButtonWrap = styled(ButtonWrap)`
-  &:hover div {
-    display: flex;
-  }
-
-  & > button {
-    border-radius: 5px 5px 0 0;
-  }
-  & > button:hover {
-    background: #e8eefb;
-  }
-`;
-
 const OptionWrap = styled.div`
   width: 100%;
   height: 36px;
@@ -340,10 +291,4 @@ const Option = styled.div`
     width: 20px;
     height: 20px;
   }
-`;
-
-const ViewAddOn = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 5px;
 `;
