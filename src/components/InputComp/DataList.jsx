@@ -10,6 +10,7 @@ function DataList({
   select = false,
   defaultValue = '',
   height = '400px',
+  disabled = false,
 }) {
   const ref = useRef();
   const dataListWrapRef = useRef();
@@ -150,6 +151,7 @@ function DataList({
             arrowMove(e);
           }}
           readOnly={select}
+          disabled={disabled}
         />
         <DataListItemWrap ref={dataListWrapRef} height={height}>
           {dataListState.map((data, i) => {
