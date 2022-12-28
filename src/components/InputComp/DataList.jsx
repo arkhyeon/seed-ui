@@ -217,6 +217,7 @@ const DataListItem = styled.li`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  user-select: none;
 
   &:hover,
   &:focus,
