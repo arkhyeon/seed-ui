@@ -4,8 +4,9 @@
   "version": "0.1.50",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && npm publish --userconfig=./.npmrc",
+    "preview": "vite preview",
+    "pub": "vite build && npm publish"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
