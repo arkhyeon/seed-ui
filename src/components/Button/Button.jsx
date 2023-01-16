@@ -29,6 +29,29 @@ export function WhiteButton(props) {
   );
 }
 
+export function RadioButton({ valueList = [], labelList = [], setValue, defaultValue }) {
+  const dataList = valueList.map((value, i) => {
+    return { value, label: labelList[i] || value };
+  });
+
+  return (
+    <RadioButtonWrap>
+      {dataList.map(({ value, label }) => {
+        return (
+          <SelectButton
+            className={defaultValue === value && 'selected-radio'}
+            value={value}
+            onClick={() => setValue(value)}
+            key={value}
+          >
+            {label}
+          </SelectButton>
+        );
+      })}
+    </RadioButtonWrap>
+  );
+}
+
 const blockedDBClick = e => {
   e.target.setAttribute('disabled', true);
 
@@ -83,6 +106,19 @@ const WhiteBtn = styled(Button)`
   :active {
     color: #fff;
   }
+`;
+
+const SelectButton = styled(Button)`
+  width: 80px;
+  &.selected-radio {
+    background-color: black;
+    color: white;
+  }
+`;
+
+const RadioButtonWrap = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const SwitchWrap = styled.div`
