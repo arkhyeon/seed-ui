@@ -50,9 +50,13 @@ function Radio({
   labelInSpacing = '4px',
   labelOutSpacing = '8px',
   type = 'fill',
+  disabled = false,
 }) {
   const handleValue = useCallback(
     value => {
+      if (disabled) {
+        return;
+      }
       setValue(value);
     },
     [setValue],
@@ -171,11 +175,6 @@ const Label = styled.label`
   :last-child {
     margin-right: 0;
   }
-`;
-
-const Title = styled.div`
-  margin-bottom: 8px;
-  padding-left: 8px;
 `;
 
 export default Radio;
