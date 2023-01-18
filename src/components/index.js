@@ -15,7 +15,7 @@ import Toggle from './Toggle';
 import { TextInput, LabelCheckBox } from './InputComp/InputComponent';
 import TextArea from './InputComp/TextArea';
 import InputGrid from './InputGrid';
-import { BlackButton, WhiteButton, SwitchButton } from './Button/Button';
+import { BlackButton, WhiteButton, SwitchButton, RadioButton } from './Button/Button';
 import LabelList from './LabelList/LabelList';
 import TmpLabelList from './TmpLabelList/TmpLabelList';
 import Count from './Count/Count';
@@ -76,7 +76,7 @@ export { CountList };
 
 export { useStore };
 
-export { MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab };
+export { MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab, RadioButton };
 
 export { DividingLine };
 
