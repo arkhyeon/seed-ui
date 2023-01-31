@@ -149,9 +149,9 @@ const SwitchWrap = styled.div`
     border: 2px solid #545454;
     border-radius: 20px;
     transition: 0.2s;
-  }
-  .switch_label:hover {
-    background: #efefef;
+    :hover {
+      background: #efefef;
+    }
   }
   .onf_btn {
     position: relative;
@@ -159,8 +159,19 @@ const SwitchWrap = styled.div`
     width: 12px;
     height: 12px;
     border-radius: 12px;
-    background: #545454;
     transition: 0.2s;
+    inset-inline-start: 2px;
+    &::before {
+      content: '';
+      position: absolute;
+      background-color: #545454;
+      top: 0;
+      bottom: 0;
+      transition: 0.2s;
+      border-radius: 6px;
+      inset-inline-start: 0;
+      inset-inline-end: 0;
+    }
   }
 
   /* checking style */
@@ -171,6 +182,20 @@ const SwitchWrap = styled.div`
   /* move */
   & input:checked + .switch_label .onf_btn {
     left: 22px;
-    background: #fff;
+
+    ::before {
+      background-color: white;
+    }
+  }
+
+  & input:checked + .switch_label:active .onf_btn {
+    ::before {
+      inset-inline-end: 0;
+      inset-inline-start: -30%;
+    }
+  }
+  & input + .switch_label:active .onf_btn::before {
+    inset-inline-end: -30%;
+    inset-inline-start: 0;
   }
 `;
