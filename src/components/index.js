@@ -32,6 +32,7 @@ import Article from './Article';
 import Card from './Card';
 import { Accordion } from './Accordion/Accordion';
 import { useStore } from '../R2wZustand';
+import DNDWrapper from '../FuntionalComponent/dnd/DNDWrapper';
 
 export { HeaderCreator };
 
@@ -85,3 +86,5 @@ export { Article };
 export { Card };
 
 export { Accordion };
+
+export { DNDWrapper };
