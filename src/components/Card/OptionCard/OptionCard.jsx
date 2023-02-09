@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
-import DataList from './InputComp/DataList';
-import { TextInput } from './InputComp/InputComponent';
+import DataList from '../../InputComp/DataList';
+import { TextInput } from '../../InputComp/InputComponent';
 
-function Card({ idx, common, action, data, list }) {
+function OptionCard({ idx, common, action, data, list }) {
   const card = useCallback(() => {
     let content;
 
@@ -85,4 +85,4 @@ const CardContent = styled.div`
   justify-content: flex-end;
 `;
 
-export default Card;
+export default OptionCard;
