@@ -109,9 +109,28 @@ const WhiteBtn = styled(Button)`
 `;
 
 const SelectButton = styled(Button)`
-  width: 80px;
+  min-width: 85px;
+  background-color: white;
   &.selected-radio {
     background-color: black;
+    color: white;
+  }
+  :first-of-type {
+    border-radius: 5px 0 0 5px;
+  }
+
+  :not(:first-of-type, :last-of-type) {
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+
+  :last-of-type {
+    border-radius: 0 5px 5px 0;
+  }
+
+  :hover {
+    background-color: #455a64;
     color: white;
   }
 `;

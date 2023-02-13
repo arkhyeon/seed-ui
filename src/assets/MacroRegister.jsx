@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
+import { AiOutlineArrowDown, BsArrowUpShort } from 'react-icons/all';
 import Card from '../components/Card/Card/Card';
 import { BlackButton, RadioButton } from '../components';
 
@@ -132,7 +133,11 @@ function MacroRegister() {
 
   return (
     <MRWrap>
-      <RadioButton valueList={['SSH', 'Telnet', 'RCS']} defaultValue="SSH" />
+      <RadioButton
+        valueList={['SSH', 'Telnet', 'RCS']}
+        labelList={[<AiOutlineArrowDown />, 'a', 'b']}
+        defaultValue="SSH"
+      />
       <BlackButton
         onClick={() =>
           setAllCollapse(prevState => {

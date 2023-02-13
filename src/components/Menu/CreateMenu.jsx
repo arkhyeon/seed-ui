@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { NavLink, Route, useNavigate } from 'react-router-dom';
+import { NavLink, Route, useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 /**
@@ -101,6 +101,11 @@ function SubMenuItem({
     }
   };
 
+  const location = window.location.pathname.split('/').splice(2);
+  const menuLink = menu.link.split('/').splice(1);
+  const similarActive =
+    menuLink[0] === location[0] && menuLink[1] === location[1] ? 'active' : null;
+
   return (
     <>
       {subMenu.length > 0 && useDepth && isDisplaySubMenuDepth(subMenu) ? (
@@ -112,6 +117,7 @@ function SubMenuItem({
               restrictMove(event);
             }}
             style={{ cursor: depth === 0 ? 'default' : 'pointer' }}
+            className={similarActive}
           >
             {title}
           </NavLink>
@@ -144,7 +150,9 @@ function SubMenuItem({
           onClick={() => handleMenuSelection('', 0)}
           className="mainActive"
         >
-          <NavLink to={subMenu.length !== 0 ? subMenu[0].link : link}>{title}</NavLink>
+          <NavLink to={subMenu.length !== 0 ? subMenu[0].link : link} className={similarActive}>
+            {title}
+          </NavLink>
         </SubMenuItem.Item>
       )}
     </>
