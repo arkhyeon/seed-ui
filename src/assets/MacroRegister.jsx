@@ -1,12 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { AiOutlineArrowDown, BsArrowUpShort } from 'react-icons/all';
 import Card from '../components/Card/Card/Card';
 import { BlackButton, RadioButton } from '../components';
+import DNDWrapper from '../FuntionalComponent/dnd/DNDWrapper';
+
+const as = {
+  step: [
+    {
+      sname: '추출',
+      seq: 1,
+    },
+    {
+      sname: '이관 1',
+      seq: 2,
+    },
+    {
+      sname: '이관 2',
+      seq: 3,
+    },
+    {
+      sname: '삭제 1',
+      seq: 4,
+    },
+    {
+      sname: '삭제 2',
+      seq: 5,
+    },
+  ],
+};
 
 function MacroRegister() {
   const { pathname } = useLocation();
+  const [stepList, setStepList] = useState([]);
+
+  useEffect(() => {
+    setStepList(as.step);
+  }, []);
 
   const [workGroupList, setWorkGroupList] = useState([
     {
@@ -147,42 +178,28 @@ function MacroRegister() {
       >
         {allCollapse ? '전체 펼치기' : '전체 접기'}
       </BlackButton>
-      {workGroupList.map(workGroup => {
-        const { wid, h, date, b } = workGroup;
+      {stepList.map((step, index) => {
+        const { seq, sname } = step;
         return (
-          <Card key={wid} width={370} height={280}>
-            <Card.Header>
-              <TitleWrapper>
-                {h}
-                <span>{date}</span>
-              </TitleWrapper>
-            </Card.Header>
-            <Card.Body>
-              <WGCardTextWrap>
-                {b.map(work => {
-                  return (
-                    <WGCardText key={work.name}>
-                      <p>{work.name}</p>
-                      <p>{work.date}</p>
-                    </WGCardText>
-                  );
-                })}
-              </WGCardTextWrap>
-            </Card.Body>
-          </Card>
+          <DNDWrapper key={seq} seq={index} itemList={stepList} setItemList={setStepList} isDrag>
+            <Circle>
+              {seq}
+              {sname}
+            </Circle>
+          </DNDWrapper>
         );
       })}
       {/* {workGroupList.map(workGroup => { */}
       {/*  const { wid, h, date, b } = workGroup; */}
       {/*  return ( */}
-      {/*    <Card key={wid}> */}
-      {/*      <CardHeader> */}
+      {/*    <Card key={wid} width={370} height={280}> */}
+      {/*      <Card.Header> */}
       {/*        <TitleWrapper> */}
       {/*          {h} */}
       {/*          <span>{date}</span> */}
       {/*        </TitleWrapper> */}
-      {/*      </CardHeader> */}
-      {/*      <CardBody> */}
+      {/*      </Card.Header> */}
+      {/*      <Card.Body> */}
       {/*        <WGCardTextWrap> */}
       {/*          {b.map(work => { */}
       {/*            return ( */}
@@ -193,7 +210,7 @@ function MacroRegister() {
       {/*            ); */}
       {/*          })} */}
       {/*        </WGCardTextWrap> */}
-      {/*      </CardBody> */}
+      {/*      </Card.Body> */}
       {/*    </Card> */}
       {/*  ); */}
       {/* })} */}
@@ -202,13 +219,13 @@ function MacroRegister() {
 }
 
 const MRWrap = styled.div`
-  width: 100%;
-  padding: 15px;
-  box-sizing: border-box;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  //width: 100%;
+  //padding: 15px;
+  //box-sizing: border-box;
+  //display: flex;
+  ////flex-wrap: wrap;
+  //justify-content: center;
+  //gap: 20px;
 `;
 
 const WGCardTextWrap = styled.div`
@@ -250,6 +267,17 @@ const WGCardText = styled.div`
   & p {
     font-size: 13px;
   }
+`;
+
+const Circle = styled.div`
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+  background-color: darkgreen;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 `;
 
 export default MacroRegister;

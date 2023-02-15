@@ -47,6 +47,7 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
 
 const Wrapper = styled.div`
   width: 100%;
+  height: 26px;
   display: flex;
 `;
 

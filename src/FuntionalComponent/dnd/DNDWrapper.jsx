@@ -15,7 +15,7 @@ import styled from '@emotion/styled';
  * @returns {JSX.Element}
  * @constructor
  */
-function DNDWrapper({ itemList, setItemList, seq, children, isDrag }) {
+function DNDWrapper({ itemList, setItemList, seq, children, isDrag = true }) {
   const onDragStart = e => {
     e.currentTarget.classList.add('grabbing');
     e.dataTransfer.effectAllowed = 'move';
