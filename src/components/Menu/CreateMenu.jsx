@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { NavLink, Route, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Route, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 /**
@@ -101,10 +101,8 @@ function SubMenuItem({
     }
   };
 
-  const location = window.location.pathname.split('/').splice(2);
-  const menuLink = menu.link.split('/').splice(1);
-  const similarActive =
-    menuLink[0] === location[0] && menuLink[1] === location[1] ? 'active' : null;
+  const location = window.location.pathname;
+  const similarActive = subMenu.find(s => location.includes(s.link)) ? 'active' : null;
 
   return (
     <>
