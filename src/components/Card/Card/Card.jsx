@@ -6,7 +6,7 @@ import { css } from '@emotion/react';
 const getChild = (children, displayName) =>
   React.Children.map(children, child => (child.type.displayName === displayName ? child : null));
 
-export default function Card({ width, height, allCollapse, setAllCollapse, children }) {
+export default function Card({ width, height, allCollapse = false, setAllCollapse, children }) {
   const [collapse, setCollapse] = useState(false);
 
   useEffect(() => {
@@ -18,13 +18,8 @@ export default function Card({ width, height, allCollapse, setAllCollapse, child
     if (allCollapse === undefined) return;
     const cardLength = document.querySelectorAll('.card-wrapper').length;
     const collapseLength = document.querySelectorAll('.card-collapse').length;
-    if (cardLength === collapseLength) {
-      setAllCollapse(true);
-    }
 
-    if (collapseLength === 0) {
-      setAllCollapse(false);
-    }
+    setAllCollapse(cardLength === collapseLength);
   }, [collapse, setAllCollapse]);
 
   const header = getChild(children, 'Header');
@@ -43,7 +38,11 @@ export default function Card({ width, height, allCollapse, setAllCollapse, child
           }}
         />
       </CardTitle>
-      <CardMain className={collapse && 'card-collapse'} width={width} height={height}>
+      <CardMain
+        className={(allCollapse || collapse) && 'card-collapse'}
+        width={width}
+        height={height}
+      >
         {body}
         {!!footer.length && <CardAddition>{footer}</CardAddition>}
       </CardMain>

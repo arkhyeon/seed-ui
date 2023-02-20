@@ -178,42 +178,48 @@ function MacroRegister() {
       >
         {allCollapse ? '전체 펼치기' : '전체 접기'}
       </BlackButton>
-      {stepList.map((step, index) => {
-        const { seq, sname } = step;
-        return (
-          <DNDWrapper key={seq} seq={index} itemList={stepList} setItemList={setStepList} isDrag>
-            <Circle>
-              {seq}
-              {sname}
-            </Circle>
-          </DNDWrapper>
-        );
-      })}
-      {/* {workGroupList.map(workGroup => { */}
-      {/*  const { wid, h, date, b } = workGroup; */}
+      {/* {stepList.map((step, index) => { */}
+      {/*  const { seq, sname } = step; */}
       {/*  return ( */}
-      {/*    <Card key={wid} width={370} height={280}> */}
-      {/*      <Card.Header> */}
-      {/*        <TitleWrapper> */}
-      {/*          {h} */}
-      {/*          <span>{date}</span> */}
-      {/*        </TitleWrapper> */}
-      {/*      </Card.Header> */}
-      {/*      <Card.Body> */}
-      {/*        <WGCardTextWrap> */}
-      {/*          {b.map(work => { */}
-      {/*            return ( */}
-      {/*              <WGCardText key={work.name}> */}
-      {/*                <p>{work.name}</p> */}
-      {/*                <p>{work.date}</p> */}
-      {/*              </WGCardText> */}
-      {/*            ); */}
-      {/*          })} */}
-      {/*        </WGCardTextWrap> */}
-      {/*      </Card.Body> */}
-      {/*    </Card> */}
+      {/*    <DNDWrapper key={seq} seq={index} itemList={stepList} setItemList={setStepList} isDrag> */}
+      {/*      <Circle> */}
+      {/*        {seq} */}
+      {/*        {sname} */}
+      {/*      </Circle> */}
+      {/*    </DNDWrapper> */}
       {/*  ); */}
       {/* })} */}
+      {workGroupList.map(workGroup => {
+        const { wid, h, date, b } = workGroup;
+        return (
+          <Card
+            key={wid}
+            width={370}
+            height={280}
+            allCollapse={allCollapse}
+            setAllCollapse={setAllCollapse}
+          >
+            <Card.Header>
+              <TitleWrapper>
+                {h}
+                <span>{date}</span>
+              </TitleWrapper>
+            </Card.Header>
+            <Card.Body>
+              <WGCardTextWrap>
+                {b.map(work => {
+                  return (
+                    <WGCardText key={work.name}>
+                      <p>{work.name}</p>
+                      <p>{work.date}</p>
+                    </WGCardText>
+                  );
+                })}
+              </WGCardTextWrap>
+            </Card.Body>
+          </Card>
+        );
+      })}
     </MRWrap>
   );
 }
