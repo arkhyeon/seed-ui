@@ -3,81 +3,59 @@ import styled from '@emotion/styled';
 import { IoIosArrowDown } from 'react-icons/all';
 import { css } from '@emotion/react';
 
-const getChild = (children, displayName) =>
-  React.Children.map(children, child => (child.type.displayName === displayName ? child : null));
-
-export default function Card({ width, height, allCollapse = false, setAllCollapse, children }) {
-  const [collapse, setCollapse] = useState(false);
+export default function Card({
+  width,
+  height,
+  allCollapse,
+  isAllCollapse,
+  setIsAllCollapse,
+  children,
+}) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
-    if (allCollapse === undefined) return;
-    setCollapse(allCollapse);
-  }, [allCollapse]);
+    setIsAllCollapse(allCollapse);
+  }, [isCollapsed]);
 
   useEffect(() => {
-    if (allCollapse === undefined) return;
     const cardLength = document.querySelectorAll('.card-wrapper').length;
     const collapseLength = document.querySelectorAll('.card-collapse').length;
 
-    setAllCollapse(cardLength === collapseLength);
-  }, [collapse, setAllCollapse]);
+    setIsAllCollapse(allCollapse);
 
-  const header = getChild(children, 'Header');
-  const body = getChild(children, 'Body');
-  const footer = getChild(children, 'Footer');
+    if (collapseLength !== cardLength) {
+      setIsCollapsed(allCollapse);
+    }
+    if (allCollapse !== isAllCollapse) {
+      setIsCollapsed(allCollapse);
+    }
+  }, [allCollapse]);
+
+  const handleToggleCollapse = () => setIsCollapsed(prevState => !prevState);
+
+  const getCommaChild = type => {
+    return React.Children.toArray(children).find(child => child.type === type)?.props.children;
+  };
+
+  const header = getCommaChild(CardHeader);
+  const body = getCommaChild(CardBody);
+  const footer = getCommaChild(CardFooter);
 
   return (
     <CardWrapper className="card-wrapper">
-      <CardTitle>
+      <CardHeader>
         {header}
-        <IoIosArrowDown
-          onClick={() => {
-            setCollapse(prevState => {
-              return !prevState;
-            });
-          }}
-        />
-      </CardTitle>
-      <CardMain
-        className={(allCollapse || collapse) && 'card-collapse'}
-        width={width}
-        height={height}
-      >
+        <IoIosArrowDown onClick={handleToggleCollapse} />
+      </CardHeader>
+      <CardBody className={isCollapsed ? 'card-collapse' : ''} width={width} height={height}>
         {body}
-        {!!footer.length && <CardAddition>{footer}</CardAddition>}
-      </CardMain>
+        {footer && <CardFooter>{footer}</CardFooter>}
+      </CardBody>
     </CardWrapper>
   );
 }
 
-function Header({ children }) {
-  return <>{children}</>;
-}
-
-function Body({ children }) {
-  return <>{children}</>;
-}
-
-function Footer({ children }) {
-  return <>{children}</>;
-}
-
-Header.displayName = 'Header';
-Card.Header = Header;
-
-Body.displayName = 'Body';
-Card.Body = Body;
-
-Footer.displayName = 'Footer';
-Card.Footer = Footer;
-
-const CardWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const CardTitle = styled.div`
+const CardHeader = styled.div`
   width: 94.6%;
   height: 50px;
   font-size: 15px;
@@ -99,7 +77,7 @@ const CardTitle = styled.div`
   }
 `;
 
-const CardMain = styled.div`
+const CardBody = styled.div`
   ${({ width, height }) => {
     return css`
       width: ${width}px;
@@ -125,6 +103,16 @@ const CardMain = styled.div`
   }
 `;
 
-const CardAddition = styled.div`
+const CardFooter = styled.div`
   width: 100%;
 `;
+
+const CardWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+Card.Header = CardHeader;
+Card.Body = CardBody;
+Card.Footer = CardFooter;

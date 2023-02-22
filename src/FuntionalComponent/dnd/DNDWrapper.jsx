@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 
 /**
  * @param itemList
@@ -59,31 +60,35 @@ function DNDWrapper({ itemList, setItemList, seq, children, isDrag = true }) {
   };
 
   return (
-    <>
-      {isDrag ? (
-        <DndWrapper
-          onDragStart={onDragStart}
-          onDragEnter={e => onDragEnter(e, seq)}
-          onDragOver={onDragOver}
-          onDragEnd={onDragEnd}
-          draggable
-          data-position={seq}
-        >
-          {children}
-        </DndWrapper>
-      ) : (
-        <>{children}</>
-      )}
-    </>
+    <DndWrapper
+      onDragStart={onDragStart}
+      onDragEnter={e => onDragEnter(e, seq)}
+      onDragOver={onDragOver}
+      onDragEnd={onDragEnd}
+      draggable
+      data-position={seq}
+      isDrag={isDrag}
+    >
+      {children}
+    </DndWrapper>
   );
 }
 
 const DndWrapper = styled.div`
-  user-select: none;
-  cursor: move;
-  &.grabbing {
-    opacity: 0.3;
-  }
+  ${({ isDrag }) => {
+    return isDrag
+      ? css`
+          user-select: none;
+          cursor: move;
+          &.grabbing {
+            opacity: 0.3;
+          }
+        `
+      : css`
+          -webkit-user-drag: none;
+          cursor: default;
+        `;
+  }}
 `;
 
 export default DNDWrapper;
