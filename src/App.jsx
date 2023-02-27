@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './Index';
 import { DepthList1 } from './assets/DepthMenuList';
 import { SetRoute } from './components';
-import './index.css';
+import './index.scss';
 
 function App() {
   return (

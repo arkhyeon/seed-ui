@@ -6,6 +6,7 @@ import ConfigSyncTable from './ConfigSyncTable';
 import ConfigSync from './ConfigSync';
 import MacroRegister from './MacroRegister';
 import MacroDashboard from './MacroDashboard';
+import TextAreaTestArea from './TextAreaTestArea';
 
 /**
  * @param {String} title
@@ -90,6 +91,13 @@ export const DepthList1 = [
             link: '/config/sync/csync',
             routePath: 'csync',
             component: <ConfigSync />,
+            display: true,
+          },
+          {
+            title: 'textAreaTestArea',
+            link: '/config/sync/textAreaTestArea',
+            routePath: 'textAreaTestArea',
+            component: <TextAreaTestArea />,
             display: true,
           },
         ],
