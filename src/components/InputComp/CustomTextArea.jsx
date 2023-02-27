@@ -9,9 +9,9 @@ import { BlackButton, TextArea, WhiteButton } from '../index';
  * @param {String} title
  * CustomTextArea 제목 역할
  * @param {Object} textAreaOption
- * TextArea의 옵션 파라미터
+ * TextArea의 옵션 파라미터. 기존의 속성들을 해당 객체에 넣어 전달하면 됩니다.
  * @param {Object} sqlAreaOption
- * CustomCodeMirror의 옵션 파라미터
+ * CustomCodeMirror의 옵션 파라미터. 기존의 속성들을 해당 객체에 넣어 전달하면 됩니다.
  * @param [{icon, handler}, ...] IconButtonList
  * CustomTextArea의 타이틀 옆 아이콘 버튼들
  * @param TextButtonList
@@ -20,7 +20,7 @@ import { BlackButton, TextArea, WhiteButton } from '../index';
  * CustomTextArea 컴포넌트
  */
 export default function CustomTextArea({
-  title,
+  title = '',
   textAreaOption,
   sqlAreaOption,
   IconButtonList = [],
@@ -28,25 +28,27 @@ export default function CustomTextArea({
 }) {
   return (
     <CustomTextAreaWrap>
-      <CustomTextAreaMenu>
-        <p>{title}</p>
-        <ButtonListWrapper>
-          {IconButtonList.map(({ icon, handler }) => {
-            return (
-              <WhiteButton key={icon.type.name} onClick={() => handler()}>
-                {icon}
-              </WhiteButton>
-            );
-          })}
-          {TextButtonList.map(({ text, handler }) => {
-            return (
-              <BlackButton key={text} onClick={() => handler()}>
-                {text}
-              </BlackButton>
-            );
-          })}
-        </ButtonListWrapper>
-      </CustomTextAreaMenu>
+      {title !== '' && (
+        <CustomTextAreaMenu>
+          <p>{title}</p>
+          <ButtonListWrapper>
+            {IconButtonList.map(({ icon, handler }) => {
+              return (
+                <WhiteButton key={icon.type.name} onClick={() => handler()}>
+                  {icon}
+                </WhiteButton>
+              );
+            })}
+            {TextButtonList.map(({ text, handler }) => {
+              return (
+                <BlackButton key={text} onClick={() => handler()}>
+                  {text}
+                </BlackButton>
+              );
+            })}
+          </ButtonListWrapper>
+        </CustomTextAreaMenu>
+      )}
       {textAreaOption && <TextArea {...textAreaOption} />}
       {sqlAreaOption && <CodeMirror {...sqlAreaOption} {...codeMirrorOption} />}
     </CustomTextAreaWrap>
