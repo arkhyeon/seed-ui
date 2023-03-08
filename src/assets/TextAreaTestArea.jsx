@@ -65,6 +65,7 @@ export default function TextAreaTestArea() {
             value: 'text',
             readOnly: true,
             rows: 15,
+            height: '200px',
           }}
         />
         <CustomTextArea
@@ -73,6 +74,7 @@ export default function TextAreaTestArea() {
             value: '테스트',
             readOnly: true,
             rows: 15,
+            height: '200px',
           }}
           TextButtonList={exampleTextMenu}
         />
@@ -122,7 +124,7 @@ export default function TextAreaTestArea() {
           sqlAreaOption={{
             value: 'text',
             readOnly: true,
-            rows: 10,
+            height: '100px',
           }}
           IconButtonList={exampleIconMenu}
         />
@@ -142,6 +144,7 @@ export default function TextAreaTestArea() {
             value: 'text',
             readOnly: true,
             rows: 15,
+            height: '100px',
           }}
           IconButtonList={exampleIconMenu}
         />
