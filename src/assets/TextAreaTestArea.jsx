@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MdOutlineContentCopy, MdOutlineContentPaste } from 'react-icons/md';
 import { CgList } from 'react-icons/cg';
 import { BiPlus } from 'react-icons/bi';
 import styled from '@emotion/styled';
 import CustomTextArea from '../components/InputComp/CustomTextArea';
+import { BlackButton } from '../components';
 
 export default function TextAreaTestArea() {
+  const [test, setTest] = useState(false);
   const copy = () => {
     alert('복사 하였습니다.');
   };
@@ -58,13 +60,14 @@ export default function TextAreaTestArea() {
 
   return (
     <>
+      <BlackButton onClick={() => setTest(prevState => !prevState)}>변경</BlackButton>
       <AccordionWrap>
         <CustomTextArea
           title="제목만 있는 텍스트 에리어"
           textAreaOption={{
             value: 'text',
             readOnly: true,
-            rows: 15,
+            rows: 10,
           }}
         />
         <CustomTextArea
@@ -120,9 +123,9 @@ export default function TextAreaTestArea() {
         <CustomTextArea
           title="아이콘 버튼들이 있는 SQL 에리어"
           sqlAreaOption={{
-            value: 'text',
-            readOnly: true,
-            rows: 10,
+            value: '여기를 수정해줘',
+            editable: test,
+            rows: 11,
           }}
           IconButtonList={exampleIconMenu}
         />

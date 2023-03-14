@@ -92,7 +92,7 @@ const AsideWrap = styled.div`
     color: #212529;
     text-align: left;
     border-radius: 5px;
-    padding: 10px 15px;
+    padding: 9px 15px 10px;
     display: flex;
     align-items: center;
     margin-top: 5px;
@@ -103,7 +103,7 @@ const AsideWrap = styled.div`
       display: block;
     }
     &:hover {
-      background-color: #cfd8dc;
+      background-color: #e8eefb;
     }
   }
 
@@ -127,7 +127,7 @@ const SideTitle = styled.div`
   color: #212529;
   border-radius: 5px;
   padding: 10px 15px;
-  background-color: #e8eefb;
+  background-color: #eceff1;
   display: flex;
   justify-content: space-between;
 

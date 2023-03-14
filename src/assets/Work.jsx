@@ -10,6 +10,7 @@ import { TextInput } from '../components/InputComp/InputComponent';
 import Logo from './Logo';
 import { BlackButton, WhiteButton } from '../components/Button/Button';
 import { DatePicker, TimePicker } from '../components';
+import Radio from '../components/Radio';
 
 function Work() {
   const {
@@ -23,6 +24,7 @@ function Work() {
   const [state, setState] = useState({});
   const [check, setCheck] = useState(false);
   const [time, setTime] = useState();
+  const [isNull, setIsNull] = useState('y');
   const [date, setDate] = useState(new Date());
   const setDataListData = value => {
     setState(value);
@@ -94,6 +96,18 @@ function Work() {
         logoLink: '/',
       }}
     >
+      <Radio
+        checkColor="rgb(64, 64, 64)"
+        value={isNull}
+        setValue={() => {
+          setIsNull(prevState => (prevState === 'y' ? 'n' : 'y'));
+        }}
+        list={[
+          { label: 'NULL', value: 'y' },
+          { label: 'NOT NULL', value: 'n' },
+        ]}
+        type="border"
+      />
       <PaginationWrap>
         <Pagination totalLength={22313} pageEvent={pageFunction} />
       </PaginationWrap>

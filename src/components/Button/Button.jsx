@@ -77,7 +77,7 @@ export function SwitchButton(props) {
 const Button = styled.button`
   font-size: 13px;
   border-radius: 5px;
-  padding: 7.5px 13px;
+  padding: 7px 13px 8px;
   transition: 0.3s;
   cursor: pointer;
   border: 1px solid #d2d2d2;
@@ -165,7 +165,7 @@ const SwitchWrap = styled.div`
     width: 38px;
     height: 16px;
     background: #fff;
-    border: 2px solid #545454;
+    border: 1px solid #d2d2d2;
     border-radius: 20px;
     transition: 0.2s;
     :hover {
@@ -183,7 +183,7 @@ const SwitchWrap = styled.div`
     &::before {
       content: '';
       position: absolute;
-      background-color: #545454;
+      background-color: #3e3e3e;
       top: 0;
       bottom: 0;
       transition: 0.2s;
@@ -195,7 +195,7 @@ const SwitchWrap = styled.div`
 
   /* checking style */
   & input:checked + .switch_label {
-    background: #545454;
+    background: #3e3e3e;
   }
 
   /* move */

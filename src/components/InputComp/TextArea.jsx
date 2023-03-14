@@ -8,7 +8,7 @@ function TextArea(props) {
 const TextAreAComp = styled.textarea`
   width: 100%;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   border: 1px solid #d2d2d2;
   resize: vertical;
   box-sizing: border-box;

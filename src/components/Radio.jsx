@@ -99,15 +99,15 @@ function Radio({
 
 const OptionWrapper = styled.div`
   display: flex;
+  gap: 10px;
 `;
 
 const CheckWrapper = styled.div`
   position: relative;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   background: transparent;
-  margin-right: ${({ labelInSpacing }) => labelInSpacing};
   display: flex;
   align-items: center;
 
@@ -120,8 +120,8 @@ const CheckWrapper = styled.div`
     position: absolute;
     border: ${({ checkColor }) => `2px solid ${checkColor}`};
     background: white;
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -170,10 +170,10 @@ const Label = styled.label`
   display: flex;
   align-items: center;
   cursor: pointer;
+  gap: 6px;
 
-  margin-right: ${({ labelOutSpacing }) => labelOutSpacing};
-  :last-child {
-    margin-right: 0;
+  & > div {
+    font-size: 14px;
   }
 `;
 

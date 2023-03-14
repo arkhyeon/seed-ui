@@ -50,7 +50,7 @@ export default function CustomTextArea({
         </CustomTextAreaMenu>
       )}
       {textAreaOption && <TextArea {...textAreaOption} />}
-      {sqlAreaOption && <CodeMirror {...sqlAreaOption} {...codeMirrorOption} />}
+      {sqlAreaOption && <CodeMirror {...codeMirrorOption} {...sqlAreaOption} />}
     </CustomTextAreaWrap>
   );
 }

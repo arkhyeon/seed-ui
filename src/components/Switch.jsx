@@ -58,7 +58,6 @@ const Wrapper = styled.label`
   -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   -webkit-background-clip: padding-box;
-  -moz-background-clip: padding-box;
   background-clip: padding-box;
   ${({ size }) => {
     if (size === 'middle') {
@@ -102,7 +101,6 @@ const Check = styled.div`
   -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   -webkit-background-clip: padding-box;
-  -moz-background-clip: padding-box;
   background-clip: padding-box;
   ${({ value, size }) => {
     if (value) {
@@ -132,7 +130,7 @@ const Check = styled.div`
     return '#eee';
   }};
 
-  ${({ size, value }) => {
+  ${({ size }) => {
     if (size === 'middle') {
       return css`
         width: 20px;
@@ -154,7 +152,7 @@ const Check = styled.div`
     border-radius: 50%;
     background: transparent;
 
-    ${({ size, value }) => {
+    ${({ size }) => {
       if (size === 'middle') {
         return css`
           width: 28px;

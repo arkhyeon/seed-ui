@@ -159,7 +159,9 @@ export function TabButton(props) {
 
 const SideTabsWrap = styled.div`
   width: 233px;
-  height: 100%;
+  min-width: 233px;
+  height: calc(100vh - 203px);
+  flex-grow: 1;
   padding-right: 18px;
   font-size: 14px;
   border-right: 1px solid #d2d2d2;
@@ -176,13 +178,17 @@ const ScrollTab = styled.div`
   gap: 10px;
 
   &::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #eeeeee;
   }
 
   &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
     background-color: #d3d3d3;
-    border-left: 5px solid white;
-    background-clip: padding-box;
   }
 `;
 
