@@ -13,7 +13,6 @@ import DataList from './InputComp/DataList';
 import Pagination from './InputComp/Pagination';
 import Toggle from './Toggle';
 import { TextInput, LabelCheckBox } from './InputComp/InputComponent';
-import TextArea from './InputComp/TextArea';
 import CustomTextArea from './InputComp/CustomTextArea';
 import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton, SwitchButton, RadioButton } from './Button/Button';
@@ -65,7 +64,6 @@ export { Pagination };
 export { Toggle };
 
 export { TextInput, LabelCheckBox };
-export { TextArea };
 export { CustomTextArea };
 
 export { InputGrid };

@@ -67,7 +67,7 @@ export default function TextAreaTestArea() {
           textAreaOption={{
             value: 'text',
             readOnly: true,
-            rows: 10,
+            rows: 15,
           }}
         />
         <CustomTextArea
@@ -76,6 +76,7 @@ export default function TextAreaTestArea() {
             value: '테스트',
             readOnly: true,
             rows: 15,
+            height: '200px',
           }}
           TextButtonList={exampleTextMenu}
         />
@@ -123,9 +124,9 @@ export default function TextAreaTestArea() {
         <CustomTextArea
           title="아이콘 버튼들이 있는 SQL 에리어"
           sqlAreaOption={{
-            value: '여기를 수정해줘',
-            editable: test,
-            rows: 11,
+            value: 'text',
+            readOnly: true,
+            rows: 10,
           }}
           IconButtonList={exampleIconMenu}
         />
@@ -145,6 +146,7 @@ export default function TextAreaTestArea() {
             value: 'text',
             readOnly: true,
             rows: 15,
+            height: '100px',
           }}
           IconButtonList={exampleIconMenu}
         />

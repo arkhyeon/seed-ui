@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import CodeMirror from '@uiw/react-codemirror';
 import { xcodeLight } from '@uiw/codemirror-theme-xcode';
 import { PostgreSQL, sql } from '@codemirror/lang-sql';
-import { BlackButton, TextArea, WhiteButton } from '../index';
+import { BlackButton, WhiteButton } from '../index';
 
 /**
  * @param {String} title
@@ -49,11 +49,24 @@ export default function CustomTextArea({
           </ButtonListWrapper>
         </CustomTextAreaMenu>
       )}
-      {textAreaOption && <TextArea {...textAreaOption} />}
-      {sqlAreaOption && <CodeMirror {...codeMirrorOption} {...sqlAreaOption} />}
+      {textAreaOption && <TextAreaComp {...textAreaOption} />}
+      {sqlAreaOption && <CodeMirror {...sqlAreaOption} {...codeMirrorOption} />}
     </CustomTextAreaWrap>
   );
 }
+
+const TextAreaComp = styled.textarea`
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d2d2d2;
+  height: ${props => {
+    if (props.height) return props.height;
+    return 'auto';
+  }};
+`;
+
 const codeMirrorOption = {
   theme: xcodeLight,
   extensions: [sql(), PostgreSQL],
@@ -65,9 +78,9 @@ const codeMirrorOption = {
 };
 
 const CustomTextAreaWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  //display: flex;
+  //flex-direction: column;
+  //justify-content: space-between;
   width: 100%;
 `;
 
