@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useLayoutEffect, useRef, useState, useEffect } from 'react';
+import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { GrClose } from 'react-icons/all';
@@ -223,7 +223,6 @@ const ModalWrap = styled.div`
   position: absolute;
   z-index: 999;
   background: white;
-  overflow: hidden;
   border: ${({ theme }) => theme.modalStyle.modalBorder};
   border-radius: 12px;
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
@@ -241,6 +240,7 @@ const ModalHeader = styled.div`
   align-items: center;
   padding: 15.5px 18px;
   font-weight: bold;
+  border-radius: 12px 12px 0 0;
 
   & svg {
     font-size: 18px;

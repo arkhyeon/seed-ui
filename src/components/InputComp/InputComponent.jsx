@@ -83,6 +83,11 @@ const CheckBoxWrap = styled.div`
       outline: none;
       cursor: pointer;
 
+      &:disabled {
+        border: 1px solid #d1d1d1;
+        background-color: #f9f9f9;
+      }
+
       &:checked {
         background-color: #545454;
 
