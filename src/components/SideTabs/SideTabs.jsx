@@ -88,6 +88,24 @@ export const selectSideTab = value => {
   }
 };
 
+const selectedOptionButton = e => {
+  e.stopPropagation();
+  const tabButtonList = document.querySelectorAll('[aria-label="side-tab-option-button"]');
+  const tabButtonListLength = tabButtonList.length;
+  for (let i = 0; i < tabButtonListLength; i++) {
+    tabButtonList[i].classList.remove('selectedOptionTab');
+  }
+  e.currentTarget.classList.add('selectedOptionTab');
+};
+
+const unSelectedOptionButton = e => {
+  const tabButtonList = document.querySelectorAll('[aria-label="side-tab-option-button"]');
+  const tabButtonListLength = tabButtonList.length;
+  for (let i = 0; i < tabButtonListLength; i++) {
+    tabButtonList[i].classList.remove('selectedOptionTab');
+  }
+};
+
 /**
  * SideTab의 메인 기능 버튼
  * @param props
@@ -121,7 +139,7 @@ export function MainTabButton(props) {
 export function TabButton(props) {
   const { deleteFunction, updateFunction, selectOption = true, option } = props;
   return (
-    <ButtonWrap className={option && 'option-button'}>
+    <ButtonWrap className={option && 'option-button'} onClick={unSelectedOptionButton}>
       <Button
         {...props}
         aria-label="side-tab-button"
@@ -141,9 +159,11 @@ export function TabButton(props) {
           {option.iconList.map((icon, i) => {
             return (
               <Option
+                aria-label="side-tab-option-button"
                 key={icon.type.name}
-                onClick={() => {
+                onClick={e => {
                   selectSideTab(props.value);
+                  selectedOptionButton(e);
                   option.funcList[i]();
                 }}
               >
@@ -153,6 +173,26 @@ export function TabButton(props) {
           })}
         </OptionWrap>
       )}
+    </ButtonWrap>
+  );
+}
+
+export function TabIconButton(props) {
+  const { selectOption = true } = props;
+  return (
+    <ButtonWrap>
+      <IconButton
+        {...props}
+        aria-label="side-tab-button"
+        onClick={e => {
+          if (selectOption) {
+            selectedButton(e);
+          }
+          props.onClick(e);
+        }}
+      >
+        {props.children}
+      </IconButton>
     </ButtonWrap>
   );
 }
@@ -208,6 +248,12 @@ const ButtonWrap = styled.div`
   &:hover button {
     background: #e8eefb;
   }
+
+  &:has(.selectedTab) .selectedOptionTab[aria-label='side-tab-option-button'] {
+    color: white;
+    fill: white;
+    background-color: black;
+  }
 `;
 
 const Button = styled.button`
@@ -230,6 +276,15 @@ const Button = styled.button`
 
   &.selectedTab + div svg {
     fill: #fff;
+  }
+`;
+
+const IconButton = styled(Button)`
+  justify-content: left;
+  gap: 8px;
+
+  & svg {
+    font-size: 16px;
   }
 `;
 
@@ -287,5 +342,13 @@ const Option = styled.div`
   & svg {
     width: 20px;
     height: 20px;
+  }
+
+  &:hover {
+    background-color: #455a64;
+    color: white;
+    & svg {
+      fill: white;
+    }
   }
 `;

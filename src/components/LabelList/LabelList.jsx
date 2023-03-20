@@ -115,7 +115,7 @@ const SelectorWrap = styled.div`
   position: relative;
   height: 33px;
   svg {
-    font-size: 33px;
+    font-size: 28px;
     cursor: pointer;
   }
 
@@ -142,7 +142,7 @@ const LabelView = styled.div`
   display: flex;
   border-radius: 15px;
   font-size: 13px;
-  padding: 8px 20px;
+  padding: 3px 20px 4px;
   background: #78909c;
   color: white;
   cursor: default;

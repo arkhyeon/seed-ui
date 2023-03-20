@@ -17,7 +17,6 @@ import CustomTextArea from './InputComp/CustomTextArea';
 import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton, SwitchButton, RadioButton } from './Button/Button';
 import LabelList from './LabelList/LabelList';
-import TmpLabelList from './TmpLabelList/TmpLabelList';
 import Count from './Count/Count';
 import CountList from './CountList/CountList';
 import {
@@ -26,6 +25,7 @@ import {
   SideTabs,
   TabButton,
   selectSideTab,
+  TabIconButton,
 } from './SideTabs/SideTabs';
 import { DividingLine } from './Line/DividingLine';
 import Article from './Article';
@@ -70,15 +70,21 @@ export { InputGrid };
 
 export { LabelList };
 
-export { TmpLabelList };
-
 export { Count };
 
 export { CountList };
 
 export { useStore };
 
-export { MainTabButton, SideScrollWrap, SideTabs, TabButton, selectSideTab, RadioButton };
+export {
+  MainTabButton,
+  SideScrollWrap,
+  SideTabs,
+  TabButton,
+  selectSideTab,
+  RadioButton,
+  TabIconButton,
+};
 
 export { DividingLine };
 

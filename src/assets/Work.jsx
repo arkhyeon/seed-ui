@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
+import { MdDangerous } from 'react-icons/all';
 import AsideCreator from '../components/Menu/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
 import DataList from '../components/InputComp/DataList';
@@ -11,6 +12,7 @@ import Logo from './Logo';
 import { BlackButton, WhiteButton } from '../components/Button/Button';
 import { DatePicker, TimePicker } from '../components';
 import Radio from '../components/Radio';
+import { TabIconButton } from '../components/SideTabs/SideTabs';
 
 function Work() {
   const {
@@ -142,6 +144,7 @@ function Work() {
           id="hello"
           onClick={componentClickFunc}
           onChange={e => componentChangeFunc(e.target.value)}
+          placeHolder="helloss"
         />
       </SearchWrapper>
       <BlackButton
@@ -178,6 +181,10 @@ function Work() {
           <option value="Vanilla" />
         </datalist>
       </TextBox>
+      <TabIconButton>
+        <MdDangerous />
+        hi
+      </TabIconButton>
     </AsideCreator>
   );
 }

@@ -30,11 +30,11 @@ const TextInputComp = styled.input`
   border: 1px solid #d2d2d2;
   border-radius: 5px;
   color: #212529;
-  font-size: 14px;
-  padding: 8px 0 6px 12px;
+  font-size: 13px;
+  padding: 8px 0 7px 12px;
 
   &::placeholder {
-    font-size: 14px;
+    font-size: 13px;
   }
 `;
 
@@ -79,7 +79,7 @@ const CheckBoxWrap = styled.div`
       -webkit-appearance: none;
       appearance: none;
       border-radius: 0.15em;
-      border: 0.15em solid #545454;
+      border: 1px solid #545454;
       outline: none;
       cursor: pointer;
 

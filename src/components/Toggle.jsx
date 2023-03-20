@@ -47,16 +47,17 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 26px;
+  height: 32px;
   display: flex;
+  align-items: center;
 `;
 
 const ToggleButton = styled.div`
   cursor: pointer;
   font-size: 14px;
   color: #545454;
-  padding-bottom: 10px;
   margin-right: 30px;
+  height: 27px;
 
   :hover,
   &[aria-pressed] {

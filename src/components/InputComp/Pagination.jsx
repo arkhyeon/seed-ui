@@ -83,18 +83,19 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent, currentPage
 
 const PaginationWarp = styled.ul`
   width: fit-content;
-  height: 30px;
+  height: 22px;
   background-color: ${({ theme }) => theme.paginationStyle.backgroundColor};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
   border: 1px solid ${({ theme }) => theme.paginationStyle.borderColor};
+  font-size: 12px;
 `;
 
 const PaginationItem = styled.li`
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,7 +117,7 @@ const PaginationItem = styled.li`
   }
 
   & svg {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   &[aria-current] {
@@ -129,12 +130,14 @@ const PaginationItem = styled.li`
 `;
 
 const ResultWrap = styled.div`
+  display: flex;
+  align-items: center;
   margin-left: 10px;
-  font-size: 14px;
+  font-size: 12px;
 
   & select {
     width: 90px;
-    height: 32px;
+    height: 24px;
     margin-right: 15px;
     border: 1px solid #d2d2d2;
     border-radius: 5px;

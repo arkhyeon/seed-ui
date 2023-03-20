@@ -77,7 +77,7 @@ export function SwitchButton(props) {
 const Button = styled.button`
   font-size: 13px;
   border-radius: 5px;
-  padding: 7px 13px 8px;
+  padding: 7px 13px 8px 13.5px;
   transition: 0.3s;
   cursor: pointer;
   border: 1px solid #d2d2d2;

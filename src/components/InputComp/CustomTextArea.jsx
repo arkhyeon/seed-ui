@@ -59,8 +59,9 @@ const TextAreaComp = styled.textarea`
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   border: 1px solid #d2d2d2;
+  resize: vertical;
   height: ${props => {
     if (props.height) return props.height;
     return 'auto';
@@ -71,6 +72,8 @@ const codeMirrorOption = {
   theme: xcodeLight,
   extensions: [sql(), PostgreSQL],
   editable: false,
+  minHeight: '100%',
+  maxHeight: '100%',
   basicSetup: {
     lineNumbers: false,
     foldGutter: false,
@@ -78,9 +81,6 @@ const codeMirrorOption = {
 };
 
 const CustomTextAreaWrap = styled.div`
-  //display: flex;
-  //flex-direction: column;
-  //justify-content: space-between;
   width: 100%;
 `;
 

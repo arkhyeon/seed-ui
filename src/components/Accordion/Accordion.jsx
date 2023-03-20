@@ -34,8 +34,8 @@ const Header = styled.div`
 
 const IconWrap = styled.div`
   width: 100%;
-  height: 50px;
-  font-size: 26px;
+  height: 40px;
+  font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: flex-end;

@@ -173,7 +173,7 @@ const Label = styled.label`
   gap: 6px;
 
   & > div {
-    font-size: 14px;
+    font-size: 13px;
   }
 `;
 
