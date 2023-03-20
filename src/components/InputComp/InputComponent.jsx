@@ -96,8 +96,8 @@ const CheckBoxWrap = styled.div`
           color: #fff;
           font-size: 14px;
           position: relative;
-          left: 1px;
-          top: -3px;
+          left: 2px;
+          top: -2px;
         }
       }
     }

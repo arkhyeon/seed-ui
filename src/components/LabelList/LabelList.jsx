@@ -34,6 +34,7 @@ function LabelList({
   direction = 'left',
   unit = '그룹',
   handleUpdate = () => {},
+  disabled = false,
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
@@ -78,14 +79,14 @@ function LabelList({
   }, [selectedValueList, labelList, valueList]);
 
   return (
-    <Section>
+    <Section disabled={disabled}>
       {direction === 'left' && (
         <LabelViewWrapper direction={direction} className="labels">
           {renderLabel()}
         </LabelViewWrapper>
       )}
       <SelectorWrap direction={direction} ref={selectorRef}>
-        <MdLabelOutline onClick={handleOpen} />
+        {disabled || <MdLabelOutline onClick={handleOpen} />}
         {isSelectorOpen && (
           <LabelWrapper
             dataList={dataList}
@@ -108,12 +109,12 @@ function LabelList({
 const Section = styled.div`
   display: flex;
   align-items: center;
-  gap: 17px;
+  gap: ${({ disabled }) => (disabled ? '0px' : '5px')};
 `;
 
 const SelectorWrap = styled.div`
   position: relative;
-  height: 33px;
+  height: 28px;
   svg {
     font-size: 28px;
     cursor: pointer;
