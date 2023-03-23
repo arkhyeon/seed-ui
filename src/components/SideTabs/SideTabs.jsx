@@ -71,7 +71,7 @@ const selectedButton = e => {
     tabButtonList[i].classList.remove('selectedTab');
   }
 
-  e.target.classList.add('selectedTab');
+  e.currentTarget.classList.add('selectedTab');
 };
 
 /**

@@ -161,6 +161,8 @@ CreateMenu.List = styled.ul`
   display: flex;
   justify-content: center;
   gap: 0;
+  position: relative;
+  z-index: 10;
 
   & > li {
     & > a {
