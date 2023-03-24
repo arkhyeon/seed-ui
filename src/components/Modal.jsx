@@ -60,15 +60,34 @@ function Modal({
   const [pos, setPos] = useState({ x: 0, y: 0 });
   // const [browserSize, setBrowserSize] = useState({ width: 0, height: 0 });
 
-  useLayoutEffect(() => {
-    const centerWidth =
-      window.pageXOffset + window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
+  const moveToCenter = () => {
+    const centerWidth = window.scrollX + window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
 
     const centerHeight =
-      window.pageYOffset + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
+      window.scrollY + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
 
     setPos({ x: centerWidth, y: centerHeight < 0 ? 0 : centerHeight });
+  };
+
+  useLayoutEffect(() => {
+    moveToCenter();
     // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
+
+    const observer = new ResizeObserver((entries, observer) => {
+      if (!modalRef.current) return;
+      for (const entry of entries) {
+        console.log(`${entry.contentRect.width}px ; height: ${entry.contentRect.height}px`);
+        const centerHeight =
+          window.scrollY + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
+
+        setPos(prevState => {
+          return { x: prevState.x, y: centerHeight < 0 ? 0 : centerHeight };
+        });
+      }
+    });
+
+    // 2. 감지할 요소 추가하기
+    observer.observe(modalRef.current);
   }, []);
 
   const handleCenter = useCallback(() => {
@@ -188,8 +207,8 @@ function Modal({
 
       const { left, top } = modalRef.current.getBoundingClientRect();
       // initialPos.current.x = e.clientX - left;
-      initialPos.current.x = e.clientX - (left + window.pageXOffset);
-      initialPos.current.y = e.clientY - (top + window.pageYOffset);
+      initialPos.current.x = e.clientX - (left + window.scrollX);
+      initialPos.current.y = e.clientY - (top + window.scrollY);
 
       document.addEventListener('mousemove', throttleMove);
       document.addEventListener('mouseup', removeEvents);
@@ -220,7 +239,8 @@ function Modal({
 
 const ModalWrap = styled.div`
   width: ${({ width }) => width};
-  position: absolute;
+  max-height: 100%;
+  position: fixed;
   z-index: 999;
   background: white;
   border: ${({ theme }) => theme.modalStyle.modalBorder};
@@ -264,6 +284,8 @@ const ModalHeader = styled.div`
 
 const ChildrenWrapper = styled.div`
   padding: 16px 18px;
+  overflow: auto;
+  max-height: 85vh;
 `;
 
 const ModalFooter = styled.div`
