@@ -71,7 +71,6 @@ const TextAreaComp = styled.textarea`
 const codeMirrorOption = {
   theme: xcodeLight,
   extensions: [sql(), PostgreSQL],
-  editable: false,
   minHeight: '100%',
   maxHeight: '100%',
   basicSetup: {

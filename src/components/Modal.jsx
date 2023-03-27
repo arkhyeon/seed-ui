@@ -284,7 +284,9 @@ const ModalHeader = styled.div`
 
 const ChildrenWrapper = styled.div`
   padding: 16px 18px;
-  overflow: auto;
+  &:has(textarea, .cm-theme) {
+    overflow: auto;
+  }
   max-height: 85vh;
 `;
 
