@@ -49,7 +49,7 @@ function Radio({
   hoverColor = '#eee',
   labelInSpacing = '4px',
   labelOutSpacing = '8px',
-  type = 'fill',
+  type = 'border',
   disabled = false,
 }) {
   const handleValue = useCallback(

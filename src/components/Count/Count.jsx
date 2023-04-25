@@ -122,6 +122,7 @@ function Count({ value = 1, onChange = () => {}, max = 2147483647, min = 0 }) {
 }
 
 const Wrapper = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   text-align: center;
@@ -134,13 +135,13 @@ const IconWrap = styled.div`
 `;
 
 const Text = styled.input`
+  width: 100%;
   display: block;
   border: 1px solid #d2d2d2;
   border-radius: 5px;
   color: #212529;
   font-size: 14px;
   padding: 8px 16px 6px 12px;
-  width: 50px;
 `;
 
 const Icon = styled.div`
