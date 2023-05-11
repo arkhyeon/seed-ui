@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
-export function TextInput(props) {
+export const TextInput = forwardRef(props => {
   const enterEvent = e => {
     if (e.key === 'Enter' && props.enterEvent) {
       props.enterEvent();
@@ -18,7 +18,7 @@ export function TextInput(props) {
       />
     </TextInputWrap>
   );
-}
+});
 
 const TextInputWrap = styled.div`
   width: 100%;

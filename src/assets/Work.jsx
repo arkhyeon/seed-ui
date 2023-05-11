@@ -13,6 +13,7 @@ import { BlackButton, WhiteButton } from '../components/Button/Button';
 import { DatePicker, TimePicker } from '../components';
 import Radio from '../components/Radio';
 import { TabIconButton } from '../components/SideTabs/SideTabs';
+import { alertStore } from '../R2wZustand';
 
 function Work() {
   const {
@@ -31,6 +32,7 @@ function Work() {
   const setDataListData = value => {
     setState(value);
   };
+  const { setAlertList } = alertStore();
   const data1 = [0, 1, 2, 3, 4];
   const data3 = ['a12', 'b34', 'c56', 'd67', 'e90'];
   const data2 = [
@@ -157,6 +159,34 @@ function Work() {
         검색
       </BlackButton>
       <WhiteButton onClick={() => {}}>검색</WhiteButton>
+      <WhiteButton
+        onClick={() => {
+          setAlertList('r2ware');
+        }}
+      >
+        알람
+      </WhiteButton>
+      <WhiteButton
+        onClick={() => {
+          setAlertList('hello');
+        }}
+      >
+        알람
+      </WhiteButton>
+      <WhiteButton
+        onClick={() => {
+          setAlertList('cococococo');
+        }}
+      >
+        알람
+      </WhiteButton>
+      <WhiteButton
+        onClick={() => {
+          setAlertList('makel');
+        }}
+      >
+        알람
+      </WhiteButton>
       <form
         onSubmit={e => {
           checkSubmit(e);

@@ -5,6 +5,7 @@ import { DepthList1 } from './assets/DepthMenuList';
 import { DatePicker, HeaderCreator } from './components';
 
 import Logo from './assets/Logo';
+import AlertToast from './components/Alert/AlertToast';
 
 function Index() {
   const click = id => {
@@ -13,6 +14,7 @@ function Index() {
 
   return (
     <div>
+      <AlertToast />
       <HeaderCreator
         logoSetting={{
           logo: <Logo />,
