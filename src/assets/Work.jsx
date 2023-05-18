@@ -14,6 +14,7 @@ import { DatePicker, TimePicker } from '../components';
 import Radio from '../components/Radio';
 import { TabIconButton } from '../components/SideTabs/SideTabs';
 import { alertStore } from '../R2wZustand';
+import { toast } from '../components/Alert/Toast';
 
 function Work() {
   const {
@@ -161,7 +162,7 @@ function Work() {
       <WhiteButton onClick={() => {}}>검색</WhiteButton>
       <WhiteButton
         onClick={() => {
-          setAlertList('r2ware');
+          toast('r2ware');
         }}
       >
         알람

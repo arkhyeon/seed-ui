@@ -1,5 +1,4 @@
 import create from 'zustand';
-import { v4 as uuidv4 } from 'uuid';
 
 export const useStore = create(set => ({
   showComp: false,
@@ -20,11 +19,12 @@ export const alertStore = create(set => ({
   alertList: [],
   setAlertList(alert) {
     set(state => {
-      const id = uuidv4();
       console.log(state);
       console.log(alert);
+      const timer = setTimeout(() => {}, 0);
+      console.log(timer);
       return {
-        alertList: [...state.alertList, { id, message: alert }],
+        alertList: [...state.alertList, { id: timer, message: alert }],
       };
     });
   },
