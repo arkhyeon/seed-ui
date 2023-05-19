@@ -34,6 +34,7 @@ import Card from './Card/Card/Card';
 import { Accordion } from './Accordion/Accordion';
 import { useStore } from '../R2wZustand';
 import DNDWrapper from '../FuntionalComponent/dnd/DNDWrapper';
+import AlertToast from './Alert/AlertToast';
 
 export { HeaderCreator };
 
@@ -95,3 +96,5 @@ export { OptionCard, Card };
 export { Accordion };
 
 export { DNDWrapper };
+
+export { AlertToast };
