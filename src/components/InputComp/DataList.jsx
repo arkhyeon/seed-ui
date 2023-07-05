@@ -15,7 +15,7 @@ function DataList({
   const ref = useRef();
   const dataListWrapRef = useRef();
   const dataList = valueList.map((value, i) => {
-    return { value, label: labelList[i] || value };
+    return { value, label: labelList[i] === undefined ? value : labelList[i] };
   });
   const [dataListState, setDataListState] = useState(dataList);
 
@@ -33,12 +33,12 @@ function DataList({
   useEffect(() => {
     setDataListState(dataList);
     if (defaultValue === '') {
-      ref.current.value = labelList[0] || valueList[0];
+      ref.current.value = labelList[0] === undefined ? valueList[0] : labelList[0];
       // setTextData(valueList[0], labelList[0] || valueList[0]);
     } else {
       for (let i = 0; i < valueList.length; i++) {
         if (valueList[i] === defaultValue) {
-          ref.current.value = labelList[i] || defaultValue;
+          ref.current.value = labelList[i] === undefined ? defaultValue : labelList[i];
           // setTextData(defaultValue, labelList[i] || defaultValue);
         }
       }

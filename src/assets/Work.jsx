@@ -117,6 +117,12 @@ function Work() {
         <Pagination totalLength={22313} pageEvent={pageFunction} />
       </PaginationWrap>
       <DataList id="프로젝트" valueList={data2} setData={setDataListData} />
+      <DataList
+        id="aaa"
+        valueList={[-1, 0, 1, 2, 3]}
+        labelList={[0, 1, 2, 3, 4]}
+        setData={setDataListData}
+      />
       <br />
       Hello Work! <br /> <br /> path : {pathname}
       <button
