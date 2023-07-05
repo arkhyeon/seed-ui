@@ -284,6 +284,9 @@ const ModalHeader = styled.div`
 
 const ChildrenWrapper = styled.div`
   padding: 16px 18px;
+  &:has(input:focus + ul) {
+    overflow: inherit;
+  }
   &:has(textarea, .cm-theme) {
     overflow: auto;
   }
