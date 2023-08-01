@@ -31,6 +31,7 @@ function DataList({
   }, []);
 
   useEffect(() => {
+    console.log('?');
     setDataListState(dataList);
     if (defaultValue === '') {
       ref.current.value = labelList[0] === undefined ? valueList[0] : labelList[0];
@@ -43,7 +44,7 @@ function DataList({
         }
       }
     }
-  }, [valueList]);
+  }, []);
 
   const exitDataList = e => {
     if (

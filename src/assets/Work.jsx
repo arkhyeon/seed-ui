@@ -31,6 +31,7 @@ function Work() {
   const [isNull, setIsNull] = useState('y');
   const [date, setDate] = useState(new Date());
   const setDataListData = value => {
+    console.log(value);
     setState(value);
   };
   const { setAlertList } = alertStore();
