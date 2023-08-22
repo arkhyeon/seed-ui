@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
 import { MdDangerous } from 'react-icons/all';
+import _ from 'lodash';
 import AsideCreator from '../components/Menu/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
 import DataList from '../components/InputComp/DataList';
@@ -30,10 +31,15 @@ function Work() {
   const [time, setTime] = useState();
   const [isNull, setIsNull] = useState('y');
   const [date, setDate] = useState(new Date());
+  const [timeData, setTimeData] = useState([]);
   const setDataListData = value => {
     console.log(value);
     setState(value);
   };
+
+  useEffect(() => {
+    setTimeData(data4);
+  }, []);
   const { setAlertList } = alertStore();
   const data1 = [0, 1, 2, 3, 4];
   const data3 = ['a12', 'b34', 'c56', 'd67', 'e90'];
@@ -68,6 +74,74 @@ function Work() {
     'Letitia',
     'Marianne',
     'Dael',
+  ];
+
+  const data4 = [
+    {
+      ie_id: -1,
+      ie_name: '미지정 그룹',
+      notes: '미지정 그룹',
+    },
+    {
+      ie_id: 3,
+      ie_name: '방주현업무그룹1',
+      notes: '업무 그룹3',
+    },
+    {
+      ie_id: 8,
+      ie_name: '[방주현] 업무1',
+      notes: '',
+    },
+    {
+      ie_id: 9,
+      ie_name: '[방주현] 업무3',
+      notes: '',
+    },
+    {
+      ie_id: 10,
+      ie_name: '[방주현] 업무4',
+      notes: '',
+    },
+    {
+      ie_id: 11,
+      ie_name: '[방주현] 업무5',
+      notes: '',
+    },
+    {
+      ie_id: 12,
+      ie_name: '[방주현] 업무6',
+      notes: '123',
+    },
+    {
+      ie_id: 16,
+      ie_name: 'cms',
+      notes: 'cms',
+    },
+    {
+      ie_id: 18,
+      ie_name: '1234',
+      notes: '13',
+    },
+    {
+      ie_id: 25,
+      ie_name: '1',
+      notes: '1',
+    },
+    {
+      ie_id: 26,
+      ie_name: 'ㅁ',
+      notes: 'ㅁ',
+    },
+    {
+      ie_id: 27,
+      ie_name: 'ㅁ',
+      notes: 'ㅁ',
+    },
+    {
+      ie_id: 30,
+      ie_name: '[HEE] 거래 종료 추출 그룹',
+      notes: '',
+    },
   ];
 
   const onSubmit = data => {
@@ -120,8 +194,9 @@ function Work() {
       <DataList id="프로젝트" valueList={data2} setData={setDataListData} />
       <DataList
         id="aaa"
-        valueList={[-1, 0, 1, 2, 3]}
-        labelList={[0, 1, 2, 3, 4]}
+        valueList={_.map(timeData, 'ie_id')}
+        // valueList={[-1, 0, 1, 2, 3]}
+        // labelList={[0, 1, 2, 3, 4]}
         setData={setDataListData}
       />
       <br />
