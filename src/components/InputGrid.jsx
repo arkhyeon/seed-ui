@@ -39,7 +39,9 @@ function InputGrid({
         {list.map((el, idx) => {
           return (
             <LineWrapper key={`line-${idx}`}>
-              <Subject className="input-grid-subject">{el.subject}</Subject>
+              <Subject titie={el.title ?? ''} className="input-grid-subject">
+                {el.subject}
+              </Subject>
               <Content contentPadding={contentPadding} className="input-grid-content">
                 {el.content}
               </Content>
