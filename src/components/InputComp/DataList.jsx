@@ -43,7 +43,7 @@ function DataList({
         }
       }
     }
-  }, [valueList]);
+  }, [valueList, defaultValue]);
 
   const exitDataList = e => {
     if (
