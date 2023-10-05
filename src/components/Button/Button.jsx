@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { useStore } from '../../R2wZustand';
 
-export function BlackButton(props) {
+export const BlackButton = forwardRef((props, ref) => {
   const { showComp } = useStore();
   return (
     <BlackBtn
+      ref={ref}
       {...props}
       onClick={e => {
         blockedDBClick(e);
@@ -15,11 +16,12 @@ export function BlackButton(props) {
       className={showComp ? 'showComp' : ''}
     />
   );
-}
+});
 
-export function WhiteButton(props) {
+export const WhiteButton = forwardRef((props, ref) => {
   return (
     <WhiteBtn
+      ref={ref}
       {...props}
       onClick={e => {
         blockedDBClick(e);
@@ -27,7 +29,7 @@ export function WhiteButton(props) {
       }}
     />
   );
-}
+});
 
 export function RadioButton({ valueList = [], labelList = [], setValue, defaultValue }) {
   const dataList = valueList.map((value, i) => {
