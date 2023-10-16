@@ -236,6 +236,10 @@ const ButtonWrap = styled.div`
   width: 100%;
   position: relative;
 
+  & button {
+    overflow: hidden;
+  }
+
   &.option-button > button {
     border-radius: 5px 5px 0 0;
   }
@@ -261,13 +265,12 @@ const Button = styled.button`
   outline: none;
   width: 100%;
   height: 38px;
-  padding: 10px 0 10px 10px;
+  padding: 10px 55px 10px 10px;
   border-radius: 5px;
   cursor: pointer;
   background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  text-overflow: ellipsis;
+  text-align: left;
 
   &.selectedTab {
     background-color: black !important;
@@ -280,7 +283,8 @@ const Button = styled.button`
 `;
 
 const IconButton = styled(Button)`
-  justify-content: left;
+  display: flex;
+  align-items: center;
   gap: 8px;
 
   & svg {

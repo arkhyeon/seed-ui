@@ -133,7 +133,7 @@ function Project() {
               ],
             }}
           >
-            버트은
+            버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은버트은
           </TabButton>
         </SideScrollWrap>
         <DividingLine />
