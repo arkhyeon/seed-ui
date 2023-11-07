@@ -140,7 +140,7 @@ function DataList({
       <DataListWrap>
         <DataListInput
           id={id}
-          inputRef={ref}
+          ref={ref}
           type="text"
           onChange={e => searchData(e.target.value, e.target.value)}
           autoComplete="off"

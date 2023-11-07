@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
-export const TextInput = forwardRef(props => {
+export const TextInput = forwardRef((props, ref) => {
   const enterEvent = e => {
     if (e.key === 'Enter' && props.enterEvent) {
       props.enterEvent();
@@ -10,7 +10,7 @@ export const TextInput = forwardRef(props => {
   return (
     <TextInputWrap>
       <TextInputComp
-        ref={props.inputRef}
+        ref={ref}
         {...props}
         onKeyDown={e => {
           enterEvent(e);
@@ -38,9 +38,9 @@ const TextInputComp = styled.input`
   }
 `;
 
-export function DataListInput(props) {
-  return <DataListInputComp ref={props.inputRef} {...props} />;
-}
+export const DataListInput = forwardRef((props, ref) => {
+  return <DataListInputComp ref={ref} {...props} />;
+});
 
 const DataListInputComp = styled(TextInputComp)`
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");

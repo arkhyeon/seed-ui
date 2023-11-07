@@ -52,7 +52,7 @@ function TimePicker({ time = '00:00', setTime = null, disabled = false }) {
     <Wrapper>
       <TextInput
         value={time}
-        inputRef={inputRef}
+        ref={inputRef}
         onClick={handleOpen}
         disabled={disabled}
         className="time-picker-input"

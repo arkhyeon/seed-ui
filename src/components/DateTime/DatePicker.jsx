@@ -111,7 +111,7 @@ function DatePicker({
       setDate(changedDate);
       setDateViewed(changedDate);
 
-      return setIsOpen(false);
+      setIsOpen(false);
     },
     [dateViewed, setDate],
   );
@@ -227,7 +227,7 @@ function DatePicker({
     <Wrapper>
       <TextInput
         className="date-picker-input"
-        inputRef={inputRef}
+        ref={inputRef}
         value={inputValue}
         onClick={() => {
           setIsOpen(!isOpen);
@@ -257,6 +257,7 @@ function DatePicker({
             ))}
           </WeekWrapper>
           {renderDays()}
+          {/* <SelectDaysWrap>asd</SelectDaysWrap> */}
         </PickerWrapper>
       )}
     </Wrapper>
