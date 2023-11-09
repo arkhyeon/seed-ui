@@ -127,11 +127,16 @@ const Wrapper = styled.div`
   align-items: center;
   text-align: center;
   position: relative;
+
+  &:hover > div {
+    display: block;
+  }
 `;
 
 const IconWrap = styled.div`
   position: absolute;
   right: 1px;
+  display: none;
 `;
 
 const Text = styled.input`

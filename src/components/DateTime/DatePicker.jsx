@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import { css } from '@emotion/react';
 import _ from 'lodash';
+import { FaMinus, FaPlus } from 'react-icons/all';
 import { TextInput } from '../InputComp/InputComponent';
 import DataList from '../InputComp/DataList';
 
@@ -257,7 +258,26 @@ function DatePicker({
             ))}
           </WeekWrapper>
           {renderDays()}
-          {/* <SelectDaysWrap>asd</SelectDaysWrap> */}
+          <SelectDaysWrap>
+            <div>
+              10일 전
+              <span>
+                <FaPlus />
+              </span>
+              <span>
+                <FaMinus />
+              </span>
+            </div>
+            <div>1개월 전</div>
+            <div>6개월 전</div>
+            <div>1년 전</div>
+          </SelectDaysWrap>
+          <SelectDaysWrap>
+            <div>10일 후</div>
+            <div>1개월 후</div>
+            <div>6개월 후</div>
+            <div>1년 후</div>
+          </SelectDaysWrap>
         </PickerWrapper>
       )}
     </Wrapper>
@@ -355,7 +375,7 @@ const DayWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 
   .selected-day {
     background: #fb5b5b !important;
@@ -395,6 +415,41 @@ const Day = styled.li`
       `
     );
   }}
+`;
+
+const SelectDaysWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 8px;
+  font-size: 14px;
+
+  & div {
+    position: relative;
+    display: flex;
+    color: white;
+    background-color: #3e3e3e;
+    border-radius: 3px;
+    padding: 2px 4px;
+    cursor: pointer;
+  }
+
+  & div:hover span {
+    display: block;
+  }
+
+  & span {
+    width: 50%;
+    position: absolute;
+    //display: none;
+    text-align: center;
+    background-color: #3e3e3e;
+  }
+
+  & span:nth-child(2) {
+    left: 50%;
+    //border-left: 1px solid #ebebeb;
+  }
 `;
 
 export default DatePicker;

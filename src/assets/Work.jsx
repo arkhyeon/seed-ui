@@ -11,7 +11,7 @@ import Pagination from '../components/InputComp/Pagination';
 import { TextInput } from '../components/InputComp/InputComponent';
 import Logo from './Logo';
 import { BlackButton, WhiteButton } from '../components/Button/Button';
-import { DatePicker, TimePicker } from '../components';
+import { Count, DatePicker, TimePicker } from '../components';
 import Radio from '../components/Radio';
 import { TabIconButton } from '../components/SideTabs/SideTabs';
 import { alertStore } from '../R2wZustand';
@@ -270,6 +270,7 @@ function Work() {
       >
         알람
       </WhiteButton>
+      <Count />
       <form
         onSubmit={e => {
           checkSubmit(e);
@@ -280,7 +281,8 @@ function Work() {
         <button type="submit">hi</button>
       </form>
       <TimePicker time={time} setTime={setTime} />
-      <DatePicker date={date} setDate={setDate} />
+      <DatePicker date={new Date('2019-11-02')} setDate={e => console.log(e)} />
+      {/* <DatePicker date={new Date('2019-11-02')} setDate={setDate} /> */}
       <TextInput />
       <TextBox>
         <label htmlFor="ice-cream-choice">Choose a flavor:</label>
