@@ -138,6 +138,7 @@ const SideTitle = styled.div`
 
 const MainWrap = styled.div`
   width: 100%;
+  position: relative;
 `;
 
 export default AsideCreator;
