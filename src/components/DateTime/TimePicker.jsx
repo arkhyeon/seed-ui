@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import TimePickerSelection from './components/TimePickerSelection';
+import TimePickerSelection from './timeComponents/TimePickerSelection';
 import { TextInput } from '../InputComp/InputComponent';
 
 function TimePicker({ time = '00:00', itemHeight = 32, onChange = () => {}, disabled = false }) {

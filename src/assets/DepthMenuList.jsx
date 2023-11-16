@@ -7,6 +7,7 @@ import ConfigSync from './ConfigSync';
 import MacroRegister from './MacroRegister';
 import MacroDashboard from './MacroDashboard';
 import TextAreaTestArea from './TextAreaTestArea';
+import Testing from '../components/Testing';
 
 /**
  * @param {String} title
@@ -38,6 +39,12 @@ export const DepthList1 = [
     title: '작업',
     link: 'work',
     component: <Work />,
+    menuRole: 3,
+  },
+  {
+    title: '테스팅',
+    link: 'testing',
+    component: <Testing />,
     menuRole: 3,
   },
   {

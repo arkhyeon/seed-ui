@@ -166,6 +166,20 @@ function Work() {
     console.log('chekc');
     console.log(e);
   };
+  function leftPad(value) {
+    if (value >= 10) {
+      return value;
+    }
+
+    return `0${value}`;
+  }
+  const dateFormat = date => {
+    const year = date.getFullYear();
+    const month = leftPad(date.getMonth() + 1);
+    const day = leftPad(date.getDate());
+
+    return [year, month, day].join('-');
+  };
 
   return (
     <AsideCreator
@@ -281,7 +295,13 @@ function Work() {
         <button type="submit">hi</button>
       </form>
       <TimePicker time={time} setTime={setTime} />
-      <DatePicker date={new Date('2019-11-02')} setDate={e => console.log(e)} />
+      <DatePicker
+        date={new Date('2019-11-02')}
+        setDate={e => {
+          console.log(dateFormat(e));
+          setDate(dateFormat(e));
+        }}
+      />
       {/* <DatePicker date={new Date('2019-11-02')} setDate={setDate} /> */}
       <TextInput />
       <TextBox>
