@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { DataListInput } from './InputComponent';
 
@@ -14,20 +14,21 @@ function DataList({
 }) {
   const ref = useRef();
   const dataListWrapRef = useRef();
-  const dataList = valueList.map((value, i) => {
-    return { value, label: labelList[i] === undefined ? value : labelList[i] };
-  });
+  const dataList = useMemo(() => {
+    return valueList.map((value, i) => ({
+      value,
+      label: labelList[i] === undefined ? value : labelList[i],
+    }));
+  }, [labelList, valueList]);
   const [dataListState, setDataListState] = useState(dataList);
 
   useEffect(() => {
-    document.addEventListener('mousedown', e => {
-      exitDataList(e);
-    });
-    return () => {
-      document.removeEventListener('mousedown', e => {
-        exitDataList(e);
-      });
-    };
+    console.log('render');
+  }, [valueList, labelList]);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', e => exitDataList(e));
+    return () => document.removeEventListener('mousedown', e => exitDataList(e));
   }, []);
 
   useEffect(() => {
@@ -147,28 +148,22 @@ function DataList({
           onFocus={() => {
             dataListWrapRef.current.style.display = 'block';
           }}
-          onKeyDown={e => {
-            arrowMove(e);
-          }}
+          onKeyDown={e => arrowMove(e)}
           readOnly={select}
           disabled={disabled}
         />
         <DataListItemWrap ref={dataListWrapRef} height={height}>
-          {dataListState.map((data, i) => {
-            return (
-              <DataListItem
-                tabIndex={i}
-                key={data.value}
-                value={data.value}
-                onClick={() => setTextData(data.value, data.label)}
-                onKeyDown={e => {
-                  arrowMove(e);
-                }}
-              >
-                {data.label}
-              </DataListItem>
-            );
-          })}
+          {dataListState?.map((data, i) => (
+            <DataListItem
+              tabIndex={i}
+              key={data.value}
+              value={data.value}
+              onClick={() => setTextData(data.value, data.label)}
+              onKeyDown={e => arrowMove(e)}
+            >
+              {data.label}
+            </DataListItem>
+          ))}
         </DataListItemWrap>
       </DataListWrap>
     </>
