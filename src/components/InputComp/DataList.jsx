@@ -23,10 +23,6 @@ function DataList({
   const [dataListState, setDataListState] = useState(dataList);
 
   useEffect(() => {
-    console.log('render');
-  }, [valueList, labelList]);
-
-  useEffect(() => {
     document.addEventListener('mousedown', e => exitDataList(e));
     return () => document.removeEventListener('mousedown', e => exitDataList(e));
   }, []);

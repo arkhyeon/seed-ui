@@ -52,6 +52,7 @@ const LabelSelectorWrap = styled.div`
   border-radius: 10px;
   background: white;
   z-index: 998;
+  overflow: hidden;
 
   svg {
     margin-right: 8px;

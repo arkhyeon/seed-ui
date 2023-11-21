@@ -83,6 +83,8 @@ const Button = styled.button`
   transition: 0.3s;
   cursor: pointer;
   border: 1px solid #d2d2d2;
+  max-height: 32px;
+
   :hover {
     background-color: #455a64;
   }
