@@ -146,7 +146,7 @@ function Modal({
   const removeEvents = useCallback(
     e => {
       const { clientX, clientY } = e;
-      const { innerWidth, innerHeight, outerWidth } = window;
+      const { innerWidth, innerHeight } = window;
 
       document.removeEventListener('mousemove', throttleMove);
       document.removeEventListener('mouseup', removeEvents);
@@ -154,26 +154,12 @@ function Modal({
       const posX = clientX - initialPos.current.x;
       const posY = clientY - initialPos.current.y;
 
-      const isDevToolsOpen = outerWidth - innerWidth > 100;
-
-      // 속성창이 켜진 상태에서 모달가로위치 + 50 속성창의 영역에 들어오면 가로 위치를 1으로 한다
-      if (isDevToolsOpen && posX + 50 >= innerWidth) {
+      if (posX + 50 >= innerWidth) {
         setPos(prevState => ({ x: 1, y: prevState.y }));
         return;
       }
 
-      // 속성창이 켜진 상태에서 모달세로위치 + 50 속성창의 영역에 들어오면 세로 위치를 1으로 한다
-      if (isDevToolsOpen && posY + 50 >= innerHeight) {
-        setPos(prevState => ({ x: prevState.x, y: 1 }));
-        return;
-      }
-
-      if (posX >= innerWidth) {
-        setPos(prevState => ({ x: 1, y: prevState.y }));
-        return;
-      }
-
-      if (posY >= innerHeight) {
+      if (posY + 50 >= innerHeight) {
         setPos(prevState => ({ x: prevState.x, y: 1 }));
       }
     },

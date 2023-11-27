@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
@@ -11,11 +11,12 @@ import Pagination from '../components/InputComp/Pagination';
 import { TextInput } from '../components/InputComp/InputComponent';
 import Logo from './Logo';
 import { BlackButton, WhiteButton } from '../components/Button/Button';
-import {Modal, Count, DatePicker, TimePicker } from '../components';
+import { Modal, Count, DatePicker, TimePicker, InputGrid } from '../components';
 import Radio from '../components/Radio';
 import { TabIconButton } from '../components/SideTabs/SideTabs';
 import { alertStore } from '../R2wZustand';
 import { toast } from '../components/Alert/Toast';
+import ModalTestTemplate from '../ModalTestTemplate';
 
 function Work() {
   const {
@@ -187,6 +188,16 @@ function Work() {
     setModal(true);
   };
 
+  const ChangeSelectDate = useCallback(e => {
+    const { name, value } = e.target || e;
+    setDate(prevState => {
+      return { ...prevState, [name]: value };
+    });
+  }, []);
+
+  const monthValueList = [...[...Array(61).keys()].map(key => key), 120];
+  const dayValueList = [-1, 32].concat([...Array(32).keys()].map(key => key));
+  const dayLabelList = ['', '말', '작업'].concat([...Array(31).keys()].map(key => key + 1));
   return (
     <AsideCreator
       menuList={DepthList1}
@@ -197,7 +208,64 @@ function Work() {
       }}
     >
       {modal && (
-        <Modal modalTitle="테스트" modalState={modal} handleClose={() => setModal(false)} />
+        <ModalTestTemplate
+          modalTitle="테스트"
+          modalState={modal}
+          handleClose={() => setModal(false)}
+          buttonList={[<WhiteButton onClick={() => setModal(false)}>닫기</WhiteButton>]}
+          width="500px"
+        >
+          <InputGridWrapper>
+            <InputGrid
+              list={[
+                {
+                  subject: '월',
+                  content: (
+                    <>
+                      <DataList
+                        setData={value => {
+                          ChangeSelectDate({
+                            name: 'std_m',
+                            value,
+                          });
+                        }}
+                        valueList={monthValueList}
+                        select
+                        defaultValue={date.std_m}
+                      />
+                      <p>개월 전</p>
+                    </>
+                  ),
+                },
+              ]}
+            />
+            <InputGrid
+              list={[
+                {
+                  subject: '일',
+                  content: (
+                    <DataListWrapper>
+                      <DataList
+                        setData={value => {
+                          ChangeSelectDate({
+                            name: 'std_d',
+                            value,
+                          });
+                        }}
+                        labelList={dayLabelList}
+                        valueList={dayValueList}
+                        select
+                        defaultValue={date.std_d}
+                      />
+                      <p>일</p>
+                    </DataListWrapper>
+                  ),
+                },
+              ]}
+              location="bottom"
+            />
+          </InputGridWrapper>
+        </ModalTestTemplate>
       )}
       <Radio
         checkColor="rgb(64, 64, 64)"
@@ -333,6 +401,25 @@ function Work() {
     </AsideCreator>
   );
 }
+
+const InputGridWrapper = styled.div`
+  margin-bottom: 20px;
+`;
+
+const DataListWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  & > div:first-of-type {
+    width: 233px;
+  }
+  & > div:nth-of-type(2) {
+    & > div {
+      width: 20px;
+    }
+  }
+`;
 
 const PaginationWrap = styled.div`
   display: flex;
