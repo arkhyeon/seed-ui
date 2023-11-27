@@ -11,7 +11,7 @@ import Pagination from '../components/InputComp/Pagination';
 import { TextInput } from '../components/InputComp/InputComponent';
 import Logo from './Logo';
 import { BlackButton, WhiteButton } from '../components/Button/Button';
-import { Count, DatePicker, TimePicker } from '../components';
+import {Modal, Count, DatePicker, TimePicker } from '../components';
 import Radio from '../components/Radio';
 import { TabIconButton } from '../components/SideTabs/SideTabs';
 import { alertStore } from '../R2wZustand';
@@ -32,6 +32,8 @@ function Work() {
   const [isNull, setIsNull] = useState('y');
   const [date, setDate] = useState(new Date());
   const [timeData, setTimeData] = useState([]);
+  const [modal, setModal] = useState(false);
+
   const setDataListData = value => {
     console.log(value);
     setState(value);
@@ -181,6 +183,10 @@ function Work() {
     return [year, month, day].join('-');
   };
 
+  const handleModalBtn = () => {
+    setModal(true);
+  };
+
   return (
     <AsideCreator
       menuList={DepthList1}
@@ -190,6 +196,9 @@ function Work() {
         logoLink: '/',
       }}
     >
+      {modal && (
+        <Modal modalTitle="테스트" modalState={modal} handleClose={() => setModal(false)} />
+      )}
       <Radio
         checkColor="rgb(64, 64, 64)"
         value={isNull}
@@ -320,6 +329,7 @@ function Work() {
         <MdDangerous />
         hi
       </TabIconButton>
+      <BlackButton onClick={handleModalBtn}>모달 버튼</BlackButton>
     </AsideCreator>
   );
 }

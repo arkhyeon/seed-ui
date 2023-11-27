@@ -31,8 +31,8 @@ import { useThrottle } from '../assets/CustomHook';
  * 모달창 하단에 표시될 버튼 목록
  * default 값은 [
  * <Button size="small" color="blue" onClick={callback}> 확인 </Button>,
-   <Button size="small" onClick={handleClose}>닫기</Button>
-   ]
+ <Button size="small" onClick={handleClose}>닫기</Button>
+ ]
  * @param {Function} props.callback
  * 모달창 확인 버튼을 눌렀을 시, 실행되는 함수
  * default 값은 null
@@ -56,10 +56,10 @@ function Modal({
 }) {
   const modalRef = useRef(null);
   const headRef = useRef(null);
-  const initialPos = useRef({ x: 0, y: 0 });
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  // const [browserSize, setBrowserSize] = useState({ width: 0, height: 0 });
+  const initialPos = useRef({ x: 0, y: 0 }); // 모달 위치 ref
+  const [pos, setPos] = useState({ x: 0, y: 0 }); // 모달 상태
 
+  // 랜더링시 브라우저 화면 내(window.innerWidth)에서 중앙 배치하는 함수
   const moveToCenter = () => {
     const centerWidth = window.scrollX + window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
 
@@ -69,122 +69,70 @@ function Modal({
     setPos({ x: centerWidth, y: centerHeight < 0 ? 0 : centerHeight });
   };
 
-  useLayoutEffect(() => {
-    moveToCenter();
-    // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
-
-    const observer = new ResizeObserver((entries, observer) => {
-      if (!modalRef.current) return;
-      for (const entry of entries) {
-        console.log(`${entry.contentRect.width}px ; height: ${entry.contentRect.height}px`);
-        const centerHeight =
-          window.scrollY + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
-
-        setPos(prevState => {
-          return { x: prevState.x, y: centerHeight < 0 ? 0 : centerHeight };
-        });
-      }
-    });
-
-    // 2. 감지할 요소 추가하기
-    observer.observe(modalRef.current);
-  }, []);
-
+  // window.innerWidth 또는 window.innerHeight에 값이 달라 졌을때 실행된다.
+  //  window.outerWidth나  window.outerHeight가 줄어들때 모달 위치가 -가 되는 것을 방지.
   const handleCenter = useCallback(() => {
-    // setBrowserSize({ width: window.innerWidth, height: window.innerHeight });
+    const { offsetWidth, offsetHeight } = modalRef.current;
+    const isWidthExceeding = offsetWidth > window.innerWidth;
+    const isHeightExceeding = offsetHeight > window.innerHeight;
 
-    const temp = { ...pos };
+    const newPosition = { ...pos };
 
-    if (modalRef.current.offsetWidth > window.innerWidth) {
-      temp.x = 0;
-    } else if (pos.x + modalRef.current.offsetWidth > window.innerWidth) {
-      temp.x = window.innerWidth - modalRef.current.offsetWidth;
+    if (isWidthExceeding) {
+      newPosition.x = 0;
+    } else if (pos.x + offsetWidth > window.innerWidth) {
+      newPosition.x = window.innerWidth - offsetWidth;
     }
-    if (modalRef.current.offsetHeight > window.innerHeight) {
-      temp.y = 0;
-    } else if (pos.y + modalRef.current.offsetHeight > window.innerHeight) {
-      temp.y = window.innerHeight - modalRef.current.offsetHeight;
+
+    if (isHeightExceeding) {
+      newPosition.y = 0;
+    } else if (pos.y + offsetHeight > window.innerHeight) {
+      newPosition.y = window.innerHeight - offsetHeight;
     }
-    setPos(temp);
+
+    setPos(newPosition);
   }, [pos]);
 
-  useLayoutEffect(() => {
-    window.addEventListener('resize', handleCenter);
-
-    return () => {
-      window.removeEventListener('resize', handleCenter);
-    };
-  }, [handleCenter]);
-
-  // useEffect(() => {
-  //   if (modalRef.current.offsetWidth > )
-  // }, [browserSize]);
-
-  // const handleMove = useCallback(
-  //   e => {
-  //     console.log('작동');
-  //     let posX = e.clientX - initialPos.current.x;
-  //     let posY = e.clientY - initialPos.current.y;
-
-  //     if (posX < 0) {
-  //       posX = 1;
-  //     }
-
-  //     if (posX + modalRef.current.offsetWidth > window.innerWidth) {
-  //       posX = window.innerWidth - modalRef.current.offsetWidth - 1;
-  //     }
-
-  //     if (posY < 0) {
-  //       posY = 1;
-  //     }
-
-  //     if (posY + modalRef.current.offsetHeight > window.innerHeight) {
-  //       posY = window.innerHeight - modalRef.current.offsetHeight - 1;
-  //     }
-
-  //     setPos({ x: posX, y: posY });
-  //   },
-  //   [modalRef, initialPos, setPos],
-  // );
-
+  // 모달을 움직이는 경우(드래그) 실행되는 함수.
   const handleMove = useCallback(
     e => {
-      let posX = e.clientX - initialPos.current.x;
-      let posY = e.clientY - initialPos.current.y;
+      const { clientX, clientY } = e;
+      const { offsetWidth, offsetHeight } = modalRef.current; // 모달의 너비와 높이
+      const { innerWidth, innerHeight } = window; // 창의 너비와 높이
+      const { scrollWidth, scrollHeight } = document.documentElement; // 스크롤의 너비와 높이
 
-      if (
-        modalRef.current.offsetWidth > window.innerWidth ||
-        modalRef.current.offsetHeight > window.innerHeight
-      ) {
-        if (posX + modalRef.current.offsetWidth > document.documentElement.scrollWidth) {
-          posX = document.documentElement.scrollWidth - modalRef.current.offsetWidth - 1;
+      let posX = clientX - initialPos.current.x;
+      let posY = clientY - initialPos.current.y;
+
+      // 모달의 너비나 높이가 창보다 클경우
+      if (offsetWidth > innerWidth || offsetHeight > innerHeight) {
+        if (posX + offsetWidth > scrollWidth) {
+          posX = scrollWidth - offsetWidth - 1;
         }
 
-        if (posY + modalRef.current.offsetHeight > document.documentElement.scrollHeight) {
-          posY = document.documentElement.scrollHeight - modalRef.current.offsetHeight - 1;
+        if (posY + offsetHeight > scrollHeight) {
+          posY = scrollHeight - offsetHeight - 1;
         }
 
         return setPos({ x: posX < 0 ? 0 : posX, y: posY < 0 ? 0 : posY });
       }
 
+      // 모달의 가로값이 음수인 경우
       if (posX < 0) {
         posX = 1;
       }
 
-      // if (posX + modalRef.current.offsetWidth > window.innerWidth) {
-      //   posX = window.innerWidth - modalRef.current.offsetWidth - 1;
-      // }
-
-      if (posX + modalRef.current.offsetWidth > document.documentElement.scrollWidth) {
-        posX = document.documentElement.scrollWidth - modalRef.current.offsetWidth - 1;
+      // 모달이 가로 끝으로 나가지 못하게 함
+      if (posX + modalRef.current.offsetWidth > scrollWidth) {
+        posX = scrollWidth - modalRef.current.offsetWidth - 1;
       }
 
       if (posY < 0) {
         posY = 1;
       }
 
-      if (posY + modalRef.current.offsetHeight > document.documentElement.scrollHeight) {
-        posY = document.documentElement.scrollHeight - modalRef.current.offsetHeight - 1;
+      if (posY + modalRef.current.offsetHeight > scrollHeight) {
+        posY = scrollHeight - modalRef.current.offsetHeight - 1;
       }
 
       setPos({ x: posX, y: posY });
@@ -194,27 +142,89 @@ function Modal({
 
   const throttleMove = useThrottle(handleMove, 10);
 
-  const removeEvents = useCallback(() => {
-    document.removeEventListener('mousemove', throttleMove);
-    document.removeEventListener('mouseup', removeEvents);
-  }, [throttleMove]);
+  // 모달 클릭후 모달에서 마우스를 뗐을때
+  const removeEvents = useCallback(
+    e => {
+      const { clientX, clientY } = e;
+      const { innerWidth, innerHeight, outerWidth } = window;
 
+      document.removeEventListener('mousemove', throttleMove);
+      document.removeEventListener('mouseup', removeEvents);
+
+      const posX = clientX - initialPos.current.x;
+      const posY = clientY - initialPos.current.y;
+
+      const isDevToolsOpen = outerWidth - innerWidth > 100;
+
+      // 속성창이 켜진 상태에서 모달가로위치 + 50 속성창의 영역에 들어오면 가로 위치를 1으로 한다
+      if (isDevToolsOpen && posX + 50 >= innerWidth) {
+        setPos(prevState => ({ x: 1, y: prevState.y }));
+        return;
+      }
+
+      // 속성창이 켜진 상태에서 모달세로위치 + 50 속성창의 영역에 들어오면 세로 위치를 1으로 한다
+      if (isDevToolsOpen && posY + 50 >= innerHeight) {
+        setPos(prevState => ({ x: prevState.x, y: 1 }));
+        return;
+      }
+
+      if (posX >= innerWidth) {
+        setPos(prevState => ({ x: 1, y: prevState.y }));
+        return;
+      }
+
+      if (posY >= innerHeight) {
+        setPos(prevState => ({ x: prevState.x, y: 1 }));
+      }
+    },
+    [throttleMove, initialPos],
+  );
+
+  // 모달 상단 클릭후 드래그하고 뗐을때 수정된 위치 변경 (useRef인 initialPos)
   const handleDown = useCallback(
     e => {
       if (!movable) {
         return;
       }
-
       const { left, top } = modalRef.current.getBoundingClientRect();
-      // initialPos.current.x = e.clientX - left;
-      initialPos.current.x = e.clientX - (left + window.scrollX);
-      initialPos.current.y = e.clientY - (top + window.scrollY);
-
+      const setInitialPosition = (clientX, clientY) => {
+        initialPos.current.x = clientX - left;
+        initialPos.current.y = clientY - top;
+      };
+      setInitialPosition(e.clientX, e.clientY);
       document.addEventListener('mousemove', throttleMove);
       document.addEventListener('mouseup', removeEvents);
     },
     [modalRef, initialPos, removeEvents, movable, throttleMove],
   );
+
+  // 컴포넌트 그리기 전에 이펙트를 수행하는 useLayoutEffect.
+  useLayoutEffect(() => {
+    moveToCenter();
+
+    const handleResize = entries => {
+      if (!modalRef.current) return;
+      entries.forEach(entry => {
+        console.log(`${entry.contentRect.width}px ; height: ${entry.contentRect.height}px`);
+        const centerHeight =
+          window.scrollY + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
+
+        setPos(prevState => ({
+          x: prevState.x,
+          y: centerHeight < 0 ? 0 : centerHeight,
+        }));
+      });
+    };
+    const observer = new ResizeObserver(handleResize);
+    observer.observe(modalRef.current);
+  }, []);
+
+  useLayoutEffect(() => {
+    window.addEventListener('resize', handleCenter);
+    return () => {
+      window.removeEventListener('resize', handleCenter);
+    };
+  }, [handleCenter]);
 
   return (
     modalState && (
