@@ -40,6 +40,7 @@ import { useThrottle } from '../assets/CustomHook';
  * 모달 내에 들어갈 컴포넌트
  * @returns {JSX.Element} Button Component
  */
+
 function Modal({
   width = `600px`,
   children,
@@ -61,11 +62,8 @@ function Modal({
 
   // 랜더링시 브라우저 화면 내(window.innerWidth)에서 중앙 배치하는 함수
   const moveToCenter = () => {
-    const centerWidth = window.scrollX + window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
-
-    const centerHeight =
-      window.scrollY + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
-
+    const centerWidth = window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
+    const centerHeight = window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
     setPos({ x: centerWidth, y: centerHeight < 0 ? 0 : centerHeight });
   };
 
@@ -83,18 +81,17 @@ function Modal({
     } else if (pos.x + offsetWidth > window.innerWidth) {
       newPosition.x = window.innerWidth - offsetWidth;
     }
-
     if (isHeightExceeding) {
       newPosition.y = 0;
     } else if (pos.y + offsetHeight > window.innerHeight) {
       newPosition.y = window.innerHeight - offsetHeight;
     }
-
     setPos(newPosition);
   }, [pos]);
 
   // 모달을 움직이는 경우(드래그) 실행되는 함수.
   const handleMove = useCallback(
+    // eslint-disable-next-line consistent-return
     e => {
       const { clientX, clientY } = e;
       const { offsetWidth, offsetHeight } = modalRef.current; // 모달의 너비와 높이
@@ -109,11 +106,9 @@ function Modal({
         if (posX + offsetWidth > scrollWidth) {
           posX = scrollWidth - offsetWidth - 1;
         }
-
         if (posY + offsetHeight > scrollHeight) {
           posY = scrollHeight - offsetHeight - 1;
         }
-
         return setPos({ x: posX < 0 ? 0 : posX, y: posY < 0 ? 0 : posY });
       }
 
@@ -187,22 +182,6 @@ function Modal({
   // 컴포넌트 그리기 전에 이펙트를 수행하는 useLayoutEffect.
   useLayoutEffect(() => {
     moveToCenter();
-
-    const handleResize = entries => {
-      if (!modalRef.current) return;
-      entries.forEach(entry => {
-        console.log(`${entry.contentRect.width}px ; height: ${entry.contentRect.height}px`);
-        const centerHeight =
-          window.scrollY + window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
-
-        setPos(prevState => ({
-          x: prevState.x,
-          y: centerHeight < 0 ? 0 : centerHeight,
-        }));
-      });
-    };
-    const observer = new ResizeObserver(handleResize);
-    observer.observe(modalRef.current);
   }, []);
 
   useLayoutEffect(() => {
