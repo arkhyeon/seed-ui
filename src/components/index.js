@@ -18,6 +18,7 @@ import InputGrid from './InputGrid';
 import { BlackButton, WhiteButton, SwitchButton, RadioButton } from './Button/Button';
 import LabelList from './LabelList/LabelList';
 import Count from './Count/Count';
+import Counter from './Counter/Counter';
 import CountList from './CountList/CountList';
 import {
   MainTabButton,
@@ -72,6 +73,8 @@ export { InputGrid };
 export { LabelList };
 
 export { Count };
+
+export { Counter };
 
 export { CountList };
 
