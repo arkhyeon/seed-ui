@@ -17,6 +17,7 @@ import { TabIconButton } from '../components/SideTabs/SideTabs';
 import { alertStore } from '../R2wZustand';
 import { toast } from '../components/Alert/Toast';
 import ModalTestTemplate from '../ModalTestTemplate';
+import Counter from '../components/Counter/Counter';
 
 function Work() {
   const {
@@ -198,6 +199,12 @@ function Work() {
   const monthValueList = [...[...Array(61).keys()].map(key => key), 120];
   const dayValueList = [-1, 32].concat([...Array(32).keys()].map(key => key));
   const dayLabelList = ['', '말', '작업'].concat([...Array(31).keys()].map(key => key + 1));
+
+  // 1000 100 100000 큰건 이만큼 걸린다
+  // 200 100 20000 작은건 이만큼 걸린다
+
+  // 작은 것에 비해 큰것은 숫자도 5배
+
   return (
     <AsideCreator
       menuList={DepthList1}
@@ -398,9 +405,12 @@ function Work() {
         hi
       </TabIconButton>
       <BlackButton onClick={handleModalBtn}>모달 버튼</BlackButton>
+      <Counter targetValue={500} time={100 / (500 / 100)} />
+      <Counter targetValue={100} time={100} />
     </AsideCreator>
   );
 }
+// 기본 설정 시간 /  (카운트 /최소 카운트)
 
 const InputGridWrapper = styled.div`
   margin-bottom: 20px;
