@@ -1,53 +1,51 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import DataList from '../../InputComp/DataList';
 import { TextInput } from '../../InputComp/InputComponent';
+import Count from '../../Count/Count';
 
-function OptionCard({ idx, common, action, data, list }) {
-  const card = useCallback(() => {
-    let content;
+function OptionCard({ config, option, setOption }) {
+  const changeOption = value => {
+    setOption(prevState =>
+      prevState.map(pv => (pv.key === option.key ? { ...pv, val: value } : pv)),
+    );
+  };
 
-    switch (common.type) {
-      case 'DataList':
-        content = (
-          <DataList
-            valueList={common.valueList}
-            labelList={common.labelList}
-            setData={value => {
-              const dataList = list;
-              dataList[idx].val = value;
-              action(dataList);
-            }}
-            select
-            defaultValue={data.val}
-          />
-        );
-        break;
-      case 'TextInput':
-        content = (
-          <TextInput
-            name={common.key}
-            defaultValue={data.val}
-            onChange={({ target }) => {
-              const dataList = list;
-              dataList[idx].val = target.value;
-              action(dataList);
-            }}
-          />
-        );
-        break;
-      default:
-        content = '';
-        break;
+  const card = () => {
+    if (config.type === 'DataList') {
+      return (
+        <DataList
+          select
+          defaultValue={option.val}
+          valueList={config.valueList}
+          labelList={config.labelList}
+          setData={value => changeOption(value)}
+        />
+      );
     }
-    return content;
-  }, [common, idx, action, data, list]);
+
+    if (config.type === 'TextInput') {
+      return (
+        <TextInput
+          name={config.key}
+          defaultValue={option.val}
+          onChange={({ target }) => changeOption(target.value)}
+        />
+      );
+    }
+
+    if (config.type === 'Count') {
+      return <Count value={option.val} onChange={value => changeOption(value)} />;
+    }
+
+    return '';
+  };
 
   return (
     <CardWrapper>
       <CardHeader>
-        <CardTitle>{common.name}</CardTitle>
-        <CardDesc>{common.desc}</CardDesc>
+        <CardTitle>{config.name}</CardTitle>
+        <CardDesc>{config.desc}</CardDesc>
       </CardHeader>
       <CardContent>{card()}</CardContent>
     </CardWrapper>
