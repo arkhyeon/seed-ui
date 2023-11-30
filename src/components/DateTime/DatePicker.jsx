@@ -41,10 +41,7 @@ function DatePicker({
   const endMonth = endDate.getMonth() + 1;
   const endDay = endDate.getDate();
 
-  useEffect(() => {
-    setInputValue(formatDate(date));
-    setDateViewed(date);
-  }, [date, startDate, endDate]);
+  useEffect(() => setInputValue(formatDate(date)), [date, startDate, endDate]);
 
   const handleClose = useCallback(
     ({ target }) => {
@@ -71,7 +68,7 @@ function DatePicker({
     if (startYear > prevDate.getFullYear()) {
       return;
     }
-
+    console.log(prevDate);
     setDateViewed(prevDate);
   };
 
