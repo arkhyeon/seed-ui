@@ -2,6 +2,7 @@ import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from 
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { GrClose } from 'react-icons/all';
+import { createPortal } from 'react-dom';
 import { BlackButton, WhiteButton } from './Button/Button';
 import { useThrottle } from '../assets/CustomHook';
 
@@ -10,10 +11,6 @@ import { useThrottle } from '../assets/CustomHook';
  * @param {String} props.width
  * 모달의 너비
  * default 값은 '600px'
- * @param {Boolean} props.modalState
- * 모달 On, Off 여부
- * 상위 컴포넌트에서 useState 값 내려 받음
- * default 값은 false
  * @param {Function} props.handleClose
  * 모달을 닫는(상태를 변경 하는) 함수
  * 상위 컴포넌트에서 상태변경 기능이 포함된 함수를 내려 받음
@@ -44,7 +41,6 @@ import { useThrottle } from '../assets/CustomHook';
 function Modal({
   width = `600px`,
   children,
-  modalState = false,
   handleClose = null,
   modalTitle = undefined,
   isCloseBtn = true,
@@ -181,6 +177,7 @@ function Modal({
 
   // 컴포넌트 그리기 전에 이펙트를 수행하는 useLayoutEffect.
   useLayoutEffect(() => {
+    if (!modalRef.current) return;
     moveToCenter();
   }, []);
 
@@ -192,23 +189,26 @@ function Modal({
   }, [handleCenter]);
 
   return (
-    modalState && (
-      <>
-        <ModalBack onClick={handleClose} />
-        <ModalWrap ref={modalRef} style={{ left: `${pos.x}px`, top: `${pos.y}px` }} width={width}>
-          <ModalHeader ref={headRef} onMouseDown={handleDown} movable={movable}>
-            {modalTitle || null}
-            {isCloseBtn ? <GrClose onClick={handleClose} /> : null}
-          </ModalHeader>
-          <ChildrenWrapper> {children}</ChildrenWrapper>
-          <ModalFooter>
-            {buttonList.map(el => {
-              return <Fragment key={el.props.children}>{el}</Fragment>;
-            })}
-          </ModalFooter>
-        </ModalWrap>
-      </>
-    )
+    <>
+      {createPortal(
+        <>
+          <ModalBack onClick={handleClose} />
+          <ModalWrap ref={modalRef} style={{ left: `${pos.x}px`, top: `${pos.y}px` }} width={width}>
+            <ModalHeader ref={headRef} onMouseDown={handleDown} movable={movable}>
+              {modalTitle || null}
+              {isCloseBtn ? <GrClose onClick={handleClose} /> : null}
+            </ModalHeader>
+            <ChildrenWrapper> {children}</ChildrenWrapper>
+            <ModalFooter>
+              {buttonList.map(el => {
+                return <Fragment key={el.props.children}>{el}</Fragment>;
+              })}
+            </ModalFooter>
+          </ModalWrap>
+        </>,
+        document.body,
+      )}
+    </>
   );
 }
 
