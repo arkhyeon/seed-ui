@@ -333,7 +333,7 @@ const OptionWrap = styled.div`
 `;
 
 const Option = styled.div`
-  width: 32px;
+  width: 28px;
   height: 24px;
   border: 1px solid #bdbdbd;
   border-radius: 5px;
