@@ -63,10 +63,7 @@ const TextAreaComp = styled.textarea`
   border-radius: 5px;
   border: 1px solid #d2d2d2;
   resize: vertical;
-  height: ${props => {
-    if (props.height) return props.height;
-    return 'auto';
-  }};
+  height: ${props => (props.height ? props.height : 'auto')};
 `;
 
 const codeMirrorOption = {

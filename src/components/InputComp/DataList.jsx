@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from '@emotion/styled';
+import { value } from 'lodash/seq';
 import { DataListInput } from './InputComponent';
 
 function DataList({
@@ -28,8 +29,14 @@ function DataList({
   }, []);
 
   useEffect(() => {
-    setDataListState(dataList);
     if (defaultValue === '') {
+      setDataListState(dataList);
+    }
+  }, [valueList]);
+
+  useEffect(() => {
+    // setDataListState(dataList);
+    if (defaultValue === '' && select) {
       ref.current.value = labelList[0] === undefined ? valueList[0] : labelList[0];
       // setTextData(valueList[0], labelList[0] || valueList[0]);
     } else {
