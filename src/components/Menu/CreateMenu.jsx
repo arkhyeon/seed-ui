@@ -23,8 +23,7 @@ import styled from '@emotion/styled';
  * @returns {JSX.Element} Menu Component
  */
 
-function CreateMenu(props) {
-  const menus = props.menus;
+function CreateMenu({ menus, useDepth, userRole }) {
   const [selectedMenus, setSelectedMenus] = useState([]);
   const navigate = useNavigate();
 
@@ -48,8 +47,8 @@ function CreateMenu(props) {
             handleMenuSelection={handleMenuSelection}
             key={menu.title}
             selectedMenus={selectedMenus}
-            useDepth={props.useDepth}
-            userRole={props.userRole}
+            useDepth={useDepth}
+            userRole={userRole}
             navigate={navigate}
           />
         );
@@ -81,13 +80,14 @@ function CreateMenu(props) {
  * depth Level
  * @returns {JSX.Element} Menu Unit Component
  */
+
 function SubMenuItem({
   menu,
   handleMenuSelection,
-  selectedMenus,
-  userRole,
-  useDepth,
   depth = 0,
+  useDepth,
+  userRole,
+  selectedMenus,
   navigate,
 }) {
   const { title, link = '', subMenu = [], menuRole = 99 } = menu;
@@ -148,7 +148,11 @@ function SubMenuItem({
           onClick={() => handleMenuSelection('', 0)}
           className="mainActive"
         >
-          <NavLink to={subMenu.length !== 0 ? subMenu[0].link : link} className={similarActive}>
+          <NavLink
+            to={subMenu.length !== 0 ? subMenu[0].link : link}
+            onMouseEnter={() => handleMenuSelection(title, depth)}
+            className={similarActive}
+          >
             {title}
           </NavLink>
         </SubMenuItem.Item>
