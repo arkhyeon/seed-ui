@@ -4,7 +4,7 @@ import DataList from '../../InputComp/DataList';
 import { TextInput } from '../../InputComp/InputComponent';
 import Count from '../../Count/Count';
 
-function OptionCard({ config, option, setOption }) {
+function OptionCard({ config, option, setOption, children }) {
   const changeOption = value => {
     setOption(prevState =>
       prevState.map(pv => (pv.key === option.key ? { ...pv, val: value } : pv)),
@@ -38,7 +38,7 @@ function OptionCard({ config, option, setOption }) {
       return <Count value={option.val} onChange={value => changeOption(value)} />;
     }
 
-    return '';
+    return <>{children}</>;
   };
 
   return (
