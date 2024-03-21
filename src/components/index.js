@@ -28,7 +28,7 @@ import {
   selectSideTab,
   TabIconButton,
 } from './SideTabs/SideTabs';
-import { DividingLine } from './Line/DividingLine';
+import DividingLine from './Line/DividingLine';
 import Article from './Article';
 import OptionCard from './Card/OptionCard/OptionCard';
 import Card from './Card/Card/Card';

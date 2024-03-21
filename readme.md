@@ -351,7 +351,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 ```
 
-- 원하는 Directory 내 theme.jsx 파일 생성
+- 원하는 Directory 내 Theme.jsx 파일 생성
 - asideMenuStyle 키로 지정하여 아래와 같이 Color 작성
 
 ```javascript

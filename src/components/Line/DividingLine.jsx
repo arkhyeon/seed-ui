@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
  * @returns {JSX.Element}
  * @constructor
  */
-export function DividingLine(props) {
+function DividingLine(props) {
   return <Line {...props} />;
 }
 

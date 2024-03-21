@@ -1,12 +1,13 @@
 {
   "name": "seed-ui",
-  "private": false,
   "version": "0.1.70",
   "scripts": {
     "dev": "vite",
     "build": "vite build && npm publish --userconfig=./.npmrc",
     "preview": "vite preview",
-    "pub": "vite build && npm publish"
+    "pub": "vite build && npm publish",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@codemirror/lang-sql": "^6.4.0",
@@ -28,6 +29,15 @@
     "@babel/preset-react": "^7.18.6",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@storybook/addon-essentials": "^7.6.10",
+    "@storybook/addon-interactions": "^7.6.10",
+    "@storybook/addon-links": "^7.6.10",
+    "@storybook/addon-mdx-gfm": "7.6.10",
+    "@storybook/addon-onboarding": "1.0.11",
+    "@storybook/blocks": "^7.6.10",
+    "@storybook/react": "^7.6.10",
+    "@storybook/react-vite": "^7.6.10",
+    "@storybook/test": "^7.6.10",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.0.0",
@@ -39,8 +49,11 @@
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-storybook": "^0.6.15",
     "prettier": "^2.7.1",
+    "prop-types": "15.8.1",
     "react-icons": "^4.4.0",
+    "storybook": "^7.6.10",
     "vite": "^3.0.0"
   },
   "peerDependencies": {
@@ -74,5 +87,10 @@
   "publishConfig": {
     "registry": "https://r2ware-rd.synology.me:8082/repository/npm_hosted/"
   },
-  "proxy": "http://192.168.10.26:8686/"
+  "proxy": "http://192.168.10.26:8686/",
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  }
 }
