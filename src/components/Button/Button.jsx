@@ -10,7 +10,11 @@ export const BlackButton = forwardRef((props, ref) => {
       {...props}
       onClick={e => {
         blockedDBClick(e);
-        props.onClick(e);
+        if (props.permission === undefined || props.permission === 2) {
+          props.onClick(e);
+        } else {
+          window.alert('쓰기 권한이 없습니다');
+        }
         useStore.setState({ showComp: true });
       }}
       className={showComp ? 'showComp' : ''}
@@ -96,10 +100,10 @@ const Button = styled.button`
 
 const BlackBtn = styled(Button)`
   color: #ffffff;
-  background: #3e3e3e;
+  background: ${({ disabled }) => (disabled ? '#cccccc' : '#3e3e3e')};
 
   &.showComp {
-    background-color: #6674fe !important;
+    background-color: ${({ disabled }) => (disabled ? '#cccccc' : '#6674fe !important')};
   }
 `;
 

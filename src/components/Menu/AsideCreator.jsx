@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { MdMenu } from 'react-icons/all';
+import { MdMenu } from 'react-icons/md';
 import { css } from '@emotion/react';
 import CreateAsideMenu from './CreateAsideMenu';
 

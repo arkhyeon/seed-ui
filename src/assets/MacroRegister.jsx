@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { AiOutlineArrowDown } from 'react-icons/all';
-import Card from '../components/Card/Card/Card';
+import { AiOutlineArrowDown } from 'react-icons/ai';
 import { BlackButton, DNDWrapper, RadioButton } from '../components';
 
 const as = {

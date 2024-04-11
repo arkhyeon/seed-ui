@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { AiOutlineUser, BsClipboardCheck, TbUsers } from 'react-icons/all';
+import { AiOutlineUser } from 'react-icons/ai';
+import { BsClipboardCheck } from 'react-icons/bs';
+import { TbUsers } from 'react-icons/tb';
+
 import { DividingLine, MainTabButton, SideScrollWrap, SideTabs, TabButton } from '../components';
 import UserFilter from '../icon/UserFilter';
 import ContractFilter from '../icon/ContractFilter';

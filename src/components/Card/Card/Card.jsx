@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { IoIosArrowDown } from 'react-icons/all';
+import { IoIosArrowDown } from 'react-icons/io';
 import { css } from '@emotion/react';
 
 export default function Card({

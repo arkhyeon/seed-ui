@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { GrClose } from 'react-icons/all';
+import { GrClose } from 'react-icons/gr';
 import { createPortal } from 'react-dom';
 import { BlackButton, WhiteButton } from './Button/Button';
 import { useThrottle } from '../assets/CustomHook';

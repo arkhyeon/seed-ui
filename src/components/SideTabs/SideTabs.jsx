@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { BiTrash, FaRegEdit } from 'react-icons/all';
-
+import { BiTrash } from 'react-icons/bi';
+import { FaRegEdit } from 'react-icons/fa';
 /**
  * ## 기본적인 사용법 ##
  *

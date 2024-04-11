@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { MdArrowDropDown } from 'react-icons/all';
+import { MdArrowDropDown } from 'react-icons/md';
 import { BlackButton } from '../Button/Button';
 
 function SearchWrapper({ props, children, detailSearchComp, search }) {

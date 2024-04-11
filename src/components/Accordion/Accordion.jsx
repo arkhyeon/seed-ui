@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { IoIosArrowDown } from 'react-icons/all';
+import { IoIosArrowDown } from 'react-icons/io';
 
 export function Accordion({ title, children, collapse, setCollapse }) {
   return (

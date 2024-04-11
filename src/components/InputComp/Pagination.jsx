@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
+import { CgChevronDoubleLeft, CgChevronDoubleRight } from 'react-icons/cg';
+
 import {
-  CgChevronDoubleLeft,
-  CgChevronDoubleRight,
   MdOutlineFirstPage,
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
   MdOutlineLastPage,
-} from 'react-icons/all';
+} from 'react-icons/md';
 
 function Pagination({ totalLength = 0, buttonLength = 10, pageEvent, currentPage = 1 }) {
   const [dataLength, setDataLength] = useState(20);

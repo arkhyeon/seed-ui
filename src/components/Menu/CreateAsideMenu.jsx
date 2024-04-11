@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/all';
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { isDisplaySubMenuDepth } from './CreateMenu';
 
 function CreateAsideMenu({ currentSideMenu, depth = 0 }) {

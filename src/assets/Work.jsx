@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
-import { MdDangerous } from 'react-icons/all';
+import { MdDangerous } from 'react-icons/md';
 import _ from 'lodash';
 import AsideCreator from '../components/Menu/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
@@ -205,6 +205,19 @@ function Work() {
 
   // 작은 것에 비해 큰것은 숫자도 5배
 
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  // 버튼 클릭 시 실행되는 함수
+  const handleClick = () => {
+    if (isDisabled) {
+      // 버튼이 disabled 상태일 때 알림창 표시
+      window.alert('버튼이 비활성화되어 있습니다.');
+    } else {
+      // 버튼이 활성화 상태일 때 실행할 로직
+      console.log('버튼이 활성화되어 있습니다.');
+    }
+  };
+
   return (
     <AsideCreator
       menuList={DepthList1}
@@ -405,6 +418,15 @@ function Work() {
         hi
       </TabIconButton>
       <BlackButton onClick={handleModalBtn}>모달 버튼</BlackButton>
+      <BlackButton disabled={isDisabled}>고장난 버튼</BlackButton>
+      <BlackButton
+        onClick={() => {
+          window.alert('working!');
+        }}
+        permission={2}
+      >
+        작동 가능 버튼
+      </BlackButton>
       <Counter targetValue={500} time={100 / (500 / 100)} />
       <Counter targetValue={100} time={100} />
     </AsideCreator>
