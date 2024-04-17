@@ -28,7 +28,7 @@ function DataList({
   }, []);
 
   useEffect(() => {
-    if (defaultValue === '') {
+    if (select) {
       setDataListState(dataList);
     }
   }, [valueList]);

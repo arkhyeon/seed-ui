@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
 import { MdDangerous } from 'react-icons/md';
 import _ from 'lodash';
+import axios from 'axios';
 import AsideCreator from '../components/Menu/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
 import DataList from '../components/InputComp/DataList';
@@ -42,6 +43,7 @@ function Work() {
   };
 
   useEffect(() => {
+    getServerList();
     setTimeData(data4);
   }, []);
   const { setAlertList } = alertStore();
@@ -217,6 +219,26 @@ function Work() {
       console.log('버튼이 활성화되어 있습니다.');
     }
   };
+  const [srcServerList, setSrcServerList] = useState([]);
+  const [dstServerList, setDstServerList] = useState([]);
+  const [serverTest, setServerTest] = useState(56);
+
+  const getServerList = () => {
+    axios.defaults.headers.common.authorization =
+      'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyMndhcmVUb2tlbiIsInVpZCI6ImFkbWluIiwiZXhwIjoxNzEzMzQyNzUxfQ.R4eZa02QTa50gr_R_u-ZfQo_HjiAQare0ajabN0pekhMrqdVVSVIRpJQ7zVRLQZz4y1OW_zUJROJs-ZNtfhyMg';
+    axios
+      .all([
+        axios.get('http://192.168.10.26:8686/CLM30/find/dbms/src'),
+        axios.get('http://192.168.10.26:8686/CLM30/find/dbms/dst'),
+      ])
+      .then(
+        axios.spread((src, dst) => {
+          setSrcServerList(src.data.data);
+          setDstServerList(dst.data.data);
+        }),
+      )
+      .catch(err => console.log(err));
+  };
 
   return (
     <AsideCreator
@@ -303,6 +325,25 @@ function Work() {
         <Pagination totalLength={22313} pageEvent={pageFunction} />
       </PaginationWrap>
       <DataList id="프로젝트" valueList={data2} setData={setDataListData} />
+      <DataList
+        valueList={_.map(srcServerList, 'serverid_src')}
+        labelList={_.map(srcServerList, 'server_name')}
+        setData={value => {
+          console.log(value);
+          setServerTest(value);
+        }}
+        select
+        defaultValue={serverTest}
+      />
+      <DataList
+        valueList={_.map(srcServerList, 'serverid_src')}
+        labelList={_.map(srcServerList, 'server_name')}
+        setData={value => {
+          console.log(value);
+          setServerTest(value);
+        }}
+        defaultValue={serverTest}
+      />
       <DataList
         id="aaa"
         valueList={_.map(timeData, 'ie_id')}
