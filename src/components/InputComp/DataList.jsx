@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { value } from 'lodash/seq';
 import { DataListInput } from './InputComponent';
 
 function DataList({
