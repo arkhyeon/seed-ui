@@ -254,7 +254,7 @@ export function SetRoute(props, auth) {
         if (auth > route.menuRole) {
           return '';
         }
-        return SubRoute(route);
+        return SubRoute(route, auth);
       })}
     </>
   );
@@ -267,8 +267,9 @@ export function SetRoute(props, auth) {
  * @returns
  * Route Component
  */
-function SubRoute(route, depth = 0) {
-  const { component, link = '', title, subMenu = [], routePath } = route;
+function SubRoute(route, auth, depth = 0) {
+  const { component, link = '', title, subMenu = [], routePath, menuRole } = route;
+  if (menuRole < auth) return null;
   return (
     <Fragment key={title}>
       {subMenu.length > 0 ? (

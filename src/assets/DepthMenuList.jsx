@@ -119,6 +119,7 @@ export const DepthList1 = [
             link: '/config/macro/register',
             routePath: 'register',
             component: <MacroRegister />,
+            menuRole: 0,
           },
           {
             title: '대시보드',
