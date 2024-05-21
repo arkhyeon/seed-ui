@@ -233,7 +233,7 @@ const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15.5px 18px;
+  padding: 11px 18px;
   font-weight: bold;
   border-radius: 12px 12px 0 0;
 
@@ -278,7 +278,7 @@ const ModalFooter = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 14px 18px;
+  padding: 11px 18px;
   gap: 15px;
   border-top: ${({ theme }) => theme.modalStyle.headBorder};
 `;

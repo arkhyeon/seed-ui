@@ -97,7 +97,7 @@ function DatePicker({
         disabled={disabled}
       />
       {isOpen && (
-        <PickerWrapper>
+        <PickerWrapper className="date-picker">
           <PickerHeader className="date-picker-head">
             <Button onClick={handlePrev} className="date-picker-button date-picker-button-left">
               <AiOutlineLeft />
