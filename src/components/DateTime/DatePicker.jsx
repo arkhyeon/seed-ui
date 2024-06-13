@@ -26,7 +26,7 @@ function DatePicker({
   date = new Date(),
   setDate = null,
   disabled = false,
-  startDate = new Date('2000-01-01'),
+  startDate = new Date('2023-01-01'),
   endDate = new Date('2040-12-31'),
 }) {
   const pickerRef = useRef(null);
