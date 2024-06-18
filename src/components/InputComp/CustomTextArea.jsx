@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import CodeMirror from '@uiw/react-codemirror';
-import { xcodeLight } from '@uiw/codemirror-theme-xcode';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { PostgreSQL, sql } from '@codemirror/lang-sql';
+import { xcodeLight } from '@uiw/codemirror-theme-xcode';
 import { BlackButton, WhiteButton } from '../index';
 
 /**
@@ -51,7 +51,20 @@ export default function CustomTextArea({
         </CustomTextAreaMenu>
       )}
       {textAreaOption && <TextAreaComp {...textAreaOption} />}
-      {sqlAreaOption && <CodeMirror {...sqlAreaOption} {...codeMirrorOption} />}
+      {sqlAreaOption && (
+        <CodeMirror
+          {...sqlAreaOption}
+          theme={sqlAreaOption?.theme || xcodeLight}
+          extensions={[sql(), PostgreSQL, ...(sqlAreaOption?.extensions || '')]}
+          minHeight="100%"
+          maxHeight="100%"
+          basicSetup={{
+            lineNumbers: false,
+            foldGutter: false,
+            ...sqlAreaOption?.basicSetup,
+          }}
+        />
+      )}
     </CustomTextAreaWrap>
   );
 }
@@ -65,17 +78,6 @@ const TextAreaComp = styled.textarea`
   resize: vertical;
   height: ${props => (props.height ? props.height : 'auto')};
 `;
-
-const codeMirrorOption = {
-  theme: xcodeLight,
-  extensions: [sql(), PostgreSQL],
-  minHeight: '100%',
-  maxHeight: '100%',
-  basicSetup: {
-    lineNumbers: false,
-    foldGutter: false,
-  },
-};
 
 const CustomTextAreaWrap = styled.div`
   width: 100%;

@@ -1,6 +1,8 @@
 import React, { memo, useEffect, useState } from 'react';
+import { EditorView } from '@uiw/react-codemirror';
 import DatePicker from './DateTime/DatePicker';
 import DataList from './InputComp/DataList';
+import CustomTextArea from './InputComp/CustomTextArea';
 
 function Testing() {
   const [index, setIndex] = useState('');
@@ -31,6 +33,16 @@ function Testing() {
       <Greeting index={index} setIndex={setIndex} />
       <Greeting index={index2} setIndex={setIndex2} />
       <button onClick={() => console.log(test)}>확인</button>
+      <div style={{ width: '200px' }}>
+        <CustomTextArea
+          sqlAreaOption={{
+            value: '11111111111111111111111111111111111111111111111111111111',
+            height: '700px',
+            editable: false,
+            extensions: [EditorView.lineWrapping],
+          }}
+        />
+      </div>
     </>
   );
 }
