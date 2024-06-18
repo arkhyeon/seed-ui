@@ -55,7 +55,7 @@ export default function CustomTextArea({
         <CodeMirror
           {...sqlAreaOption}
           theme={sqlAreaOption?.theme || xcodeLight}
-          extensions={[sql(), PostgreSQL, ...(sqlAreaOption?.extensions || '')]}
+          extensions={[sql(), PostgreSQL, EditorView.lineWrapping]}
           minHeight="100%"
           maxHeight="100%"
           basicSetup={{
