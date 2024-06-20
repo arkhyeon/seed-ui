@@ -12,6 +12,7 @@ export const TextInput = forwardRef((props, ref) => {
       <TextInputComp
         ref={ref}
         {...props}
+        maxLength={props?.maxLength || 100}
         onKeyDown={e => {
           enterEvent(e);
         }}
