@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { BiTrash } from 'react-icons/bi';
 import { FaRegEdit } from 'react-icons/fa';
+import { TbFileTime } from 'react-icons/tb';
 /**
  * ## 기본적인 사용법 ##
  *
@@ -137,7 +138,7 @@ export function MainTabButton(props) {
  * @constructor
  */
 export function TabButton(props) {
-  const { deleteFunction, updateFunction, selectOption = true, option } = props;
+  const { deleteFunction, updateFunction, logFunction, selectOption = true, option } = props;
   return (
     <ButtonWrap className={option && 'option-button'} onClick={unSelectedOptionButton}>
       <Button
@@ -153,6 +154,7 @@ export function TabButton(props) {
       <AddOn>
         {deleteFunction && <BiTrash onClick={deleteFunction} />}
         {updateFunction && <FaRegEdit onClick={updateFunction} />}
+        {logFunction && <TbFileTime onClick={logFunction} />}
       </AddOn>
       {option && (
         <OptionWrap>
