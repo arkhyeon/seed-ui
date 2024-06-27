@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { BiTrash } from 'react-icons/bi';
+import { BiFile, BiTrash } from 'react-icons/bi';
 import { FaRegEdit } from 'react-icons/fa';
 import { TbFileTime } from 'react-icons/tb';
 /**
@@ -154,7 +154,7 @@ export function TabButton(props) {
       <AddOn>
         {deleteFunction && <BiTrash onClick={deleteFunction} />}
         {updateFunction && <FaRegEdit onClick={updateFunction} />}
-        {logFunction && <TbFileTime onClick={logFunction} />}
+        {logFunction && <BiFile onClick={logFunction} />}
       </AddOn>
       {option && (
         <OptionWrap>

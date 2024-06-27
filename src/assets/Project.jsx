@@ -118,6 +118,7 @@ function Project() {
             onClick={e => console.log(e)}
             deleteFunction={() => console.log('a')}
             updateFunction={() => console.log('a')}
+            logFunction={() => console.log('a')}
             value={1}
             option={{
               iconList: [

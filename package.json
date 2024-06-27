@@ -1,6 +1,6 @@
 {
   "name": "seed-ui",
-  "version": "0.1.73",
+  "version": "0.1.74",
   "scripts": {
     "dev": "vite",
     "build": "vite build && npm publish --userconfig=./.npmrc",
