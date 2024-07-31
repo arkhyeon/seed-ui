@@ -303,7 +303,7 @@ const AddOn = styled.div`
   top: 10px;
   right: 15px;
   align-items: center;
-  gap: 5px;
+  gap: 2px;
   display: flex;
   font-size: 18px;
 

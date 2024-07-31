@@ -28,7 +28,7 @@ function DataList({
   }, []);
 
   useEffect(() => {
-    if (select) {
+    if (select || dataListState.length === 0) {
       setDataListState(dataList);
     }
   }, [valueList]);
