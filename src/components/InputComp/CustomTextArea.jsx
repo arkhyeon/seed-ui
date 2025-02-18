@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { PostgreSQL, sql } from '@codemirror/lang-sql';
@@ -25,7 +25,23 @@ export default function CustomTextArea({
   sqlAreaOption,
   IconButtonList = [],
   TextButtonList = [],
+  focusOn = false,
 }) {
+  const textAreaRef = useRef(null);
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (focusOn) {
+      textAreaRef.current?.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current?.focus();
+    }
+  }, []);
+
   return (
     <CustomTextAreaWrap>
       {title !== '' && (
@@ -49,7 +65,7 @@ export default function CustomTextArea({
           </ButtonListWrapper>
         </CustomTextAreaMenu>
       )}
-      {textAreaOption && <TextAreaComp {...textAreaOption} />}
+      {textAreaOption && <TextAreaComp {...textAreaOption} ref={textAreaRef} />}
       {sqlAreaOption && (
         <CodeMirror
           {...sqlAreaOption}
@@ -61,6 +77,10 @@ export default function CustomTextArea({
             lineNumbers: false,
             foldGutter: false,
             ...sqlAreaOption?.basicSetup,
+          }}
+          onCreateEditor={view => {
+            editorRef.current = view;
+            view.focus(); // 에디터가 생성되면 바로 포커스
           }}
         />
       )}

@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useState } from 'react';
-import { EditorView } from '@uiw/react-codemirror';
 import DatePicker from './DateTime/DatePicker';
 import DataList from './InputComp/DataList';
 import CustomTextArea from './InputComp/CustomTextArea';
@@ -39,8 +38,9 @@ function Testing() {
             value:
               '1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
             height: '700px',
-            editable: false,
+            editable: true,
           }}
+          focusOn
         />
       </div>
     </>

@@ -67,6 +67,7 @@ export default function TextAreaTestArea() {
             rows: 15,
             height: '200px',
           }}
+          // focusOn
         />
         <CustomTextArea
           title="텍스트 버튼들이 있는 텍스트 에리어"
@@ -108,45 +109,53 @@ export default function TextAreaTestArea() {
             rows: 10,
           }}
         />
+        {/*   <CustomTextArea */}
+        {/*     title="아이콘 버튼들이 있는 텍스트 에리어" */}
+        {/*     textAreaOption={{ */}
+        {/*       value: 'text', */}
+        {/*       readOnly: true, */}
+        {/*       rows: 10, */}
+        {/*     }} */}
+        {/*     IconButtonList={exampleIconMenu} */}
+        {/*   /> */}
+        {/* </AccordionWrap> */}
+        {/* <AccordionWrap> */}
+        {/*   <CustomTextArea */}
+        {/*     title="아이콘 버튼들이 있는 SQL 에리어" */}
+        {/*     sqlAreaOption={{ */}
+        {/*       value: 'text', */}
+        {/*       readOnly: true, */}
+        {/*       height: '100px', */}
+        {/*     }} */}
+        {/*     IconButtonList={exampleIconMenu} */}
+        {/*   /> */}
+        {/* </AccordionWrap> */}
+        {/* <AccordionWrap> */}
+        {/*   <CustomTextArea */}
+        {/*     title="제목만 있는 텍스트 에리어" */}
+        {/*     textAreaOption={{ */}
+        {/*       value: '테스트', */}
+        {/*       readOnly: true, */}
+        {/*       rows: 15, */}
+        {/*     }} */}
+        {/*   /> */}
+        {/* <CustomTextArea */}
+        {/*   title="아이콘 버튼들이 있는 SQL 에리어" */}
+        {/*   sqlAreaOption={{ */}
+        {/*     value: 'text', */}
+        {/*     readOnly: true, */}
+        {/*     rows: 15, */}
+        {/*     height: '100px', */}
+        {/*   }} */}
+        {/*   IconButtonList={exampleIconMenu} */}
+        {/* /> */}
         <CustomTextArea
-          title="아이콘 버튼들이 있는 텍스트 에리어"
-          textAreaOption={{
-            value: 'text',
-            readOnly: true,
-            rows: 10,
-          }}
-          IconButtonList={exampleIconMenu}
-        />
-      </AccordionWrap>
-      <AccordionWrap>
-        <CustomTextArea
-          title="아이콘 버튼들이 있는 SQL 에리어"
           sqlAreaOption={{
-            value: 'text',
-            readOnly: true,
-            height: '100px',
+            value: 'select * from table t1',
+            rows: 30,
+            height: '30px',
           }}
-          IconButtonList={exampleIconMenu}
-        />
-      </AccordionWrap>
-      <AccordionWrap>
-        <CustomTextArea
-          title="제목만 있는 텍스트 에리어"
-          textAreaOption={{
-            value: '테스트',
-            readOnly: true,
-            rows: 15,
-          }}
-        />
-        <CustomTextArea
-          title="아이콘 버튼들이 있는 SQL 에리어"
-          sqlAreaOption={{
-            value: 'text',
-            readOnly: true,
-            rows: 15,
-            height: '100px',
-          }}
-          IconButtonList={exampleIconMenu}
+          focusOn
         />
       </AccordionWrap>
     </>
