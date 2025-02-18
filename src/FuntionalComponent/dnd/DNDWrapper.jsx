@@ -20,7 +20,7 @@ function DNDWrapper({ itemList, setItemList, seq, children, isDrag = true }) {
   const onDragStart = e => {
     e.currentTarget.classList.add('grabbing');
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', e.currentTarget);
+    // e.dataTransfer.setData('text/html', e.currentTarget);
     // const img = new Image();
     // img.src = '';
     // e.dataTransfer.setDragImage(img, 0, 0);
@@ -55,7 +55,7 @@ function DNDWrapper({ itemList, setItemList, seq, children, isDrag = true }) {
       }
     }
     data[targetPosition] = itemList[grabPosition];
-
+    console.log(data);
     setItemList([...data]);
   };
 

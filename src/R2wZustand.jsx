@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand/react';
 
 export const useStore = create(set => ({
   showComp: false,

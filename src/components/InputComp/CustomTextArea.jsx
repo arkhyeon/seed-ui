@@ -20,7 +20,6 @@ import { BlackButton, WhiteButton } from '../index';
  * CustomTextArea 컴포넌트
  */
 export default function CustomTextArea({
-  key = 0,
   title = '',
   textAreaOption,
   sqlAreaOption,
@@ -28,7 +27,7 @@ export default function CustomTextArea({
   TextButtonList = [],
 }) {
   return (
-    <CustomTextAreaWrap key={key}>
+    <CustomTextAreaWrap>
       {title !== '' && (
         <CustomTextAreaMenu>
           <p>{title}</p>
