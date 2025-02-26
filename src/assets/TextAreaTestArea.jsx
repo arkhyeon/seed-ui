@@ -63,7 +63,6 @@ export default function TextAreaTestArea() {
           title="제목만 있는 텍스트 에리어"
           textAreaOption={{
             value: 'text',
-            readOnly: true,
             rows: 15,
             height: '200px',
           }}

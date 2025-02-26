@@ -31,16 +31,22 @@ export default function CustomTextArea({
   const editorRef = useRef(null);
 
   useEffect(() => {
-    if (focusOn) {
-      textAreaRef.current?.focus();
+    if (focusOn && textAreaRef.current) {
+      const textArea = textAreaRef.current;
+      textArea.focus();
+      textArea.setSelectionRange(textArea.value.length, textArea.value.length); // 커서를 문장 끝으로 이동
     }
-  }, []);
+  }, [focusOn]);
 
   useEffect(() => {
-    if (editorRef.current) {
-      editorRef.current?.focus();
+    if (focusOn && editorRef.current) {
+      const view = editorRef.current;
+      view.focus();
+      view.dispatch({
+        selection: { anchor: view.state.doc.length }, // 커서를 문장 끝으로 이동
+      });
     }
-  }, []);
+  }, [focusOn]);
 
   return (
     <CustomTextAreaWrap>
@@ -80,7 +86,12 @@ export default function CustomTextArea({
           }}
           onCreateEditor={view => {
             editorRef.current = view;
-            view.focus(); // 에디터가 생성되면 바로 포커스
+            if (focusOn) {
+              view.focus();
+              view.dispatch({
+                selection: { anchor: view.state.doc.length }, // 커서를 문장 끝으로 이동
+              });
+            }
           }}
         />
       )}
