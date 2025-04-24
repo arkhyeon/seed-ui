@@ -216,7 +216,7 @@ const ModalWrap = styled.div`
   width: ${({ width }) => width};
   max-height: 100%;
   position: fixed;
-  z-index: 999;
+  z-index: 9999;
   background: white;
   border: ${({ theme }) => theme.modalStyle.modalBorder};
   border-radius: 12px;
@@ -290,7 +290,7 @@ const ModalBack = styled.div`
   position: fixed;
   top: 0px;
   left: 0px;
-  z-index: 999;
+  z-index: 9999;
   opacity: 0.3;
 `;
 

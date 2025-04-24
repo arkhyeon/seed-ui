@@ -1,7 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
+import _ from 'lodash';
 import DatePicker from './DateTime/DatePicker';
 import DataList from './InputComp/DataList';
 import CustomTextArea from './InputComp/CustomTextArea';
+import LabelList from './LabelList/LabelList';
 
 function Testing() {
   const [index, setIndex] = useState('');
@@ -13,6 +15,8 @@ function Testing() {
   useEffect(() => {
     console.log(date);
   }, [date]);
+
+  const [selectedValueList, setSelectedValueList] = useState([]);
 
   return (
     <>
@@ -31,6 +35,16 @@ function Testing() {
       />
       <Greeting index={index} setIndex={setIndex} />
       <Greeting index={index2} setIndex={setIndex2} />
+      <LabelList
+        labelList={_.map(data1, 'gname')}
+        valueList={_.map(data1, 'gid')}
+        setSelectedValueList={e => {
+          console.log(e());
+          setSelectedValueList(e);
+        }}
+        selectedValueList={selectedValueList}
+        // createFunction={createLabel}
+      />
       <button onClick={() => console.log(test)}>확인</button>
       <div style={{ width: '500px' }}>
         <CustomTextArea
@@ -158,4 +172,57 @@ const num = [
   51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74,
   75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98,
   99,
+];
+
+const data1 = [
+  {
+    gid: 1,
+    gname: 'group1',
+    notes: null,
+  },
+  {
+    gid: 2,
+    gname: 'group2',
+    notes: null,
+  },
+  {
+    gid: 3,
+    gname: 'group3',
+    notes: null,
+  },
+  {
+    gid: 4,
+    gname: 'group4',
+    notes: null,
+  },
+  {
+    gid: 5,
+    gname: 'group5',
+    notes: null,
+  },
+  {
+    gid: 6,
+    gname: 'group6',
+    notes: null,
+  },
+  {
+    gid: 7,
+    gname: 'group7',
+    notes: null,
+  },
+  {
+    gid: 8,
+    gname: 'group8',
+    notes: null,
+  },
+  {
+    gid: 9,
+    gname: 'group9',
+    notes: null,
+  },
+  {
+    gid: 10,
+    gname: 'group10',
+    notes: null,
+  },
 ];

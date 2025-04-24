@@ -1,29 +1,26 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { MdLabel, MdLabelOutline } from 'react-icons/md';
 
-function Label({ setSelectedValueList, data, LabelButton, selectedValueList }) {
-  const [isCheck, setIsCheck] = useState(false);
+function Label({ setSelectedValueList, data, selectedValueList }) {
+  const isChecked = selectedValueList.includes(data.value);
 
-  const handleCheck = useCallback(() => {
-    setIsCheck(!isCheck);
-    if (isCheck) {
-      setSelectedValueList(prevState => {
-        return prevState.filter(state => state !== data.value);
-      });
+  const handleToggle = () => {
+    if (isChecked) {
+      setSelectedValueList(prev => prev.filter(val => val !== data.value));
     } else {
-      setSelectedValueList([...selectedValueList, data.value]);
+      setSelectedValueList(prev => [...prev, data.value]);
     }
-  }, [selectedValueList, isCheck, data]);
-
-  useEffect(() => {
-    setIsCheck(selectedValueList.includes(data.value));
-  }, [selectedValueList, data]);
+  };
 
   return (
-    <LabelButton onClick={handleCheck} className="label-selector-option">
-      {isCheck ? <MdLabel /> : <MdLabelOutline />}
-      {data.label}
-    </LabelButton>
+    <div
+      onClick={handleToggle}
+      className="label-selector-option"
+      style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '8px 15px' }}
+    >
+      {isChecked ? <MdLabel /> : <MdLabelOutline />}
+      <span style={{ marginLeft: '8px' }}>{data.label}</span>
+    </div>
   );
 }
 

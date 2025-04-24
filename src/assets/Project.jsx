@@ -155,13 +155,6 @@ function Project() {
     //     <DatePicker date={endDate} setDate={setEndDate} startDate={date} />
     //     <TimePicker time={time} setTime={setTime} />
     //     <TestTimePicker onChange={val => setTime2(val)} time={time2} />
-    //     <LabelList
-    //       labelList={_.map(data1, 'gname')}
-    //       valueList={_.map(data1, 'gid')}
-    //       setSelectedValueList={setSelectedValueList}
-    //       selectedValueList={selectedValueList}
-    //       createFunction={createLabel}
-    //     />
     //   </Wrapper>
     //   <Wrapper>
     //     <Count value={cnt} onChange={value => setCount(value)} max={55} />
