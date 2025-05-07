@@ -4,6 +4,7 @@ import DatePicker from './DateTime/DatePicker';
 import DataList from './InputComp/DataList';
 import CustomTextArea from './InputComp/CustomTextArea';
 import LabelList from './LabelList/LabelList';
+import { PasswordInput } from './InputComp/InputComponent';
 
 function Testing() {
   const [index, setIndex] = useState('');
@@ -46,6 +47,9 @@ function Testing() {
         // createFunction={createLabel}
       />
       <button onClick={() => console.log(test)}>확인</button>
+      <div style={{ width: '500px' }}>
+        <PasswordInput />
+      </div>
       <div style={{ width: '500px' }}>
         <CustomTextArea
           sqlAreaOption={{

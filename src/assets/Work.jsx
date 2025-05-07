@@ -9,7 +9,7 @@ import AsideCreator from '../components/Menu/AsideCreator';
 import { DepthList1 } from './DepthMenuList';
 import DataList from '../components/InputComp/DataList';
 import Pagination from '../components/InputComp/Pagination';
-import { TextInput } from '../components/InputComp/InputComponent';
+import { PasswordInput, TextInput } from '../components/InputComp/InputComponent';
 import Logo from './Logo';
 import { BlackButton, WhiteButton } from '../components/Button/Button';
 import { Modal, Count, DatePicker, TimePicker, InputGrid } from '../components';

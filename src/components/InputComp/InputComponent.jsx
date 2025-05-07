@@ -1,5 +1,6 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styled from '@emotion/styled';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export const TextInput = forwardRef((props, ref) => {
   const enterEvent = e => {
@@ -21,9 +22,30 @@ export const TextInput = forwardRef((props, ref) => {
   );
 });
 
+export const PasswordInput = forwardRef((props, ref) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => setShowPassword(prev => !prev);
+
+  return (
+    <TextInputWrap>
+      <TextInputComp
+        ref={ref}
+        type={showPassword ? 'text' : 'password'}
+        {...props}
+        maxLength={props?.maxLength || 100}
+      />
+      <EyeToggle onClick={toggleShowPassword} type="button">
+        {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+      </EyeToggle>
+    </TextInputWrap>
+  );
+});
+
 const TextInputWrap = styled.div`
   width: 100%;
   display: flex;
+  position: relative;
 `;
 
 const TextInputComp = styled.input`
@@ -37,6 +59,16 @@ const TextInputComp = styled.input`
   &::placeholder {
     font-size: 13px;
   }
+`;
+
+const EyeToggle = styled.button`
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 8px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
 `;
 
 export const DataListInput = forwardRef((props, ref) => {
