@@ -11,6 +11,7 @@ function DataList({
   select = false,
   height = '400px',
   disabled = false,
+  placeholder = '',
 }) {
   const ref = useRef();
   const dataListWrapRef = useRef();
@@ -112,6 +113,7 @@ function DataList({
           onKeyDown={arrowMove}
           readOnly={select}
           disabled={disabled}
+          placeholder={placeholder}
         />
         {isListOpen && (
           <DataListItemWrap ref={dataListWrapRef} height={height} style={{ display: 'block' }}>
