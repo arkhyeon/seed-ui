@@ -1,11 +1,9 @@
 import React from 'react';
 import { MdLabel, MdLabelOutline } from 'react-icons/md';
 
-function Label({ setSelectedValueList, data, selectedValueList }) {
-  const isChecked = selectedValueList.includes(data.value);
-
+function Label({ setSelectedValueList, data }) {
   const handleToggle = () => {
-    if (isChecked) {
+    if (data.isChecked) {
       setSelectedValueList(prev => prev.filter(val => val !== data.value));
     } else {
       setSelectedValueList(prev => [...prev, data.value]);
@@ -18,7 +16,7 @@ function Label({ setSelectedValueList, data, selectedValueList }) {
       className="label-selector-option"
       style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '8px 15px' }}
     >
-      {isChecked ? <MdLabel /> : <MdLabelOutline />}
+      {data.isChecked ? <MdLabel /> : <MdLabelOutline />}
       <span style={{ marginLeft: '8px' }}>{data.label}</span>
     </div>
   );

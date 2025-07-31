@@ -126,6 +126,19 @@ export function MainTabButton(props) {
   );
 }
 
+export function MainSmallTabButton(props) {
+  return (
+    <MainSmallButton
+      {...props}
+      aria-label="side-tab-button"
+      onClick={e => {
+        selectedButton(e);
+        props.onClick(e);
+      }}
+    />
+  );
+}
+
 /**
  * SideTab의 일반 기능 버튼
  *
@@ -295,6 +308,13 @@ const IconButton = styled(Button)`
 `;
 
 const MainButton = styled(Button)`
+  background-color: #eceff1;
+`;
+
+const MainSmallButton = styled(Button)`
+  width: 50%;
+  padding: 0;
+  text-align: center;
   background-color: #eceff1;
 `;
 

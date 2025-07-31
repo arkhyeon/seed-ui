@@ -40,11 +40,11 @@ function Testing() {
         labelList={_.map(data1, 'gname')}
         valueList={_.map(data1, 'gid')}
         setSelectedValueList={e => {
-          console.log(e());
           setSelectedValueList(e);
         }}
+        direction="right"
+        unit="데이터 베이스"
         selectedValueList={selectedValueList}
-        // createFunction={createLabel}
       />
       <button onClick={() => console.log(test)}>확인</button>
       <div style={{ width: '500px' }}>

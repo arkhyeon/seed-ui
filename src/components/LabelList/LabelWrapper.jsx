@@ -1,21 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { MdOutlineNewLabel } from 'react-icons/md';
 import Label from './Label';
 import DividingLine from '../Line/DividingLine';
 
 function LabelWrapper({ dataList, setSelectedValueList, selectedValueList, createFunction, unit }) {
+  const [initialSortedDataList] = useState(() =>
+    dataList
+      .map(dl => ({ ...dl, isChecked: selectedValueList.includes(dl.value) }))
+      .sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
+  );
+
   return (
     <LabelSelectorWrap className="label-selector">
       <Title>{unit} 관리</Title>
       <DividingLine />
       <LabelWrap>
-        {dataList.map(data => (
+        {initialSortedDataList.map(data => (
           <Label
             key={`label-${data.value}`}
-            data={data}
+            data={{ ...data, isChecked: selectedValueList.includes(data.value) }}
             setSelectedValueList={setSelectedValueList}
-            selectedValueList={selectedValueList}
           />
         ))}
       </LabelWrap>

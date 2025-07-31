@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { DataListInput } from './InputComponent';
 
@@ -6,137 +6,97 @@ function DataList({
   id,
   valueList,
   labelList = [],
+  defaultValue,
   setData,
   select = false,
-  defaultValue = '',
   height = '400px',
   disabled = false,
 }) {
   const ref = useRef();
   const dataListWrapRef = useRef();
-  const dataList = useMemo(() => {
-    return valueList.map((value, i) => ({
-      value,
-      label: labelList[i] === undefined ? value : labelList[i],
-    }));
-  }, [labelList, valueList]);
-  const [dataListState, setDataListState] = useState(dataList);
+  const [isListOpen, setListOpen] = useState(false);
 
-  useEffect(() => {
-    document.addEventListener('mousedown', e => exitDataList(e));
-    return () => document.removeEventListener('mousedown', e => exitDataList(e));
+  const dataMap = useMemo(() => {
+    const map = new Map();
+    valueList.forEach((v, i) => {
+      map.set(v, labelList[i] === undefined ? v : labelList[i]);
+    });
+    return map;
+  }, [valueList, labelList]);
+
+  const displayValue = useMemo(() => {
+    if (dataMap.has(defaultValue)) {
+      return dataMap.get(defaultValue);
+    }
+    return select ? '' : defaultValue;
+  }, [defaultValue, dataMap, select]);
+
+  const filteredList = useMemo(() => {
+    if (select || !defaultValue) {
+      return valueList.map(v => ({ value: v, label: dataMap.get(v) }));
+    }
+    const lowerCaseValue = defaultValue.toString().toLowerCase();
+    return valueList
+      .filter(v => dataMap.get(v).toString().toLowerCase().includes(lowerCaseValue))
+      .map(v => ({ value: v, label: dataMap.get(v) }));
+  }, [defaultValue, valueList, dataMap, select]);
+
+  const handleInputChange = e => {
+    if (!select) {
+      setData(e.target.value);
+    }
+  };
+
+  const handleItemClick = useCallback(
+    itemValue => {
+      setData(itemValue);
+      setListOpen(false);
+    },
+    [setData],
+  );
+
+  const closeList = useCallback(e => {
+    if (!ref.current?.contains(e.target) && !dataListWrapRef.current?.contains(e.target)) {
+      setListOpen(false);
+    }
   }, []);
 
   useEffect(() => {
-    if (select || dataListState.length === 0) {
-      setDataListState(dataList);
-    }
-  }, [valueList]);
+    document.addEventListener('mousedown', closeList);
+    return () => document.removeEventListener('mousedown', closeList);
+  }, [closeList]);
 
-  useEffect(() => {
-    // setDataListState(dataList);
-    if (defaultValue === '' && select) {
-      ref.current.value = labelList[0] === undefined ? valueList[0] : labelList[0];
-      // setTextData(valueList[0], labelList[0] || valueList[0]);
-    } else {
-      for (let i = 0; i < valueList.length; i++) {
-        if (valueList[i] === defaultValue) {
-          ref.current.value = labelList[i] === undefined ? defaultValue : labelList[i];
-          // setTextData(defaultValue, labelList[i] || defaultValue);
+  const arrowMove = useCallback(
+    e => {
+      const children = dataListWrapRef.current?.children;
+      if (!children || !children.length || !isListOpen) return;
+
+      const activeElement = document.activeElement;
+      let activeIndex = Array.prototype.indexOf.call(children, activeElement);
+
+      if (e.keyCode === 38) {
+        // Up arrow
+        e.preventDefault();
+        activeIndex = activeIndex <= 0 ? children.length - 1 : activeIndex - 1;
+        children[activeIndex].focus();
+      } else if (e.keyCode === 40) {
+        // Down arrow
+        e.preventDefault();
+        activeIndex = activeIndex >= children.length - 1 ? 0 : activeIndex + 1;
+        children[activeIndex].focus();
+      } else if (e.keyCode === 13) {
+        // Enter
+        if (activeElement && activeElement.hasAttribute('value')) {
+          e.preventDefault();
+          handleItemClick(activeElement.getAttribute('value'));
         }
+      } else if (e.keyCode === 27) {
+        // Escape
+        setListOpen(false);
       }
-    }
-  }, [valueList, defaultValue]);
-
-  const exitDataList = e => {
-    if (
-      dataListWrapRef.current === null ||
-      dataListWrapRef.current.contains(e.target) ||
-      ref.current.contains(e.target)
-    ) {
-      return;
-    }
-    dataListWrapRef.current.style.display = 'none';
-  };
-
-  const searchData = (value, label) => {
-    setData(value);
-    if (select) {
-      return;
-    }
-    const searchList = dataList.filter(data => {
-      const stringLabel = data.label.toString();
-      return stringLabel.includes(label);
-    });
-
-    dataListWrapRef.current.style.display = 'block';
-
-    if (searchList[0] === undefined) {
-      dataListWrapRef.current.style.display = 'none';
-      setDataListState([]);
-      return;
-    }
-
-    if (searchList[0].label === value && searchList.length === 1) {
-      dataListWrapRef.current.style.display = 'none';
-      return;
-    }
-
-    setDataListState(searchList);
-  };
-
-  const setTextData = (value, label) => {
-    ref.current.value = label;
-    searchData(value, label);
-    dataListWrapRef.current.style.display = 'none';
-  };
-
-  let moveCount = -1;
-
-  const arrowMove = e => {
-    for (let i = 0; i < dataListWrapRef.current.children.length; i++) {
-      dataListWrapRef.current.children[i].classList.remove('activeDataList');
-    }
-    // 위
-    if (e.keyCode === 38) {
-      e.preventDefault();
-      if (moveCount <= 0) {
-        dataListWrapRef.current.children[dataListWrapRef.current.children.length - 1].focus();
-        dataListWrapRef.current.children[dataListWrapRef.current.children.length - 1].classList.add(
-          'activeDataList',
-        );
-        moveCount = dataListWrapRef.current.children.length - 1;
-      } else {
-        moveCount--;
-        dataListWrapRef.current.children[moveCount].focus();
-        dataListWrapRef.current.children[moveCount]?.classList.add('activeDataList');
-      }
-    }
-
-    // 아래
-    if (e.keyCode === 40) {
-      e.preventDefault();
-      if (moveCount >= dataListWrapRef.current.children.length - 1) {
-        dataListWrapRef.current.children[0].focus();
-        dataListWrapRef.current.children[0].classList.add('activeDataList');
-        moveCount = 0;
-      } else {
-        moveCount++;
-        dataListWrapRef.current.children[moveCount].focus();
-        dataListWrapRef.current.children[moveCount]?.classList.add('activeDataList');
-      }
-    }
-
-    if (e.keyCode === 13) {
-      if (dataListWrapRef.current.children[moveCount]?.attributes.value.value === undefined) {
-        return;
-      }
-      setTextData(
-        dataListWrapRef.current.children[moveCount]?.attributes.value.value,
-        dataListWrapRef.current.children[moveCount]?.attributes.value.ownerElement.innerText,
-      );
-    }
-  };
+    },
+    [isListOpen, handleItemClick],
+  );
 
   return (
     <>
@@ -145,28 +105,29 @@ function DataList({
           id={id}
           ref={ref}
           type="text"
-          onChange={e => searchData(e.target.value, e.target.value)}
+          value={displayValue || ''}
+          onChange={handleInputChange}
           autoComplete="off"
-          onFocus={() => {
-            dataListWrapRef.current.style.display = 'block';
-          }}
-          onKeyDown={e => arrowMove(e)}
+          onFocus={() => setListOpen(true)}
+          onKeyDown={arrowMove}
           readOnly={select}
           disabled={disabled}
         />
-        <DataListItemWrap ref={dataListWrapRef} height={height}>
-          {dataListState?.map((data, i) => (
-            <DataListItem
-              tabIndex={i}
-              key={data.value}
-              value={data.value}
-              onClick={() => setTextData(data.value, data.label)}
-              onKeyDown={e => arrowMove(e)}
-            >
-              {data.label}
-            </DataListItem>
-          ))}
-        </DataListItemWrap>
+        {isListOpen && (
+          <DataListItemWrap ref={dataListWrapRef} height={height} style={{ display: 'block' }}>
+            {filteredList.map((data, i) => (
+              <DataListItem
+                tabIndex={0}
+                key={data.value}
+                value={data.value}
+                onClick={() => handleItemClick(data.value)}
+                onKeyDown={arrowMove}
+              >
+                {data.label}
+              </DataListItem>
+            ))}
+          </DataListItemWrap>
+        )}
       </DataListWrap>
     </>
   );
@@ -188,7 +149,7 @@ const DataListItemWrap = styled.ul`
   z-index: 9999;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
     width: 6px;

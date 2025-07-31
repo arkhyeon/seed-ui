@@ -12,20 +12,21 @@ import Switch from './Switch';
 import DataList from './InputComp/DataList';
 import Pagination from './InputComp/Pagination';
 import Toggle from './Toggle';
-import { TextInput, LabelCheckBox } from './InputComp/InputComponent';
+import { LabelCheckBox, TextInput, PasswordInput } from './InputComp/InputComponent';
 import CustomTextArea from './InputComp/CustomTextArea';
 import InputGrid from './InputGrid';
-import { BlackButton, WhiteButton, SwitchButton, RadioButton } from './Button/Button';
+import { BlackButton, RadioButton, SwitchButton, WhiteButton } from './Button/Button';
 import LabelList from './LabelList/LabelList';
 import Count from './Count/Count';
 import Counter from './Counter/Counter';
 import CountList from './CountList/CountList';
 import {
   MainTabButton,
+  MainSmallTabButton,
+  selectSideTab,
   SideScrollWrap,
   SideTabs,
   TabButton,
-  selectSideTab,
   TabIconButton,
 } from './SideTabs/SideTabs';
 import DividingLine from './Line/DividingLine';
@@ -65,7 +66,7 @@ export { Pagination };
 
 export { Toggle };
 
-export { TextInput, LabelCheckBox };
+export { TextInput, PasswordInput, LabelCheckBox };
 export { CustomTextArea };
 
 export { InputGrid };
@@ -82,6 +83,7 @@ export { useStore };
 
 export {
   MainTabButton,
+  MainSmallTabButton,
   SideScrollWrap,
   SideTabs,
   TabButton,

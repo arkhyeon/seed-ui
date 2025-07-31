@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useStore } from '../../R2wZustand';
 
 export const BlackButton = forwardRef((props, ref) => {
-  const { showComp } = useStore();
+  // const { showComp } = useStore();
   return (
     <BlackBtn
       ref={ref}
@@ -13,7 +13,7 @@ export const BlackButton = forwardRef((props, ref) => {
         props.onClick(e);
         useStore.setState({ showComp: true });
       }}
-      className={showComp ? 'showComp' : ''}
+      // className={showComp ? 'showComp' : ''}
     />
   );
 });

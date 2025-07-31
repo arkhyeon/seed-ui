@@ -29,14 +29,14 @@ function Work() {
     formState: { errors },
   } = useForm();
   const { pathname } = useLocation();
-  const [state, setState] = useState({});
+  const [state, setState] = useState('');
   const [check, setCheck] = useState(false);
   const [time, setTime] = useState();
   const [isNull, setIsNull] = useState('y');
   const [date, setDate] = useState(new Date());
   const [timeData, setTimeData] = useState([]);
   const [modal, setModal] = useState(false);
-
+  const [name, setName] = useState(24);
   const setDataListData = value => {
     console.log(value);
     setState(value);
@@ -49,6 +49,9 @@ function Work() {
   const { setAlertList } = alertStore();
   const data1 = [0, 1, 2, 3, 4];
   const data3 = ['a12', 'b34', 'c56', 'd67', 'e90'];
+  const labelList = Array(30)
+    .fill(0)
+    .map((e, i) => i);
   const data2 = [
     'Andi',
     'Stern',
@@ -324,25 +327,28 @@ function Work() {
       <PaginationWrap>
         <Pagination totalLength={22313} pageEvent={pageFunction} />
       </PaginationWrap>
-      <DataList id="프로젝트" valueList={data2} setData={setDataListData} />
       <DataList
-        valueList={_.map(srcServerList, 'serverid_src')}
-        labelList={_.map(srcServerList, 'server_name')}
-        setData={value => {
-          console.log(value);
-          setServerTest(value);
+        valueList={labelList}
+        labelList={data2}
+        value={name}
+        setData={e => {
+          console.log(e);
+          setName(e);
         }}
         select
-        defaultValue={serverTest}
       />
       <DataList
         valueList={_.map(srcServerList, 'serverid_src')}
         labelList={_.map(srcServerList, 'server_name')}
-        setData={value => {
-          console.log(value);
-          setServerTest(value);
-        }}
-        defaultValue={serverTest}
+        value={serverTest}
+        setData={setServerTest}
+        select
+      />
+      <DataList
+        valueList={_.map(srcServerList, 'serverid_src')}
+        labelList={_.map(srcServerList, 'server_name')}
+        value={serverTest}
+        setData={setServerTest}
       />
       <DataList
         id="aaa"

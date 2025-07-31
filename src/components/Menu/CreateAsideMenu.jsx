@@ -23,7 +23,7 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
 
   return (
     <ASideMenuWrap>
-      {currentSideMenu.map(sm => {
+      {currentSideMenu?.map(sm => {
         if (sm.display === false || sm.menuRole === 0) {
           return '';
         }

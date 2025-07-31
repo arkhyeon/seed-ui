@@ -35,7 +35,14 @@ function OptionCard({ config, option, setOption, children }) {
     }
 
     if (config.type === 'Count') {
-      return <Count value={option.val} onChange={value => changeOption(value)} />;
+      return (
+        <Count
+          value={option.val}
+          onChange={value => changeOption(value)}
+          min={config?.min}
+          max={config?.max}
+        />
+      );
     }
 
     return <>{children}</>;
