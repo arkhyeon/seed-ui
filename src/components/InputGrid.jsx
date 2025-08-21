@@ -86,7 +86,7 @@ const Subject = styled.div`
   align-items: center;
   font-size: 13px;
   color: #545454;
-  padding: 14.5px 6px;
+  padding: 14.5px 6px 14.5px 12px;
 `;
 
 const Content = styled.div`
