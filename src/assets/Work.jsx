@@ -323,6 +323,7 @@ function Work() {
           { label: 'NOT NULL', value: 'n' },
         ]}
         type="border"
+        disabled
       />
       <PaginationWrap>
         <Pagination totalLength={22313} pageEvent={pageFunction} />

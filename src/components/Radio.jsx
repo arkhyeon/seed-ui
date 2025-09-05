@@ -53,11 +53,11 @@ function Radio({
   disabled = false,
 }) {
   const handleValue = useCallback(
-    value => {
+    elValue => {
       if (disabled) {
         return;
       }
-      setValue(value);
+      setValue(elValue);
     },
     [setValue],
   );
@@ -79,6 +79,7 @@ function Radio({
               value={el.value}
               checked={value === el.value}
               idx={idx}
+              disabled={disabled}
             >
               <Check
                 value={el.value}
@@ -126,6 +127,8 @@ const CheckWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
+    opacity: ${({ disabled }) => disabled && 0.5};
+
     ${({ type, checked, checkColor }) => {
       if (type === 'border' && checked) {
         return css`
