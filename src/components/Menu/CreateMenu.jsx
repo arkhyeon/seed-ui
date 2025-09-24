@@ -90,17 +90,13 @@ function SubMenuItem({
   selectedMenus,
   navigate,
 }) {
-  const { title, link = '', subMenu = [], menuRole = 99, onClick = null } = menu;
-
+  const { title, link = '', subMenu = [], menuRole = 99 } = menu;
   if (userRole > menuRole) {
     return null;
   }
   const restrictMove = e => {
-    if (onClick) {
-      onClick();
-    }
-    if (subMenu.length > 0) {
-      e.preventDefault();
+    e.preventDefault();
+    if (depth !== 0) {
       navigate(subMenu[0]?.link);
     }
   };
