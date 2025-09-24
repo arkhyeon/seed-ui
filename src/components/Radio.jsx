@@ -42,8 +42,8 @@ function Radio({
   value = 1,
   setValue = null,
   list = [
-    { value: 1, label: 'test1' },
-    { value: 2, label: 'test2' },
+    { value: 1 || 'y', label: 'test1', disabled: true },
+    { value: 2 || 'n', label: 'test2', disabled: false },
   ],
   checkColor = 'rgb(144, 202, 249)',
   hoverColor = '#eee',
@@ -53,11 +53,11 @@ function Radio({
   disabled = false,
 }) {
   const handleValue = useCallback(
-    elValue => {
-      if (disabled) {
+    el => {
+      if (disabled || el.disabled) {
         return;
       }
-      setValue(elValue);
+      setValue(el.value);
     },
     [setValue],
   );
@@ -68,7 +68,7 @@ function Radio({
         {list.map((el, idx) => (
           <Label
             key={`label-${el.value}`}
-            onClick={() => handleValue(el.value)}
+            onClick={() => handleValue(el)}
             labelOutSpacing={labelOutSpacing}
           >
             <CheckWrapper
@@ -79,7 +79,7 @@ function Radio({
               value={el.value}
               checked={value === el.value}
               idx={idx}
-              disabled={disabled}
+              disabled={disabled || el.disabled}
             >
               <Check
                 value={el.value}

@@ -192,8 +192,13 @@ function Modal({
     <>
       {createPortal(
         <>
-          <ModalBack onClick={handleClose} />
-          <ModalWrap ref={modalRef} style={{ left: `${pos.x}px`, top: `${pos.y}px` }} width={width}>
+          <ModalBack onClick={handleClose} className="modal-back" />
+          <ModalWrap
+            ref={modalRef}
+            style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+            width={width}
+            className="modal-wrap"
+          >
             <ModalHeader ref={headRef} onMouseDown={handleDown} movable={movable}>
               {modalTitle || null}
               {isCloseBtn ? <GrClose onClick={handleClose} /> : null}

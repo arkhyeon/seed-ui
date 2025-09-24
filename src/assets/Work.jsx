@@ -33,7 +33,7 @@ function Work() {
   const [check, setCheck] = useState(false);
   const [time, setTime] = useState();
   const [isNull, setIsNull] = useState('y');
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date('2019-05-05'));
   const [timeData, setTimeData] = useState([]);
   const [modal, setModal] = useState(false);
   const [name, setName] = useState(24);
@@ -441,11 +441,12 @@ function Work() {
       </form>
       <TimePicker time={time} setTime={setTime} />
       <DatePicker
-        date={new Date('2019-11-02')}
+        date={date}
         setDate={e => {
-          console.log(dateFormat(e));
-          setDate(dateFormat(e));
+          console.log(e);
+          setDate(e);
         }}
+        startDate={new Date()}
       />
       {/* <DatePicker date={new Date('2019-11-02')} setDate={setDate} /> */}
       <TextInput />
