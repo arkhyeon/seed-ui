@@ -12,7 +12,6 @@ function ConfigSyncTable() {
       <Accordion title={<div>aasdasd</div>} collapse={collapse} setCollapse={setCollapse}>
         <Test />
       </Accordion>
-
       <SwitchButton id="hi" />
       <SwitchButton id="hel" />
     </AccordionWrap>

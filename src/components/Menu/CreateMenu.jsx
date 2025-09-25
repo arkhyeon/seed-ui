@@ -111,7 +111,9 @@ function SubMenuItem({
           <NavLink
             to={link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
-            onClick={restrictMove}
+            onClick={event => {
+              restrictMove(event);
+            }}
             style={{ cursor: depth === 0 ? 'default' : 'pointer' }}
             className={similarActive}
           >
@@ -150,12 +152,6 @@ function SubMenuItem({
             to={subMenu.length !== 0 ? subMenu[0].link : link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
             className={similarActive}
-            onClick={() => {
-              if (onClick) {
-                onClick();
-              }
-              handleMenuSelection('', 0);
-            }}
           >
             {title}
           </NavLink>
