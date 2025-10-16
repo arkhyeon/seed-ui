@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { NavLink, Route, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
+import { IoIosArrowForward } from 'react-icons/io';
 
 /**
  * @param {Array} props.menus
@@ -116,10 +117,10 @@ function SubMenuItem({
             to={link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
             onClick={restrictMove}
-            style={{ cursor: depth === 0 ? 'default' : 'pointer' }}
             className={similarActive}
           >
             {title}
+            {depth > 0 && <IoIosArrowForward />}
           </NavLink>
           {selectedMenus[depth] === title && (
             <SubMenuItem.List depth={depth} className="subMenuItem">
@@ -184,12 +185,13 @@ CreateMenu.List = styled.ul`
       line-height: 55px;
       color: #e0e0e0;
       font-size: 15px;
-
-      &:hover {
-        color: white;
-        font-weight: bold;
-      }
     }
+  }
+  & > li:hover > a {
+    color: white;
+    font-weight: bold;
+    background-color: #fb5b5b;
+    border-radius: 10px 10px 0 0;
   }
 `;
 
@@ -241,6 +243,7 @@ SubMenuItem.Item = styled.li`
     display: flex;
     align-items: center;
     padding: 0 15px;
+    justify-content: space-between;
   }
 `;
 
