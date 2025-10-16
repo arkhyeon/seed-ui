@@ -8,6 +8,8 @@ import MacroRegister from './MacroRegister';
 import MacroDashboard from './MacroDashboard';
 import TextAreaTestArea from './TextAreaTestArea';
 import Testing from '../components/Testing';
+import Test1Table from './test1';
+import Test2Table from './test2';
 
 /**
  * @param {String} title
@@ -62,20 +64,21 @@ export const DepthList1 = [
         title: '작업 설정',
         link: '/config/work',
         routePath: 'work',
-        component: <ConfigWork />,
         menuRole: 1,
         subMenu: [
           {
             title: '테이블 설정',
-            link: '/config/sync/table',
+            link: '/config/work/table',
             routePath: 'table',
+            menuRole: 0,
             component: <ConfigSyncTable />,
             display: true,
           },
           {
             title: '동기화 설정',
-            link: '/config/sync/csync',
+            link: '/config/work/csync',
             routePath: 'csync',
+            menuRole: 1,
             component: <ConfigSync />,
             display: true,
           },
@@ -90,14 +93,14 @@ export const DepthList1 = [
             title: '테이블 설정',
             link: '/config/sync/table',
             routePath: 'table',
-            component: <ConfigSyncTable />,
+            component: <Test1Table />,
             display: true,
           },
           {
             title: '동기화 설정',
             link: '/config/sync/csync',
             routePath: 'csync',
-            component: <ConfigSync />,
+            component: <Test2Table />,
             display: true,
           },
           {

@@ -91,17 +91,13 @@ function SubMenuItem({
   selectedMenus,
   navigate,
 }) {
-  const { title, link = '', subMenu = [], menuRole = 99, onClick = null } = menu;
-
+  const { title, link = '', subMenu = [], menuRole = 99 } = menu;
   if (userRole > menuRole) {
     return null;
   }
   const restrictMove = e => {
-    if (onClick) {
-      onClick();
-    }
-    if (subMenu.length > 0) {
-      e.preventDefault();
+    e.preventDefault();
+    if (depth !== 0) {
       navigate(subMenu[0]?.link);
     }
   };
@@ -116,7 +112,10 @@ function SubMenuItem({
           <NavLink
             to={link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
-            onClick={restrictMove}
+            onClick={event => {
+              restrictMove(event);
+            }}
+            style={{ cursor: depth === 0 ? 'default' : 'pointer' }}
             className={similarActive}
           >
             {title}
@@ -155,12 +154,6 @@ function SubMenuItem({
             to={subMenu.length !== 0 ? subMenu[0].link : link}
             onMouseEnter={() => handleMenuSelection(title, depth)}
             className={similarActive}
-            onClick={() => {
-              if (onClick) {
-                onClick();
-              }
-              handleMenuSelection('', 0);
-            }}
           >
             {title}
           </NavLink>
