@@ -1,0 +1,35 @@
+import React, { Fragment } from 'react';
+import { Route } from 'react-router-dom';
+
+/**
+ * Route Component를 props에 맞게 자동 생성(재귀 SubRoute())
+ * @param {[{component, menuRole: number, link: string, title: string},{component, menuRole: number, link: string, title: string},{subMenu: [{routePath: string, component, menuRole: number, link: string, icon, title: string},{routePath: string, subMenu: [{routePath: string, component, link: string, title: string},{routePath: string, component, link: string, title: string}], link: string, icon, title: string},{routePath: string, subMenu: [{routePath: string, component, link: string, title: string},{routePath: string, component, link: string, title: string},{routePath: string, subMenu: [{routePath: string, component, link: string, title: string},{routePath: string, component, link: string, title: string},{routePath: string, component, link: string, title: string}], link: string, title: string}], link: string, icon, title: string}], menuRole: number, link: string, icon, title: string}]} props
+ * @param {int} auth(option)
+ * 권한 체크
+ * auth(ulevel)이 menuRole보다 작다면 활성화
+ * ex ) auth[1] > menuRole[3] >> 활성화
+ *      auth[3] > menuRole[1] >> 비활성
+ * @returns
+ * Route Component
+ */
+export function SetRoute(props) {
+  return <>{props.map(route => SubRoute(route))}</>;
+}
+
+/**
+ * @param {Object} route
+ * @param {int} depth
+ * depth Level
+ * @returns
+ * Route Component
+ */
+function SubRoute(route, depth = 0) {
+  const { component, link = '', title, subMenu = [], routePath } = route;
+  return (
+    <Fragment key={title}>
+      <Route path={routePath || link} element={component}>
+        {subMenu.length > 0 && subMenu.map(child => SubRoute(child, depth + 1))}
+      </Route>
+    </Fragment>
+  );
+}

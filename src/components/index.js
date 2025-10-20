@@ -1,5 +1,5 @@
 import HeaderCreator from './Menu/HeaderCreator';
-import { SetRoute } from './Menu/CreateMenu';
+import { SetRoute } from './Menu/RouteGenerator';
 import AsideCreator from './Menu/AsideCreator';
 import Tooltip from './Tooltip';
 import Modal from './Modal';
