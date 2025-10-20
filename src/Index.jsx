@@ -17,7 +17,6 @@ function Index() {
         }}
         menuList={DepthList1}
         useDepth
-        userRole={1}
       >
         <div>
           <NavLink to="children">Children</NavLink>

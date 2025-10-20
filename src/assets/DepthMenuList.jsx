@@ -24,7 +24,7 @@ import Test2Table from './test2';
  * @param {component} component(option)
  * 해당 URL에 보여줄 컴포넌트
  * Route element={component}
- * @param {Integer} userRole(option)
+ * @param {int} userRole(option)
  * 권한 체크
  * userRole(ulevel)이 menuRole보다 작다면 활성화
  * ex ) userRole[1] > menuRole[3] >> 활성화
@@ -47,7 +47,7 @@ export const DepthList1 = [
     title: '테스팅',
     link: 'testing',
     component: <Testing />,
-    menuRole: 3,
+    menuRole: 0,
   },
   {
     title: '프로젝트',
@@ -58,13 +58,11 @@ export const DepthList1 = [
   {
     title: '설정',
     link: 'config',
-    menuRole: 1,
     subMenu: [
       {
         title: '작업 설정',
         link: '/config/work',
         routePath: 'work',
-        menuRole: 1,
         subMenu: [
           {
             title: '테이블 설정',
@@ -95,6 +93,7 @@ export const DepthList1 = [
             routePath: 'table',
             component: <Test1Table />,
             display: true,
+            menuRole: 1,
           },
           {
             title: '동기화 설정',
@@ -102,6 +101,7 @@ export const DepthList1 = [
             routePath: 'csync',
             component: <Test2Table />,
             display: true,
+            menuRole: 1,
           },
           {
             title: 'textAreaTestArea',
@@ -109,6 +109,7 @@ export const DepthList1 = [
             routePath: 'textAreaTestArea',
             component: <TextAreaTestArea />,
             display: true,
+            menuRole: 1,
           },
         ],
       },
@@ -122,7 +123,8 @@ export const DepthList1 = [
             link: '/config/macro/register',
             routePath: 'register',
             component: <MacroRegister />,
-            // menuRole: 0,
+            display: false,
+            menuRole: 1,
           },
           {
             title: '대시보드',
@@ -130,12 +132,14 @@ export const DepthList1 = [
             routePath: 'dashboard',
             component: <MacroDashboard />,
             display: false,
+            menuRole: 1,
           },
           {
             title: '명령어',
             link: '/config/macro/command',
             routePath: 'command',
             component: <Work />,
+            menuRole: 1,
           },
         ],
       },

@@ -43,9 +43,9 @@ function CreateMenu({ menus, useDepth }) {
   return (
     <CreateMenuList onMouseLeave={() => setSelectedMenus([])}>
       <MenuContext.Provider value={contextValue}>
-        {menus.map(menu => {
-          return <SubMenuItem menu={menu} key={menu.title} />;
-        })}
+        {menus.map(menu => (
+          <SubMenuItem menu={menu} key={menu.title} />
+        ))}
       </MenuContext.Provider>
     </CreateMenuList>
   );

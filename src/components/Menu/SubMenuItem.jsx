@@ -3,32 +3,27 @@ import { NavLink, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { IoIosArrowForward } from 'react-icons/io';
 import MenuContext from './MenuContext';
+import { canShowMenu, getAccessibleLink } from './menuUtils';
 
 function SubMenuItem({ menu, depth = 0 }) {
-  const { handleMenuSelection, selectedMenus, useDepth, userRole } = useContext(MenuContext);
+  const { handleMenuSelection, selectedMenus, useDepth, navigate } = useContext(MenuContext);
 
-  const { title, link = '', subMenu = [], menuRole = 99 } = menu;
+  const { title, link = '', subMenu = [] } = menu;
   const location = useLocation();
 
-  if (userRole > menuRole) {
+  if (!canShowMenu(menu)) {
     return null;
   }
 
-  const getLastSubMenuLink = currentMenu => {
-    if (!currentMenu.subMenu?.length) return currentMenu.link;
-    return getLastSubMenuLink(currentMenu.subMenu[0]);
-  };
-
   const isActive = subMenu.some(s => location.pathname.includes(s.link));
 
-  const hasVisibleSubMenu =
-    subMenu.length > 0 && useDepth && subMenu.some(child => child.display !== false);
+  const hasVisibleSubMenu = subMenu.length > 0 && useDepth;
 
   if (hasVisibleSubMenu) {
     return (
       <Item>
         <NavLink
-          to={getLastSubMenuLink(menu)}
+          to={getAccessibleLink(menu)}
           onMouseEnter={() => handleMenuSelection(title, depth)}
           className={isActive ? 'active' : ''}
         >
@@ -37,12 +32,9 @@ function SubMenuItem({ menu, depth = 0 }) {
         </NavLink>
         {selectedMenus[depth] === title && (
           <List depth={depth} className="subMenuItem">
-            {subMenu.map((child, i) => {
-              if (child.display === false) {
-                return null;
-              }
-              return <SubMenuItem menu={child} key={`sub-${title}${i + 1}`} depth={depth + 1} />;
-            })}
+            {subMenu.map((child, i) => (
+              <SubMenuItem menu={child} key={`sub-${title}${i + 1}`} depth={depth + 1} />
+            ))}
           </List>
         )}
       </Item>
@@ -52,11 +44,16 @@ function SubMenuItem({ menu, depth = 0 }) {
   return (
     <Item
       onMouseEnter={() => handleMenuSelection('', depth)}
-      onClick={() => handleMenuSelection('', 0)}
+      onClick={() => {
+        handleMenuSelection('', 0);
+        if (link) {
+          navigate(link);
+        }
+      }}
       className="mainActive"
     >
       <NavLink
-        to={subMenu.length > 0 ? subMenu[0].link : link}
+        to={link}
         onMouseEnter={() => handleMenuSelection(title, depth)}
         className={isActive ? 'active' : ''}
       >

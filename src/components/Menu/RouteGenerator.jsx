@@ -24,12 +24,13 @@ export function SetRoute(props) {
  * Route Component
  */
 function SubRoute(route, depth = 0) {
-  const { component, link = '', title, subMenu = [], routePath } = route;
+  const { component, link = '', title, subMenu = [], routePath, menuRole } = route;
+
+  if (menuRole < 1) return null;
+
   return (
-    <Fragment key={title}>
-      <Route path={routePath || link} element={component}>
-        {subMenu.length > 0 && subMenu.map(child => SubRoute(child, depth + 1))}
-      </Route>
-    </Fragment>
+    <Route path={routePath || link} element={component} key={title}>
+      {subMenu.length > 0 && subMenu.map(child => SubRoute(child, depth + 1))}
+    </Route>
   );
 }
