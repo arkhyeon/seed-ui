@@ -117,6 +117,7 @@ export const DepthList1 = [
         title: '매크로',
         link: '/config/macro',
         routePath: 'macro',
+        menuRole: 1,
         subMenu: [
           {
             title: '매크로 등록',
@@ -139,6 +140,7 @@ export const DepthList1 = [
             link: '/config/macro/command',
             routePath: 'command',
             component: <Work />,
+            display: false,
             menuRole: 1,
           },
         ],

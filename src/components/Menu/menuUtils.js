@@ -7,11 +7,21 @@ export const canShowMenu = menuItem => {
     return false;
   }
 
-  if (menuItem.subMenu && menuItem.subMenu.length > 0) {
-    return menuItem.subMenu.some(child => canShowMenu(child));
-  }
+  const hasVisibleDescendant =
+    menuItem.subMenu && menuItem.subMenu.length > 0
+      ? menuItem.subMenu.some(child => canShowMenu(child))
+      : false;
 
-  return !!menuItem.menuRole;
+  const hasOwnRole = menuItem.menuRole && menuItem.menuRole > 0;
+
+  return hasOwnRole || hasVisibleDescendant;
+};
+
+export const canBeLinkedTo = menuItem => {
+  if (menuItem.subMenu && menuItem.subMenu.length > 0) {
+    return menuItem.subMenu.some(child => canBeLinkedTo(child));
+  }
+  return menuItem.menuRole && menuItem.menuRole > 0;
 };
 
 export const getAccessibleLink = currentMenu => {
@@ -19,7 +29,7 @@ export const getAccessibleLink = currentMenu => {
     return currentMenu.link;
   }
 
-  const accessibleChild = currentMenu.subMenu.find(canShowMenu);
+  const accessibleChild = currentMenu.subMenu.find(canBeLinkedTo);
 
   if (!accessibleChild) {
     return currentMenu.link;

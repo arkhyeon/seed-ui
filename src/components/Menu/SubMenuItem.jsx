@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { IoIosArrowForward } from 'react-icons/io';
 import MenuContext from './MenuContext';
-import { canShowMenu, getAccessibleLink } from './menuUtils';
+import { canShowMenu, getAccessibleLink, isDisplaySubMenuDepth } from './menuUtils';
 
 function SubMenuItem({ menu, depth = 0 }) {
   const { handleMenuSelection, selectedMenus, useDepth, navigate } = useContext(MenuContext);
@@ -17,7 +17,7 @@ function SubMenuItem({ menu, depth = 0 }) {
 
   const isActive = subMenu.some(s => location.pathname.includes(s.link));
 
-  const hasVisibleSubMenu = subMenu.length > 0 && useDepth;
+  const hasVisibleSubMenu = subMenu.length > 0 && useDepth && isDisplaySubMenuDepth(subMenu);
 
   if (hasVisibleSubMenu) {
     return (
@@ -41,19 +41,21 @@ function SubMenuItem({ menu, depth = 0 }) {
     );
   }
 
+  const navLink = subMenu.length > 0 ? getAccessibleLink(menu) : link;
+
   return (
     <Item
       onMouseEnter={() => handleMenuSelection('', depth)}
       onClick={() => {
         handleMenuSelection('', 0);
-        if (link) {
-          navigate(link);
+        if (navLink) {
+          navigate(navLink);
         }
       }}
       className="mainActive"
     >
       <NavLink
-        to={link}
+        to={navLink}
         onMouseEnter={() => handleMenuSelection(title, depth)}
         className={isActive ? 'active' : ''}
       >
