@@ -47,7 +47,7 @@ export const DepthList1 = [
     title: '테스팅',
     link: 'testing',
     component: <Testing />,
-    menuRole: 0,
+    isPublic: true, // isPublic: true 이면 menuRole이 없거나 0이라도 항상 보이고 접속 가능
   },
   {
     title: '프로젝트',
@@ -68,7 +68,7 @@ export const DepthList1 = [
             title: '테이블 설정',
             link: '/config/work/table',
             routePath: 'table',
-            menuRole: 0,
+            isPublic: true,
             component: <ConfigSyncTable />,
             display: true,
           },

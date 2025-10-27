@@ -24,9 +24,12 @@ export function SetRoute(props) {
  * Route Component
  */
 function SubRoute(route, depth = 0) {
-  const { component, link = '', title, subMenu = [], routePath, menuRole } = route;
+  const { component, link = '', title, subMenu = [], routePath, menuRole, isPublic } = route;
 
-  if (menuRole < 1) return null;
+  // isPublic이 아니면서, menuRole이 0일때만 경로 생성 방지
+  if (!isPublic && menuRole !== undefined && menuRole < 1) {
+    return null;
+  }
 
   return (
     <Route path={routePath || link} element={component} key={title}>

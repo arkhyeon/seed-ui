@@ -13,9 +13,6 @@ import MenuContext from './MenuContext';
  * 사이드 메뉴 사용할 때 Depth를 사용할 것인지 아닌지
  * true : Depth 이용 메뉴
  * false : Depth 없이 메뉴
- * @param {Boolean} display
- * subMenu에서 Route로만 사용할 메뉴에 대해서 분기 처리
- * default : true, false 설정 시 메뉴에 보이지 않음.
 
  * @returns {JSX.Element} Menu Component
  */

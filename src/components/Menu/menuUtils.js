@@ -7,6 +7,11 @@ export const canShowMenu = menuItem => {
     return false;
   }
 
+  // isPublic 플래그가 있으면 항상 메뉴 표시
+  if (menuItem.isPublic) {
+    return true;
+  }
+
   const hasVisibleDescendant =
     menuItem.subMenu && menuItem.subMenu.length > 0
       ? menuItem.subMenu.some(child => canShowMenu(child))
@@ -21,7 +26,7 @@ export const canBeLinkedTo = menuItem => {
   if (menuItem.subMenu && menuItem.subMenu.length > 0) {
     return menuItem.subMenu.some(child => canBeLinkedTo(child));
   }
-  return menuItem.menuRole && menuItem.menuRole > 0;
+  return menuItem.isPublic || (menuItem.menuRole && menuItem.menuRole > 0);
 };
 
 export const getAccessibleLink = currentMenu => {
