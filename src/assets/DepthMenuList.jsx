@@ -12,29 +12,19 @@ import Test1Table from './test1';
 import Test2Table from './test2';
 
 /**
- * @param {String} title
- * 메뉴에 들어갈 텍스트, map key 역할[unique]
- * @param {String} link(option)
- * URL Path
- * NavLink to={link}
- * routePath가 없으면 link가 routePath로 설정
- * @param {String} routePath(option)
- * routePath
- * Route path={routePath}
- * @param {component} component(option)
- * 해당 URL에 보여줄 컴포넌트
- * Route element={component}
- * @param {int} userRole(option)
- * 권한 체크
- * userRole(ulevel)이 menuRole보다 작다면 활성화
- * ex ) userRole[1] > menuRole[3] >> 활성화
- *      userRole[3] > menuRole[1] >> 비활성
- * @param {Array} subMenu(option)
- *  - 해당 메뉴 하위로 나올 메뉴
+ * DepthMenuList.jsx
  *
- * @return
- * function CreateMenu = title, link, subMenu 사용
- * function setRoute   = title, link, subMenu, component 사용
+ * 메뉴 구조를 정의하는 파일입니다.
+ * 각 메뉴 아이템 객체는 다음과 같은 속성을 가질 수 있습니다.
+ *
+ * @param {String} title - 메뉴에 표시될 텍스트. React 리스트 렌더링 시 `key`로도 사용됩니다. (필수, 고유값)
+ * @param {String} link - 메뉴 클릭 시 이동할 URL 경로. `NavLink`의 `to` 속성에 사용됩니다.
+ * @param {String} routePath - (옵션) React Router의 `<Route>` `path` 속성에 사용될 경로. 지정하지 않으면 `link` 값이 사용됩니다.
+ * @param {React.Component} component - (옵션) 해당 경로에 렌더링될 React 컴포넌트.
+ * @param {Array} subMenu - (옵션) 하위 메뉴를 정의하는 메뉴 아이템 객체의 배열.
+ * @param {Number} menuRole - (옵션) 메뉴에 접근하기 위한 권한 레벨. `RouteGenerator`와 `canShowMenu`에서 사용됩니다.
+ * @param {Boolean} display - (옵션) `false`로 설정 시, `canShowMenu`가 항상 `false`를 반환하여 메뉴가 숨겨집니다.
+ * @param {Boolean} isPublic - (옵션) `true`로 설정 시, `menuRole`에 관계없이 항상 메뉴가 보이고 접근 가능하게 됩니다.
  */
 export const DepthList1 = [
   {

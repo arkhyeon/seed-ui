@@ -3,7 +3,13 @@ import path from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      babel: {
+        plugins: ['babel-plugin-react-compiler'],
+      },
+    }),
+  ],
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/components/index.js'),
