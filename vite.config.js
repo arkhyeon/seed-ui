@@ -4,11 +4,12 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [
-    react({
-      babel: {
-        plugins: ['babel-plugin-react-compiler'],
-      },
-    }),
+    react(),
+    // react({
+    //   babel: {
+    //     plugins: ['babel-plugin-react-compiler'],
+    //   },
+    // }),
   ],
   build: {
     lib: {

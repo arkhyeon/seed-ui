@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { BiFile, BiTrash } from 'react-icons/bi';
 import { FaRegEdit } from 'react-icons/fa';
-import { TbFileTime } from 'react-icons/tb';
+import { IoIosArrowForward } from 'react-icons/io';
+import _ from 'lodash';
+
 /**
  * ## 기본적인 사용법 ##
  *
@@ -48,12 +50,90 @@ import { TbFileTime } from 'react-icons/tb';
  * @constructor
  */
 export function SideTabs(props) {
-  return <SideTabsWrap {...props} />;
+  const resizeAside = useRef();
+  const [resizer, setResizer] = useState({
+    currentScreenX: 0,
+    mouseActive: false,
+    currentWidth: 0,
+    maxWidth: 0,
+  });
+
+  useEffect(() => {
+    collapseStyle(window.sessionStorage.getItem('AsideWidth') || 265);
+  }, []);
+
+  const resizingStart = e => {
+    document.body.style.userSelect = 'none';
+
+    setResizer({
+      currentScreenX: e.screenX,
+      mouseActive: true,
+      currentWidth: resizeAside.current.clientWidth,
+      maxWidth: window.innerWidth,
+    });
+  };
+
+  window.onmousemove = e => resizing(e);
+
+  const resizing = _.debounce(e => {
+    if (resizer.mouseActive) {
+      const move = e.screenX - resizer.currentScreenX;
+      const newWidth = resizer.currentWidth + move;
+
+      resizeAside.current.style.width = `${newWidth}px`;
+
+      collapseStyle(newWidth);
+    }
+  }, 1);
+
+  const collapseStyle = currentWidth => {
+    const classList = resizeAside.current.classList;
+
+    classList.toggle('narrow', currentWidth > 183 && currentWidth < 203);
+    classList.toggle('narrower', currentWidth <= 183);
+
+    if (!resizer.mouseActive) {
+      resizeAside.current.style.width = `${currentWidth}px`;
+    }
+
+    window.sessionStorage.setItem('AsideWidth', currentWidth);
+  };
+
+  window.onmouseup = e => resizingDone(e);
+
+  const resizingDone = () => {
+    if (resizer.mouseActive) {
+      document.body.style.userSelect = 'unset';
+      setResizer({ ...resizer, mouseActive: false });
+    }
+  };
+
+  const toggleCollapse = () => {
+    const isNarrower = resizeAside.current.classList.contains('narrower');
+    collapseStyle(isNarrower ? 265 : 83);
+  };
+
+  return (
+    <>
+      <SideTabsWrap {...props} ref={resizeAside}>
+        {props.children}
+        <ResizerBar onMouseDown={e => resizingStart(e)}>
+          <IoIosArrowForward
+            onClick={() => toggleCollapse()}
+            size={18}
+            viewBox="-10 0 512 512"
+            color="#333"
+            style={{}}
+          />
+        </ResizerBar>
+      </SideTabsWrap>
+    </>
+  );
 }
 
 /**
  * SideTabs 내부의 스크롤 가능한 틀
- * @param props
+ * @param prAops
  * @returns {JSX.Element}
  * @constructor
  */
@@ -214,16 +294,48 @@ export function TabIconButton(props) {
 
 const SideTabsWrap = styled.div`
   width: 233px;
-  min-width: 233px;
+  min-width: 83px;
+  max-width: 400px;
   height: calc(100vh - 203px);
   flex-grow: 1;
   padding-right: 18px;
   font-size: 14px;
-  border-right: 1px solid #d2d2d2;
+  position: relative;
+  box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  &.narrower svg {
+    transform: rotate(180deg);
+  }
+`;
+
+const ResizerBar = styled.div`
+  width: 4px;
+  height: 100%;
+  border-right: 1px solid #d2d2d2;
+  cursor: ew-resize;
+  position: absolute;
+  right: -2px;
+  box-sizing: border-box;
+
+  &:hover {
+    border-right: 3px solid #a9a9a9;
+  }
+
+  & svg {
+    background: #eceff1;
+    border-radius: 100%;
+    width: 18px;
+    height: 18px;
+    top: calc(50% - 8px);
+    position: absolute;
+    left: -5px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
 `;
 
 const ScrollTab = styled.div`
