@@ -112,8 +112,10 @@ export function SideTabs(props) {
 
   const toggleCollapse = useCallback(() => {
     if (!asideRef.current) return;
-    const isNarrower = asideRef.current.classList.contains('narrower');
-    updateWidth(isNarrower ? DEFAULT_WIDTH : COLLAPSED_WIDTH);
+    if (resizeData.current.startWidth === asideRef.current.clientWidth) {
+      const isNarrower = asideRef.current.classList.contains('narrower');
+      updateWidth(isNarrower ? DEFAULT_WIDTH : COLLAPSED_WIDTH);
+    }
   }, [updateWidth]);
 
   return (
