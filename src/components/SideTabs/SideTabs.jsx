@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { BiFile, BiTrash } from 'react-icons/bi';
 import { FaRegEdit } from 'react-icons/fa';
-import { IoIosArrowForward } from 'react-icons/io';
+import { IoIosArrowBack } from 'react-icons/io';
 import _ from 'lodash';
 
 /**
@@ -49,82 +49,79 @@ import _ from 'lodash';
  * @returns {JSX.Element}
  * @constructor
  */
-export function SideTabs(props) {
-  const resizeAside = useRef();
-  const [resizer, setResizer] = useState({
-    currentScreenX: 0,
-    mouseActive: false,
-    currentWidth: 0,
-    maxWidth: 0,
-  });
 
-  useEffect(() => {
-    collapseStyle(window.sessionStorage.getItem('AsideWidth') || 265);
+const DEFAULT_WIDTH = 252;
+const NARROW_WIDTH_THRESHOLD = 183;
+const COLLAPSED_WIDTH = 165;
+const MIN_WIDTH = 165;
+const MAX_WIDTH = 418;
+
+export function SideTabs(props) {
+  const asideRef = useRef(null);
+  const resizeData = useRef({ startX: 0, startWidth: 0 });
+  const [isResizing, setIsResizing] = useState(false);
+
+  const updateWidth = useCallback(width => {
+    if (!asideRef.current) return;
+
+    const newWidth = Math.max(MIN_WIDTH, Math.min(width, MAX_WIDTH));
+
+    asideRef.current.style.width = `${newWidth}px`;
+    asideRef.current.classList.toggle('narrower', newWidth <= NARROW_WIDTH_THRESHOLD);
+    window.sessionStorage.setItem('AsideWidth', String(newWidth));
   }, []);
 
-  const resizingStart = e => {
+  useEffect(() => {
+    const savedWidth = window.sessionStorage.getItem('AsideWidth');
+    updateWidth(savedWidth ? parseInt(savedWidth, 10) : DEFAULT_WIDTH);
+  }, [updateWidth]);
+
+  const handleResizeStart = useCallback(e => {
+    if (!asideRef.current) return;
     document.body.style.userSelect = 'none';
+    resizeData.current = { startX: e.screenX, startWidth: asideRef.current.clientWidth };
+    setIsResizing(true);
+  }, []);
 
-    setResizer({
-      currentScreenX: e.screenX,
-      mouseActive: true,
-      currentWidth: resizeAside.current.clientWidth,
-      maxWidth: window.innerWidth,
-    });
-  };
-
-  window.onmousemove = e => resizing(e);
-
-  const resizing = _.debounce(e => {
-    if (resizer.mouseActive) {
-      const move = e.screenX - resizer.currentScreenX;
-      const newWidth = resizer.currentWidth + move;
-
-      resizeAside.current.style.width = `${newWidth}px`;
-
-      collapseStyle(newWidth);
-    }
-  }, 1);
-
-  const collapseStyle = currentWidth => {
-    const classList = resizeAside.current.classList;
-
-    classList.toggle('narrow', currentWidth > 183 && currentWidth < 203);
-    classList.toggle('narrower', currentWidth <= 183);
-
-    if (!resizer.mouseActive) {
-      resizeAside.current.style.width = `${currentWidth}px`;
+  useEffect(() => {
+    if (!isResizing) {
+      return;
     }
 
-    window.sessionStorage.setItem('AsideWidth', currentWidth);
-  };
+    const handleResizing = _.debounce(e => {
+      if (!asideRef.current) return;
+      const move = e.screenX - resizeData.current.startX;
+      const newWidth = resizeData.current.startWidth + move;
+      updateWidth(newWidth);
+    }, 1);
 
-  window.onmouseup = e => resizingDone(e);
+    const handleResizeDone = () => {
+      setIsResizing(false);
+    };
 
-  const resizingDone = () => {
-    if (resizer.mouseActive) {
+    window.addEventListener('mousemove', handleResizing);
+    window.addEventListener('mouseup', handleResizeDone);
+
+    return () => {
+      handleResizing.cancel();
+      window.removeEventListener('mousemove', handleResizing);
+      window.removeEventListener('mouseup', handleResizeDone);
       document.body.style.userSelect = 'unset';
-      setResizer({ ...resizer, mouseActive: false });
-    }
-  };
+    };
+  }, [isResizing, updateWidth]);
 
-  const toggleCollapse = () => {
-    const isNarrower = resizeAside.current.classList.contains('narrower');
-    collapseStyle(isNarrower ? 265 : 83);
-  };
+  const toggleCollapse = useCallback(() => {
+    if (!asideRef.current) return;
+    const isNarrower = asideRef.current.classList.contains('narrower');
+    updateWidth(isNarrower ? DEFAULT_WIDTH : COLLAPSED_WIDTH);
+  }, [updateWidth]);
 
   return (
     <>
-      <SideTabsWrap {...props} ref={resizeAside}>
+      <SideTabsWrap {...props} ref={asideRef}>
         {props.children}
-        <ResizerBar onMouseDown={e => resizingStart(e)}>
-          <IoIosArrowForward
-            onClick={() => toggleCollapse()}
-            size={18}
-            viewBox="-10 0 512 512"
-            color="#333"
-            style={{}}
-          />
+        <ResizerBar onMouseDown={handleResizeStart}>
+          <IoIosArrowBack onClick={toggleCollapse} size={18} viewBox="-10 0 512 512" />
         </ResizerBar>
       </SideTabsWrap>
     </>
@@ -133,7 +130,7 @@ export function SideTabs(props) {
 
 /**
  * SideTabs 내부의 스크롤 가능한 틀
- * @param prAops
+ * @param props
  * @returns {JSX.Element}
  * @constructor
  */
@@ -293,15 +290,15 @@ export function TabIconButton(props) {
 }
 
 const SideTabsWrap = styled.div`
-  width: 233px;
-  min-width: 83px;
-  max-width: 400px;
+  width: 252px;
+  min-width: 165px;
+  max-width: 418px;
   height: calc(100vh - 203px);
-  flex-grow: 1;
   padding-right: 18px;
   font-size: 14px;
   position: relative;
   box-sizing: border-box;
+  flex-shrink: 0;
 
   display: flex;
   flex-direction: column;
@@ -335,6 +332,7 @@ const ResizerBar = styled.div`
     left: -5px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
+    color: #333;
   }
 `;
 

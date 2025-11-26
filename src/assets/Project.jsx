@@ -4,7 +4,16 @@ import { AiOutlineUser } from 'react-icons/ai';
 import { BsClipboardCheck } from 'react-icons/bs';
 import { TbUsers } from 'react-icons/tb';
 
-import { DividingLine, MainTabButton, SideScrollWrap, SideTabs, TabButton } from '../components';
+import {
+  Count,
+  DatePicker,
+  DividingLine,
+  MainTabButton,
+  SideScrollWrap,
+  SideTabs,
+  TabButton,
+  TimePicker,
+} from '../components';
 import UserFilter from '../icon/UserFilter';
 import ContractFilter from '../icon/ContractFilter';
 
@@ -106,9 +115,7 @@ function Project() {
   };
 
   return (
-    <div>
-      {' '}
-      -- 전체 사이즈 설정
+    <div className="flex" style={{ flexGrow: 1 }}>
       <SideTabs>
         <MainTabButton onClick={() => console.log('a')}>메인버튼</MainTabButton>
         <DividingLine />
@@ -142,30 +149,31 @@ function Project() {
         </SideScrollWrap>
         <DividingLine />
       </SideTabs>
+      <Wrap>
+        <Wrapper>
+          <DatePicker
+            date={date}
+            setDate={setDate}
+            startDate={new Date('2022-11-10')}
+            endDate={endDate}
+          />
+          <DatePicker date={endDate} setDate={setEndDate} startDate={date} />
+          <TimePicker time={time} setTime={setTime} />
+          <TimePicker onChange={val => setTime2(val)} time={time2} />
+        </Wrapper>
+        <Wrapper>
+          <Count value={cnt} onChange={value => setCount(value)} max={55} />
+        </Wrapper>
+      </Wrap>
     </div>
-    // <Wrap>
-    //   <button onClick={getGroupList}>검사</button>
-    //   <Wrapper>
-    //     <DatePicker
-    //       date={date}
-    //       setDate={setDate}
-    //       startDate={new Date('2022-11-10')}
-    //       endDate={endDate}
-    //     />
-    //     <DatePicker date={endDate} setDate={setEndDate} startDate={date} />
-    //     <TimePicker time={time} setTime={setTime} />
-    //     <TestTimePicker onChange={val => setTime2(val)} time={time2} />
-    //   </Wrapper>
-    //   <Wrapper>
-    //     <Count value={cnt} onChange={value => setCount(value)} max={55} />
-    //   </Wrapper>
-    // </Wrap>
   );
 }
 
 export default Project;
 
 const Wrap = styled.div`
+  width: 100%;
+  padding-left: 18px;
   display: flex;
   flex-direction: column;
 `;
