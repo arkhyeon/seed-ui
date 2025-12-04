@@ -10,7 +10,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Index />}>
-          {SetRoute(DepthList1, 1)}
+          {SetRoute(DepthList1, 'y')}
         </Route>
       </Routes>
     </Router>

@@ -31,7 +31,7 @@ export const DepthList1 = [
     title: '작업',
     link: 'work',
     component: <Work />,
-    menuRole: 3,
+    // menuRole: 3,
   },
   {
     title: '테스팅',
@@ -53,14 +53,14 @@ export const DepthList1 = [
         title: '작업 설정',
         link: '/config/work',
         routePath: 'work',
+        component: <Project />,
         subMenu: [
           {
             title: '테이블 설정',
             link: '/config/work/table',
             routePath: 'table',
-            isPublic: true,
             component: <ConfigSyncTable />,
-            display: true,
+            display: false,
           },
           {
             title: '동기화 설정',
@@ -68,7 +68,7 @@ export const DepthList1 = [
             routePath: 'csync',
             menuRole: 1,
             component: <ConfigSync />,
-            display: true,
+            display: false,
           },
         ],
       },

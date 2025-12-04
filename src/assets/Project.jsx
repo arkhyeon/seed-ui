@@ -17,7 +17,7 @@ import {
 import UserFilter from '../icon/UserFilter';
 import ContractFilter from '../icon/ContractFilter';
 
-function Project() {
+function Project({ children }) {
   const data2 = [
     'Andi',
     'Stern',
@@ -165,6 +165,7 @@ function Project() {
           <Count value={cnt} onChange={value => setCount(value)} max={55} />
         </Wrapper>
       </Wrap>
+      {children}
     </div>
   );
 }

@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { isDisplaySubMenuDepth } from './menuUtils';
 
-function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
+function CreateAsideMenu({ currentSideMenu, depth = 0, role }) {
   const [displayChildren, setDisplayChildren] = useState({});
   const { pathname } = useLocation();
   useEffect(() => {
@@ -24,7 +24,7 @@ function CreateAsideMenu({ currentSideMenu, depth = 0 }) {
   return (
     <ASideMenuWrap>
       {currentSideMenu?.map(sm => {
-        if (sm.display === false || sm.menuRole === 0) {
+        if (role === 'n' && (!sm.display || sm.menuRole === 0)) {
           return '';
         }
         return (

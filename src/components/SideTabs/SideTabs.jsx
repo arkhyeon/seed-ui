@@ -122,7 +122,7 @@ export function SideTabs(props) {
     <>
       <SideTabsWrap {...props} ref={asideRef}>
         {props.children}
-        <ResizerBar onMouseDown={handleResizeStart}>
+        <ResizerBar className="resizer-bar" onMouseDown={handleResizeStart}>
           <IoIosArrowBack onClick={toggleCollapse} size={18} viewBox="-10 0 512 512" />
         </ResizerBar>
       </SideTabsWrap>
@@ -306,7 +306,7 @@ const SideTabsWrap = styled.div`
   flex-direction: column;
   gap: 10px;
 
-  &.narrower svg {
+  &.narrower .resizer-bar svg {
     transform: rotate(180deg);
   }
 `;
@@ -363,6 +363,10 @@ const ButtonWrap = styled.div`
   width: 100%;
   position: relative;
 
+  & button:hover {
+    padding: 10px 55px 10px 10px;
+  }
+
   & button {
     overflow: hidden;
   }
@@ -392,7 +396,7 @@ const Button = styled.button`
   outline: none;
   width: 100%;
   height: 38px;
-  padding: 10px 55px 10px 10px;
+  padding: 10px 15px 10px 10px;
   border-radius: 5px;
   cursor: pointer;
   background-color: white;

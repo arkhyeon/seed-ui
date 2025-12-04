@@ -12,8 +12,8 @@ import { Route } from 'react-router-dom';
  * @returns
  * Route Component
  */
-export function SetRoute(props) {
-  return <>{props.map(route => SubRoute(route))}</>;
+export function SetRoute(props, role = 'n') {
+  return <>{props.map(route => SubRoute(route, role))}</>;
 }
 
 /**
@@ -23,17 +23,19 @@ export function SetRoute(props) {
  * @returns
  * Route Component
  */
-function SubRoute(route, depth = 0) {
+function SubRoute(route, role, depth = 0) {
   const { component, link = '', title, subMenu = [], routePath, menuRole, isPublic } = route;
 
   // isPublic이 아니면서, menuRole이 0일때만 경로 생성 방지
-  if (!isPublic && menuRole !== undefined && menuRole < 1) {
-    return null;
+  if (role === 'n') {
+    if (!isPublic && menuRole !== undefined && menuRole < 1) {
+      return null;
+    }
   }
 
   return (
     <Route path={routePath || link} element={component} key={title}>
-      {subMenu.length > 0 && subMenu.map(child => SubRoute(child, depth + 1))}
+      {subMenu.length > 0 && subMenu.map(child => SubRoute(child, role, depth + 1))}
     </Route>
   );
 }

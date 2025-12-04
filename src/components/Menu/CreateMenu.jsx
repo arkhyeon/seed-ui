@@ -17,7 +17,7 @@ import MenuContext from './MenuContext';
  * @returns {JSX.Element} Menu Component
  */
 
-function CreateMenu({ menus, useDepth }) {
+function CreateMenu({ menus, useDepth, role }) {
   const [selectedMenus, setSelectedMenus] = useState([]);
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ function CreateMenu({ menus, useDepth }) {
     <CreateMenuList onMouseLeave={() => setSelectedMenus([])}>
       <MenuContext.Provider value={contextValue}>
         {menus.map(menu => (
-          <SubMenuItem menu={menu} key={menu.title} />
+          <SubMenuItem menu={menu} key={menu.title} role={role} />
         ))}
       </MenuContext.Provider>
     </CreateMenuList>

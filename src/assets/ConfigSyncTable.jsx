@@ -13,6 +13,7 @@ function ConfigSyncTable() {
         <Test />
       </Accordion>
       <SwitchButton id="hi" />
+      12312312
       <SwitchButton id="hel" />
     </AccordionWrap>
   );

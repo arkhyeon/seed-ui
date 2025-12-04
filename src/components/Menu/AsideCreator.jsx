@@ -5,7 +5,7 @@ import { MdMenu } from 'react-icons/md';
 import { css } from '@emotion/react';
 import CreateAsideMenu from './CreateAsideMenu';
 
-function AsideCreator({ menuList, title, logoSetting = {}, children }) {
+function AsideCreator({ menuList, title, logoSetting = {}, children, role = 'n' }) {
   const targetMenu = menuList.filter(menu => menu.title === title)[0];
   const { logo, logoLink = '/' } = logoSetting;
   const [hide, setHide] = useState(false);
@@ -24,7 +24,7 @@ function AsideCreator({ menuList, title, logoSetting = {}, children }) {
         <SideTitle>
           <span>{targetMenu.title}</span>
         </SideTitle>
-        <CreateAsideMenu currentSideMenu={targetMenu.subMenu} />
+        <CreateAsideMenu currentSideMenu={targetMenu.subMenu} role={role} />
       </AsideWrap>
       <MainWrap>{children}</MainWrap>
     </Container>

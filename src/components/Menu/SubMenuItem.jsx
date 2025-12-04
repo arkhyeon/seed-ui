@@ -5,13 +5,13 @@ import { IoIosArrowForward } from 'react-icons/io';
 import MenuContext from './MenuContext';
 import { canShowMenu, getAccessibleLink, isDisplaySubMenuDepth } from './menuUtils';
 
-function SubMenuItem({ menu, depth = 0 }) {
+function SubMenuItem({ menu, depth = 0, role }) {
   const { handleMenuSelection, selectedMenus, useDepth, navigate } = useContext(MenuContext);
 
   const { title, link = '', subMenu = [] } = menu;
   const location = useLocation();
 
-  if (!canShowMenu(menu)) {
+  if (!canShowMenu(menu, role)) {
     return null;
   }
 
@@ -23,7 +23,7 @@ function SubMenuItem({ menu, depth = 0 }) {
     return (
       <Item>
         <NavLink
-          to={getAccessibleLink(menu)}
+          to={getAccessibleLink(menu, role)}
           onMouseEnter={() => handleMenuSelection(title, depth)}
           className={isActive ? 'active' : ''}
         >
@@ -33,7 +33,12 @@ function SubMenuItem({ menu, depth = 0 }) {
         {selectedMenus[depth] === title && (
           <List depth={depth} className="subMenuItem">
             {subMenu.map((child, i) => (
-              <SubMenuItem menu={child} key={`sub-${title}${i + 1}`} depth={depth + 1} />
+              <SubMenuItem
+                menu={child}
+                key={`sub-${title}${i + 1}`}
+                depth={depth + 1}
+                role={role}
+              />
             ))}
           </List>
         )}
@@ -41,7 +46,7 @@ function SubMenuItem({ menu, depth = 0 }) {
     );
   }
 
-  const navLink = subMenu.length > 0 ? getAccessibleLink(menu) : link;
+  const navLink = subMenu.length > 0 ? getAccessibleLink(menu, role) : link;
 
   return (
     <Item

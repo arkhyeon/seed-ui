@@ -13,13 +13,13 @@ import CreateMenu from './CreateMenu';
  *
  * @returns {JSX.Element} HeaderCreator
  */
-function HeaderCreator({ logoSetting, menuList, useDepth = true, children = <div /> }) {
+function HeaderCreator({ logoSetting, menuList, useDepth = true, children = <div />, role = 'n' }) {
   const { logo, logoLink = '/' } = logoSetting;
 
   return (
     <HeaderWrap>
       <NavLink to={logoLink}>{logo}</NavLink>
-      <CreateMenu menus={menuList} useDepth={useDepth} />
+      <CreateMenu menus={menuList} useDepth={useDepth} role={role} />
       {children}
     </HeaderWrap>
   );
