@@ -21,10 +21,18 @@ function CreateAsideMenu({ currentSideMenu, depth = 0, role }) {
     }
   };
 
+  const validation = sm => {
+    if (!sm.display) return false;
+    if (role === 'y') return true;
+    if (role === 'n') return sm.menuRole > 0;
+
+    return false;
+  };
+
   return (
     <ASideMenuWrap>
       {currentSideMenu?.map(sm => {
-        if (role === 'n' && (!sm.display || sm.menuRole === 0)) {
+        if (validation(sm)) {
           return '';
         }
         return (
