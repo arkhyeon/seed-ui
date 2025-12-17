@@ -70,6 +70,7 @@ function Radio({
             key={`label-${el.value}`}
             onClick={() => handleValue(el)}
             labelOutSpacing={labelOutSpacing}
+            disabled={value !== el.value && (disabled || el.disabled)}
           >
             <CheckWrapper
               checkColor={checkColor}
@@ -79,7 +80,6 @@ function Radio({
               value={el.value}
               checked={value === el.value}
               idx={idx}
-              disabled={disabled || el.disabled}
             >
               <Check
                 value={el.value}
@@ -127,7 +127,6 @@ const CheckWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    opacity: ${({ disabled }) => disabled && 0.5};
 
     ${({ type, checked, checkColor }) => {
       if (type === 'border' && checked) {
@@ -174,6 +173,7 @@ const Label = styled.label`
   align-items: center;
   cursor: pointer;
   gap: 6px;
+  opacity: ${({ disabled }) => disabled && 0.5};
 
   & > div {
     font-size: 13px;

@@ -123,7 +123,7 @@ export function SideTabs(props) {
       <SideTabsWrap {...props} ref={asideRef}>
         {props.children}
         <ResizerBar className="resizer-bar" onMouseDown={handleResizeStart}>
-          <IoIosArrowBack onClick={toggleCollapse} size={18} viewBox="-10 0 512 512" />
+          <IoIosArrowBack onClick={toggleCollapse} size={18} viewBox="0 0 512 512" />
         </ResizerBar>
       </SideTabsWrap>
     </>
@@ -363,7 +363,7 @@ const ButtonWrap = styled.div`
   width: 100%;
   position: relative;
 
-  & button:hover {
+  &:hover button {
     padding: 10px 55px 10px 10px;
   }
 
