@@ -6,38 +6,6 @@ import { createPortal } from 'react-dom';
 import { BlackButton, WhiteButton } from './Button/Button';
 import { useThrottle } from '../assets/CustomHook';
 
-/**
- *
- * @param {String} props.width
- * 모달의 너비
- * default 값은 '600px'
- * @param {Function} props.handleClose
- * 모달을 닫는(상태를 변경 하는) 함수
- * 상위 컴포넌트에서 상태변경 기능이 포함된 함수를 내려 받음
- * default 값은 null
- * @param {String} props.modalTitle
- * 모달의 제목
- * default 값은 'undefined'로 ""로 표시됨.
- * @param {Boolean} props.isCloseBtn
- * 모달창 오른쪽 상단에 닫기 버튼 존재 여부
- * default 값은 true
- * @param {Boolean} props.movable
- * 모달창 상단을 드래그 하여 이동 가능한 지 여부
- * default 값은 true
- * @param {Component[]} props.buttonList
- * 모달창 하단에 표시될 버튼 목록
- * default 값은 [
- * <Button size="small" color="blue" onClick={callback}> 확인 </Button>,
- <Button size="small" onClick={handleClose}>닫기</Button>
- ]
- * @param {Function} props.callback
- * 모달창 확인 버튼을 눌렀을 시, 실행되는 함수
- * default 값은 null
- * @param {Component} props.children
- * 모달 내에 들어갈 컴포넌트
- * @returns {JSX.Element} Button Component
- */
-
 function Modal({
   width = `600px`,
   children,
@@ -53,18 +21,16 @@ function Modal({
 }) {
   const modalRef = useRef(null);
   const headRef = useRef(null);
-  const initialPos = useRef({ x: 0, y: 0 }); // 모달 위치 ref
-  const [pos, setPos] = useState({ x: 0, y: 0 }); // 모달 상태
+  const initialPos = useRef({ x: 0, y: 0 });
+  const isCentered = useRef(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
 
-  // 랜더링시 브라우저 화면 내(window.innerWidth)에서 중앙 배치하는 함수
   const moveToCenter = () => {
     const centerWidth = window.innerWidth / 2 - modalRef.current.offsetWidth / 2;
     const centerHeight = window.innerHeight / 2 - modalRef.current.offsetHeight / 2;
     setPos({ x: centerWidth, y: centerHeight < 0 ? 0 : centerHeight });
   };
 
-  // window.innerWidth 또는 window.innerHeight에 값이 달라 졌을때 실행된다.
-  //  window.outerWidth나  window.outerHeight가 줄어들때 모달 위치가 -가 되는 것을 방지.
   const handleCenter = useCallback(() => {
     const { offsetWidth, offsetHeight } = modalRef.current;
     const isWidthExceeding = offsetWidth > window.innerWidth;
@@ -85,19 +51,16 @@ function Modal({
     setPos(newPosition);
   }, [pos]);
 
-  // 모달을 움직이는 경우(드래그) 실행되는 함수.
   const handleMove = useCallback(
-    // eslint-disable-next-line consistent-return
     e => {
       const { clientX, clientY } = e;
-      const { offsetWidth, offsetHeight } = modalRef.current; // 모달의 너비와 높이
-      const { innerWidth, innerHeight } = window; // 창의 너비와 높이
-      const { scrollWidth, scrollHeight } = document.documentElement; // 스크롤의 너비와 높이
+      const { offsetWidth, offsetHeight } = modalRef.current;
+      const { innerWidth, innerHeight } = window;
+      const { scrollWidth, scrollHeight } = document.documentElement;
 
       let posX = clientX - initialPos.current.x;
       let posY = clientY - initialPos.current.y;
 
-      // 모달의 너비나 높이가 창보다 클경우
       if (offsetWidth > innerWidth || offsetHeight > innerHeight) {
         if (posX + offsetWidth > scrollWidth) {
           posX = scrollWidth - offsetWidth - 1;
@@ -108,20 +71,11 @@ function Modal({
         return setPos({ x: posX < 0 ? 0 : posX, y: posY < 0 ? 0 : posY });
       }
 
-      // 모달의 가로값이 음수인 경우
-      if (posX < 0) {
-        posX = 1;
-      }
-
-      // 모달이 가로 끝으로 나가지 못하게 함
+      if (posX < 0) posX = 1;
       if (posX + modalRef.current.offsetWidth > scrollWidth) {
         posX = scrollWidth - modalRef.current.offsetWidth - 1;
       }
-
-      if (posY < 0) {
-        posY = 1;
-      }
-
+      if (posY < 0) posY = 1;
       if (posY + modalRef.current.offsetHeight > scrollHeight) {
         posY = scrollHeight - modalRef.current.offsetHeight - 1;
       }
@@ -133,7 +87,6 @@ function Modal({
 
   const throttleMove = useThrottle(handleMove, 10);
 
-  // 모달 클릭후 모달에서 마우스를 뗐을때
   const removeEvents = useCallback(
     e => {
       const { clientX, clientY } = e;
@@ -149,7 +102,6 @@ function Modal({
         setPos(prevState => ({ x: 1, y: prevState.y }));
         return;
       }
-
       if (posY + 50 >= innerHeight) {
         setPos(prevState => ({ x: prevState.x, y: 1 }));
       }
@@ -157,12 +109,10 @@ function Modal({
     [throttleMove, initialPos],
   );
 
-  // 모달 상단 클릭후 드래그하고 뗐을때 수정된 위치 변경 (useRef인 initialPos)
   const handleDown = useCallback(
     e => {
-      if (!movable) {
-        return;
-      }
+      if (!movable) return;
+      isCentered.current = true;
       const { left, top } = modalRef.current.getBoundingClientRect();
       const setInitialPosition = (clientX, clientY) => {
         initialPos.current.x = clientX - left;
@@ -175,10 +125,18 @@ function Modal({
     [modalRef, initialPos, removeEvents, movable, throttleMove],
   );
 
-  // 컴포넌트 그리기 전에 이펙트를 수행하는 useLayoutEffect.
   useLayoutEffect(() => {
     if (!modalRef.current) return;
     moveToCenter();
+
+    const observer = new ResizeObserver(() => {
+      if (!isCentered.current) {
+        moveToCenter();
+      }
+    });
+    observer.observe(modalRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
   useLayoutEffect(() => {
@@ -203,7 +161,15 @@ function Modal({
               {modalTitle || null}
               {isCloseBtn ? <GrClose onClick={handleClose} /> : null}
             </ModalHeader>
-            <ChildrenWrapper> {children}</ChildrenWrapper>
+            <ChildrenWrapper
+              onMouseDown={e => {
+                if (e.target.tagName === 'TEXTAREA') {
+                  isCentered.current = true;
+                }
+              }}
+            >
+              {children}
+            </ChildrenWrapper>
             <ModalFooter>
               {buttonList.map(el => {
                 return <Fragment key={el.props.children}>{el}</Fragment>;
@@ -223,7 +189,7 @@ const ModalWrap = styled.div`
   position: fixed;
   z-index: 9999;
   background: white;
-  border: ${({ theme }) => theme.modalStyle.modalBorder};
+  border: ${({ theme }) => theme.modalStyle?.modalBorder || 'none'};
   border-radius: 12px;
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
 

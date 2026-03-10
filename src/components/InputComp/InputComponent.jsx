@@ -27,6 +27,12 @@ export const PasswordInput = forwardRef((props, ref) => {
 
   const toggleShowPassword = () => setShowPassword(prev => !prev);
 
+  const enterEvent = e => {
+    if (e.key === 'Enter' && props.enterEvent) {
+      props.enterEvent();
+    }
+  };
+
   return (
     <TextInputWrap>
       <TextInputComp
@@ -34,8 +40,11 @@ export const PasswordInput = forwardRef((props, ref) => {
         type={showPassword ? 'text' : 'password'}
         {...props}
         maxLength={props?.maxLength || 100}
+        onKeyDown={e => {
+          enterEvent(e);
+        }}
       />
-      <EyeToggle onClick={toggleShowPassword} type="button">
+      <EyeToggle onClick={toggleShowPassword} type="button" tabIndex="-1" aria-hidden="true">
         {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
       </EyeToggle>
     </TextInputWrap>

@@ -88,7 +88,7 @@ function Radio({
                 type={type}
               />
             </CheckWrapper>
-            <div>{el.label}</div>
+            <p>{el.label}</p>
           </Label>
         ))}
       </OptionWrapper>
@@ -175,7 +175,7 @@ const Label = styled.label`
   gap: 6px;
   opacity: ${({ disabled }) => disabled && 0.5};
 
-  & > div {
+  & > p {
     font-size: 13px;
   }
 `;
