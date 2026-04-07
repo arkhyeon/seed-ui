@@ -1,19 +1,6 @@
-import React, { useState, useLayoutEffect, useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-
-/**
- * @param {Number} params.initialValue
- * inputbox에 가장 처음 표기될 숫자
- * 기본 값은 1
- * @param {Number} params.max
- * 설정할 수 있는 숫자의 최댓값
- * 기본 값은 99
- * @param {Number} params.min
- * 설정할 수 있는 숫자의 최솟값
- * 기본 값은 0
- * @returns {JSXComponent} Count Component
- */
 
 const clickHolding = btnEl => {
   let timerId;
@@ -21,17 +8,11 @@ const clickHolding = btnEl => {
 
   const onMouseDown = e => {
     if (e.button === 0 && btnEl) {
-      timerId = setInterval(() => {
-        btnEl.click();
-      }, DURATION);
+      timerId = setInterval(() => btnEl.click(), DURATION);
     }
   };
 
-  const clearTimer = () => {
-    if (timerId) {
-      clearInterval(timerId);
-    }
-  };
+  const clearTimer = () => clearInterval(timerId);
 
   btnEl.addEventListener('mousedown', onMouseDown);
   btnEl.addEventListener('mouseup', clearTimer);
@@ -40,75 +21,91 @@ const clickHolding = btnEl => {
 
   return () => {
     btnEl.removeEventListener('mousedown', onMouseDown);
-    btnEl.removeEventListener('contextmenu', clearTimer);
     btnEl.removeEventListener('mouseup', clearTimer);
     btnEl.removeEventListener('mouseout', clearTimer);
+    btnEl.removeEventListener('contextmenu', clearTimer);
   };
 };
 
 function Count({ value = 1, onChange = () => {}, max = 2147483647, min = 0 }) {
   const btnUpRef = useRef(null);
   const btnDownRef = useRef(null);
-  const counter = useRef(value);
+  const [inputValue, setInputValue] = useState(String(value));
 
   useLayoutEffect(() => {
-    const removeListenerUp = clickHolding(btnUpRef.current);
-    const removeListenerDown = clickHolding(btnDownRef.current);
+    setInputValue(String(value));
+  }, [value]);
+
+  useLayoutEffect(() => {
+    const removeUp = clickHolding(btnUpRef.current);
+    const removeDown = clickHolding(btnDownRef.current);
     return () => {
-      removeListenerUp();
-      removeListenerDown();
+      removeUp();
+      removeDown();
     };
   }, []);
 
-  useLayoutEffect(() => {
-    counter.current = value;
-  }, [value]);
+  const clamp = useCallback(num => Math.min(max, Math.max(min, num)), [max, min]);
 
   const clickPlus = () => {
-    if (max <= counter.current) return;
-    counter.current++;
-    onChange(counter.current);
+    const next = clamp((Number(inputValue) || min) + 1);
+    setInputValue(String(next));
+    onChange(next);
   };
 
   const clickMinus = () => {
-    if (min >= counter.current) return;
-    counter.current--;
-    onChange(counter.current);
+    const next = clamp((Number(inputValue) || min) - 1);
+    setInputValue(String(next));
+    onChange(next);
   };
 
-  const checkOnlyNum = useCallback(str => {
-    const reg = /^[0-9]+$/;
+  const handleChange = e => {
+    const val = e.target.value;
 
-    return reg.test(str);
-  }, []);
+    if (val === '') {
+      setInputValue('');
+      return;
+    }
 
-  const handleChange = useCallback(
-    e => {
-      const targetValue = Number(e.target.value);
-      if (!targetValue) {
-        onChange(min);
-        counter.current = min;
-        return;
-      }
+    if (!/^[0-9]+$/.test(val)) return;
 
-      if (checkOnlyNum(e.target.value)) {
-        if (targetValue <= max && targetValue >= min) {
-          onChange(targetValue);
-          counter.current = targetValue;
-        }
+    const num = Number(val);
 
-        if (targetValue > max) {
-          onChange(max);
-          counter.current = max;
-        }
-      }
-    },
-    [checkOnlyNum, max, min],
-  );
+    if (num > max) {
+      setInputValue(String(max)); // ✅ max 초과면 max로
+      onChange(max);
+      return;
+    }
+
+    setInputValue(val);
+    onChange(num);
+  };
+
+  const handleBlur = () => {
+    const num = Number(inputValue);
+    if (!inputValue || num < min) {
+      // ✅ 빈값이거나 min 미만이면 min으로
+      setInputValue(String(min));
+      onChange(min);
+    }
+  };
+
+  const handleFocus = e => e.target.select();
+
+  const handleKeyDown = e => {
+    if (e.key === 'Enter') handleBlur();
+  };
 
   return (
     <Wrapper>
-      <Text value={value} onChange={handleChange} className="count-text" />
+      <Text
+        value={inputValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        onKeyDown={handleKeyDown}
+        className="count-text"
+      />
       <IconWrap>
         <Icon ref={btnUpRef} onClick={clickPlus} className="count-btn count-btn-plus">
           <AiOutlinePlus />

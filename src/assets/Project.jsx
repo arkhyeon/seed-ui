@@ -162,7 +162,7 @@ function Project({ children }) {
           <TimePicker onChange={val => setTime2(val)} time={time2} />
         </Wrapper>
         <Wrapper>
-          <Count value={cnt} onChange={value => setCount(value)} max={55} />
+          <Count value={cnt} onChange={value => setCount(value)} max={55} min={1} />
         </Wrapper>
       </Wrap>
       {children}
