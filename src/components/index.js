@@ -2,6 +2,7 @@ import HeaderCreator from './Menu/HeaderCreator';
 import { SetRoute } from './Menu/RouteGenerator';
 import AsideCreator from './Menu/AsideCreator';
 import Tooltip from './Tooltip';
+import HelpIcon from './HelpIcon';
 import Modal from './Modal';
 import alarm from './alarm';
 import Slider from './Slider';
@@ -47,6 +48,8 @@ export { AsideCreator };
 export { BlackButton, WhiteButton, SwitchButton };
 
 export { Tooltip };
+
+export { HelpIcon };
 
 export { Modal };
 
