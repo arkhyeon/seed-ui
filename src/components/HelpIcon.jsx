@@ -5,6 +5,7 @@ import React, { useState } from 'react';
  * @param {string} message - 팝업에 표시될 메시지
  * @param {number} size - 아이콘의 크기 (기본값 20)
  */
+
 function HelpIcon({ message = '', size = 20 }) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -19,7 +20,7 @@ function HelpIcon({ message = '', size = 20 }) {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    // cursor: 'help',
+    marginLeft: '5px', // 아이콘 텍스트 사이 간격
   };
 
   const iconStyle = {
@@ -35,50 +36,53 @@ function HelpIcon({ message = '', size = 20 }) {
     fontWeight: '700',
     backgroundColor: 'transparent',
     transition: 'all 0.2s ease-in-out',
+    cursor: 'pointer',
   };
 
   const popupStyle = {
     position: 'absolute',
-    top: '100%',
-    left: '80%',
-    marginTop: '10px',
+    /* 우측 배치 설정 */
+    left: '100%',
+    top: '50%',
+    transform: isVisible
+      ? 'translate(12px, -50%)' // 노출 시: 우측으로 12px 이동 및 수직 중앙 정렬
+      : 'translate(5px, -50%)', // 미노출 시:  왼쪽에서 대기
 
-    minWidth: '80px',
+    marginLeft: '0px',
+    // minWidth: '120px',
+    maxWidth: '250px',
     width: 'max-content',
-    maxWidth: '200px',
     height: 'auto',
 
     backgroundColor: colors.gray800,
     color: '#fff',
-    textAlign: 'center',
+    textAlign: 'left',
     borderRadius: '6px',
     padding: '10px 12px',
     fontSize: '12px',
     lineHeight: '1.4',
-    zIndex: 1050,
+
+    /* 최우선 순위 유지 및 줄바꿈 설정 */
+    zIndex: 9999,
+    wordBreak: 'break-all',
+    overflowWrap: 'anywhere',
+
     opacity: isVisible ? 1 : 0,
     visibility: isVisible ? 'visible' : 'hidden',
-
-    // 우측 하단으로 살짝 밀려나며 나타나는 효과
-    transform: isVisible ? 'translate(0, 0)' : 'translate(-5px, -5px)',
-    transition: 'opacity 0.3s ease, transform 0.3s ease, visibility 0.3s',
-    transitionDelay: isVisible ? '100ms' : '0ms',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    wordBreak: 'keep-all', // 단어 단위 줄바꿈
+    transition: 'opacity 0.2s ease, transform 0.2s ease, visibility 0.2s',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
     pointerEvents: 'none',
   };
 
-  // 화살표 스타일: 팝업이 이동했으므로 아이콘을 가리키도록 위치 조정
   const arrowStyle = {
     position: 'absolute',
-    top: '-6px',
-    left: '10px', // 팝업 내에서의 위치
-    borderLeft: '6px solid transparent',
-    borderRight: '6px solid transparent',
-    borderBottom: `6px solid ${colors.gray800}`,
+    /* 왼쪽 화살표 설정 */
+    left: '-6px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    borderTop: '6px solid transparent',
+    borderBottom: '6px solid transparent',
+    borderRight: `6px solid ${colors.gray800}`,
   };
 
   return (

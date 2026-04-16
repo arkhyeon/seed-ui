@@ -304,6 +304,7 @@ function Work() {
                         defaultValue={date.std_d}
                       />
                       <p>일</p>
+                      <HelpIcon message="ㅇㅈㅁㅇ" />
                     </DataListWrapper>
                   ),
                 },
