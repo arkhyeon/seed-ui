@@ -295,7 +295,7 @@ const SideTabsWrap = styled.div`
   width: 252px;
   min-width: 165px;
   max-width: 418px;
-  height: calc(100vh - 203px);
+  //height: calc(100vh - 203px);
   padding-right: 18px;
   font-size: 14px;
   position: relative;

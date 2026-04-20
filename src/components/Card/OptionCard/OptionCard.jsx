@@ -81,6 +81,7 @@ const CardTitle = styled.div`
 const CardDesc = styled.div`
   display: flex;
   padding: 0.3em;
+  line-height: 24px;
 `;
 
 const CardContent = styled.div`
