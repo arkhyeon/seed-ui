@@ -12,13 +12,16 @@ function Testing() {
   const [date, setDate] = useState(new Date());
   const [peopleNames, setPeopleNames] = useState(name);
   const [key, setKey] = useState(num);
-  const [test, setTest] = useState(0);
+  const [test, setTest] = useState('');
   useEffect(() => {
     console.log(date);
   }, [date]);
 
   const [selectedValueList, setSelectedValueList] = useState([]);
-
+  const [stdm, setStdm] = useState(1);
+  useEffect(() => {
+    console.log(stdm);
+  }, [stdm]);
   return (
     <>
       <DatePicker
@@ -28,9 +31,19 @@ function Testing() {
         // endDate={new Date('2023-11-11')}
       />
       <DataList
-        name="ptype"
+        id="std_m"
+        setData={value => {
+          setStdm(value);
+        }}
+        valueList={[1, 2, 3, 4, 5]}
+        labelList={['a', 'b', 'c', 'd', 'e']}
+        select
+        defaultValue={stdm}
+      />
+      <DataList
+        id="ptype"
         labelList={peopleNames}
-        valueList={key}
+        valueList={peopleNames}
         setData={value => setTest(value)}
         defaultValue={test}
       />

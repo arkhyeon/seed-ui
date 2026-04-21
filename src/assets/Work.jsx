@@ -36,7 +36,8 @@ function Work() {
   const [date, setDate] = useState(new Date('2019-05-05'));
   const [timeData, setTimeData] = useState([]);
   const [modal, setModal] = useState(false);
-  const [name, setName] = useState(24);
+  const [name, setName] = useState('');
+  const [stdm, setStdm] = useState('');
   const setDataListData = value => {
     console.log(value);
     setState(value);
@@ -260,6 +261,7 @@ function Work() {
           buttonList={[<WhiteButton onClick={() => setModal(false)}>닫기</WhiteButton>]}
           width="500px"
         >
+          <TextInput />
           <InputGridWrapper>
             <InputGrid
               list={[
@@ -268,15 +270,14 @@ function Work() {
                   content: (
                     <>
                       <DataList
+                        name="std_m"
                         setData={value => {
-                          ChangeSelectDate({
-                            name: 'std_m',
-                            value,
-                          });
+                          setStdm(value);
                         }}
-                        valueList={monthValueList}
+                        valueList={[1, 2, 3, 4, 5]}
+                        labelList={[1, 2, 3, 4, 5]}
                         select
-                        defaultValue={date.std_m}
+                        defaultValue={stdm}
                       />
                       <p>개월 전</p>
                     </>
@@ -328,16 +329,18 @@ function Work() {
       <PaginationWrap>
         <Pagination totalLength={22313} pageEvent={pageFunction} />
       </PaginationWrap>
+      123
       <DataList
-        valueList={labelList}
+        valueList={data2}
         labelList={data2}
-        value={name}
+        defaultValue={name}
         setData={e => {
           console.log(e);
           setName(e);
         }}
         select
       />
+      123
       <DataList
         valueList={_.map(srcServerList, 'serverid_src')}
         labelList={_.map(srcServerList, 'server_name')}

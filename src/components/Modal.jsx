@@ -21,6 +21,7 @@ function Modal({
 }) {
   const modalRef = useRef(null);
   const headRef = useRef(null);
+  const lastButtonRef = useRef(null);
   const initialPos = useRef({ x: 0, y: 0 });
   const isCentered = useRef(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -62,23 +63,17 @@ function Modal({
       let posY = clientY - initialPos.current.y;
 
       if (offsetWidth > innerWidth || offsetHeight > innerHeight) {
-        if (posX + offsetWidth > scrollWidth) {
-          posX = scrollWidth - offsetWidth - 1;
-        }
-        if (posY + offsetHeight > scrollHeight) {
-          posY = scrollHeight - offsetHeight - 1;
-        }
+        if (posX + offsetWidth > scrollWidth) posX = scrollWidth - offsetWidth - 1;
+        if (posY + offsetHeight > scrollHeight) posY = scrollHeight - offsetHeight - 1;
         return setPos({ x: posX < 0 ? 0 : posX, y: posY < 0 ? 0 : posY });
       }
 
       if (posX < 0) posX = 1;
-      if (posX + modalRef.current.offsetWidth > scrollWidth) {
+      if (posX + modalRef.current.offsetWidth > scrollWidth)
         posX = scrollWidth - modalRef.current.offsetWidth - 1;
-      }
       if (posY < 0) posY = 1;
-      if (posY + modalRef.current.offsetHeight > scrollHeight) {
+      if (posY + modalRef.current.offsetHeight > scrollHeight)
         posY = scrollHeight - modalRef.current.offsetHeight - 1;
-      }
 
       setPos({ x: posX, y: posY });
     },
@@ -114,37 +109,62 @@ function Modal({
       if (!movable) return;
       isCentered.current = true;
       const { left, top } = modalRef.current.getBoundingClientRect();
-      const setInitialPosition = (clientX, clientY) => {
-        initialPos.current.x = clientX - left;
-        initialPos.current.y = clientY - top;
-      };
-      setInitialPosition(e.clientX, e.clientY);
+      initialPos.current.x = e.clientX - left;
+      initialPos.current.y = e.clientY - top;
       document.addEventListener('mousemove', throttleMove);
       document.addEventListener('mouseup', removeEvents);
     },
     [modalRef, initialPos, removeEvents, movable, throttleMove],
   );
 
+  // 센터 이동 + ResizeObserver
   useLayoutEffect(() => {
     if (!modalRef.current) return;
     moveToCenter();
 
     const observer = new ResizeObserver(() => {
-      if (!isCentered.current) {
-        moveToCenter();
-      }
+      if (!isCentered.current) moveToCenter();
     });
     observer.observe(modalRef.current);
 
     return () => observer.disconnect();
   }, []);
 
+  // 윈도우 리사이즈 대응
   useLayoutEffect(() => {
     window.addEventListener('resize', handleCenter);
-    return () => {
-      window.removeEventListener('resize', handleCenter);
-    };
+    return () => window.removeEventListener('resize', handleCenter);
   }, [handleCenter]);
+
+  // ESC 닫기 + Enter 마지막 버튼 실행
+  useLayoutEffect(() => {
+    // ESC: 캡처 페이즈 (항상 먼저 실행)
+    const handleEsc = e => {
+      if (e.key === 'Escape') handleClose?.();
+    };
+    document.addEventListener('keydown', handleEsc, true);
+
+    // Enter: 버블링 (자식이 stopPropagation 하면 안 올라옴)
+    const handleEnter = e => {
+      if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && !e.defaultPrevented) {
+        lastButtonRef.current?.click();
+      }
+    };
+    document.addEventListener('keydown', handleEnter);
+
+    return () => {
+      document.removeEventListener('keydown', handleEsc, true);
+      document.removeEventListener('keydown', handleEnter);
+    };
+  }, [handleClose]);
+
+  // 첫 input 포커스
+  useLayoutEffect(() => {
+    const input = modalRef.current?.querySelector(
+      'input[type="text"]:not([readonly]), input[type="password"], input:not([type])',
+    );
+    input?.focus();
+  }, []);
 
   return (
     <>
@@ -171,9 +191,11 @@ function Modal({
               {children}
             </ChildrenWrapper>
             <ModalFooter>
-              {buttonList.map(el => {
-                return <Fragment key={el.props.children}>{el}</Fragment>;
-              })}
+              {buttonList.map((el, i) => (
+                <Fragment key={el.props.children}>
+                  <span ref={i === buttonList.length - 1 ? lastButtonRef : undefined}>{el}</span>
+                </Fragment>
+              ))}
             </ModalFooter>
           </ModalWrap>
         </>,
@@ -212,20 +234,13 @@ const ModalHeader = styled.div`
     font-size: 18px;
     cursor: pointer;
   }
-  ${({ theme }) => {
-    return css`
-      background: ${theme.modalStyle.headBg};
-      color: ${theme.modalStyle.headFc};
-      border-bottom: ${theme.modalStyle.headBorder};
-    `;
-  }}
+  ${({ theme }) => css`
+    background: ${theme.modalStyle.headBg};
+    color: ${theme.modalStyle.headFc};
+    border-bottom: ${theme.modalStyle.headBorder};
+  `}
 
-  cursor: ${({ movable }) => {
-    if (movable) {
-      return 'move';
-    }
-    return 'normal';
-  }};
+  cursor: ${({ movable }) => (movable ? 'move' : 'normal')};
 `;
 
 const ChildrenWrapper = styled.div`

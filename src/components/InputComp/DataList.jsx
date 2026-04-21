@@ -76,27 +76,26 @@ function DataList({
       let activeIndex = Array.prototype.indexOf.call(children, activeElement);
 
       if (e.keyCode === 38) {
-        // Up arrow
         e.preventDefault();
         activeIndex = activeIndex <= 0 ? children.length - 1 : activeIndex - 1;
         children[activeIndex].focus();
       } else if (e.keyCode === 40) {
-        // Down arrow
         e.preventDefault();
         activeIndex = activeIndex >= children.length - 1 ? 0 : activeIndex + 1;
         children[activeIndex].focus();
       } else if (e.keyCode === 13) {
-        // Enter
         if (activeElement && activeElement.hasAttribute('value')) {
           e.preventDefault();
-          handleItemClick(activeElement.getAttribute('value'));
+          const attrValue = activeElement.getAttribute('value');
+          // getAttribute는 항상 string → valueList에서 원본 타입으로 매칭
+          const originalValue = valueList.find(v => String(v) === attrValue);
+          handleItemClick(originalValue ?? attrValue);
         }
       } else if (e.keyCode === 27) {
-        // Escape
         setListOpen(false);
       }
     },
-    [isListOpen, handleItemClick],
+    [isListOpen, handleItemClick, valueList],
   );
 
   return (
@@ -117,7 +116,7 @@ function DataList({
         />
         {isListOpen && (
           <DataListItemWrap ref={dataListWrapRef} height={height} style={{ display: 'block' }}>
-            {filteredList.map((data, i) => (
+            {filteredList.map(data => (
               <DataListItem
                 tabIndex={0}
                 key={data.value}

@@ -91,6 +91,7 @@ const SelectorWrap = styled.div`
   height: 28px;
   svg {
     font-size: 28px;
+    min-width: 28px;
     cursor: pointer;
   }
 
@@ -117,6 +118,10 @@ const LabelView = styled.div`
   padding: 3px 20px 4px;
   background: #78909c;
   color: white;
+  max-width: 200px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 export default LabelList;

@@ -17,7 +17,17 @@ function Label({ setSelectedValueList, data }) {
       style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '8px 15px' }}
     >
       {data.isChecked ? <MdLabel /> : <MdLabelOutline />}
-      <span style={{ marginLeft: '8px' }}>{data.label}</span>
+      <span
+        style={{
+          marginLeft: '8px',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          width: '100%',
+        }}
+      >
+        {data.label}
+      </span>
     </div>
   );
 }

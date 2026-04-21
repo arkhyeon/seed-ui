@@ -4,19 +4,19 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export const TextInput = forwardRef((props, ref) => {
   const enterEvent = e => {
-    if (e.key === 'Enter' && props.enterEvent) {
+    if (e.key === 'Enter' && props?.enterEvent) {
+      e.preventDefault();
       props.enterEvent();
     }
   };
+
   return (
     <TextInputWrap>
       <TextInputComp
         ref={ref}
         {...props}
         maxLength={props?.maxLength || 100}
-        onKeyDown={e => {
-          enterEvent(e);
-        }}
+        onKeyDown={enterEvent}
       />
     </TextInputWrap>
   );
@@ -28,7 +28,8 @@ export const PasswordInput = forwardRef((props, ref) => {
   const toggleShowPassword = () => setShowPassword(prev => !prev);
 
   const enterEvent = e => {
-    if (e.key === 'Enter' && props.enterEvent) {
+    if (e.key === 'Enter' && props?.enterEvent) {
+      e.preventDefault();
       props.enterEvent();
     }
   };
@@ -40,9 +41,7 @@ export const PasswordInput = forwardRef((props, ref) => {
         type={showPassword ? 'text' : 'password'}
         {...props}
         maxLength={props?.maxLength || 100}
-        onKeyDown={e => {
-          enterEvent(e);
-        }}
+        onKeyDown={enterEvent}
       />
       <EyeToggle onClick={toggleShowPassword} type="button" tabIndex="-1" aria-hidden="true">
         {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
