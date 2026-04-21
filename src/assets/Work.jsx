@@ -19,6 +19,7 @@ import { alertStore } from '../R2wZustand';
 import { toast } from '../components/Alert/Toast';
 import ModalTestTemplate from '../ModalTestTemplate';
 import Counter from '../components/Counter/Counter';
+import HelpIcon from '../components/HelpIcon.jsx';
 
 function Work() {
   const {
@@ -304,6 +305,7 @@ function Work() {
                         defaultValue={date.std_d}
                       />
                       <p>일</p>
+                      <HelpIcon message="ㅇㅈㅁㅇ" />
                     </DataListWrapper>
                   ),
                 },
@@ -481,6 +483,7 @@ function Work() {
       </BlackButton>
       <Counter targetValue={500} time={100 / (500 / 100)} />
       <Counter targetValue={100} time={100} />
+      <HelpIcon message="Using" />
     </AsideCreator>
   );
 }
