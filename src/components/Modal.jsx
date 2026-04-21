@@ -193,7 +193,9 @@ function Modal({
             <ModalFooter>
               {buttonList.map((el, i) => (
                 <Fragment key={el.props.children}>
-                  <span ref={i === buttonList.length - 1 ? lastButtonRef : undefined}>{el}</span>
+                  {React.cloneElement(el, {
+                    ref: i === buttonList.length - 1 ? lastButtonRef : null,
+                  })}
                 </Fragment>
               ))}
             </ModalFooter>

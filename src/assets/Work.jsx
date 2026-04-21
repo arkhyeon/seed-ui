@@ -259,7 +259,10 @@ function Work() {
           modalTitle="테스트"
           modalState={modal}
           handleClose={() => setModal(false)}
-          buttonList={[<WhiteButton onClick={() => setModal(false)}>닫기</WhiteButton>]}
+          buttonList={[
+            <WhiteButton onClick={() => setModal(false)}>닫기</WhiteButton>,
+            <BlackButton onClick={() => console.log('123')}>확인</BlackButton>,
+          ]}
           width="500px"
         >
           <TextInput />
