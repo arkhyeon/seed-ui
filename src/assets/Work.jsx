@@ -37,6 +37,7 @@ function Work() {
   const [date, setDate] = useState(new Date('2019-05-05'));
   const [timeData, setTimeData] = useState([]);
   const [modal, setModal] = useState(false);
+  const [modal2, setModal2] = useState(false);
   const [name, setName] = useState('');
   const [stdm, setStdm] = useState('');
   const setDataListData = value => {
@@ -262,6 +263,71 @@ function Work() {
           buttonList={[
             <WhiteButton onClick={() => setModal(false)}>닫기</WhiteButton>,
             <BlackButton onClick={() => console.log('123')}>확인</BlackButton>,
+          ]}
+          width="500px"
+        >
+          <TextInput />
+          <InputGridWrapper>
+            <InputGrid
+              list={[
+                {
+                  subject: '월',
+                  content: (
+                    <>
+                      <DataList
+                        name="std_m"
+                        setData={value => {
+                          setStdm(value);
+                        }}
+                        valueList={[1, 2, 3, 4, 5]}
+                        labelList={[1, 2, 3, 4, 5]}
+                        select
+                        defaultValue={stdm}
+                      />
+                      <p>개월 전</p>
+                    </>
+                  ),
+                },
+              ]}
+            />
+            <InputGrid
+              list={[
+                {
+                  subject: '일',
+                  content: (
+                    <DataListWrapper>
+                      <DataList
+                        setData={value => {
+                          ChangeSelectDate({
+                            name: 'std_d',
+                            value,
+                          });
+                        }}
+                        labelList={dayLabelList}
+                        valueList={dayValueList}
+                        select
+                        defaultValue={date.std_d}
+                      />
+                      <p>일</p>
+                      <HelpIcon message="ㅇㅈㅁㅇ" />
+                      <BlackButton onClick={() => setModal2(true)}>Modal2</BlackButton>
+                    </DataListWrapper>
+                  ),
+                },
+              ]}
+              location="bottom"
+            />
+          </InputGridWrapper>
+        </ModalTestTemplate>
+      )}
+      {modal2 && (
+        <ModalTestTemplate
+          modalTitle="테스트"
+          modalState={modal2}
+          handleClose={() => setModal2(false)}
+          buttonList={[
+            <WhiteButton onClick={() => setModal2(false)}>닫기</WhiteButton>,
+            <BlackButton onClick={() => console.log('1234')}>확인</BlackButton>,
           ]}
           width="500px"
         >

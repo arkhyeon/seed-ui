@@ -5,12 +5,14 @@ import { BsClipboardCheck } from 'react-icons/bs';
 import { TbUsers } from 'react-icons/tb';
 
 import {
+  Accordion,
   Count,
   DatePicker,
   DividingLine,
   MainTabButton,
   SideScrollWrap,
   SideTabs,
+  SwitchButton,
   TabButton,
   TimePicker,
 } from '../components';
@@ -30,7 +32,7 @@ function Project({ children }) {
     'Nils',
     'Janeen',
   ];
-
+  const [collapse, setCollapse] = useState();
   const data1 = [
     {
       gid: 1,
@@ -164,6 +166,23 @@ function Project({ children }) {
         <Wrapper>
           <Count value={cnt} onChange={value => setCount(value)} max={55} min={1} />
         </Wrapper>
+        <AccordionWrap>
+          <Accordion
+            title={
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                aasdasd
+                <SwitchButton id="hi" />
+              </div>
+            }
+            collapse={collapse}
+            setCollapse={setCollapse}
+          >
+            <Test />
+          </Accordion>
+          <SwitchButton id="hi" />
+          12312312
+          <SwitchButton id="hel" />
+        </AccordionWrap>
       </Wrap>
       {children}
     </div>
@@ -183,4 +202,15 @@ const Wrapper = styled.div`
   width: 100%;
   margin: 16px 0;
   display: flex;
+`;
+const AccordionWrap = styled.div`
+  width: 50%;
+`;
+
+const Test = styled.div`
+  width: 100%;
+  height: 490px;
+  background-color: darkorange;
+  padding: 30px 15px;
+  box-sizing: border-box;
 `;

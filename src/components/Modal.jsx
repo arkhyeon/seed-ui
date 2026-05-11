@@ -5,6 +5,7 @@ import { GrClose } from 'react-icons/gr';
 import { createPortal } from 'react-dom';
 import { BlackButton, WhiteButton } from './Button/Button';
 import { useThrottle } from '../assets/CustomHook';
+import EscStack from '../common/EscStack';
 
 function Modal({
   width = `600px`,
@@ -136,34 +137,39 @@ function Modal({
     return () => window.removeEventListener('resize', handleCenter);
   }, [handleCenter]);
 
-  // ESC 닫기 + Enter 마지막 버튼 실행
+  // ESC: EscStack에 등록
   useLayoutEffect(() => {
-    // ESC: 캡처 페이즈 (항상 먼저 실행)
-    const handleEsc = e => {
-      if (e.key === 'Escape') handleClose?.();
-    };
-    document.addEventListener('keydown', handleEsc, true);
+    const handler = () => handleClose?.();
+    EscStack.push(handler);
+    return () => EscStack.remove(handler);
+  }, [handleClose]);
 
-    // Enter: 버블링 (자식이 stopPropagation 하면 안 올라옴)
+  // Enter: 마지막 버튼 실행
+  useLayoutEffect(() => {
     const handleEnter = e => {
       if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && !e.defaultPrevented) {
         lastButtonRef.current?.click();
       }
     };
     document.addEventListener('keydown', handleEnter);
-
-    return () => {
-      document.removeEventListener('keydown', handleEsc, true);
-      document.removeEventListener('keydown', handleEnter);
-    };
-  }, [handleClose]);
+    return () => document.removeEventListener('keydown', handleEnter);
+  }, []);
 
   // 첫 input 포커스
   useLayoutEffect(() => {
     const input = modalRef.current?.querySelector(
-      'input[type="text"]:not([readonly]), input[type="password"], input:not([type])',
+      `
+      input[type="text"]:not([readonly]):not([disabled]),
+      input[type="password"]:not([readonly]):not([disabled]),
+      input:not([type]):not([readonly]):not([disabled])
+    `,
     );
-    input?.focus();
+
+    if (input) {
+      input.focus();
+    } else {
+      modalRef.current?.focus();
+    }
   }, []);
 
   return (

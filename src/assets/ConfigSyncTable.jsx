@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Accordion } from '../components/Accordion/Accordion';
-import { SwitchButton } from '../components';
+import { Accordion, SwitchButton } from '../components/index';
 
 function ConfigSyncTable() {
   const { pathname } = useLocation();
   const [collapse, setCollapse] = useState();
   return (
     <AccordionWrap>
-      <Accordion title={<div>aasdasd</div>} collapse={collapse} setCollapse={setCollapse}>
+      <Accordion
+        title={
+          <div>
+            aasdasd
+            <SwitchButton id="hi" />
+          </div>
+        }
+        collapse={collapse}
+        setCollapse={setCollapse}
+      >
         <Test />
       </Accordion>
-      <SwitchButton id="hi" />
       12312312
       <SwitchButton id="hel" />
     </AccordionWrap>
