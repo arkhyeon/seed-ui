@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
+import ReactDOM from 'react-dom';
 
 /**
  * HelpIcon Component
- * @param {string} message - 팝업에 표시될 메시지
- * @param {number} size - 아이콘의 크기 (기본값 20)
  */
-
 function HelpIcon({ message = '', size = 20 }) {
   const [isVisible, setIsVisible] = useState(false);
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
+  const iconRef = useRef(null);
 
   const colors = {
     gray600: '#6c757d',
@@ -15,18 +15,34 @@ function HelpIcon({ message = '', size = 20 }) {
     border: 'rgba(108, 117, 125, 0.5)',
   };
 
-  const containerStyle = {
-    position: 'relative',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: '5px', // 아이콘 텍스트 사이 간격
+  // 아이콘의 위치를 계산하여 포털 팝업의 위치를 결정합니다.
+  const updatePosition = () => {
+    if (iconRef.current) {
+      const rect = iconRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.top + rect.height / 2, // 수직 중앙
+        left: rect.left + rect.width + 12, // 아이콘 우측 12px 지점
+      });
+    }
   };
+
+  // 팝업이 열릴 때나 스크롤/리사이즈 시 위치 업데이트
+  useLayoutEffect(() => {
+    if (isVisible) {
+      updatePosition();
+      window.addEventListener('resize', updatePosition);
+      window.addEventListener('scroll', updatePosition, true);
+    }
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
+  }, [isVisible]);
 
   const iconStyle = {
     width: `${size}px`,
     height: `${size}px`,
-    display: 'flex',
+    display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '50%',
@@ -34,49 +50,42 @@ function HelpIcon({ message = '', size = 20 }) {
     color: colors.gray600,
     fontSize: `${size * 0.65}px`,
     fontWeight: '700',
-    backgroundColor: 'transparent',
-    transition: 'all 0.2s ease-in-out',
+    backgroundColor: isVisible ? '#f8f9fa' : 'transparent',
+    transition: 'background-color 0.2s',
     cursor: 'pointer',
+    marginLeft: '5px',
+    verticalAlign: 'middle',
   };
 
   const popupStyle = {
-    position: 'absolute',
-    /* 우측 배치 설정 */
-    left: '100%',
-    top: '50%',
-    transform: isVisible
-      ? 'translate(12px, -50%)' // 노출 시: 우측으로 12px 이동 및 수직 중앙 정렬
-      : 'translate(5px, -50%)', // 미노출 시:  왼쪽에서 대기
+    position: 'fixed',
+    top: `${coords.top}px`,
+    left: `${coords.left}px`,
+    transform: 'translateY(-50%)',
 
-    marginLeft: '0px',
-    // minWidth: '120px',
     maxWidth: '250px',
     width: 'max-content',
-    height: 'auto',
-
     backgroundColor: colors.gray800,
     color: '#fff',
-    textAlign: 'left',
-    borderRadius: '6px',
     padding: '10px 12px',
+    borderRadius: '6px',
     fontSize: '12px',
     lineHeight: '1.4',
+    zIndex: 10000, // 최상위 유지
 
-    /* 최우선 순위 유지 및 줄바꿈 설정 */
-    zIndex: 9999,
+    /* 줄바꿈 설정 */
     wordBreak: 'break-all',
     overflowWrap: 'anywhere',
 
+    pointerEvents: 'none',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
     opacity: isVisible ? 1 : 0,
     visibility: isVisible ? 'visible' : 'hidden',
-    transition: 'opacity 0.2s ease, transform 0.2s ease, visibility 0.2s',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-    pointerEvents: 'none',
+    transition: 'opacity 0.2s, visibility 0.2s',
   };
 
   const arrowStyle = {
     position: 'absolute',
-    /* 왼쪽 화살표 설정 */
     left: '-6px',
     top: '50%',
     transform: 'translateY(-50%)',
@@ -86,26 +95,27 @@ function HelpIcon({ message = '', size = 20 }) {
   };
 
   return (
-    <div
-      style={containerStyle}
-      onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
-    >
+    <>
+      {/* 아이콘 부분 */}
       <div
-        style={{
-          ...iconStyle,
-          backgroundColor: isVisible ? '#f8f9fa' : 'transparent',
-        }}
+        ref={iconRef}
+        style={iconStyle}
+        onMouseEnter={() => setIsVisible(true)}
+        onMouseLeave={() => setIsVisible(false)}
       >
         !
       </div>
-      {message !== '' && (
-        <div style={popupStyle}>
-          {message}
-          <div style={arrowStyle} />
-        </div>
-      )}
-    </div>
+
+      {/* 포털을 이용한 말풍선 부분 */}
+      {message &&
+        ReactDOM.createPortal(
+          <div style={popupStyle}>
+            {message}
+            <div style={arrowStyle} />
+          </div>,
+          document.body,
+        )}
+    </>
   );
 }
 
