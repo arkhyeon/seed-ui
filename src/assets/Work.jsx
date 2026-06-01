@@ -29,7 +29,7 @@ function Work() {
     control,
     formState: { errors },
   } = useForm();
-  const { pathname } = useLocation();
+  const { pathname, state: state2 } = useLocation();
   const [state, setState] = useState('');
   const [check, setCheck] = useState(false);
   const [time, setTime] = useState();
@@ -44,7 +44,7 @@ function Work() {
     console.log(value);
     setState(value);
   };
-
+  console.log(useLocation());
   useEffect(() => {
     getServerList();
     setTimeData(data4);

@@ -4,7 +4,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 
 export function Accordion({ title, children, collapse, setCollapse }) {
   const handleToggle = () => {
-    setCollapse(prev => !prev);
+    setCollapse(!collapse);
   };
 
   return (

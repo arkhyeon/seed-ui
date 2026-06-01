@@ -26,6 +26,7 @@ function SubMenuItem({ menu, depth = 0, role }) {
           to={getAccessibleLink(menu, role)}
           onMouseEnter={() => handleMenuSelection(title, depth)}
           className={isActive ? 'active' : ''}
+          state={menu.state}
         >
           {title}
           {depth > 0 && <IoIosArrowForward />}
@@ -53,14 +54,15 @@ function SubMenuItem({ menu, depth = 0, role }) {
       onMouseEnter={() => handleMenuSelection('', depth)}
       onClick={() => {
         handleMenuSelection('', 0);
-        if (navLink) {
-          navigate(navLink);
-        }
+        // if (navLink) {
+        //   navigate(navLink);
+        // }
       }}
       className="mainActive"
     >
       <NavLink
         to={navLink}
+        state={menu.state}
         onMouseEnter={() => handleMenuSelection(title, depth)}
         className={isActive ? 'active' : ''}
       >

@@ -5,6 +5,7 @@ import DataList from './InputComp/DataList';
 import CustomTextArea from './InputComp/CustomTextArea';
 import LabelList from './LabelList/LabelList';
 import { PasswordInput } from './InputComp/InputComponent';
+import RangeDatePicker from './DateTime/RangeDatePicker.jsx';
 
 function Testing() {
   const [index, setIndex] = useState('');
@@ -22,6 +23,10 @@ function Testing() {
   useEffect(() => {
     console.log(stdm);
   }, [stdm]);
+  const [startDt, setStartDt] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDt, setEndDt] = useState('');
+  const [endTime, setEndTime] = useState('');
   return (
     <>
       <DatePicker
@@ -30,6 +35,56 @@ function Testing() {
         // startDate={new Date('2022-4-12')}
         // endDate={new Date('2023-11-11')}
       />
+      <RangeDatePicker
+        startDt={startDt}
+        setStartDt={setStartDt}
+        endDt={endDt}
+        setEndDt={setEndDt}
+      />
+      <RangeDatePicker
+        startDt={startDt}
+        setStartDt={setStartDt}
+        endDt={endDt}
+        setEndDt={setEndDt}
+        startTime={startTime}
+        setStartTime={setStartTime}
+      />
+      <RangeDatePicker
+        startDt={startDt}
+        setStartDt={setStartDt}
+        endDt={endDt}
+        setEndDt={setEndDt}
+        startTime={startTime}
+        setStartTime={setStartTime}
+        endTime={endTime}
+        setEndTime={setEndTime}
+        onApply={e => console.log(e)}
+      />
+      <RangeDatePicker
+        startDt={startDt}
+        setStartDt={setStartDt}
+        endDt={endDt}
+        setEndDt={setEndDt}
+        startTime={startTime}
+        setStartTime={setStartTime}
+        endTime={endTime}
+        setEndTime={setEndTime}
+        allowFuture={false}
+        onApply={e => console.log(e)}
+      />
+      <RangeDatePicker
+        startDt={startDt}
+        setStartDt={setStartDt}
+        endDt={endDt}
+        setEndDt={setEndDt}
+        startTime={startTime}
+        setStartTime={setStartTime}
+        endTime={endTime}
+        setEndTime={setEndTime}
+        allowPast={false}
+        onApply={e => console.log(e)}
+      />
+
       <DataList
         id="std_m"
         setData={value => {

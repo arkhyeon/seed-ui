@@ -31,6 +31,7 @@ export const DepthList1 = [
     title: '작업',
     link: 'work',
     component: <Work />,
+    state: { gid: 0 },
     // menuRole: 3,
   },
   {
