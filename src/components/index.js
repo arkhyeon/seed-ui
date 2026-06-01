@@ -7,6 +7,7 @@ import Modal from './Modal';
 import alarm from './alarm';
 import Slider from './Slider';
 import DatePicker from './DateTime/DatePicker';
+import RangeDatePicker from './DateTime/RangeDatePicker';
 import TimePicker from './DateTime/TimePicker';
 import Radio from './Radio';
 import Switch from './Switch';
@@ -58,7 +59,7 @@ export { alarm };
 
 export { Slider };
 
-export { DatePicker, TimePicker };
+export { DatePicker, TimePicker, RangeDatePicker };
 
 export { Radio };
 
