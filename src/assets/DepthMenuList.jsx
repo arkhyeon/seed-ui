@@ -9,7 +9,7 @@ import TextAreaTestArea from './TextAreaTestArea';
 import Testing from '../components/Testing';
 import Test1Table from './test1';
 import Test2Table from './test2';
-import ShowcaseLayout from './ShowcaseLayout';
+import DashboardPage from './DashboardPage';
 
 /**
  * DepthMenuList.jsx
@@ -141,7 +141,7 @@ export const DepthList1 = [
   {
     title: '레이아웃',
     link: 'layout',
-    component: <ShowcaseLayout />,
+    component: <DashboardPage />,
     menuRole: 3,
   },
 ];
