@@ -14,6 +14,12 @@ function DashboardPage() {
     { id: 'widget-4', title: '기타1', w: 4, h: 2 },
     { id: 'widget-5', title: '기타2', w: 4, h: 2 },
     { id: 'widget-6', title: '기타3', w: 4, h: 2 },
+    { id: 'widget-7', title: '기타4', w: 4, h: 2 },
+    { id: 'widget-8', title: '기타5', w: 4, h: 2 },
+    { id: 'widget-9', title: '기타6', w: 4, h: 2 },
+    { id: 'widget-10', title: '기타7', w: 4, h: 2 },
+    { id: 'widget-11', title: '기타8', w: 4, h: 2 },
+    { id: 'widget-12', title: '기타9', w: 4, h: 2 },
   ];
 
   return (

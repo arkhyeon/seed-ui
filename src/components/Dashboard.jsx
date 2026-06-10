@@ -66,7 +66,8 @@ function TabComponent({ title, onRemove }) {
  * GridStack 초기화 사이드바 및 탭 배치.
  */
 function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
-  const containerRef = useRef(null); // GridStack이 적용될 컨테이너 DOM 참조
+  const rootContainerRef = useRef(null); // 루트 컨테이너 DOM 참조
+  const gridContainerRef = useRef(null); // GridStack이 적용될 컨테이너 DOM 참조
   const gridRef = useRef(null); // GridStack 인스턴스 참조
   const [dashboardWidth, setDashboardWidth] = useState(0); // 현재 화면 너비 (반응형 컬럼 조정을 위함)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 사이드바 열림/닫힘 상태
@@ -101,7 +102,7 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
       });
     };
     const observer = new ResizeObserver(handleResize);
-    if (containerRef.current) observer.observe(containerRef.current);
+    if (rootContainerRef.current) observer.observe(rootContainerRef.current);
     return () => {
       observer.disconnect();
     };
@@ -109,7 +110,7 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
 
   // GridStack 초기화 및 이벤트 리스너 등록
   useEffect(() => {
-    if (!containerRef.current) return undefined;
+    if (!gridContainerRef.current) return undefined;
 
     if (!gridRef.current) {
       // GridStack 인스턴스 생성
@@ -125,7 +126,7 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
           alwaysShowPlaceholder: true, // 드래그 중 배치 예정 위치 항상 표시
           animate: true, // 이동/리사이즈 시 애니메이션 적용
         },
-        containerRef.current,
+        gridContainerRef.current,
       );
       gridRef.current = grid;
 
@@ -228,7 +229,7 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
       });
 
       // 초기 렌더링 시점에 존재하는 기본 위젯들을 초기화
-      const staticItems = containerRef.current.querySelectorAll('.grid-stack-item');
+      const staticItems = gridContainerRef.current.querySelectorAll('.grid-stack-item');
       staticItems.forEach(el => {
         grid.update(el, { minW: 2, maxW: 8, minH: 2, maxH: 6 }); // 기본 위젯에 리사이징 제약 적용
         renderWidget(el, el.getAttribute('data-title'));
@@ -312,9 +313,12 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
     setIsEditable(prev => !prev);
   };
 
+  const isHeaderNarrow = dashboardWidth > 0 && dashboardWidth < 576;
+  const isSidebarNarrow = dashboardWidth > 0 && dashboardWidth < 768;
+
   return (
-    <RootContainer width={width}>
-      <Header>
+    <RootContainer width={width} height={height} ref={rootContainerRef}>
+      <Header isNarrow={isHeaderNarrow}>
         <div style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{title}</div>
         <HeaderActions>
           <WhiteButton onClick={handleToggleEditMode}>
@@ -330,8 +334,8 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
       </Header>
 
       <MainLayout>
-        <GridWrapper isSidebarOpen={isSidebarOpen} height={height}>
-          <div className={`grid-stack ${!isEditable ? 'is-static' : ''}`} ref={containerRef}>
+        <GridWrapper height={height}>
+          <div className={`grid-stack ${!isEditable ? 'is-static' : ''}`} ref={gridContainerRef}>
             {initialLayout.map(item => (
               <div
                 key={item.id}
@@ -347,33 +351,35 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
           </div>
         </GridWrapper>
 
-        <Sidebar isOpen={isSidebarOpen}>
-          <SidebarHeader>위젯 라이브러리</SidebarHeader>
-          <SidebarContent>
-            {sidebarTabs
-              .filter(item => !activeWidgetIds.includes(item.id))
-              .map(item => (
-                <div
-                  key={item.id}
-                  className="sidebar-item grid-stack-item"
-                  gs-w={item.w}
-                  gs-h={item.h}
-                  data-id={item.id}
-                  data-title={item.title}
-                  style={{ marginBottom: '10px' }}
-                >
-                  <SidebarItemInner>
-                    <DragIcon>⠿</DragIcon>
-                    <div>
-                      <div style={{ fontWeight: 'bold', fontSize: '14px' }}>{item.title}</div>
-                      <div style={{ fontSize: '12px', color: '#888' }}>
-                        {item.w}x{item.h}
+        <Sidebar isOpen={isSidebarOpen} isNarrow={isSidebarNarrow}>
+          <SidebarInner isNarrow={isSidebarNarrow}>
+            <SidebarHeader>위젯 라이브러리</SidebarHeader>
+            <SidebarContent>
+              {sidebarTabs
+                .filter(item => !activeWidgetIds.includes(item.id))
+                .map(item => (
+                  <div
+                    key={item.id}
+                    className="sidebar-item grid-stack-item"
+                    gs-w={item.w}
+                    gs-h={item.h}
+                    data-id={item.id}
+                    data-title={item.title}
+                    style={{ marginBottom: '10px' }}
+                  >
+                    <SidebarItemInner>
+                      <DragIcon>⠿</DragIcon>
+                      <div>
+                        <div style={{ fontWeight: 'bold', fontSize: '14px' }}>{item.title}</div>
+                        <div style={{ fontSize: '12px', color: '#888' }}>
+                          {item.w}x{item.h}
+                        </div>
                       </div>
-                    </div>
-                  </SidebarItemInner>
-                </div>
-              ))}
-          </SidebarContent>
+                    </SidebarItemInner>
+                  </div>
+                ))}
+            </SidebarContent>
+          </SidebarInner>
         </Sidebar>
       </MainLayout>
     </RootContainer>
@@ -383,11 +389,9 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
 const GridWrapper = styled.div`
   flex: 1;
   padding: 15px;
-  margin-right: ${props => (props.isSidebarOpen ? '280px' : '0')};
-  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   .grid-stack {
-    min-height: ${props => (props.height ? `${props.height}` : 'auto')};
+    min-height: ${props => (props.height ? `calc(${props.height} * 0.9)` : 'auto')};
     border: 1px solid gray;
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0.02);
@@ -447,19 +451,27 @@ const RootContainer = styled.div`
   width: ${props => (props.width ? `${props.width}` : 'auto')};
   display: flex;
   flex-direction: column;
-  height: 100vh;
   border: 1px solid black;
+  min-height: ${props => (props.height ? `${props.height}` : 'auto')};
 `;
 
 const Header = styled.div`
-  padding: 0 20px;
+  padding: 10px 20px;
   min-height: 56px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 10px 20px;
   z-index: 1100;
   color: #08060d;
+
+  ${props =>
+    props.isNarrow &&
+    `
+    flex-direction: column;
+    align-items: flex-start;
+  `}
 `;
 
 const HeaderActions = styled.div`
@@ -474,7 +486,6 @@ const MainLayout = styled.div`
   display: flex;
   flex: 1;
   position: relative;
-  overflow: hidden;
 `;
 const TabItem = styled.div`
   width: 100%;
@@ -612,18 +623,30 @@ const FooterLink = styled.a`
   }
 `;
 const Sidebar = styled.div`
-  position: absolute;
-  right: 0;
+  position: sticky;
   top: 15px;
-  bottom: 0;
-  width: 280px;
+  align-self: flex-start;
+  height: auto;
   background: white;
-  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.08);
-  transform: translateX(${props => (props.isOpen ? '0' : '100%')});
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: ${props => (props.isOpen ? '-4px 0 15px rgba(0, 0, 0, 0.08)' : 'none')};
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1050;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  width: ${props => {
+    if (!props.isOpen) return '0';
+    return props.isNarrow ? '200px' : '280px';
+  }};
+`;
+const SidebarInner = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  width: ${props => (props.isNarrow ? '200px' : '280px')};
+  min-width: ${props => (props.isNarrow ? '200px' : '280px')};
 `;
 const SidebarHeader = styled.div`
   padding: 20px;
