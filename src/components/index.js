@@ -4,6 +4,7 @@ import AsideCreator from './Menu/AsideCreator';
 import Tooltip from './Tooltip';
 import HelpIcon from './HelpIcon';
 import Modal from './Modal';
+// import Dashboard from './Dashboard';
 import alarm from './alarm';
 import Slider from './Slider';
 import DatePicker from './DateTime/DatePicker';
@@ -110,3 +111,5 @@ export { DNDWrapper };
 export { AlertToast };
 
 export { EscStack };
+
+// export { Dashboard };

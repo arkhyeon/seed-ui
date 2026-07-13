@@ -1,7 +1,6 @@
 import React from 'react';
 import Work from './Work';
 import Project from './Project';
-import ConfigWork from './ConfigWork';
 import ConfigSyncTable from './ConfigSyncTable';
 import ConfigSync from './ConfigSync';
 import MacroRegister from './MacroRegister';
@@ -10,6 +9,7 @@ import TextAreaTestArea from './TextAreaTestArea';
 import Testing from '../components/Testing';
 import Test1Table from './test1';
 import Test2Table from './test2';
+import DashboardPage from './DashboardPage';
 
 /**
  * DepthMenuList.jsx
@@ -137,5 +137,11 @@ export const DepthList1 = [
         ],
       },
     ],
+  },
+  {
+    title: '레이아웃',
+    link: 'layout',
+    component: <DashboardPage />,
+    menuRole: 3,
   },
 ];
