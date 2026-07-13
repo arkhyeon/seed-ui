@@ -269,6 +269,7 @@ function Work() {
           <TextInput />
           <InputGridWrapper>
             <InputGrid
+              required
               list={[
                 {
                   subject: '월',

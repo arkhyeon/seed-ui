@@ -43,7 +43,8 @@ function InputGrid({
           return (
             <LineWrapper key={`line-${idx}`}>
               <Subject title={el.title ?? ''} className="input-grid-subject">
-                {required && <RequiredMark>*</RequiredMark>} {el.subject}
+                {required && <RequiredMark>*&nbsp;</RequiredMark>}
+                {el.subject}
               </Subject>
               <Content contentPadding={contentPadding} className="input-grid-content">
                 {el.content}
