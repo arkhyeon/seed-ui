@@ -18,6 +18,8 @@ import { css } from '@emotion/react';
  *    subject: {String} 넣고자 하는 제목, content: {Component} 내용 안에 들어갈 컴포넌트, flex: {Number} 1(생략 가능, default 값은 1)
  *  },
  * ]
+ * @param list
+ * @param required
  * @param {String} location
  * 해당 컴포넌트가 여러개 들어갈 시 border 겹침으로 인한 Param
  * top : default 위 아래 border
@@ -30,6 +32,7 @@ import { css } from '@emotion/react';
 
 function InputGrid({
   list = [{ subject: '내용 없음', content: <input /> }],
+  required = false,
   location = 'top',
   contentPadding = '10%',
 }) {
@@ -40,7 +43,7 @@ function InputGrid({
           return (
             <LineWrapper key={`line-${idx}`}>
               <Subject title={el.title ?? ''} className="input-grid-subject">
-                {el.subject}
+                {required && <RequiredMark>*</RequiredMark>} {el.subject}
               </Subject>
               <Content contentPadding={contentPadding} className="input-grid-content">
                 {el.content}
@@ -87,6 +90,11 @@ const Subject = styled.div`
   font-size: 13px;
   color: #545454;
   padding: 14.5px 6px 14.5px 12px;
+`;
+
+const RequiredMark = styled.span`
+  color: #e53935;
+  font-weight: bold;
 `;
 
 const Content = styled.div`

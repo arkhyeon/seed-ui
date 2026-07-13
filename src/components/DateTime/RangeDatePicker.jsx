@@ -23,10 +23,17 @@ function useRangePicker() {
 
 // ─── Utils ───────────────────────────────────────────────────────────────────
 
-const toDate = str => {
-  if (!str) return null;
-  const d = new Date(`${str}T00:00:00`);
+const toDate = val => {
+  if (!val) return null;
+  if (val instanceof Date) return Number.isNaN(val.getTime()) ? null : val;
+  const d = new Date(`${val}T00:00:00`);
   return Number.isNaN(d.getTime()) ? null : d;
+};
+
+const toDateString = val => {
+  if (!val) return '';
+  if (val instanceof Date) return Number.isNaN(val.getTime()) ? '' : formatDate(val);
+  return val;
 };
 
 const isSameOrAfter = (a, b) =>
@@ -59,7 +66,6 @@ const formatDateInput = raw => {
   const mmRaw = digits.slice(4, 6);
   const ddRaw = digits.slice(6, 8);
 
-  // month auto-pad: if first digit > 1, prepend 0; clamp to 12
   let mm = mmRaw;
   if (mmRaw.length === 1) {
     if (Number(mmRaw) > 1) mm = `0${mmRaw}`;
@@ -71,7 +77,6 @@ const formatDateInput = raw => {
 
   if (digits.length <= 6) return `${yyyy}-${mm}`;
 
-  // day auto-pad: if first digit > 3, prepend 0; clamp to max days in month
   const maxDay = new Date(Number(yyyy), Number(mm), 0).getDate();
   let dd = ddRaw;
   if (ddRaw.length === 1) {
@@ -104,7 +109,6 @@ const formatTimeInput = raw => {
   const hhRaw = digits.slice(0, 2);
   const mmRaw = digits.slice(2, 4);
 
-  // hour auto-pad: if first digit > 2, prepend 0; clamp to 23
   let hh = hhRaw;
   if (hhRaw.length === 1) {
     if (Number(hhRaw) > 2) hh = `0${hhRaw}`;
@@ -115,7 +119,6 @@ const formatTimeInput = raw => {
 
   if (digits.length <= 2) return hh;
 
-  // minute: clamp to 59
   let mm = mmRaw;
   if (mmRaw.length === 2) {
     const mv = Number(mmRaw);
@@ -131,7 +134,10 @@ const isValidTime = str => {
   return h >= 0 && h <= 23 && m >= 0 && m <= 59;
 };
 
+const PICKER_WIDTH = 520;
+
 // ─── DateInput ───────────────────────────────────────────────────────────────
+
 function DateInput({ value, onChange, startDate, endDate, placeholder = 'YYYY-MM-DD' }) {
   const [local, setLocal] = useState(value || '');
 
@@ -166,6 +172,7 @@ function DateInput({ value, onChange, startDate, endDate, placeholder = 'YYYY-MM
 }
 
 // ─── TimeInput ───────────────────────────────────────────────────────────────
+
 function TimeInput({ value, onChange, placeholder = 'HH:mm' }) {
   const [local, setLocal] = useState(value || '');
 
@@ -200,6 +207,7 @@ function TimeInput({ value, onChange, placeholder = 'HH:mm' }) {
 }
 
 // ─── InputRow ────────────────────────────────────────────────────────────────
+
 function InputRow() {
   const {
     startDt,
@@ -219,7 +227,6 @@ function InputRow() {
 
   return (
     <InputRowWrap>
-      {/* 왼쪽 반 = 왼쪽 캘린더 너비 */}
       <InputHalf cols={hasStartTime ? 2 : 1}>
         <InputCell>
           <InputLabel>시작일</InputLabel>
@@ -237,7 +244,6 @@ function InputRow() {
           </InputCell>
         )}
       </InputHalf>
-      {/* 오른쪽 반 = 오른쪽 캘린더 너비 */}
       <InputHalf cols={hasEndTime ? 2 : 1}>
         <InputCell>
           <InputLabel>종료일</InputLabel>
@@ -255,6 +261,7 @@ function InputRow() {
 }
 
 // ─── QuickRangeButtons ───────────────────────────────────────────────────────
+
 function QuickRangeButtons() {
   const {
     setStartDt,
@@ -295,10 +302,7 @@ function QuickRangeButtons() {
     { label: '1개월', action: () => setRange(addMonths(today, -1), today) },
     { label: '3개월', action: () => setRange(addMonths(today, -3), today) },
     { label: '6개월', action: () => setRange(addMonths(today, -6), today) },
-    {
-      label: '당해',
-      action: () => setRange(new Date(today.getFullYear(), 0, 1), today),
-    },
+    { label: '당해', action: () => setRange(new Date(today.getFullYear(), 0, 1), today) },
     { label: '1년', action: () => setRange(addMonths(today, -12), today) },
   ];
 
@@ -312,10 +316,7 @@ function QuickRangeButtons() {
     { label: '1개월', action: () => setRange(today, addMonths(today, 1)) },
     { label: '3개월', action: () => setRange(today, addMonths(today, 3)) },
     { label: '6개월', action: () => setRange(today, addMonths(today, 6)) },
-    {
-      label: '당해',
-      action: () => setRange(today, new Date(today.getFullYear(), 11, 31)),
-    },
+    { label: '당해', action: () => setRange(today, new Date(today.getFullYear(), 11, 31)) },
     { label: '1년', action: () => setRange(today, addMonths(today, 12)) },
   ];
 
@@ -349,7 +350,6 @@ function QuickRangeButtons() {
       </QuickWrap>
       <QuickBtn
         onClick={() => setRange(today, today)}
-        className="felx-cc"
         style={{
           flex: 1,
           display: 'flex',
@@ -518,11 +518,27 @@ function RangeDatePickerProvider({
 }) {
   const wrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [alignRight, setAlignRight] = useState(false);
   const [hoverDate, setHoverDate] = useState(null);
   const [selectingPhase, setSelectingPhase] = useState('start');
 
   const rangeStart = useMemo(() => toDate(startDt), [startDt]);
   const rangeEnd = useMemo(() => toDate(endDt), [endDt]);
+
+  // 클릭 시점에 rect 읽고 → alignRight 확정 → isOpen true
+  const handleInputClick = useCallback(() => {
+    if (disabled) return;
+    if (isOpen) {
+      setIsOpen(false);
+      return;
+    }
+    if (wrapperRef.current) {
+      const rect = wrapperRef.current.getBoundingClientRect();
+      setAlignRight(window.innerWidth - rect.left < PICKER_WIDTH);
+    }
+    setIsOpen(true);
+    setSelectingPhase('start');
+  }, [disabled, isOpen]);
 
   const handleDayClick = useCallback(
     day => {
@@ -619,17 +635,12 @@ function RangeDatePickerProvider({
           className="range-picker-input"
           value={inputText}
           placeholder="시작일 ~ 종료일"
-          onClick={() => {
-            if (!disabled) {
-              setIsOpen(o => !o);
-              setSelectingPhase('start');
-            }
-          }}
+          onClick={handleInputClick}
           readOnly
           disabled={disabled}
         />
         {isOpen && (
-          <RangePickerWrapper>
+          <RangePickerWrapper alignRight={alignRight}>
             <CalendarsRow>{children}</CalendarsRow>
             <PanelDivider />
             <InputRow />
@@ -656,26 +667,10 @@ function RangeDatePickerProvider({
 
 // ─── Public Component ─────────────────────────────────────────────────────────
 
-/**
- * @param {string}   startDt       - 'YYYY-MM-DD'
- * @param {function} setStartDt
- * @param {string}   endDt         - 'YYYY-MM-DD'
- * @param {function} setEndDt
- * @param {string}   [startTime]   - 'HH:mm' — 있을 때만 시작 시간 표시
- * @param {function} [setStartTime]
- * @param {string}   [endTime]     - 'HH:mm' — 있을 때만 종료 시간 표시
- * @param {function} [setEndTime]
- * @param {boolean}  [disabled]
- * @param {Date}     [startDate]   - 선택 가능 최소일
- * @param {Date}     [endDate]     - 선택 가능 최대일
- * @param {boolean}  [allowPast=true]   - false면 오늘 이전 날짜 선택 불가
- * @param {boolean}  [allowFuture=true] - false면 오늘 이후 날짜 선택 불가
- * @param {function} [onApply]     - 있으면 적용 버튼 표시 후 클릭 시 실행
- */
 function RangeDatePicker({
-  startDt = '',
+  startDt: startDtProp = '',
   setStartDt = () => {},
-  endDt = '',
+  endDt: endDtProp = '',
   setEndDt = () => {},
   startTime,
   setStartTime,
@@ -688,6 +683,8 @@ function RangeDatePicker({
   allowFuture = true,
   onApply,
 }) {
+  const startDt = toDateString(startDtProp);
+  const endDt = toDateString(endDtProp);
   const today = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -704,13 +701,13 @@ function RangeDatePicker({
     [allowFuture, today, endDate],
   );
 
-  // 시간 prop이 있는데 값이 비어있으면 '00:00' 초기값 세팅
   useEffect(() => {
     if (setStartTime && !startTime) setStartTime('00:00');
   }, []);
   useEffect(() => {
     if (setEndTime && !endTime) setEndTime('00:00');
   }, []);
+
   const initLeft = useMemo(() => {
     let base;
     if (!allowPast) base = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -726,8 +723,6 @@ function RangeDatePicker({
     return d;
   });
 
-  // allowPast=false  → left 최솟값 = today 달
-  // allowFuture=false → right 최댓값 = today 달, left 최댓값 = today-1 달
   const clampLeft = useCallback(
     d => {
       const dFirst = new Date(d.getFullYear(), d.getMonth(), 1);
@@ -827,6 +822,16 @@ const RangePickerWrapper = styled.div`
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+  ${({ alignRight }) =>
+    alignRight
+      ? css`
+          right: 0;
+          left: auto;
+        `
+      : css`
+          left: 0;
+          right: auto;
+        `}
 `;
 
 const CalendarsRow = styled.div`
