@@ -13,6 +13,10 @@ import { Route } from 'react-router-dom';
  * Route Component
  */
 
+export function SetRoute(props, role = 'n') {
+  return <>{props.map(route => SubRoute(route, role))}</>;
+}
+
 /**
  * @param {Object} route
  * @param {int} depth
