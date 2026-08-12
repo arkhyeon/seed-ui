@@ -12,9 +12,6 @@ import { Route } from 'react-router-dom';
  * @returns
  * Route Component
  */
-export function SetRoute(props, role = 'n') {
-  return <>{props.map(route => SubRoute(route, role))}</>;
-}
 
 /**
  * @param {Object} route

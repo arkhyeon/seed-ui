@@ -136,9 +136,11 @@ const isValidTime = str => {
 
 const PICKER_WIDTH = 520;
 
+const NO_END = '9999-12-31';
+
 // ─── DateInput ───────────────────────────────────────────────────────────────
 
-function DateInput({ value, onChange, startDate, endDate, placeholder = 'YYYY-MM-DD' }) {
+function DateInput({ value, onChange, startDate, endDate, placeholder = 'YYYY-MM-DD', disabled = false }) {
   const [local, setLocal] = useState(value || '');
 
   useEffect(() => setLocal(value || ''), [value]);
@@ -167,6 +169,7 @@ function DateInput({ value, onChange, startDate, endDate, placeholder = 'YYYY-MM
       onBlur={handleBlur}
       placeholder={placeholder}
       maxLength={10}
+      disabled={disabled}
     />
   );
 }
@@ -224,6 +227,7 @@ function InputRow() {
 
   const hasStartTime = startTime !== undefined;
   const hasEndTime = endTime !== undefined;
+  const noEnd = endDt === NO_END;
 
   return (
     <InputRowWrap>
@@ -247,7 +251,13 @@ function InputRow() {
       <InputHalf cols={hasEndTime ? 2 : 1}>
         <InputCell>
           <InputLabel>종료일</InputLabel>
-          <DateInput value={endDt} onChange={setEndDt} startDate={startDate} endDate={endDate} />
+          <DateInput
+            value={endDt}
+            onChange={setEndDt}
+            startDate={startDate}
+            endDate={endDate}
+            disabled={noEnd}
+          />
         </InputCell>
         {hasEndTime && (
           <InputCell>
@@ -542,6 +552,7 @@ function RangeDatePickerProvider({
 
   const handleDayClick = useCallback(
     day => {
+      if (endDt === NO_END) return;
       if (selectingPhase === 'start') {
         setStartDt(formatDate(day));
         setEndDt('');
@@ -558,7 +569,7 @@ function RangeDatePickerProvider({
         if (!onApply) setIsOpen(false);
       }
     },
-    [selectingPhase, rangeStart, setStartDt, setEndDt, onApply],
+    [selectingPhase, rangeStart, setStartDt, setEndDt, onApply, endDt],
   );
 
   useEffect(() => {
@@ -574,6 +585,23 @@ function RangeDatePickerProvider({
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [selectingPhase, rangeEnd, setStartDt]);
+
+  // 한쪽만 선택하고 적용하면 나머지도 같은 날짜로 맞춰 당일 검색처럼 처리
+  const handleApply = useCallback(() => {
+    let s = startDt;
+    let e = endDt;
+    if (s && !e) {
+      e = s;
+      setEndDt(e);
+    } else if (!s && e) {
+      s = e;
+      setStartDt(s);
+    }
+    setSelectingPhase('start');
+    setHoverDate(null);
+    if (onApply) onApply(s, e);
+    setIsOpen(false);
+  }, [startDt, endDt, setStartDt, setEndDt, onApply]);
 
   const inputText = useMemo(() => {
     const parts = [];
@@ -644,18 +672,15 @@ function RangeDatePickerProvider({
             <CalendarsRow>{children}</CalendarsRow>
             <PanelDivider />
             <InputRow />
-            <PanelDivider />
-            <QuickRangeButtons />
-            {onApply && (
+            {endDt !== NO_END && (
+              <>
+                <PanelDivider />
+                <QuickRangeButtons />
+              </>
+            )}
+            {endDt !== NO_END && onApply && (
               <ApplyRow>
-                <ApplyBtn
-                  onClick={() => {
-                    onApply();
-                    setIsOpen(false);
-                  }}
-                >
-                  적용
-                </ApplyBtn>
+                <ApplyBtn onClick={handleApply}>적용</ApplyBtn>
               </ApplyRow>
             )}
           </RangePickerWrapper>
