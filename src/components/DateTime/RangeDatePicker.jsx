@@ -552,12 +552,12 @@ function RangeDatePickerProvider({
 
   const handleDayClick = useCallback(
     day => {
-      if (endDt === NO_END) return;
       if (selectingPhase === 'start') {
         setStartDt(formatDate(day));
-        setEndDt('');
-        setSelectingPhase('end');
+        if (endDt !== NO_END) setEndDt('');
+        setSelectingPhase(endDt === NO_END ? 'start' : 'end');
       } else {
+        if (endDt === NO_END) return;
         if (rangeStart && day < rangeStart) {
           setStartDt(formatDate(day));
           setEndDt(formatDate(rangeStart));

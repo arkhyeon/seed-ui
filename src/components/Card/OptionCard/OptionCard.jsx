@@ -2,9 +2,14 @@ import React from 'react';
 import styled from '@emotion/styled';
 import DataList from '../../InputComp/DataList';
 import { TextInput } from '../../InputComp/InputComponent';
+import CustomTextArea from '../../InputComp/CustomTextArea';
 import Count from '../../Count/Count';
 
+const WIDE_TYPES = ['TextArea', 'Query'];
+
 function OptionCard({ config, option, setOption, children }) {
+  const isWide = WIDE_TYPES.includes(config.type);
+
   const changeOption = value => {
     setOption(prevState =>
       prevState.map(pv => (pv.key === option.key ? { ...pv, val: value } : pv)),
@@ -34,6 +39,32 @@ function OptionCard({ config, option, setOption, children }) {
       );
     }
 
+    if (config.type === 'TextArea') {
+      return (
+        <CustomTextArea
+          textAreaOption={{
+            defaultValue: option.val,
+            height: config?.height || '120px',
+            onChange: ({ target }) => changeOption(target.value),
+            ...config.textAreaOption,
+          }}
+        />
+      );
+    }
+
+    if (config.type === 'Query') {
+      return (
+        <CustomTextArea
+          sqlAreaOption={{
+            value: option.val ?? '',
+            height: config?.height || '200px',
+            onChange: value => changeOption(value),
+            ...config.sqlAreaOption,
+          }}
+        />
+      );
+    }
+
     if (config.type === 'Count') {
       return (
         <Count
@@ -49,18 +80,19 @@ function OptionCard({ config, option, setOption, children }) {
   };
 
   return (
-    <CardWrapper>
-      <CardHeader>
+    <CardWrapper wide={isWide}>
+      <CardHeader wide={isWide}>
         <CardTitle>{config.name}</CardTitle>
         <CardDesc>{config.desc}</CardDesc>
       </CardHeader>
-      <CardContent>{card()}</CardContent>
+      <CardContent wide={isWide}>{card()}</CardContent>
     </CardWrapper>
   );
 }
 
 const CardWrapper = styled.div`
   display: flex;
+  flex-direction: ${props => (props.wide ? 'column' : 'row')};
   background-color: #eee;
   padding: 0.5em;
   margin-bottom: 0.5em;
@@ -69,7 +101,7 @@ const CardWrapper = styled.div`
 
 const CardHeader = styled.div`
   display: grid;
-  width: 80%;
+  width: ${props => (props.wide ? '100%' : '80%')};
 `;
 
 const CardTitle = styled.div`
@@ -82,13 +114,14 @@ const CardDesc = styled.div`
   display: flex;
   padding: 0.3em;
   line-height: 24px;
+  white-space: pre-line;
 `;
 
 const CardContent = styled.div`
   display: flex;
-  width: 20%;
+  width: ${props => (props.wide ? '100%' : '20%')};
   align-items: center;
-  justify-content: flex-end;
+  justify-content: ${props => (props.wide ? 'stretch' : 'flex-end')};
 `;
 
 export default OptionCard;
