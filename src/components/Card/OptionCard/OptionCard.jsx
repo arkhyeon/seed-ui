@@ -45,6 +45,7 @@ function OptionCard({ config, option, setOption, children }) {
           textAreaOption={{
             defaultValue: option.val,
             height: config?.height || '120px',
+            placeholder: config?.placeholder,
             onChange: ({ target }) => changeOption(target.value),
             ...config.textAreaOption,
           }}
@@ -58,6 +59,7 @@ function OptionCard({ config, option, setOption, children }) {
           sqlAreaOption={{
             value: option.val ?? '',
             height: config?.height || '200px',
+            placeholder: config?.placeholder,
             onChange: value => changeOption(value),
             ...config.sqlAreaOption,
           }}
