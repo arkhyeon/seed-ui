@@ -2,67 +2,63 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
-import { isDisplaySubMenuDepth } from './menuUtils';
+import { canShowMenu, isDisplaySubMenuDepth } from './menuUtils';
+
+// 현재 경로가 이 메뉴(또는 하위)에 속하는지 판정 → 활성 그룹 자동 펼침에 사용.
+const isActivePath = (menuItem, pathname) =>
+  (!!menuItem.link && pathname.includes(menuItem.link)) ||
+  (menuItem.subMenu ?? []).some(child => isActivePath(child, pathname));
 
 function CreateAsideMenu({ currentSideMenu, depth = 0, role }) {
-  const [displayChildren, setDisplayChildren] = useState({});
+  const [openMap, setOpenMap] = useState({});
   const { pathname } = useLocation();
+
+  // DOM을 뒤지지 않고 현재 경로에서 열림 상태를 파생한다.
+  // 활성 경로에 걸린 그룹은 펼치고, 사용자가 수동 토글한 상태는 유지(additive).
   useEffect(() => {
-    collapseSubMenu();
-  }, [pathname]);
-
-  const collapseSubMenu = () => {
-    const activeSubMenu = document.querySelectorAll('a.active[activeclassname="sideSelectMenu"]');
-    for (let i = 0; i < activeSubMenu.length; i++) {
-      setDisplayChildren({
-        ...displayChildren,
-        [activeSubMenu[i].pathname]: !displayChildren[activeSubMenu[i].pathname],
+    setOpenMap(prev => {
+      const next = { ...prev };
+      (currentSideMenu ?? []).forEach(sm => {
+        if (isActivePath(sm, pathname)) {
+          next[sm.link] = true;
+        }
       });
-    }
-  };
+      return next;
+    });
+  }, [pathname, currentSideMenu]);
 
-  const validation = sm => {
-    if (!sm.display) return false;
-    if (role === 'y') return true;
-    if (role === 'n') return sm.menuRole > 0;
-
-    return false;
-  };
+  const toggle = link => setOpenMap(prev => ({ ...prev, [link]: !prev[link] }));
 
   return (
     <ASideMenuWrap>
       {currentSideMenu?.map(sm => {
-        if (validation(sm)) {
-          return '';
+        if (!canShowMenu(sm, role)) {
+          return null;
         }
+        const hasChildren = sm.subMenu && isDisplaySubMenuDepth(sm.subMenu);
         return (
           <ASideMenuList key={sm.link} depth={depth}>
-            {sm.subMenu && isDisplaySubMenuDepth(sm.subMenu) ? (
+            {hasChildren ? (
               <NavLink
-                activeclassname="sideSelectMenu"
                 to={sm.link}
                 onClick={e => {
                   e.preventDefault();
-                  setDisplayChildren({
-                    ...displayChildren,
-                    [sm.link]: !displayChildren[sm.link],
-                  });
+                  toggle(sm.link);
                 }}
               >
                 {depth === 0 && sm.icon}
                 <p>
-                  {sm.title}{' '}
-                  {displayChildren[sm.link] ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+                  {sm.title} {openMap[sm.link] ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
                 </p>
               </NavLink>
             ) : (
-              <NavLink to={sm.link} activeclassname="sideSelectMenu">
+              <NavLink to={sm.link}>
                 {depth === 0 && sm.icon}
                 <p>{sm.title}</p>
               </NavLink>
             )}
-            {displayChildren[sm.link] && sm.subMenu && (
-              <CreateAsideMenu currentSideMenu={sm.subMenu} depth={depth + 1} />
+            {openMap[sm.link] && sm.subMenu && (
+              <CreateAsideMenu currentSideMenu={sm.subMenu} depth={depth + 1} role={role} />
             )}
           </ASideMenuList>
         );

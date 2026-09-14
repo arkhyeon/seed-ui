@@ -6,7 +6,7 @@ import { css } from '@emotion/react';
 import CreateAsideMenu from './CreateAsideMenu';
 
 function AsideCreator({ menuList, title, logoSetting = {}, children, role = 'n' }) {
-  const targetMenu = menuList.filter(menu => menu.title === title)[0];
+  const targetMenu = menuList.find(menu => menu.title === title);
   const { logo, logoLink = '/' } = logoSetting;
   const [hide, setHide] = useState(false);
 
@@ -15,6 +15,10 @@ function AsideCreator({ menuList, title, logoSetting = {}, children, role = 'n' 
       return !prevState;
     });
   };
+
+  if (!targetMenu) {
+    return null;
+  }
 
   return (
     <Container hide={hide}>

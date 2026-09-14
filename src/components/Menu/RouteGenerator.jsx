@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Route } from 'react-router-dom';
+import { canRouteTo } from './menuUtils';
 
 /**
  * Route Component를 props에 맞게 자동 생성(재귀 SubRoute())
@@ -25,13 +26,11 @@ export function SetRoute(props, role = 'n') {
  * Route Component
  */
 function SubRoute(route, role, depth = 0) {
-  const { component, link = '', title, subMenu = [], routePath, menuRole, isPublic } = route;
+  const { component, link = '', title, subMenu = [], routePath } = route;
 
-  // isPublic이 아니면서, menuRole이 0일때만 경로 생성 방지
-  if (role === 'n') {
-    if (!isPublic && menuRole !== undefined && menuRole < 1) {
-      return null;
-    }
+  // 라우트 생성 대상 판정은 menuUtils.canRouteTo로 일원화(노출 판정과 의도적으로 다름)
+  if (!canRouteTo(route, role)) {
+    return null;
   }
 
   return (

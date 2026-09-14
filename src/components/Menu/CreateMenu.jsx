@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import SubMenuItem from './SubMenuItem';
@@ -17,20 +17,45 @@ import MenuContext from './MenuContext';
  * @returns {JSX.Element} Menu Component
  */
 
+// 메뉴에서 마우스가 벗어난 뒤 실제로 닫히기까지의 유예 시간(ms).
+// 대각선 이동이나 서브메뉴 flyout 이동 중 커서가 잠깐 영역 밖으로 삐끗해도
+// 메뉴가 즉시 닫히지 않도록 완충 역할을 한다.
+const MENU_CLOSE_DELAY = 300;
+
 function CreateMenu({ menus, useDepth, role }) {
   const [selectedMenus, setSelectedMenus] = useState([]);
   const navigate = useNavigate();
+  const closeTimerRef = useRef(null);
 
-  const handleMenuSelection = useCallback((label, depth) => {
-    setSelectedMenus(selectedMenusProp => {
-      const newSelectedMenus = [...selectedMenusProp];
-      newSelectedMenus.length = depth;
-      if (label !== '') {
-        newSelectedMenus[depth] = label;
-      }
-      return newSelectedMenus;
-    });
+  const clearCloseTimer = useCallback(() => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
   }, []);
+
+  const scheduleClose = useCallback(() => {
+    clearCloseTimer();
+    closeTimerRef.current = setTimeout(() => setSelectedMenus([]), MENU_CLOSE_DELAY);
+  }, [clearCloseTimer]);
+
+  // 언마운트 시 남은 타이머 정리
+  useEffect(() => () => clearCloseTimer(), [clearCloseTimer]);
+
+  const handleMenuSelection = useCallback(
+    (label, depth) => {
+      clearCloseTimer();
+      setSelectedMenus(selectedMenusProp => {
+        const newSelectedMenus = [...selectedMenusProp];
+        newSelectedMenus.length = depth;
+        if (label !== '') {
+          newSelectedMenus[depth] = label;
+        }
+        return newSelectedMenus;
+      });
+    },
+    [clearCloseTimer],
+  );
 
   const contextValue = useMemo(
     () => ({ handleMenuSelection, selectedMenus, useDepth, navigate }),
@@ -38,7 +63,7 @@ function CreateMenu({ menus, useDepth, role }) {
   );
 
   return (
-    <CreateMenuList onMouseLeave={() => setSelectedMenus([])}>
+    <CreateMenuList onMouseLeave={scheduleClose} onMouseEnter={clearCloseTimer}>
       <MenuContext.Provider value={contextValue}>
         {menus.map(menu => (
           <SubMenuItem menu={menu} key={menu.title} role={role} />
