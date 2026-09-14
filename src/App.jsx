@@ -1,17 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Index from './Index';
-import { DepthList1 } from './assets/DepthMenuList';
-import { SetRoute } from './components';
+import Playground from './playground/Playground';
 import './index.scss';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Index />}>
-          {SetRoute(DepthList1, 'y')}
-        </Route>
+        <Route path="/" element={<Playground />} />
+        <Route path="/playground" element={<Playground />} />
+        <Route path="/playground/:name" element={<Playground />} />
       </Routes>
     </Router>
   );
