@@ -458,7 +458,7 @@ const Wrapper = styled.div`
 const PickerWrapper = styled.div`
   position: absolute;
   margin-top: 4px;
-  background: white;
+  background: var(--seed-surface);
   width: 250px !important;
   z-index: 80;
   display: flex;
@@ -478,7 +478,7 @@ const PickerWrapper = styled.div`
 const PickerHeader = styled.div`
   height: 40px;
   width: 100% !important;
-  background: #3e3e3e;
+  background: var(--seed-invert-bg);
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -513,7 +513,7 @@ const Button = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: white;
+  color: var(--seed-invert-text);
 
   svg {
     width: 25px;
@@ -524,8 +524,8 @@ const Button = styled.div`
 const WeekWrapper = styled.ul`
   display: flex;
   width: 100% !important;
-  background: #3e3e3e;
-  color: white;
+  background: var(--seed-invert-bg);
+  color: var(--seed-invert-text);
   justify-content: center;
 
   & li {
@@ -547,9 +547,9 @@ const DayWrapper = styled.ul`
   margin-bottom: 8px;
 
   .selected-day {
-    background: #fb5b5b !important;
+    background: var(--seed-primary) !important;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    color: white;
+    color: var(--seed-invert-text);
   }
 `;
 
@@ -561,12 +561,13 @@ const Days = styled.li`
   align-items: center;
   border-radius: 4px;
   margin-top: 1px;
+  color: var(--seed-text);
 
   ${({ day }) =>
     day &&
     css`
       &:hover {
-        background-color: #eceff1;
+        background-color: var(--seed-surface-header);
       }
       cursor: pointer;
     `}
@@ -576,7 +577,7 @@ const Days = styled.li`
     sdt &&
     css`
       cursor: default;
-      background-color: #ebebeb !important;
+      background-color: var(--x-ebebeb) !important;
     `}
 `;
 
@@ -594,8 +595,8 @@ const SelectDaysWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    background-color: #3e3e3e;
+    color: var(--seed-invert-text);
+    background-color: var(--seed-invert-bg);
     border-radius: 3px;
     cursor: pointer;
   }
@@ -610,12 +611,12 @@ const SelectDaysWrap = styled.div`
     position: absolute;
     display: none;
     text-align: center;
-    background-color: #3e3e3e;
+    background-color: var(--seed-invert-bg);
   }
 
   & span:nth-of-type(2) {
     left: 50%;
-    border-left: 1px solid #ebebeb;
+    border-left: 1px solid var(--x-ebebeb);
     box-sizing: border-box;
   }
 `;

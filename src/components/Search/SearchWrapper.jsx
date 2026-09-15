@@ -52,7 +52,7 @@ const DefaultSearchWrap = styled.div`
 
 const DetailSearchWrapper = styled.div`
   width: 100%;
-  background-color: white;
+  background-color: var(--seed-surface);
   position: absolute;
   top: 96%;
   z-index: 1;

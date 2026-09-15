@@ -838,7 +838,7 @@ function RangeDatePicker({
 const RangePickerWrapper = styled.div`
   position: absolute;
   margin-top: 4px;
-  background: white;
+  background: var(--seed-surface);
   z-index: 80;
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
@@ -866,7 +866,7 @@ const CalendarsRow = styled.div`
 
 const PanelDivider = styled.div`
   height: 1px;
-  background: #eeeeee;
+  background: var(--seed-scrollbar-track);
   margin: 8px 0;
 `;
 
@@ -895,27 +895,28 @@ const RangeDayCell = styled.li`
   border-radius: 4px;
   margin-top: 1px;
   font-size: 13px;
+  color: var(--seed-text);
   transition: background 0.1s;
 
   ${({ inRange }) =>
     inRange &&
     css`
-      background-color: #fde8e8;
+      background-color: var(--x-fde8e8);
       border-radius: 0;
     `}
   ${({ isStart }) =>
     isStart &&
     css`
-      background-color: #fb5b5b !important;
-      color: white;
+      background-color: var(--seed-primary) !important;
+      color: var(--seed-invert-text);
       border-radius: 4px 0 0 4px;
       box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     `}
   ${({ isEnd }) =>
     isEnd &&
     css`
-      background-color: #fb5b5b !important;
-      color: white;
+      background-color: var(--seed-primary) !important;
+      color: var(--seed-invert-text);
       border-radius: 0 4px 4px 0;
       box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     `}
@@ -925,8 +926,8 @@ const RangeDayCell = styled.li`
     css`
       cursor: pointer;
       &:hover {
-        background-color: #f0b0b0;
-        color: white;
+        background-color: var(--x-f0b0b0);
+        color: var(--seed-invert-text);
       }
     `}
   ${({ day, disabled }) =>
@@ -934,8 +935,8 @@ const RangeDayCell = styled.li`
     disabled &&
     css`
       cursor: default;
-      background-color: #ebebeb !important;
-      color: #bbb;
+      background-color: var(--x-ebebeb) !important;
+      color: var(--x-bbb);
     `}
 `;
 
@@ -965,7 +966,7 @@ const InputCell = styled.div`
 
 const InputLabel = styled.span`
   font-size: 13px;
-  color: #666;
+  color: var(--x-666);
   white-space: nowrap;
 `;
 
@@ -974,16 +975,18 @@ const StyledInput = styled.input`
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: 1px solid #d0d0d0;
+  border: 1px solid var(--x-d0d0d0);
   border-radius: 3px;
+  background: var(--seed-surface);
+  color: var(--seed-text);
   padding: 0 6px;
   font-size: 13px;
   outline: none;
   &:focus {
-    border-color: #fb5b5b;
+    border-color: var(--seed-primary);
   }
   &::placeholder {
-    color: #bbb;
+    color: var(--x-bbb);
   }
 `;
 
@@ -1002,7 +1005,7 @@ const QuickGroup = styled.div`
 
 const QuickGroupLabel = styled.span`
   font-size: 12px;
-  color: #888;
+  color: var(--x-888);
   white-space: nowrap;
   width: 30px;
 `;
@@ -1020,17 +1023,17 @@ const QuickBtn = styled.button`
   height: 30px;
   padding: 0 10px;
   border-radius: 3px;
-  background: #f5f5f5;
-  color: #444;
-  border: 1px solid #e0e0e0;
+  background: var(--x-f5f5f5);
+  color: var(--x-444);
+  border: 1px solid var(--x-e0e0e0);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   transition: background 0.1s;
   &:hover {
-    background: #fb5b5b;
-    color: white;
-    border-color: #fb5b5b;
+    background: var(--seed-primary);
+    color: var(--seed-invert-text);
+    border-color: var(--seed-primary);
   }
 `;
 
@@ -1048,10 +1051,10 @@ const ApplyBtn = styled.button`
   font-size: 13px;
   text-align: center;
   border-radius: 4px;
-  background: #3e3e3e;
-  color: white;
+  background: var(--seed-invert-bg);
+  color: var(--seed-invert-text);
   &:hover {
-    background: #fb5b5b;
+    background: var(--seed-primary);
   }
 `;
 

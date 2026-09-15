@@ -49,7 +49,7 @@ function TabComponent({ title, onRemove }) {
         </MenuContainer>
       </WidgetHeader>
       <ContentArea onMouseDown={stopDrag}>
-        <div style={{ color: '#adb5bd', fontSize: '12px' }}>위젯 데이터 영역</div>
+        <div style={{ color: 'var(--x-adb5bd)', fontSize: '12px' }}>위젯 데이터 영역</div>
       </ContentArea>
       <Divider onMouseDown={stopDrag} />
       <WidgetFooter onMouseDown={stopDrag}>
@@ -371,7 +371,7 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
                       <DragIcon>⠿</DragIcon>
                       <div>
                         <div style={{ fontWeight: 'bold', fontSize: '14px' }}>{item.title}</div>
-                        <div style={{ fontSize: '12px', color: '#888' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--x-888)' }}>
                           {item.w}x{item.h}
                         </div>
                       </div>
@@ -510,9 +510,9 @@ const DragHandle = styled.div`
   align-items: center;
   justify-content: center;
   cursor: grab !important;
-  background-color: #f1f3f5;
+  background-color: var(--x-f1f3f5);
   border-radius: 4px;
-  color: #adb5bd;
+  color: var(--x-adb5bd);
   z-index: 10;
   &::before {
     content: '⠿';
@@ -520,7 +520,7 @@ const DragHandle = styled.div`
   }
   &:hover {
     background-color: #e9ecef;
-    color: #495057;
+    color: var(--x-495057);
   }
 `;
 const WidgetTitle = styled.div`
@@ -534,7 +534,7 @@ const WidgetTitle = styled.div`
   justify-content: center;
   font-size: 14px;
   font-weight: 700;
-  color: #495057;
+  color: var(--x-495057);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -553,14 +553,14 @@ const MenuButton = styled.button`
   height: 28px;
   font-size: 18px;
   cursor: pointer;
-  color: #adb5bd;
+  color: var(--x-adb5bd);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
   &:hover {
-    background: #f1f3f5;
-    color: #495057;
+    background: var(--x-f1f3f5);
+    color: var(--x-495057);
   }
 `;
 const Dropdown = styled.div`
@@ -650,7 +650,7 @@ const SidebarInner = styled.div`
 `;
 const SidebarHeader = styled.div`
   padding: 20px;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid var(--x-f1f3f5);
   font-weight: bold;
   font-size: 16px;
 `;

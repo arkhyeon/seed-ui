@@ -10,7 +10,7 @@ export function Accordion({ title, children, collapse, setCollapse }) {
   return (
     <AccordionWrap>
       <Header onClick={handleToggle}>
-        {preventTitleClickToggle(title)}
+        <TitleWrap>{preventTitleClickToggle(title)}</TitleWrap>
         <IconWrap
           onClick={e => {
             e.stopPropagation();
@@ -50,18 +50,24 @@ function preventTitleClickToggle(node) {
 
 const AccordionWrap = styled.div`
   width: 100%;
+  color: var(--seed-text);
 `;
 
 const Header = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #d2d2d2;
+  border-bottom: 1px solid var(--seed-border);
   cursor: pointer;
 `;
 
+const TitleWrap = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
 const IconWrap = styled.div`
-  width: 100%;
+  flex-shrink: 0;
   height: 40px;
   font-size: 22px;
   display: flex;

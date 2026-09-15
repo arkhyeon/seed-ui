@@ -248,18 +248,18 @@ const MinNum = styled.div`
   justify-content: start;
   align-items: center;
   font-size: 14px;
-  color: #666;
+  color: var(--x-666);
   padding: 0 10px;
 
   &:hover {
-    background-color: #eceff1;
+    background-color: var(--seed-surface-header);
   }
 
   ${({ selected }) => {
     return (
       selected &&
       css`
-        color: #f7f7f7;
+        color: var(--x-f7f7f7);
         font-size: 16px;
         background: transparent !important;
       `

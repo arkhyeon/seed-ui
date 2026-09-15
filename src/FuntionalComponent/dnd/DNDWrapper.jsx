@@ -109,8 +109,12 @@ const DndWrapper = styled.div`
       ? css`
           user-select: none;
           cursor: move;
+          /* 드래그 중인 항목: 반투명 + 점선 테두리로 "떠 있는" 상태 표시 */
           &.grabbing {
-            opacity: 0.3;
+            opacity: 0.35;
+            outline: 2px dashed var(--seed-primary);
+            outline-offset: -2px;
+            border-radius: 8px;
           }
         `
       : css`
@@ -118,29 +122,36 @@ const DndWrapper = styled.div`
           cursor: default;
         `}
 
-  /* 드롭 위치 인디케이터: 항목의 앞/뒤 경계에 빨간 선 */
+  /* 드롭 위치 미리보기: 삽입될 경계에 점선 슬롯 표시.
+     레이아웃을 밀지 않도록(스크롤/오실레이션 방지) 절대배치 오버레이로만 그린다. */
   ${({ hint, direction }) => {
     if (!hint) return '';
     const vertical = direction !== 'horizontal';
-    const line = vertical ? 'left: 0; right: 0; height: 3px;' : 'top: 0; bottom: 0; width: 3px;';
+    // 항목 사이 gap(6px) 중앙에 오도록 경계 바깥쪽으로 살짝 배치
+    const bar = vertical
+      ? `left: 0; right: 0; height: 4px;`
+      : `top: 0; bottom: 0; width: 4px;`;
     const place =
       // eslint-disable-next-line no-nested-ternary
       hint === 'before'
         ? vertical
-          ? 'top: -3px;'
-          : 'left: -3px;'
+          ? `top: -5px;`
+          : `left: -5px;`
         : vertical
-        ? 'bottom: -3px;'
-        : 'right: -3px;';
+        ? `bottom: -5px;`
+        : `right: -5px;`;
+
     return css`
       &::after {
         content: '';
         position: absolute;
-        background: #fb5b5b;
-        border-radius: 2px;
-        z-index: 5;
-        ${line}
+        ${bar}
         ${place}
+        border: 1px dashed var(--seed-primary);
+        background: rgba(251, 91, 91, 0.35);
+        border-radius: 3px;
+        z-index: 5;
+        pointer-events: none;
       }
     `;
   }}

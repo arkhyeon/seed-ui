@@ -47,7 +47,7 @@ const TimeWrap = styled.div`
   z-index: 99998;
   margin-top: 3px;
   position: absolute;
-  background-color: white;
+  background-color: var(--seed-surface);
 `;
 
 const TimeWrapOverlay = styled.div`

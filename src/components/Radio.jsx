@@ -45,8 +45,8 @@ function Radio({
     { value: 1 || 'y', label: 'test1', disabled: true },
     { value: 2 || 'n', label: 'test2', disabled: false },
   ],
-  checkColor = 'rgb(144, 202, 249)',
-  hoverColor = '#eee',
+  checkColor = 'var(--seed-primary)',
+  hoverColor = 'var(--x-eee)',
   labelInSpacing = '4px',
   labelOutSpacing = '8px',
   type = 'border',
@@ -120,7 +120,7 @@ const CheckWrapper = styled.div`
     content: '';
     position: absolute;
     border: ${({ checkColor }) => `2px solid ${checkColor}`};
-    background: white;
+    background: var(--seed-surface);
     width: 12px;
     height: 12px;
     top: 50%;
@@ -138,7 +138,7 @@ const CheckWrapper = styled.div`
 
       if (type === 'border') {
         return css`
-          border: 2px solid #d2d2d2;
+          border: 2px solid var(--seed-border);
         `;
       }
     }};
@@ -177,6 +177,7 @@ const Label = styled.label`
 
   & > p {
     font-size: 13px;
+    color: var(--seed-text);
   }
 `;
 

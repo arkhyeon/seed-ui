@@ -14,6 +14,8 @@ function LabelList({
   unit = '그룹',
   handleUpdate = () => {},
   disabled = false,
+  labelColor = null,
+  labelTextColor = null,
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const selectorRef = useRef(null);
@@ -51,7 +53,9 @@ function LabelList({
       {direction === 'left' && (
         <LabelViewWrapper direction={direction}>
           {selectedLabels.map(data => (
-            <LabelView key={`label-${data.value}`}>{data.label}</LabelView>
+            <LabelView key={`label-${data.value}`} color={labelColor} textColor={labelTextColor}>
+              {data.label}
+            </LabelView>
           ))}
         </LabelViewWrapper>
       )}
@@ -72,7 +76,9 @@ function LabelList({
       {direction === 'right' && (
         <LabelViewWrapper direction={direction}>
           {selectedLabels.map(data => (
-            <LabelView key={`label-${data.value}`}>{data.label}</LabelView>
+            <LabelView key={`label-${data.value}`} color={labelColor} textColor={labelTextColor}>
+              {data.label}
+            </LabelView>
           ))}
         </LabelViewWrapper>
       )}
@@ -93,6 +99,7 @@ const SelectorWrap = styled.div`
     font-size: 28px;
     min-width: 28px;
     cursor: pointer;
+    color: var(--seed-text);
   }
 
   .label-selector {
@@ -116,8 +123,8 @@ const LabelView = styled.div`
   border-radius: 15px;
   font-size: 13px;
   padding: 3px 20px 4px;
-  background: #78909c;
-  color: white;
+  background: ${({ color }) => color || 'var(--seed-chip-bg)'};
+  color: ${({ textColor }) => textColor || 'var(--seed-chip-text)'};
   max-width: 200px;
   white-space: nowrap;
   text-overflow: ellipsis;

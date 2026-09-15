@@ -23,14 +23,18 @@ import { css } from '@emotion/react';
  * 'left-end'
  * @param {String} props.color
  * 툴팁의 배경색
- * default 값은 '#d2d2d2'
+ * default 값은 'var(--seed-invert-bg)' (어두운 버블)
+ * @param {String} props.textColor
+ * 툴팁의 글자색
+ * default 값은 'var(--seed-invert-text)' (흰색)
  * @returns {JSX.element} Tooltip Component
  */
 
 function Tooltip({
   text = '텍스트를 넣어주세요.',
   position = 'top-center',
-  color = '#d2d2d2',
+  color = 'var(--seed-invert-bg)',
+  textColor = 'var(--seed-invert-text)',
   children,
 }) {
   const wrapperRef = useRef(null);
@@ -70,6 +74,7 @@ function Tooltip({
             size={size}
             tooltipSize={tooltipSize}
             color={color}
+            textColor={textColor}
             className="tooltip"
           >
             {text}
@@ -93,9 +98,10 @@ const TooltipComponent = styled.div`
   white-space: nowrap;
   padding: 4px 8px;
   border-radius: 4px;
-  ${({ color }) => {
+  ${({ color, textColor }) => {
     return css`
       background: ${color};
+      color: ${textColor};
     `;
   }};
 

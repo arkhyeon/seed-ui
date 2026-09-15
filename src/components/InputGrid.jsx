@@ -63,13 +63,13 @@ const Wrapper = styled.div`
   ${({ location }) => {
     if (location === 'top') {
       return css`
-        border-top: 1px solid #d2d2d2;
-        border-bottom: 1px solid #d2d2d2;
+        border-top: 1px solid var(--seed-border);
+        border-bottom: 1px solid var(--seed-border);
       `;
     }
     if (location === 'bottom') {
       return css`
-        border-bottom: 1px solid #d2d2d2;
+        border-bottom: 1px solid var(--seed-border);
       `;
     }
     return '';
@@ -78,7 +78,7 @@ const Wrapper = styled.div`
 
 const LineWrapper = styled.div`
   display: flex;
-  border-bottom: 1px solid #d2d2d2;
+  border-bottom: 1px solid var(--seed-border);
   &:last-of-type {
     border-bottom: none;
   }
@@ -89,12 +89,12 @@ const Subject = styled.div`
   display: flex;
   align-items: center;
   font-size: 13px;
-  color: #545454;
+  color: var(--seed-text-secondary);
   padding: 14.5px 6px 14.5px 12px;
 `;
 
 const RequiredMark = styled.span`
-  color: #e53935;
+  color: var(--seed-danger);
   font-weight: bold;
 `;
 

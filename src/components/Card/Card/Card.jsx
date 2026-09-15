@@ -65,7 +65,7 @@ const CardHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: white;
+  color: var(--seed-invert-text);
   font-weight: bold;
   padding: 0 15px;
   box-sizing: border-box;
@@ -88,17 +88,18 @@ const CardBody = styled.div`
   padding: 35px 10px 10px;
   box-sizing: border-box;
   border-radius: 5px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--x-e0e0e0);
   box-shadow: rgba(20, 20, 20, 0.12) 0 0.25rem 0.375rem -0.0625rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
   transition: 0.3s;
 
   &.card-collapse {
     height: 0;
     padding: 0 10px;
-    border: 0 solid #e0e0e0;
+    border: 0 solid var(--x-e0e0e0);
     margin: 0;
   }
 `;

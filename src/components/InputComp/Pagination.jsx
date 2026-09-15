@@ -83,49 +83,56 @@ function Pagination({ totalLength = 0, buttonLength = 10, pageEvent, currentPage
 
 const PaginationWarp = styled.ul`
   width: fit-content;
-  height: 22px;
-  background-color: ${({ theme }) => theme.paginationStyle.backgroundColor};
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
-  border: 1px solid ${({ theme }) => theme.paginationStyle.borderColor};
-  font-size: 12px;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  list-style: none;
 `;
 
 const PaginationItem = styled.li`
-  width: 24px;
-  height: 24px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: ${({ theme }) => theme.paginationStyle.fontColor};
-  transition: 0.3s;
-
-  &:nth-of-type(n + 2) {
-    border-left: 1px solid ${({ theme }) => theme.paginationStyle.divideLine};
-  }
+  color: var(--seed-text);
+  background: var(--seed-surface);
+  border: 1px solid var(--seed-border);
+  border-radius: 8px;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    transform 0.1s ease;
+  user-select: none;
 
   &:hover {
-    background-color: ${({ theme }) => theme.paginationStyle.hoverBackgroundColor};
-    color: ${({ theme }) => theme.paginationStyle.hoverFontColor};
+    background-color: var(--seed-hover);
+    border-color: var(--seed-border-strong);
   }
 
   &:active {
-    outline: 3px solid #b0bec5;
+    transform: scale(0.92);
   }
 
   & svg {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   &[aria-current] {
-    background-color: ${({ theme }) => theme.paginationStyle.activeBackgroundColor};
-    color: ${({ theme }) => theme.paginationStyle.activeFontColor};
-    font-weight: bold;
-    cursor: revert;
-    transform: revert;
+    background-color: var(--seed-primary);
+    border-color: var(--seed-primary);
+    color: #fff;
+    font-weight: 700;
+    cursor: default;
+    &:hover {
+      background-color: var(--seed-primary);
+      border-color: var(--seed-primary);
+    }
   }
 `;
 
@@ -134,14 +141,16 @@ const ResultWrap = styled.div`
   align-items: center;
   margin-left: 10px;
   font-size: 12px;
+  color: var(--seed-text);
 
   & select {
     width: 90px;
-    height: 24px;
+    height: 30px;
     margin-right: 15px;
-    border: 1px solid #d2d2d2;
-    border-radius: 5px;
-    color: #212529;
+    border: 1px solid var(--seed-border);
+    border-radius: 8px;
+    background: var(--seed-surface);
+    color: var(--seed-text);
     padding: 4px 18px 3px 6px;
   }
 `;

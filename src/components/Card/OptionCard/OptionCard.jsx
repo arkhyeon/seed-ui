@@ -95,7 +95,9 @@ function OptionCard({ config, option, setOption, children }) {
 const CardWrapper = styled.div`
   display: flex;
   flex-direction: ${props => (props.wide ? 'column' : 'row')};
-  background-color: #eee;
+  background-color: var(--x-eee);
+  color: var(--seed-text);
+  font-size: 14px;
   padding: 0.5em;
   margin-bottom: 0.5em;
   border-radius: 0.5em;
@@ -103,7 +105,7 @@ const CardWrapper = styled.div`
 
 const CardHeader = styled.div`
   display: grid;
-  width: ${props => (props.wide ? '100%' : '80%')};
+  width: ${props => (props.wide ? '100%' : '58%')};
 `;
 
 const CardTitle = styled.div`
@@ -115,15 +117,21 @@ const CardTitle = styled.div`
 const CardDesc = styled.div`
   display: flex;
   padding: 0.3em;
-  line-height: 24px;
+  font-size: 13px;
+  color: var(--seed-text-secondary);
+  line-height: 22px;
   white-space: pre-line;
 `;
 
 const CardContent = styled.div`
   display: flex;
-  width: ${props => (props.wide ? '100%' : '20%')};
+  width: ${props => (props.wide ? '100%' : '42%')};
   align-items: center;
   justify-content: ${props => (props.wide ? 'stretch' : 'flex-end')};
+
+  & > * {
+    width: 100%;
+  }
 `;
 
 export default OptionCard;

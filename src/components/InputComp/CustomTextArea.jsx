@@ -1,9 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { PostgreSQL, sql } from '@codemirror/lang-sql';
-import { xcodeLight } from '@uiw/codemirror-theme-xcode';
+import { xcodeLight, xcodeDark } from '@uiw/codemirror-theme-xcode';
 import { BlackButton, WhiteButton } from '../index';
+
+// <html data-theme="dark"> 를 구독해 CodeMirror 테마를 라이트/다크로 자동 전환
+function useIsDarkTheme() {
+  const [isDark, setIsDark] = useState(
+    () => typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark',
+  );
+  useEffect(() => {
+    const root = document.documentElement;
+    const update = () => setIsDark(root.getAttribute('data-theme') === 'dark');
+    update();
+    const obs = new MutationObserver(update);
+    obs.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => obs.disconnect();
+  }, []);
+  return isDark;
+}
 
 /**
  * @param {String} title
@@ -29,6 +45,7 @@ export default function CustomTextArea({
 }) {
   const textAreaRef = useRef(null);
   const editorRef = useRef(null);
+  const isDark = useIsDarkTheme();
 
   useEffect(() => {
     if (focusOn && textAreaRef.current) {
@@ -75,7 +92,7 @@ export default function CustomTextArea({
       {sqlAreaOption && (
         <CodeMirror
           {...sqlAreaOption}
-          theme={sqlAreaOption?.theme || xcodeLight}
+          theme={sqlAreaOption?.theme || (isDark ? xcodeDark : xcodeLight)}
           extensions={[sql(), PostgreSQL, EditorView.lineWrapping]}
           minHeight="100%"
           maxHeight="100%"
@@ -104,7 +121,9 @@ const TextAreaComp = styled.textarea`
   box-sizing: border-box;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #d2d2d2;
+  border: 1px solid var(--seed-border);
+  background: var(--seed-surface);
+  color: var(--seed-text);
   resize: vertical;
   height: ${props => (props.height ? props.height : 'auto')};
 `;

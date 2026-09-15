@@ -57,8 +57,8 @@ const TimePickerAnimationWrap = styled.div`
   overflow: hidden;
   user-select: none;
   border-radius: 3px;
-  border: 1px solid #d2d2d2;
-  box-shadow: 1px 3px 3px 0 #c3c3c3;
+  border: 1px solid var(--seed-border);
+  box-shadow: 1px 3px 3px 0 var(--x-c3c3c3);
 
   animation: fade-in 150ms ease-out;
   @keyframes fade-in {
@@ -76,8 +76,8 @@ const TimePickerAnimationWrap = styled.div`
 const TimeTitle = styled.div`
   width: 100%;
   height: 32px;
-  background-color: #3e3e3e;
-  color: white;
+  background-color: var(--seed-invert-bg);
+  color: var(--seed-invert-text);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,7 +99,7 @@ const TimePickerSelectionWrap = styled.div`
 const TimePickerSelectionOverlay = styled.div`
   position: absolute;
   border-radius: 6px;
-  background-color: #fb5b5b;
+  background-color: var(--seed-primary);
   pointer-events: none;
   margin: 0 5px;
   left: 0;
@@ -110,7 +110,7 @@ const TimePickerSelectionOverlay = styled.div`
 const Colon = styled.div`
   display: flex;
   align-items: center;
-  color: #f7f7f7;
+  color: var(--x-f7f7f7);
   z-index: 100;
   font-weight: 600;
 `;

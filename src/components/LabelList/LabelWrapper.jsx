@@ -40,15 +40,17 @@ function LabelWrapper({ dataList, setSelectedValueList, selectedValueList, creat
 const LabelSelectorWrap = styled.div`
   position: absolute;
   width: 250px;
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 7px var(--seed-shadow);
   border-radius: 10px;
-  background: white;
+  background: var(--seed-surface);
+  color: var(--seed-text);
   z-index: 998;
 `;
 
 const Title = styled.div`
   padding: 12.5px 15px;
   font-size: 14px;
+  color: var(--seed-text);
 `;
 
 const LabelWrap = styled.div`
@@ -60,7 +62,7 @@ const LabelWrap = styled.div`
     width: 6px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #d3d3d3;
+    background-color: var(--seed-scrollbar-thumb);
     border-radius: 10px;
   }
 `;
@@ -78,8 +80,8 @@ const LabelButton = styled.div`
   }
 
   :hover {
-    background: #3e3e3e;
-    color: white;
+    background: var(--seed-invert-bg);
+    color: var(--seed-invert-text);
   }
 `;
 

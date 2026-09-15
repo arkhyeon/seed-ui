@@ -1,3 +1,4 @@
+import '../styles/seedTheme'; // 다크모드 CSS 변수(:root / [data-theme=dark]) 자동 주입
 import HeaderCreator from './Menu/HeaderCreator';
 import { SetRoute } from './Menu/RouteGenerator';
 import AsideCreator from './Menu/AsideCreator';
@@ -33,7 +34,6 @@ import {
   TabIconButton,
 } from './SideTabs/SideTabs';
 import DividingLine from './Line/DividingLine';
-import Article from './Article';
 import OptionCard from './Card/OptionCard/OptionCard';
 import Card from './Card/Card/Card';
 import { Accordion } from './Accordion/Accordion';
@@ -104,8 +104,6 @@ export {
 };
 
 export { DividingLine };
-
-export { Article };
 
 export { OptionCard, Card };
 

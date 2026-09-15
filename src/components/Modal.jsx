@@ -1,6 +1,5 @@
 import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 import { GrClose } from 'react-icons/gr';
 import { createPortal } from 'react-dom';
 import { BlackButton, WhiteButton } from './Button/Button';
@@ -218,10 +217,11 @@ const ModalWrap = styled.div`
   max-height: 100%;
   position: fixed;
   z-index: 9999;
-  background: white;
+  background: var(--seed-surface);
+  color: var(--x-black);
   border: ${({ theme }) => theme.modalStyle?.modalBorder || 'none'};
   border-radius: 12px;
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 7px var(--seed-shadow);
 
   -ms-user-select: none;
   -moz-user-select: none;
@@ -242,11 +242,9 @@ const ModalHeader = styled.div`
     font-size: 18px;
     cursor: pointer;
   }
-  ${({ theme }) => css`
-    background: ${theme.modalStyle.headBg};
-    color: ${theme.modalStyle.headFc};
-    border-bottom: ${theme.modalStyle.headBorder};
-  `}
+  background: var(--seed-surface-header);
+  color: var(--x-black);
+  border-bottom: 1px solid var(--seed-border);
 
   cursor: ${({ movable }) => (movable ? 'move' : 'normal')};
 `;
@@ -274,13 +272,13 @@ const ModalFooter = styled.div`
   justify-content: flex-end;
   padding: 11px 18px;
   gap: 15px;
-  border-top: ${({ theme }) => theme.modalStyle.headBorder};
+  border-top: 1px solid var(--seed-border);
 `;
 
 const ModalBack = styled.div`
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: var(--seed-invert-bg);
   position: fixed;
   top: 0px;
   left: 0px;

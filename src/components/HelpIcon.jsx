@@ -10,9 +10,9 @@ function HelpIcon({ message = '', size = 20 }) {
   const iconRef = useRef(null);
 
   const colors = {
-    gray600: '#6c757d',
-    gray800: 'rgba(33, 37, 41, 0.9)',
-    border: 'rgba(108, 117, 125, 0.5)',
+    gray600: 'var(--x-6c757d)',
+    gray800: 'var(--seed-help-popup)',
+    border: 'var(--seed-help-border)',
   };
 
   // 아이콘의 위치를 계산하여 포털 팝업의 위치를 결정합니다.
@@ -50,7 +50,7 @@ function HelpIcon({ message = '', size = 20 }) {
     color: colors.gray600,
     fontSize: `${size * 0.65}px`,
     fontWeight: '700',
-    backgroundColor: isVisible ? '#f8f9fa' : 'transparent',
+    backgroundColor: isVisible ? 'var(--x-f8f9fa)' : 'transparent',
     transition: 'background-color 0.2s',
     cursor: 'pointer',
     marginLeft: '5px',

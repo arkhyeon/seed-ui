@@ -13,7 +13,7 @@ function DividingLine(props) {
 const Line = styled.div`
   width: 100%;
   height: 1px;
-  background: #d2d2d2;
+  background: var(--seed-border);
 `;
 
 export default DividingLine;

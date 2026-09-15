@@ -4,7 +4,7 @@ import { MdOutlineNewLabel } from 'react-icons/md';
 import Option from './Option';
 
 const LabelSelector = forwardRef(
-  ({ labelList, setLabelList, createLabel, modifyLabel, unit }, ref) => {
+  ({ labelList, setLabelList, createLabel, modifyLabel, unit, direction = 'right' }, ref) => {
     const renderOptions = useCallback(() => {
       return (
         <>
@@ -22,7 +22,7 @@ const LabelSelector = forwardRef(
     }, [labelList, setLabelList, modifyLabel]);
 
     return (
-      <Wrapper ref={ref} className="label-selector">
+      <Wrapper ref={ref} className="label-selector" direction={direction}>
         <Title className="label-selector-title">{unit} 관리</Title>
         <DividingLine className="label-selector-divide" />
         {renderOptions()}
@@ -38,10 +38,12 @@ const LabelSelector = forwardRef(
 
 const Wrapper = styled.div`
   position: absolute;
+  top: 36px;
+  ${({ direction }) => (direction === 'left' ? 'right: 0;' : 'left: 0;')}
   width: 250px;
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 7px var(--seed-shadow);
   border-radius: 10px;
-  background: white;
+  background: var(--seed-surface);
   z-index: 998;
   /* margin-top: 4px; */
 
@@ -59,6 +61,7 @@ const Title = styled.div`
   padding-left: 15px;
   height: 43px;
   font-size: 14px;
+  color: var(--seed-text);
   display: flex;
   align-items: center;
 `;
@@ -66,7 +69,7 @@ const Title = styled.div`
 const DividingLine = styled.div`
   width: 100%;
   height: 1px;
-  background: #d2d2d2;
+  background: var(--seed-border);
   padding: 0px !important;
 `;
 
@@ -76,8 +79,8 @@ const CreateBtn = styled.div`
   font-size: 14px;
 
   :hover {
-    background: rgb(62, 62, 62);
-    color: white;
+    background: var(--seed-invert-bg);
+    color: var(--seed-invert-text);
   }
   cursor: pointer;
   display: flex;

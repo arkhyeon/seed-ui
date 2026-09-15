@@ -82,21 +82,26 @@ const Button = styled.button`
   padding: 7px 13px 8px 13.5px;
   transition: 0.3s;
   cursor: pointer;
-  border: 1px solid #d2d2d2;
+  border: 1px solid var(--seed-border);
   max-height: 32px;
 
   :hover {
-    background-color: #455a64;
+    background-color: var(--seed-hover-strong);
   }
 
   :active {
-    outline: 3px solid #b0bec5;
+    outline: 3px solid var(--x-b0bec5);
   }
 `;
 
 const BlackBtn = styled(Button)`
-  color: #ffffff;
-  background: #3e3e3e;
+  color: var(--seed-btn-primary-text);
+  background: var(--seed-btn-primary-bg);
+
+  :hover {
+    background-color: var(--seed-btn-primary-hover);
+    color: var(--seed-btn-primary-text);
+  }
 
   &.showComp {
     background-color: #6674fe !important;
@@ -104,20 +109,21 @@ const BlackBtn = styled(Button)`
 `;
 
 const WhiteBtn = styled(Button)`
-  color: #212529;
-  background: #fff;
+  color: var(--seed-text);
+  background: var(--seed-surface);
   :hover,
   :active {
-    color: #fff;
+    color: var(--seed-invert-text);
   }
 `;
 
 const SelectButton = styled(Button)`
   min-width: 85px;
-  background-color: white;
+  background-color: var(--seed-surface);
+  color: var(--seed-text);
   &.selected-radio {
-    background-color: black;
-    color: white;
+    background-color: var(--seed-emphasis-bg);
+    color: var(--seed-emphasis-text);
   }
   :first-of-type {
     border-radius: 5px 0 0 5px;
@@ -134,8 +140,8 @@ const SelectButton = styled(Button)`
   }
 
   :hover {
-    background-color: #455a64;
-    color: white;
+    background-color: var(--seed-hover-strong);
+    color: var(--seed-invert-text);
   }
 `;
 
@@ -152,6 +158,7 @@ const SwitchWrap = styled.div`
   .switch_text {
     cursor: pointer;
     font-size: 14px;
+    color: var(--seed-text);
   }
 
   & input {
@@ -168,12 +175,12 @@ const SwitchWrap = styled.div`
     cursor: pointer;
     width: 38px;
     height: 16px;
-    background: #fff;
-    border: 1px solid #d2d2d2;
+    background: var(--seed-surface);
+    border: 1px solid var(--seed-border);
     border-radius: 20px;
     transition: 0.2s;
     :hover {
-      background: #efefef;
+      background: var(--x-efefef);
     }
   }
   .onf_btn {
@@ -187,7 +194,7 @@ const SwitchWrap = styled.div`
     &::before {
       content: '';
       position: absolute;
-      background-color: #3e3e3e;
+      background-color: var(--x-3e3e3e);
       top: 0;
       bottom: 0;
       transition: 0.2s;
@@ -199,7 +206,7 @@ const SwitchWrap = styled.div`
 
   /* checking style */
   & input:checked + .switch_label {
-    background: #3e3e3e;
+    background: var(--seed-emphasis-bg);
   }
 
   /* move */
@@ -207,7 +214,7 @@ const SwitchWrap = styled.div`
     left: 22px;
 
     ::before {
-      background-color: white;
+      background-color: var(--seed-emphasis-text);
     }
   }
 

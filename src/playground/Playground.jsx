@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -27,7 +27,6 @@ import InputGrid from '../components/InputGrid';
 import Counter from '../components/Counter/Counter';
 import CountList from '../components/CountList/CountList';
 import LabelList from '../components/LabelList/LabelList';
-import Article from '../components/Article';
 import {
   SideTabs,
   MainTabButton,
@@ -1075,28 +1074,6 @@ const [end, setEnd] = useState('');
   <Card.Body>본문 내용</Card.Body>
 </Card>`,
   },
-  {
-    category: 'Layout',
-    name: 'Article',
-    controls: [],
-    render: () => (
-      <div style={{ width: 520 }}>
-        <Article
-          list={[
-            { subject: '이름', text: '필수 항목', content: <TextInput placeholder="이름" /> },
-            { subject: '이메일', text: '', content: <TextInput placeholder="you@example.com" /> },
-          ]}
-        />
-      </div>
-    ),
-    snippet: () => `<Article
-  list={[
-    { subject: '이름', text: '필수 항목', content: <TextInput /> },
-    { subject: '이메일', text: '', content: <TextInput /> },
-  ]}
-/>`,
-  },
-
   // ─── Data ─────────────────────────────────────────────────
   {
     category: 'Data',
@@ -1118,16 +1095,33 @@ const [end, setEnd] = useState('');
     controls: [
       { key: 'unit', type: 'text', default: 'IP' },
       { key: 'direction', type: 'select', options: ['right', 'left'], default: 'right' },
+      { key: 'labelColor', type: 'text', default: '#78909c' },
     ],
     initialState: { labels: ['192.168.0.1', '192.168.0.2', '10.0.0.5'] },
-    render: (p, { state, setState }) => (
-      <CountList
-        unit={p.unit}
-        direction={p.direction}
-        labelList={state.labels}
-        setLabelList={v => setState({ labels: v })}
-      />
-    ),
+    render: (p, { state, setState }) => {
+      // 실제 useState 처럼 함수형 업데이터를 지원
+      const setLabelList = v =>
+        setState({ labels: typeof v === 'function' ? v(state.labels) : v });
+      return (
+        <CountList
+          unit={p.unit}
+          direction={p.direction}
+          labelColor={p.labelColor || null}
+          labelList={state.labels}
+          setLabelList={setLabelList}
+          createLabel={() => {
+            // eslint-disable-next-line no-alert
+            const v = window.prompt(`추가할 ${p.unit}`);
+            if (v) setState({ labels: [...state.labels, v] });
+          }}
+          modifyLabel={val => {
+            // eslint-disable-next-line no-alert
+            const v = window.prompt(`${p.unit} 수정`, val);
+            if (v) setState({ labels: state.labels.map(l => (l === val ? v : l)) });
+          }}
+        />
+      );
+    },
     snippet: p => `const [labels, setLabels] = useState(['192.168.0.1', '192.168.0.2']);
 
 <CountList
@@ -1156,7 +1150,10 @@ const [end, setEnd] = useState('');
         valueList={parseJson(p.valueList, [])}
         labelList={parseJson(p.labelList, [])}
         selectedValueList={state.selected}
-        setSelectedValueList={v => setState({ selected: v })}
+        // 실제 useState 처럼 함수형 업데이터 지원 (Label 이 prev => ... 형태로 호출)
+        setSelectedValueList={v =>
+          setState({ selected: typeof v === 'function' ? v(state.selected) : v })
+        }
       />
     ),
     snippet: p => `const [selected, setSelected] = useState(['a']);
@@ -1307,6 +1304,10 @@ const [end, setEnd] = useState('');
         { id: 2, label: '항목 2' },
         { id: 3, label: '항목 3' },
         { id: 4, label: '항목 4' },
+        { id: 5, label: '항목 5' },
+        { id: 6, label: '항목 6' },
+        { id: 7, label: '항목 7' },
+        { id: 8, label: '항목 8' },
       ],
     },
     render: (p, { state, setState }) => {
@@ -1323,14 +1324,18 @@ const [end, setEnd] = useState('');
       return (
         <div>
           <div style={{ marginBottom: 8, fontSize: 12, color: 'var(--pg-muted)' }}>
-            드래그해서 순서를 바꿔보세요. (끌면 삽입 위치가 빨간 선으로 표시됩니다)
+            드래그해서 순서를 바꿔보세요. (넘치면 가로=아래로, 세로=옆으로 여러 줄로 감쌈)
           </div>
           <div
             style={{
               display: 'flex',
               flexDirection: horizontal ? 'row' : 'column',
+              flexWrap: 'wrap',
               gap: 6,
               marginBottom: 10,
+              maxWidth: horizontal ? 360 : 'none',
+              maxHeight: horizontal ? 'none' : 220,
+              alignContent: 'flex-start',
             }}
           >
             {items.map((it, idx) => (
@@ -1345,11 +1350,11 @@ const [end, setEnd] = useState('');
                 <div
                   style={{
                     padding: '10px 14px',
-                    background: '#eceff1',
-                    border: '1px solid #d2d2d2',
+                    background: 'var(--x-eceff1)',
+                    border: '1px solid var(--seed-border)',
                     borderRadius: 6,
                     fontSize: 14,
-                    color: '#212529',
+                    color: 'var(--seed-text)',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -1833,6 +1838,11 @@ function Playground() {
       return next;
     });
 
+  // 실제 소비 앱과 동일하게 <html data-theme>을 토글 → seed-ui 변수(:root/[data-theme]) 활성화
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  }, [dark]);
+
   const defaults = useMemo(
     () => Object.fromEntries(active.controls.map(c => [c.key, c.default])),
     [active],
@@ -2027,8 +2037,8 @@ const Layout = styled.div`
     --pg-border: #3a3a40;
     --pg-text: #e8e8ea;
     --pg-muted: #9a9aa2;
-    --pg-stage: #f4f5f7;
-    --pg-stage-dot: #d9dce1;
+    --pg-stage: #000000;
+    --pg-stage-dot: #262626;
     --pg-code-bg: #101014;
     --pg-code-text: #e8e8ea;
     --pg-sidebar: #101014;
@@ -2167,7 +2177,7 @@ const Stage = styled.div`
   margin-bottom: 20px;
   background-image: radial-gradient(var(--pg-stage-dot) 1px, transparent 1px);
   background-size: 16px 16px;
-  color: #212529;
+  color: var(--pg-text);
 `;
 
 const StageInner = styled.div`

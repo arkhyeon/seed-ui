@@ -50,6 +50,7 @@ const animateOdometer = css`
 
 const NumberWrapper = styled.p`
   font-weight: 600;
+  color: var(--seed-text);
   ${({ animate }) => (animate ? animateOdometer : 'none')};
 `;
 

@@ -124,7 +124,7 @@ export const Wrapper = styled.div`
 export const PickerHeader = styled.div`
   height: 40px;
   width: 100% !important;
-  background: #3e3e3e;
+  background: var(--seed-invert-bg);
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -157,7 +157,7 @@ export const NavButton = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: white;
+  color: var(--seed-invert-text);
   svg {
     width: 25px;
     height: 25px;
@@ -167,8 +167,8 @@ export const NavButton = styled.div`
 export const WeekWrapper = styled.ul`
   display: flex;
   width: 100% !important;
-  background: #3e3e3e;
-  color: white;
+  background: var(--seed-invert-bg);
+  color: var(--seed-invert-text);
   justify-content: center;
 
   & li {

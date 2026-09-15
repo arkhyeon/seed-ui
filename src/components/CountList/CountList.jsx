@@ -35,6 +35,8 @@ function CountList({
   modifyLabel = null,
   unit = 'IP',
   direction = 'right',
+  labelColor = null,
+  labelTextColor = null,
 }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const iconRef = useRef(null);
@@ -69,19 +71,26 @@ function CountList({
     if (labelList.length === 0) {
       return null;
     }
-    return <Label>{labelList[0]}</Label>;
-  }, [labelList]);
+    // 선택된 항목 전체를 칩으로 나열(넘치면 wrap 되어 옆/아래로 늘어남)
+    return labelList.map(item => (
+      <Label key={item} color={labelColor} textColor={labelTextColor}>
+        {item}
+      </Label>
+    ));
+  }, [labelList, labelColor, labelTextColor]);
+
+  const labels = (
+    <LabelWrapper className="labels">
+      <Count>{labelList.length}개</Count> {renderLabel()}
+    </LabelWrapper>
+  );
 
   return (
     <Wrapper>
       <Section>
-        <div>
+        {direction === 'left' ? labels : null}
+        <IconRow>
           <Icon onClick={handleOpen} ref={iconRef} />
-          {direction === 'left' ? (
-            <LabelWrapper className="labels">
-              <Count>{labelList.length}개</Count> {renderLabel()}
-            </LabelWrapper>
-          ) : null}
           {isSelectorOpen && (
             <LabelSelector
               labelList={labelList}
@@ -90,14 +99,11 @@ function CountList({
               modifyLabel={modifyLabel}
               setLabelList={setLabelList}
               unit={unit}
+              direction={direction}
             />
           )}
-        </div>
-        {direction === 'right' ? (
-          <LabelWrapper className="labels">
-            <Count>{labelList.length}개</Count> {renderLabel()}
-          </LabelWrapper>
-        ) : null}
+        </IconRow>
+        {direction === 'right' ? labels : null}
       </Section>
     </Wrapper>
   );
@@ -115,16 +121,22 @@ const Section = styled.div`
   }
 `;
 
+const IconRow = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
 const LabelWrapper = styled.div`
   display: flex;
-  & > div:last-of-type {
-    margin-right: 17px;
-  }
+  flex-wrap: wrap;
   align-items: center;
+  gap: 6px 0;
 `;
 
 const Count = styled.div`
   margin-left: 10px;
+  color: var(--seed-text);
 `;
 
 export default CountList;

@@ -102,6 +102,9 @@ const ToastWrap = styled.div`
   left: 50%;
   transform: translateX(-50%);
   z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
 `;
 
@@ -124,9 +127,9 @@ const ToastDefault = styled.div`
   align-items: center;
   padding: 12px 20px;
   gap: 12px;
-  background-color: #fff;
+  background-color: var(--seed-surface);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  color: #000;
+  color: var(--x-000);
   font-size: 14px;
   border-radius: 6px;
   opacity: 1;
@@ -157,10 +160,10 @@ const ToastAlertItem = styled(ToastDefault)`
         borderColor = '#03a7f1';
         break;
       case 'error':
-        borderColor = '#fb5b5b';
+        borderColor = 'var(--seed-primary)';
         break;
       default:
-        borderColor = '#e9e9e9';
+        borderColor = 'var(--x-e9e9e9)';
         break;
     }
     return css`
@@ -182,7 +185,7 @@ const ToastConfirmItem = styled(ToastDefault)`
   ${({ type }) => {
     if (type === 'error') {
       return css`
-        border-left: 5px solid #fb5b5b;
+        border-left: 5px solid var(--seed-primary);
       `;
     }
     return '';

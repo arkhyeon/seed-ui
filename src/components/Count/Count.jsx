@@ -139,20 +139,21 @@ const IconWrap = styled.div`
 const Text = styled.input`
   width: 100%;
   display: block;
-  border: 1px solid #d2d2d2;
+  border: 1px solid var(--seed-border);
   border-radius: 5px;
-  color: #212529;
+  background: var(--seed-surface);
+  color: var(--seed-text);
   font-size: 14px;
   padding: 8px 16px 6px 12px;
 `;
 
 const Icon = styled.div`
   display: flex;
-  color: white;
+  color: var(--seed-invert-text);
   font-size: 14px;
   cursor: pointer;
   padding: 0 6px;
-  background-color: #3e3e3e;
+  background-color: var(--seed-invert-bg);
 
   &.count-btn-plus {
     border-radius: 0 4px 0 0;

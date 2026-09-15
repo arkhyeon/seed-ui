@@ -58,14 +58,16 @@ const TextInputWrap = styled.div`
 
 const TextInputComp = styled.input`
   width: 100%;
-  border: 1px solid #d2d2d2;
+  border: 1px solid var(--seed-border);
   border-radius: 5px;
-  color: #212529;
+  background: var(--seed-surface);
+  color: var(--seed-text);
   font-size: 13px;
   padding: 8px 0 7px 12px;
 
   &::placeholder {
     font-size: 13px;
+    color: var(--x-888);
   }
 `;
 
@@ -76,15 +78,15 @@ const EyeToggle = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: #888;
+  color: var(--x-888);
 `;
 
 export const DataListInput = forwardRef((props, ref) => {
-  return <DataListInputComp ref={ref} {...props} />;
+  return <DataListInputComp ref={ref} {...props} className="seed-select-arrow" />;
 });
 
 const DataListInputComp = styled(TextInputComp)`
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23888888' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
   background-position: right 0.75rem center;
   background-repeat: no-repeat;
   background-size: 16px 12px;
@@ -113,6 +115,7 @@ const CheckBoxWrap = styled.div`
     gap: 10px;
     cursor: pointer;
     font-size: 14px;
+    color: var(--seed-text);
 
     & input {
       width: 18px;
@@ -120,21 +123,21 @@ const CheckBoxWrap = styled.div`
       -webkit-appearance: none;
       appearance: none;
       border-radius: 0.15em;
-      border: 1px solid #545454;
+      border: 1px solid var(--x-545454);
       outline: none;
       cursor: pointer;
 
       &:disabled {
-        border: 1px solid #d1d1d1;
-        background-color: #f9f9f9;
+        border: 1px solid var(--x-d1d1d1);
+        background-color: var(--x-f9f9f9);
       }
 
       &:checked {
-        background-color: #545454;
+        background-color: var(--x-545454);
 
         &::before {
           content: '\\2714';
-          color: #fff;
+          color: var(--seed-invert-text);
           font-size: 14px;
           position: relative;
           left: 2px;

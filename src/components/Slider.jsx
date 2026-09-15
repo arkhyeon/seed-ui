@@ -189,8 +189,8 @@ const Wrapper = styled.div`
       height: ${height};
     `;
   }}
-  border: 1px solid black;
-  background: white;
+  border: 1px solid var(--seed-border-strong);
+  background: var(--seed-surface);
 
   overflow: hidden;
   position: relative;

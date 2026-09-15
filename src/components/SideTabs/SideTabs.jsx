@@ -316,18 +316,18 @@ const SideTabsWrap = styled.div`
 const ResizerBar = styled.div`
   width: 4px;
   height: 100%;
-  border-right: 1px solid #d2d2d2;
+  border-right: 1px solid var(--seed-border);
   cursor: ew-resize;
   position: absolute;
   right: -2px;
   box-sizing: border-box;
 
   &:hover {
-    border-right: 3px solid #a9a9a9;
+    border-right: 3px solid var(--x-a9a9a9);
   }
 
   & svg {
-    background: #eceff1;
+    background: var(--seed-surface-header);
     border-radius: 100%;
     width: 18px;
     height: 18px;
@@ -336,7 +336,7 @@ const ResizerBar = styled.div`
     left: -5px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
-    color: #333;
+    color: var(--x-333);
   }
 `;
 
@@ -352,12 +352,12 @@ const ScrollTab = styled.div`
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
-    background-color: #eeeeee;
+    background-color: var(--seed-scrollbar-track);
   }
 
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #d3d3d3;
+    background-color: var(--seed-scrollbar-thumb);
   }
 `;
 
@@ -383,13 +383,13 @@ const ButtonWrap = styled.div`
   }
 
   &:hover button {
-    background: #e8eefb;
+    background: var(--seed-hover);
   }
 
   &:has(.selectedTab) .selectedOptionTab[aria-label='side-tab-option-button'] {
-    color: white;
-    fill: white;
-    background-color: black;
+    color: var(--seed-emphasis-text);
+    fill: var(--seed-emphasis-text);
+    background-color: var(--seed-emphasis-bg);
   }
 `;
 
@@ -401,17 +401,18 @@ const Button = styled.button`
   padding: 10px 15px 10px 10px;
   border-radius: 5px;
   cursor: pointer;
-  background-color: white;
+  background-color: var(--seed-surface);
+  color: var(--seed-text);
   text-overflow: ellipsis;
   text-align: left;
 
   &.selectedTab {
-    background-color: black !important;
-    color: white;
+    background-color: var(--seed-emphasis-bg) !important;
+    color: var(--seed-emphasis-text);
   }
 
   &.selectedTab + div svg {
-    fill: #fff;
+    fill: var(--seed-emphasis-text);
   }
 `;
 
@@ -426,14 +427,14 @@ const IconButton = styled(Button)`
 `;
 
 const MainButton = styled(Button)`
-  background-color: #eceff1;
+  background-color: var(--seed-surface-header);
 `;
 
 const MainSmallButton = styled(Button)`
   width: 50%;
   padding: 0;
   text-align: center;
-  background-color: #eceff1;
+  background-color: var(--seed-surface-header);
 `;
 
 const AddOn = styled.div`
@@ -450,7 +451,7 @@ const AddOn = styled.div`
     cursor: pointer;
 
     &:hover {
-      fill: #e91e63 !important;
+      fill: var(--x-e91e63) !important;
     }
   }
 `;
@@ -459,7 +460,7 @@ const OptionWrap = styled.div`
   width: 100%;
   height: 36px;
   padding: 0 10px;
-  border: 1px solid #e8eefb;
+  border: 1px solid var(--seed-hover);
   box-sizing: border-box;
   border-radius: 0 0 5px 5px;
   display: none;
@@ -468,20 +469,21 @@ const OptionWrap = styled.div`
 
   button.selectedTab ~ & {
     display: flex;
-    border-color: #9e9e9e;
+    border-color: var(--seed-border-strong);
   }
 `;
 
 const Option = styled.div`
   width: 28px;
   height: 24px;
-  border: 1px solid #bdbdbd;
+  border: 1px solid var(--x-bdbdbd);
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   cursor: pointer;
+  color: var(--seed-text);
 
   & svg {
     width: 20px;
@@ -489,10 +491,10 @@ const Option = styled.div`
   }
 
   &:hover {
-    background-color: #455a64;
-    color: white;
+    background-color: var(--seed-hover-strong);
+    color: var(--seed-invert-text);
     & svg {
-      fill: white;
+      fill: var(--seed-invert-text);
     }
   }
 `;

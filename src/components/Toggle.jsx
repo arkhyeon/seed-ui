@@ -55,14 +55,14 @@ const Wrapper = styled.div`
 const ToggleButton = styled.div`
   cursor: pointer;
   font-size: 14px;
-  color: #545454;
+  color: var(--seed-text-secondary);
   margin-right: 30px;
   height: 27px;
 
   :hover,
   &[aria-pressed] {
     font-weight: bold;
-    box-shadow: inset 0 -2px 0 #212529;
+    box-shadow: inset 0 -2px 0 var(--seed-text);
   }
 `;
 

@@ -146,9 +146,9 @@ const DataListItemWrap = styled.ul`
   display: none;
   position: absolute;
   top: 99%;
-  background: white;
+  background: var(--seed-surface);
   z-index: 9999;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--x-ced4da);
   border-radius: 0.25rem;
   overflow-y: auto;
 
@@ -158,21 +158,22 @@ const DataListItemWrap = styled.ul`
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
-    background-color: #eeeeee;
+    background-color: var(--seed-scrollbar-track);
   }
 
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #d3d3d3;
+    background-color: var(--seed-scrollbar-thumb);
   }
 `;
 
 const DataListItem = styled.li`
   height: 16px;
-  border-bottom: 1px solid #ced4da;
+  border-bottom: 1px solid var(--x-ced4da);
   outline: none;
   padding: 0.375rem 2.25rem 0.375rem 0.75rem;
   font-size: 14px;
+  color: var(--seed-text);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -181,8 +182,8 @@ const DataListItem = styled.li`
   &:hover,
   &:focus,
   &.activeDataList {
-    background-color: ${({ theme }) => theme.dataListStyle.hoverBackgroundColor};
-    color: ${({ theme }) => theme.dataListStyle.hoverColor};
+    background-color: ${({ theme }) => theme.dataListStyle?.hoverBackgroundColor || 'var(--seed-emphasis-bg)'};
+    color: ${({ theme }) => theme.dataListStyle?.hoverColor || 'var(--seed-emphasis-text)'};
   }
 `;
 

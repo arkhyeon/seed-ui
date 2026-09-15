@@ -29,11 +29,12 @@ function Option({ value, modifyLabel, setLabelList, labelList }) {
 
 const Wrapper = styled.div`
   cursor: pointer;
-  padding-left: 15px;
+  padding: 0 12px 0 15px;
   display: flex;
   align-items: center;
   height: 32px;
   font-size: 14px;
+  color: var(--seed-text);
   justify-content: space-between;
 
   svg {
@@ -42,8 +43,8 @@ const Wrapper = styled.div`
   }
 
   :hover {
-    background: rgb(62, 62, 62);
-    color: white;
+    background: var(--seed-invert-bg);
+    color: var(--seed-invert-text);
   }
 
   :first-of-type {
@@ -60,13 +61,14 @@ const Wrapper = styled.div`
 
 const ButtonWrapper = styled.div`
   display: flex;
-  visibility: hidden;
+  gap: 4px;
+  visibility: visible;
 
   svg {
-    width: 21px;
-    height: 21px;
+    width: 20px;
+    height: 20px;
     &:hover {
-      fill: #e91e63;
+      fill: var(--seed-danger);
     }
   }
 `;

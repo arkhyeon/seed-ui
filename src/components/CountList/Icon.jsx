@@ -14,6 +14,7 @@ const Button = styled.button`
   position: relative;
   background: transparent;
   border: none;
+  color: var(--seed-text);
   display: flex;
   justify-content: center;
   align-items: center;
