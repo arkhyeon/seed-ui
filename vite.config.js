@@ -19,13 +19,26 @@ export default defineConfig({
       fileName: format => `seed-ui.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react-router-dom', '@emotion/styled', '@emotion/react'],
+      external: [
+        'react',
+        'react-dom',
+        'react-router-dom',
+        '@emotion/styled',
+        '@emotion/react',
+        'lodash',
+        'zustand',
+        /^react-icons/,
+        /^lodash\//,
+      ],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           'react-router-dom': 'react-router-dom',
           '@emotion/styled': 'styled',
+          '@emotion/react': 'emotionReact',
+          lodash: '_',
+          zustand: 'zustand',
         },
       },
     },

@@ -5,7 +5,6 @@ import AsideCreator from './Menu/AsideCreator';
 import Tooltip from './Tooltip';
 import HelpIcon from './HelpIcon';
 import Modal from './Modal';
-// import Dashboard from './Dashboard';
 import Slider from './Slider';
 import DatePicker from './DateTime/DatePicker';
 import RangeDatePicker from './DateTime/RangeDatePicker';
@@ -123,4 +122,3 @@ export {
   cancelConfirm,
 };
 
-// export { Dashboard };

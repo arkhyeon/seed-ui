@@ -93,7 +93,7 @@ const AsideWrap = styled.div`
   }};
 
   & ul li a {
-    color: #212529;
+    color: var(--seed-text);
     text-align: left;
     border-radius: 5px;
     padding: 9px 15px 10px;
@@ -107,7 +107,7 @@ const AsideWrap = styled.div`
       display: block;
     }
     &:hover {
-      background-color: #e8eefb;
+      background-color: var(--seed-hover);
     }
   }
 
