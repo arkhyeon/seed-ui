@@ -12,7 +12,9 @@ const SQL_EXTENSIONS = [sql(), PostgreSQL, EditorView.lineWrapping];
 // <html data-theme="dark"> 를 구독해 CodeMirror 테마를 라이트/다크로 자동 전환
 function useIsDarkTheme() {
   const [isDark, setIsDark] = useState(
-    () => typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark',
+    () =>
+      typeof document !== 'undefined' &&
+      document.documentElement.getAttribute('data-theme') === 'dark',
   );
   useEffect(() => {
     const root = document.documentElement;
@@ -76,6 +78,22 @@ export default function CustomTextArea({
     }
   }, [focusOn]);
 
+  const replaceTabOnPaste = EditorView.domEventHandlers({
+    paste(event, view) {
+      const text = event.clipboardData?.getData('text/plain');
+
+      if (!text) return false;
+
+      const newText = text.replace(/\t/g, '    ');
+
+      event.preventDefault();
+
+      view.dispatch(view.state.replaceSelection(newText));
+
+      return true;
+    },
+  });
+
   return (
     <CustomTextAreaWrap>
       {title !== '' && (
@@ -104,7 +122,7 @@ export default function CustomTextArea({
         <CodeMirror
           {...sqlAreaOption}
           theme={theme}
-          extensions={SQL_EXTENSIONS}
+          extensions={[replaceTabOnPaste, ...SQL_EXTENSIONS]}
           minHeight="100%"
           maxHeight="100%"
           basicSetup={basicSetup}
