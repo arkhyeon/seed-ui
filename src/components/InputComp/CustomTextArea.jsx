@@ -1,9 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { PostgreSQL, sql } from '@codemirror/lang-sql';
 import { xcodeLight, xcodeDark } from '@uiw/codemirror-theme-xcode';
 import { BlackButton, WhiteButton } from '../index';
+
+// CodeMirror 확장은 렌더마다 재생성하면 에디터 전체가 재구성되어 입력 랙/깜빡임을 유발한다.
+// 모듈 스코프 고정 배열로 재사용한다.
+const SQL_EXTENSIONS = [sql(), PostgreSQL, EditorView.lineWrapping];
 
 // <html data-theme="dark"> 를 구독해 CodeMirror 테마를 라이트/다크로 자동 전환
 function useIsDarkTheme() {
@@ -46,6 +50,13 @@ export default function CustomTextArea({
   const textAreaRef = useRef(null);
   const editorRef = useRef(null);
   const isDark = useIsDarkTheme();
+
+  // 렌더마다 새 객체가 되면 CodeMirror가 재구성되므로 메모이즈한다.
+  const theme = sqlAreaOption?.theme || (isDark ? xcodeDark : xcodeLight);
+  const basicSetup = useMemo(
+    () => ({ lineNumbers: false, foldGutter: false, ...sqlAreaOption?.basicSetup }),
+    [sqlAreaOption?.basicSetup],
+  );
 
   useEffect(() => {
     if (focusOn && textAreaRef.current) {
@@ -92,15 +103,11 @@ export default function CustomTextArea({
       {sqlAreaOption && (
         <CodeMirror
           {...sqlAreaOption}
-          theme={sqlAreaOption?.theme || (isDark ? xcodeDark : xcodeLight)}
-          extensions={[sql(), PostgreSQL, EditorView.lineWrapping]}
+          theme={theme}
+          extensions={SQL_EXTENSIONS}
           minHeight="100%"
           maxHeight="100%"
-          basicSetup={{
-            lineNumbers: false,
-            foldGutter: false,
-            ...sqlAreaOption?.basicSetup,
-          }}
+          basicSetup={basicSetup}
           onCreateEditor={view => {
             editorRef.current = view;
             if (focusOn) {
