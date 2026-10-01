@@ -576,15 +576,16 @@ function RangeDatePickerProvider({
     const handler = ({ target }) => {
       if (wrapperRef.current && !wrapperRef.current.contains(target)) {
         setIsOpen(false);
-        if (selectingPhase === 'end' && !rangeEnd) {
-          setStartDt('');
+        // start만 찍고 닫으면 end를 start로 맞춰 당일 범위로 완성 (미선택으로 인한 API 400 방지)
+        if (selectingPhase === 'end' && !rangeEnd && startDt) {
+          setEndDt(startDt);
           setSelectingPhase('start');
         }
       }
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [selectingPhase, rangeEnd, setStartDt]);
+  }, [selectingPhase, rangeEnd, startDt, setEndDt]);
 
   // 한쪽만 선택하고 적용하면 나머지도 같은 날짜로 맞춰 당일 검색처럼 처리
   const handleApply = useCallback(() => {
@@ -735,9 +736,10 @@ function RangeDatePicker({
 
   const initLeft = useMemo(() => {
     let base;
-    if (!allowPast) base = new Date(today.getFullYear(), today.getMonth(), 1);
-    else if (!allowFuture) base = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-    else base = startDt ? new Date(`${startDt}T00:00:00`) : new Date();
+    if (startDt) base = new Date(`${startDt}T00:00:00`);
+    // allowPast면 왼쪽=지난달 / 오른쪽=이번달, 아니면 왼쪽=이번달 / 오른쪽=다음달
+    else if (allowPast) base = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    else base = new Date(today.getFullYear(), today.getMonth(), 1);
     return Number.isNaN(base.getTime()) ? new Date() : base;
   }, []);
 
