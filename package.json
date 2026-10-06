@@ -1,6 +1,6 @@
 {
   "name": "seed-ui",
-  "version": "0.2.49",
+  "version": "0.2.50",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -68,8 +68,11 @@
     ".": {
       "import": "./dist/seed-ui.es.js",
       "require": "./dist/seed-ui.umd.js"
-    }
+    },
+    "./theme.css": "./dist/seedTheme.css",
+    "./dist/seedTheme.css": "./dist/seedTheme.css"
   },
+  "style": "./dist/seedTheme.css",
   "browserslist": {
     "production": [
       ">0.2%",
