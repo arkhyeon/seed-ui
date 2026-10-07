@@ -3,8 +3,14 @@ import ReactDOM from 'react-dom';
 
 /**
  * HelpIcon Component
+ *
+ * props
+ *  - message : 마우스 올리면 뜨는 말풍선 (없으면 말풍선 없음)
+ *  - size    : 아이콘 크기(px)
+ *  - symbol  : 아이콘 글자 (기본 '!', 사용법 안내용은 '?')
+ *  - onClick : 클릭 시 실행 (예: GuideTour 열기). 있으면 button으로 렌더
  */
-function HelpIcon({ message = '', size = 20 }) {
+function HelpIcon({ message = '', size = 20, symbol = '!', onClick }) {
   const [isVisible, setIsVisible] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
   const iconRef = useRef(null);
@@ -97,14 +103,35 @@ function HelpIcon({ message = '', size = 20 }) {
   return (
     <>
       {/* 아이콘 부분 */}
-      <div
-        ref={iconRef}
-        style={iconStyle}
-        onMouseEnter={() => setIsVisible(true)}
-        onMouseLeave={() => setIsVisible(false)}
-      >
-        !
-      </div>
+      {onClick ? (
+        <button
+          type="button"
+          ref={iconRef}
+          style={{
+            ...iconStyle,
+            padding: 0,
+            lineHeight: 1,
+            font: 'inherit',
+            fontSize: iconStyle.fontSize,
+            fontWeight: iconStyle.fontWeight,
+          }}
+          onClick={onClick}
+          onMouseEnter={() => setIsVisible(true)}
+          onMouseLeave={() => setIsVisible(false)}
+          aria-label={typeof message === 'string' && message ? message : '도움말'}
+        >
+          {symbol}
+        </button>
+      ) : (
+        <div
+          ref={iconRef}
+          style={iconStyle}
+          onMouseEnter={() => setIsVisible(true)}
+          onMouseLeave={() => setIsVisible(false)}
+        >
+          {symbol}
+        </div>
+      )}
 
       {/* 포털을 이용한 말풍선 부분 */}
       {message &&

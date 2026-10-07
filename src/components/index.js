@@ -4,6 +4,7 @@ import { SetRoute } from './Menu/RouteGenerator';
 import AsideCreator from './Menu/AsideCreator';
 import Tooltip from './Tooltip';
 import HelpIcon from './HelpIcon';
+import GuideTour from './GuideTour';
 import Modal from './Modal';
 import Slider from './Slider';
 import DatePicker from './DateTime/DatePicker';
@@ -59,6 +60,8 @@ export { BlackButton, WhiteButton, SwitchButton };
 export { Tooltip };
 
 export { HelpIcon };
+
+export { GuideTour };
 
 export { Modal };
 
@@ -121,4 +124,3 @@ export {
   resetNotifyStore,
   cancelConfirm,
 };
-

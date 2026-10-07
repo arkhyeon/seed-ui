@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 npmrc
+/.yarnrc.yml
+/.yarn/install-state.gz
+/.storybook/main.js

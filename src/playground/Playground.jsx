@@ -12,6 +12,7 @@ import { TextInput, PasswordInput, LabelCheckBox } from '../components/InputComp
 import Count from '../components/Count/Count';
 import Tooltip from '../components/Tooltip';
 import HelpIcon from '../components/HelpIcon';
+import GuideTour from '../components/GuideTour';
 import Pagination from '../components/InputComp/Pagination';
 import { Accordion } from '../components/Accordion/Accordion';
 import DividingLine from '../components/Line/DividingLine';
@@ -255,6 +256,70 @@ content: <PasswordInput name="pwd" onChange={changePwd} />`,
 
 <HelpIcon message="CMD 작업은 CLM 서버에서 실행합니다." size={13.5} />`,
   },
+  GuideTour: {
+    file: 'page/work/workGroup/modal/WorkGroupCategoryModal.jsx',
+    code: `import { GuideTour, HelpIcon } from 'seed-ui';
+
+// ─────────────── 렌더부 ───────────────────────────────────────
+function WorkGroupCategoryModal({ isEdit }) {
+  const [showHelp, setShowHelp] = useState(false);
+  const nameRowRef = useRef(null);
+  const steps = useMemo(() => buildGuideSteps({ nameRowRef, isEdit }), [isEdit]);
+
+  return (
+    <ModalTemplate modalTitle={isEdit ? '분류 수정' : '분류 추가'} ...>
+      <NameRow ref={nameRowRef}>
+        <p>분류명</p>
+        <TextInput ... />
+        <HelpIcon symbol="?" onClick={() => setShowHelp(true)} />
+      </NameRow>
+      <Table ... />
+      <GuideTour open={showHelp} steps={steps} onClose={() => setShowHelp(false)} />
+    </ModalTemplate>
+  );
+}
+
+// ─────────────── 타겟 컴포넌트 검색부 ─────────────────────────
+const modalWrapOf = el => el?.closest('.modal-wrap');
+const inModal = (ref, selector) => modalWrapOf(ref.current)?.querySelector(selector);
+const findButton = (text, root = document) =>
+  [...root.querySelectorAll('button')].find(b => b.textContent.trim() === text);
+
+// ─────────────── 작성부 ───────────────────────────────────────
+const buildGuideSteps = ({ nameRowRef, isEdit }) => [
+  {
+    title: '분류명 입력',
+    target: () => nameRowRef.current?.querySelector('input'),
+    content: (
+      <>
+        공백 없이 최대 14자로 입력합니다.
+        <br />
+        예) <code>01서버팀</code> → <code>02개발팀</code> 순서로 배치
+      </>
+    ),
+  },
+  {
+    title: '업무 선택',
+    target: () => inModal(nameRowRef, '.ag-body'),
+    content: '업무는 하나의 분류에만 속합니다. ...',
+  },
+  {
+    title: isEdit ? '수정' : '추가',
+    target: () => findButton(isEdit ? '수정' : '추가', modalWrapOf(nameRowRef.current) ?? document),
+    content: '누르면 바로 반영되며, 업무 이력은 남기지 않습니다.',
+  },
+  {
+    title: '분류 수정',
+    target: () => null,
+    content: (
+      <>
+        라벨을 <b>더블 클릭</b>하면 수정 모드로 열립니다.
+        <LabelSample>...</LabelSample>
+      </>
+    ),
+  },
+];`,
+  },
   Modal: {
     file: 'components/PageTemplate/ModalTemplate.jsx',
     code: `import { Modal } from 'seed-ui';
@@ -399,6 +464,67 @@ const SAMPLE_MENU_JSON = JSON.stringify(
   null,
   2,
 );
+
+// GuideTour 예제 단계 (렌더마다 새로 만들지 않도록 모듈 상수)
+// target 지정 방식별 예: id / 범위 안 선택자 / 텍스트로 버튼 찾기 / 없음(가운데 + 그림)
+const guideModalWrap = () => document.getElementById('guide-demo-name')?.closest('.modal-wrap');
+const GUIDE_STEPS = [
+  {
+    title: '이름 입력 (id)',
+    target: () => document.getElementById('guide-demo-name'),
+    content: (
+      <>
+        <code>document.getElementById</code> 또는 <code>ref.current</code>로 지정합니다.
+        <br />
+        예) <code>01서버팀</code>
+      </>
+    ),
+  },
+  {
+    title: '목록 (범위 안 선택자)',
+    target: () => guideModalWrap()?.querySelector('[data-guide="list"]'),
+    content: 'ref·id를 달 수 없는 라이브러리 내부 요소는 감싼 요소 안에서 선택자로 찾습니다.',
+  },
+  {
+    title: '확인 (텍스트로 버튼 찾기)',
+    target: () =>
+      [...(guideModalWrap()?.querySelectorAll('button') ?? [])].find(
+        b => b.textContent.trim() === '확인',
+      ),
+    content: 'Modal 하단 버튼처럼 ref를 넘길 수 없으면 버튼 글자로 찾습니다.',
+  },
+  {
+    title: '대상 없음',
+    target: () => null,
+    content: (
+      <>
+        <code>target</code>이 <code>null</code>이면 가운데에 설명만 표시합니다. 캔버스처럼 DOM이
+        없는 요소는 그림으로 안내하세요.
+        <div
+          style={{
+            margin: '8px 0',
+            padding: 10,
+            borderRadius: 6,
+            background: 'var(--x-f5f5f5)',
+            textAlign: 'center',
+          }}
+        >
+          <span
+            style={{
+              padding: '2px 8px',
+              borderRadius: 4,
+              background: '#abe1ed',
+              color: '#175b69',
+              fontWeight: 700,
+            }}
+          >
+            01서버팀
+          </span>
+        </div>
+      </>
+    ),
+  },
+];
 
 const stories = [
   // ─── Buttons ──────────────────────────────────────────────
@@ -888,14 +1014,78 @@ const [end, setEnd] = useState('');
     controls: [
       { key: 'message', type: 'text', default: '이 항목에 대한 도움말입니다.' },
       { key: 'size', type: 'number', default: 20 },
+      { key: 'symbol', type: 'text', default: '!' },
     ],
     render: p => (
       <span style={{ display: 'inline-flex', alignItems: 'center' }}>
         설정 항목
-        <HelpIcon message={p.message} size={p.size} />
+        <HelpIcon message={p.message} size={p.size} symbol={p.symbol} />
       </span>
     ),
     snippet: p => `<HelpIcon message="${p.message}" size={${p.size}} />`,
+  },
+  {
+    category: 'Feedback',
+    name: 'GuideTour',
+    controls: [],
+    initialState: { modal: false, tour: false },
+    render: (p, { state, setState }) => (
+      <>
+        <BlackButton onClick={() => setState({ modal: true })}>모달 열기</BlackButton>
+        {state.modal && (
+          <Modal
+            modalTitle="분류 추가"
+            width="480px"
+            handleClose={() => setState({ modal: false, tour: false })}
+            callback={() => setState({ modal: false, tour: false })}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 13 }}>이름</span>
+              <input id="guide-demo-name" style={{ flex: 1 }} />
+              <HelpIcon symbol="?" onClick={() => setState({ tour: true })} />
+            </div>
+            <ul
+              data-guide="list"
+              style={{ margin: '12px 0 0', paddingLeft: 18, fontSize: 13, lineHeight: 1.8 }}
+            >
+              <li>A01 고객</li>
+              <li>A02 계약</li>
+            </ul>
+            <GuideTour
+              open={state.tour}
+              steps={GUIDE_STEPS}
+              onClose={() => setState({ tour: false })}
+            />
+          </Modal>
+        )}
+      </>
+    ),
+    snippet: () => `const [open, setOpen] = useState(false);
+const inputRef = useRef(null);
+const wrapRef = useRef(null);
+
+// 렌더마다 새로 만들지 않도록 useMemo (또는 모듈 상수)
+const steps = useMemo(() => [
+  // 1) ref
+  { title: '이름 입력', target: () => inputRef.current, content: '공백 없이 입력합니다.' },
+  // 2) id
+  { title: '저장', target: () => document.getElementById('save-btn'), content: '바로 반영됩니다.' },
+  // 3) 범위 안 선택자 (ag-grid 등 ref를 못 다는 요소) + 4) 못 찾으면 대체 대상
+  {
+    title: '분류 컬럼',
+    target: () =>
+      wrapRef.current?.querySelector('.ag-header-cell[col-id="category"]') ??
+      wrapRef.current?.querySelector('.ag-header'),
+    content: '다른 분류의 업무를 고르면 이 분류로 옮겨집니다.',
+  },
+  // 5) 좌표 (캔버스 요소 직접 계산)
+  { title: '차트', target: () => ({ top: 100, left: 200, width: 80, height: 30 }), content: '...' },
+  // 6) 없음 → 가운데 설명창
+  { title: '마무리', target: () => null, content: <img src={sample} alt="" /> },
+], []);
+
+<HelpIcon symbol="?" onClick={() => setOpen(true)} />
+<GuideTour open={open} steps={steps} onClose={() => setOpen(false)} />`,
   },
   {
     category: 'Feedback',
@@ -1100,8 +1290,7 @@ const [end, setEnd] = useState('');
     initialState: { labels: ['192.168.0.1', '192.168.0.2', '10.0.0.5'] },
     render: (p, { state, setState }) => {
       // 실제 useState 처럼 함수형 업데이터를 지원
-      const setLabelList = v =>
-        setState({ labels: typeof v === 'function' ? v(state.labels) : v });
+      const setLabelList = v => setState({ labels: typeof v === 'function' ? v(state.labels) : v });
       return (
         <CountList
           unit={p.unit}
@@ -1814,6 +2003,19 @@ function Playground() {
     return [...map.entries()];
   }, []);
 
+  // 사이드바 검색 (대소문자 무시): 컴포넌트 이름은 부분 일치, 카테고리는 앞글자 일치
+  // (카테고리까지 부분 일치면 'b' 검색에 Feedback 전체가 걸림)
+  const [query, setQuery] = useState('');
+  const q = query.trim().toLowerCase();
+  const visibleCategories = useMemo(() => {
+    if (!q) return categories;
+    const hit = s => s.name.toLowerCase().includes(q) || s.category.toLowerCase().startsWith(q);
+    return categories
+      .map(([cat, items]) => [cat, items.filter(hit)])
+      .filter(([, items]) => items.length > 0);
+  }, [categories, q]);
+  const firstResult = visibleCategories[0]?.[1][0];
+
   const activeName = stories.some(s => s.name === name) ? name : stories[0].name;
   const active = stories.find(s => s.name === activeName);
 
@@ -1892,8 +2094,21 @@ function Playground() {
             {dark ? '☀' : '◐'}
           </ThemeToggle>
         </BrandRow>
-        {categories.map(([cat, items]) => {
-          const parents = items.filter(s => !s.parent);
+        <SearchBox
+          type="search"
+          value={query}
+          placeholder="컴포넌트 검색"
+          onChange={e => setQuery(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' && firstResult) selectStory(firstResult.name);
+            if (e.key === 'Escape') setQuery('');
+          }}
+        />
+        {visibleCategories.length === 0 && <NoResult>검색 결과가 없습니다.</NoResult>}
+        {visibleCategories.map(([cat, items]) => {
+          // 검색으로 부모가 빠진 하위 항목은 최상위로 표시
+          const names = new Set(items.map(s => s.name));
+          const parents = items.filter(s => !s.parent || !names.has(s.parent));
           const childrenOf = parentName => items.filter(s => s.parent === parentName);
           return (
             <Group key={cat}>
@@ -2091,6 +2306,33 @@ const ThemeToggle = styled.button`
   &:hover {
     background: rgba(255, 255, 255, 0.2);
   }
+`;
+
+const SearchBox = styled.input`
+  display: block;
+  width: calc(100% - 40px);
+  margin: 0 20px 8px;
+  padding: 7px 10px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+
+  &::placeholder {
+    color: #9e9e9e;
+  }
+  &:focus {
+    border-color: #fb5b5b;
+  }
+`;
+
+const NoResult = styled.div`
+  padding: 10px 20px;
+  font-size: 13px;
+  color: #9e9e9e;
 `;
 
 const Group = styled.div`
