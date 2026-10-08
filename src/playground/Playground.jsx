@@ -25,6 +25,8 @@ import DatePicker from '../components/DateTime/DatePicker';
 import RangeDatePicker from '../components/DateTime/RangeDatePicker';
 import TimePicker from '../components/DateTime/TimePicker';
 import Modal from '../components/Modal';
+import Popover from '../components/Popover/Popover';
+import MenuButton from '../components/Popover/MenuButton';
 import DataList from '../components/InputComp/DataList';
 import CustomTextArea from '../components/InputComp/CustomTextArea';
 import InputGrid from '../components/InputGrid';
@@ -1328,6 +1330,131 @@ const steps = useMemo(() => [
     },
     render: () => null,
     snippet: () => '',
+  },
+  {
+    category: 'Feedback',
+    name: 'Popover',
+    controls: [
+      {
+        key: 'placement',
+        type: 'select',
+        options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
+        default: 'bottom-start',
+        desc: '버튼 기준으로 창이 뜨는 위치입니다. bottom/top = 아래/위, start/end = 왼쪽/오른쪽 끝 맞춤',
+      },
+      {
+        key: 'title',
+        type: 'text',
+        default: '표시 항목',
+        desc: '창 맨 위 작은 제목입니다. 비우면 없음',
+      },
+      {
+        key: 'width',
+        type: 'text',
+        default: '240px',
+        desc: '창 너비입니다 (비우면 내용에 맞춤, 최소 160px).',
+      },
+    ],
+    initialState: { checks: { server: true, table: true, owner: false } },
+    render: (p, { state, setState }) => (
+      <div
+        style={{
+          minHeight: 200,
+          display: 'flex',
+          alignItems: p.placement.startsWith('top') ? 'flex-end' : 'flex-start',
+        }}
+      >
+        <Popover
+          trigger={<>⚙ 표시</>}
+          triggerTitle="표시 항목"
+          title={p.title || undefined}
+          width={p.width || undefined}
+          placement={p.placement}
+        >
+          {[
+            ['server', '서버'],
+            ['table', '테이블'],
+            ['owner', '상위 소유자'],
+          ].map(([k, label]) => (
+            <div key={k} style={{ padding: '4px 0' }}>
+              <LabelCheckBox
+                id={`pg-pop-${k}`}
+                label={label}
+                size={16}
+                checked={state.checks[k]}
+                onChange={e => setState({ checks: { ...state.checks, [k]: e.target.checked } })}
+              />
+            </div>
+          ))}
+        </Popover>
+      </div>
+    ),
+    snippet: p => `<Popover
+  trigger={<><FiSliders /> 표시</>}${p.title ? `\n  title="${p.title}"` : ''}${
+      p.width ? `\n  width="${p.width}"` : ''
+    }
+  placement="${p.placement}"
+>
+  {/* 아무 내용이나 */}
+  <LabelCheckBox label="서버" checked={server} onChange={...} />
+</Popover>`,
+  },
+  {
+    category: 'Feedback',
+    name: 'MenuButton',
+    controls: [
+      { key: 'label', type: 'text', default: '업무 정렬', desc: '버튼 글자입니다.' },
+      {
+        key: 'title',
+        type: 'text',
+        default: '정렬 방식',
+        desc: '목록 맨 위 작은 제목입니다. 비우면 없음',
+      },
+      {
+        key: 'placement',
+        type: 'select',
+        options: ['top-end', 'top-start', 'bottom-end', 'bottom-start'],
+        default: 'top-end',
+        desc: '목록이 뜨는 위치입니다. 화면 아래쪽 버튼은 top(위로)을 쓰세요.',
+      },
+      {
+        key: 'options',
+        type: 'json',
+        default: JSON.stringify(['가로 정렬', '세로 정렬', '바둑판 정렬']),
+        desc: '고를 항목 목록입니다. 1개만 두면 목록 없이 바로 실행됩니다.',
+      },
+      { key: 'disabled', type: 'boolean', default: false },
+    ],
+    initialState: { picked: '' },
+    render: (p, { state, setState }) => (
+      <div
+        style={{
+          minHeight: 200,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: p.placement.startsWith('top') ? 'flex-end' : 'flex-start',
+          gap: 12,
+        }}
+      >
+        <MenuButton
+          label={p.label}
+          title={p.title || undefined}
+          placement={p.placement}
+          disabled={p.disabled}
+          options={parseJson(p.options, [])}
+          onSelect={opt => setState({ picked: opt })}
+        />
+        <div style={{ fontSize: 13, color: 'var(--pg-muted)' }}>선택: {state.picked || '없음'}</div>
+      </div>
+    ),
+    snippet: p => `<MenuButton
+  label="${p.label}"${p.title ? `\n  title="${p.title}"` : ''}
+  placement="${p.placement}"${p.disabled ? '\n  disabled' : ''}
+  options={layoutPresets}            // [{ key, label }, ...]
+  getLabel={opt => opt.label}
+  onSelect={opt => changeLayout(opt.key)}
+/>`,
   },
   {
     category: 'Feedback',

@@ -178,6 +178,56 @@ const COMPONENT_DOCS = {
       '키보드: Esc 닫기, → / Enter 다음, ← 이전.',
     ],
   },
+  Popover: {
+    badge: 'NEW',
+    summary: '버튼을 누르면 버튼 옆에 작은 창을 띄웁니다. 바깥을 누르거나 Esc를 누르면 닫힙니다.',
+    whenToUse: [
+      '보기 옵션·필터처럼 화면을 가리지 않고 잠깐 여는 설정',
+      '모달까지 띄우기엔 가벼운 선택·입력',
+    ],
+    props: [
+      fn('trigger', 'ReactNode', '기본 버튼 안 내용 (아이콘 + 글자)', true),
+      fn(
+        'renderTrigger',
+        '({ open, toggle, close }) => ReactNode',
+        '버튼을 직접 그릴 때 (WhiteButton 등)',
+        true,
+      ),
+      fn('triggerTitle', 'string', '기본 버튼에 마우스를 올리면 뜨는 설명', true),
+      fn(
+        'children',
+        'ReactNode | ({ close }) => ReactNode',
+        '창 안 내용. 함수면 close를 받아 고른 뒤 닫기',
+      ),
+      fn('keepOpen', 'boolean', 'true면 바깥 클릭·Esc로 안 닫힘 (가이드 투어 중 등)', true),
+      fn('open / onOpenChange', 'boolean / (open) => void', '열림 상태를 밖에서 관리할 때', true),
+    ],
+    notes: [
+      'Esc는 EscStack에 등록돼 모달 위에서도 가장 나중에 연 창부터 닫힙니다.',
+      '창 안 제목·항목은 PopoverTitle·PopoverItem을 쓰면 다른 메뉴와 모양이 맞습니다.',
+    ],
+  },
+  MenuButton: {
+    badge: 'NEW',
+    summary: '누르면 고를 목록을 띄우는 버튼입니다. 항목이 1개면 목록 없이 바로 실행합니다.',
+    whenToUse: [
+      '정렬 방식처럼 여러 동작 중 하나를 고를 때',
+      '대상(서버 등)이 여러 개일 때만 고르게 하고, 하나면 바로 실행할 때',
+    ],
+    props: [
+      fn('options', 'Array', '고를 항목 목록'),
+      fn('onSelect', '(option, index) => void', '항목을 고르면 호출 (1개면 버튼 누를 때 바로)'),
+      fn(
+        'getLabel',
+        '(option, index) => ReactNode',
+        '항목 표시 글자. 기본 option.label ?? option',
+        true,
+      ),
+      fn('getKey', '(option, index) => key', '항목 key. 기본 option.key ?? index', true),
+      fn('ButtonComponent', 'Component', '버튼 컴포넌트. 기본 WhiteButton', true),
+    ],
+    notes: ['목록 모양은 Popover와 같습니다 (PopoverItem 사용).'],
+  },
   Modal: {
     summary: '화면 위에 띄우는 대화상자입니다. ESC로 닫히고 헤더를 잡고 옮길 수 있습니다.',
     whenToUse: ['등록·수정 폼, 확인이 필요한 작업'],
