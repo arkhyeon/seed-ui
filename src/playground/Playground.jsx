@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -13,6 +13,9 @@ import Count from '../components/Count/Count';
 import Tooltip from '../components/Tooltip';
 import HelpIcon from '../components/HelpIcon';
 import GuideTour from '../components/GuideTour';
+import { tourTarget } from '../components/guideTourTarget';
+import { TargetPreview, TOUR_TARGET_DEMOS } from './TargetPreview';
+import COMPONENT_DOCS from './componentDocs';
 import Pagination from '../components/InputComp/Pagination';
 import { Accordion } from '../components/Accordion/Accordion';
 import DividingLine from '../components/Line/DividingLine';
@@ -49,6 +52,9 @@ import { CLM } from '../R2wZustand';
  * - 활성 컴포넌트는 URL(/playground/:name)로 관리되어 새로고침해도 유지된다.
  * - json 컨트롤: 값을 JSON 문자열로 편집 → render에서 parseJson으로 파싱.
  */
+
+// 코드·이름 표기용 글꼴 (플레이그라운드 전체 공통)
+const CODE_FONT = "'Cascadia Code', Consolas, 'D2Coding', Menlo, monospace";
 
 const parseJson = (str, fallback) => {
   try {
@@ -258,7 +264,7 @@ content: <PasswordInput name="pwd" onChange={changePwd} />`,
   },
   GuideTour: {
     file: 'page/work/workGroup/modal/WorkGroupCategoryModal.jsx',
-    code: `import { GuideTour, HelpIcon } from 'seed-ui';
+    code: `import { GuideTour, HelpIcon, tourTarget } from 'seed-ui';
 
 // ─────────────── 렌더부 ───────────────────────────────────────
 function WorkGroupCategoryModal({ isEdit }) {
@@ -279,17 +285,11 @@ function WorkGroupCategoryModal({ isEdit }) {
   );
 }
 
-// ─────────────── 타겟 컴포넌트 검색부 ─────────────────────────
-const modalWrapOf = el => el?.closest('.modal-wrap');
-const inModal = (ref, selector) => modalWrapOf(ref.current)?.querySelector(selector);
-const findButton = (text, root = document) =>
-  [...root.querySelectorAll('button')].find(b => b.textContent.trim() === text);
-
 // ─────────────── 작성부 ───────────────────────────────────────
 const buildGuideSteps = ({ nameRowRef, isEdit }) => [
   {
     title: '분류명 입력',
-    target: () => nameRowRef.current?.querySelector('input'),
+    target: tourTarget.query('input', nameRowRef),
     content: (
       <>
         공백 없이 최대 14자로 입력합니다.
@@ -300,17 +300,17 @@ const buildGuideSteps = ({ nameRowRef, isEdit }) => [
   },
   {
     title: '업무 선택',
-    target: () => inModal(nameRowRef, '.ag-body'),
+    target: tourTarget.inModal(nameRowRef, '.ag-body'), // ag-grid 본문
     content: '업무는 하나의 분류에만 속합니다. ...',
   },
   {
     title: isEdit ? '수정' : '추가',
-    target: () => findButton(isEdit ? '수정' : '추가', modalWrapOf(nameRowRef.current) ?? document),
+    target: tourTarget.button(isEdit ? '수정' : '추가', tourTarget.modalOf(nameRowRef)), // 모달 하단 버튼
     content: '누르면 바로 반영되며, 업무 이력은 남기지 않습니다.',
   },
   {
     title: '분류 수정',
-    target: () => null,
+    target: tourTarget.none, // 캔버스(GoJS) 라벨 → 예시 그림으로 안내
     content: (
       <>
         라벨을 <b>더블 클릭</b>하면 수정 모드로 열립니다.
@@ -318,6 +318,15 @@ const buildGuideSteps = ({ nameRowRef, isEdit }) => [
       </>
     ),
   },
+];
+
+// ─── 다른 사용처: page/work/workGroup/component/DiagramViewOptions.jsx ───
+// 체크 열 전체·범위 칸 묶음처럼 여러 요소를 한 번에 강조 → all
+const buildViewGuideSteps = bodyRef => [
+  { title: '항상', target: tourTarget.all('[data-col="fixed"]', bodyRef), content: '...' },
+  { title: '확대', target: tourTarget.all('[data-col="zoom"]', bodyRef), content: '...' },
+  { title: '적용 범위', target: tourTarget.all('[data-guide="scope"]', bodyRef), content: '...' },
+  { title: '정렬', target: tourTarget.button('업무 정렬'), content: '...' }, // 메뉴 밖 버튼은 root 생략 → document
 ];`,
   },
   Modal: {
@@ -466,40 +475,57 @@ const SAMPLE_MENU_JSON = JSON.stringify(
 );
 
 // GuideTour 예제 단계 (렌더마다 새로 만들지 않도록 모듈 상수)
-// target 지정 방식별 예: id / 범위 안 선택자 / 텍스트로 버튼 찾기 / 없음(가운데 + 그림)
-const guideModalWrap = () => document.getElementById('guide-demo-name')?.closest('.modal-wrap');
+// target 지정 방식별 예: id / Modal 안 선택자 / 글자로 버튼 / 여러 요소 묶음 / 없음(가운데 + 그림)
+const guideNameInput = () => document.getElementById('guide-demo-name');
 const GUIDE_STEPS = [
   {
     title: '이름 입력 (id)',
-    target: () => document.getElementById('guide-demo-name'),
+    target: tourTarget.id('guide-demo-name'),
     content: (
       <>
-        <code>document.getElementById</code> 또는 <code>ref.current</code>로 지정합니다.
+        <code>tourTarget.id(id)</code> 또는 <code>tourTarget.ref(ref)</code>로 지정합니다.
         <br />
         예) <code>01서버팀</code>
       </>
     ),
   },
   {
-    title: '목록 (범위 안 선택자)',
-    target: () => guideModalWrap()?.querySelector('[data-guide="list"]'),
-    content: 'ref·id를 달 수 없는 라이브러리 내부 요소는 감싼 요소 안에서 선택자로 찾습니다.',
+    title: '목록 (Modal 안 선택자)',
+    target: tourTarget.inModal(guideNameInput, '[data-guide="list"]'),
+    content: (
+      <>
+        ref·id를 달 수 없는 라이브러리 내부 요소는 <code>tourTarget.inModal(ref, 선택자)</code>·
+        <code>tourTarget.query(선택자, 범위)</code>로 찾습니다.
+      </>
+    ),
   },
   {
-    title: '확인 (텍스트로 버튼 찾기)',
-    target: () =>
-      [...(guideModalWrap()?.querySelectorAll('button') ?? [])].find(
-        b => b.textContent.trim() === '확인',
-      ),
-    content: 'Modal 하단 버튼처럼 ref를 넘길 수 없으면 버튼 글자로 찾습니다.',
+    title: '항목 전체 (여러 요소 묶음)',
+    target: tourTarget.all('[data-guide="list"] li', tourTarget.modalOf(guideNameInput)),
+    content: (
+      <>
+        <code>tourTarget.all(선택자, 범위)</code>는 일치하는 요소 전부를 감싸서 강조합니다. 표의 한
+        열처럼 흩어진 칸을 묶을 때 씁니다.
+      </>
+    ),
+  },
+  {
+    title: '확인 (글자로 버튼 찾기)',
+    target: tourTarget.button('확인', tourTarget.modalOf(guideNameInput)),
+    content: (
+      <>
+        Modal 하단 버튼처럼 ref를 넘길 수 없으면 <code>tourTarget.button(글자, 범위)</code>로
+        찾습니다.
+      </>
+    ),
   },
   {
     title: '대상 없음',
-    target: () => null,
+    target: tourTarget.none,
     content: (
       <>
-        <code>target</code>이 <code>null</code>이면 가운데에 설명만 표시합니다. 캔버스처럼 DOM이
-        없는 요소는 그림으로 안내하세요.
+        <code>tourTarget.none</code>(= <code>null</code>)이면 가운데에 설명만 표시합니다. 캔버스처럼
+        DOM이 없는 요소는 그림으로 안내하세요.
         <div
           style={{
             margin: '8px 0',
@@ -525,6 +551,42 @@ const GUIDE_STEPS = [
     ),
   },
 ];
+
+// tourTarget 문서 카드: 주제 + 설명 + 인자 + 미리보기(샘플 화면에 target 테두리) + 그 미리보기와 같은 코드
+const ttDoc = ({ key, title, desc, params, returns }) => ({
+  title,
+  desc,
+  params,
+  returns,
+  example: TOUR_TARGET_DEMOS[key].code,
+  preview: <TargetPreview demo={TOUR_TARGET_DEMOS[key]} title={title} desc={desc} />,
+});
+
+// tourTarget 문서에서 반복되는 인자 설명
+const P = {
+  ref: desc => ({
+    name: 'ref',
+    type: 'RefObject<HTMLElement>',
+    desc: `${desc} — useRef()로 만든 객체`,
+  }),
+  text: desc => ({ name: '글자', type: 'string', desc }),
+  selector: ex => ({
+    name: '선택자',
+    type: 'string',
+    desc: `CSS 선택자 (예: '${ex}') — querySelector에 넣는 문자열`,
+  }),
+  root: {
+    name: '범위',
+    type: 'RefObject | HTMLElement | () => HTMLElement',
+    optional: true,
+    desc: '이 안에서만 찾음. ref·요소·요소를 돌려주는 함수(tourTarget.modalOf(ref) 등). 생략하면 화면 전체(document)',
+  },
+  targets: desc => ({
+    name: '...대상',
+    type: 'Array<target 함수 | RefObject | HTMLElement>',
+    desc: `${desc}. tourTarget.* 결과·ref·요소를 섞어서 넣을 수 있음`,
+  }),
+};
 
 const stories = [
   // ─── Buttons ──────────────────────────────────────────────
@@ -743,6 +805,7 @@ const stories = [
     name: 'LabelCheckBox',
     controls: [
       { key: 'label', type: 'text', default: '동의합니다' },
+      { key: 'size', type: 'number', default: 18 },
       { key: 'disabled', type: 'boolean', default: false },
     ],
     initialState: { checked: false },
@@ -750,6 +813,7 @@ const stories = [
       <LabelCheckBox
         id="pg-labelcheckbox"
         label={p.label}
+        size={p.size}
         disabled={p.disabled}
         checked={state.checked}
         onChange={e => setState({ checked: e.target.checked })}
@@ -759,7 +823,9 @@ const stories = [
 
 <LabelCheckBox
   id="agree"
-  label="${p.label}"${p.disabled ? '\n  disabled' : ''}
+  label="${p.label}"${p.size !== 18 ? `\n  size={${p.size}}` : ''}${
+      p.disabled ? '\n  disabled' : ''
+    }
   checked={checked}
   onChange={e => setChecked(e.target.checked)}
 />`,
@@ -1060,32 +1126,208 @@ const [end, setEnd] = useState('');
         )}
       </>
     ),
-    snippet: () => `const [open, setOpen] = useState(false);
+    snippet: () => `import { GuideTour, HelpIcon, tourTarget } from 'seed-ui';
+
+const [open, setOpen] = useState(false);
 const inputRef = useRef(null);
 const wrapRef = useRef(null);
 
 // 렌더마다 새로 만들지 않도록 useMemo (또는 모듈 상수)
 const steps = useMemo(() => [
-  // 1) ref
-  { title: '이름 입력', target: () => inputRef.current, content: '공백 없이 입력합니다.' },
-  // 2) id
-  { title: '저장', target: () => document.getElementById('save-btn'), content: '바로 반영됩니다.' },
-  // 3) 범위 안 선택자 (ag-grid 등 ref를 못 다는 요소) + 4) 못 찾으면 대체 대상
+  // ref / id
+  { title: '이름 입력', target: tourTarget.ref(inputRef), content: '공백 없이 입력합니다.' },
+  { title: '저장', target: tourTarget.id('save-btn'), content: '바로 반영됩니다.' },
+  // 범위 안 선택자 (ag-grid 등 ref를 못 다는 요소) / Modal 안 선택자
+  { title: '헤더', target: tourTarget.query('.ag-header', wrapRef), content: '...' },
+  { title: '목록', target: tourTarget.inModal(inputRef, '.ag-body'), content: '...' },
+  // 글자로 버튼 (Modal 하단 버튼 등)
+  { title: '추가', target: tourTarget.button('추가', tourTarget.modalOf(inputRef)), content: '...' },
+  // 여러 요소 묶음: 같은 선택자 전부 / 서로 다른 대상 함께
+  { title: '항상 열', target: tourTarget.all('[data-col="fixed"]', wrapRef), content: '...' },
+  { title: '입력+저장', target: tourTarget.union(inputRef, tourTarget.id('save-btn')), content: '...' },
+  // 대체 대상: 앞에서 못 찾으면 다음 후보
   {
     title: '분류 컬럼',
-    target: () =>
-      wrapRef.current?.querySelector('.ag-header-cell[col-id="category"]') ??
-      wrapRef.current?.querySelector('.ag-header'),
-    content: '다른 분류의 업무를 고르면 이 분류로 옮겨집니다.',
+    target: tourTarget.first(
+      tourTarget.query('.ag-header-cell[col-id="category"]', wrapRef),
+      tourTarget.query('.ag-header', wrapRef),
+    ),
+    content: '...',
   },
-  // 5) 좌표 (캔버스 요소 직접 계산)
+  // 캔버스: GoJS 노드 / 직접 좌표
+  {
+    title: '노드',
+    target: tourTarget.diagramPart(() => diagramRef.current?.getDiagram(), d => d.findNodeForKey(1)),
+    content: '...',
+  },
   { title: '차트', target: () => ({ top: 100, left: 200, width: 80, height: 30 }), content: '...' },
-  // 6) 없음 → 가운데 설명창
-  { title: '마무리', target: () => null, content: <img src={sample} alt="" /> },
+  // 없음 → 가운데 설명창
+  { title: '마무리', target: tourTarget.none, content: <img src={sample} alt="" /> },
 ], []);
 
 <HelpIcon symbol="?" onClick={() => setOpen(true)} />
 <GuideTour open={open} steps={steps} onClose={() => setOpen(false)} />`,
+  },
+  {
+    category: 'Feedback',
+    name: 'tourTarget',
+    parent: 'GuideTour',
+    controls: [],
+    // docs가 있으면 데모판·Controls 대신 문서 페이지로 표시 (DocsPage)
+    docs: {
+      summary: 'GuideTour에서 "어디를 밝게 비출지(target)"를 한 줄로 지정하는 함수 모음입니다.',
+      whenToUse: [
+        'ref를 달 수 없는 요소(ag-grid 내부, Modal 하단 버튼)를 가리킬 때',
+        '표의 한 열처럼 흩어진 여러 칸을 한 번에 강조할 때',
+        '조건에 따라 없을 수도 있는 버튼을 안전하게 가리킬 때 (못 찾으면 가운데 설명창)',
+      ],
+      quickStart: `import { GuideTour, HelpIcon, tourTarget } from 'seed-ui';
+
+const steps = useMemo(() => [
+  { title: '이름 입력', target: tourTarget.ref(inputRef),               content: '...' },
+  { title: '업무 목록', target: tourTarget.inModal(inputRef, '.ag-body'), content: '...' },
+  { title: '추가',     target: tourTarget.button('추가'),               content: '...' },
+  { title: '마무리',   target: tourTarget.none,                         content: '...' },
+], []);
+
+<HelpIcon symbol="?" onClick={() => setOpen(true)} />
+<GuideTour open={open} steps={steps} onClose={() => setOpen(false)} />`,
+      groups: [
+        {
+          title: '자주 쓰는 함수',
+          items: [
+            ttDoc({
+              key: 'ref',
+              title: 'ref로 잡은 요소 비추기',
+              desc: '컴포넌트 안에서 useRef로 잡아 둔 요소를 그대로 비춥니다. 가장 기본 방법입니다.',
+              params: [P.ref('비출 요소에 연결한 ref')],
+            }),
+            ttDoc({
+              key: 'button',
+              title: '버튼 글자로 찾아 비추기',
+              desc: 'ref를 넘길 수 없는 버튼(Modal 하단 확인·추가 등)을 글자로 찾습니다. 앞뒤 공백은 무시하고 글자가 정확히 같아야 합니다.',
+              params: [P.text("버튼에 적힌 글자 (예: '추가')"), P.root],
+            }),
+            ttDoc({
+              key: 'inModal',
+              title: '모달 안에서 찾아 비추기',
+              desc: 'ref 요소가 들어있는 Modal 안에서 선택자로 찾습니다. ag-grid 본문처럼 ref를 달 수 없는 요소에 씁니다.',
+              params: [P.ref('Modal 안에 있는 아무 요소의 ref (기준점)'), P.selector('.ag-body')],
+            }),
+            ttDoc({
+              key: 'all',
+              title: '여러 칸을 한 번에 묶어 비추기',
+              desc: '선택자에 맞는 요소 전부를 하나의 사각형으로 감쌉니다. 표의 한 열, 흩어진 칸 묶음에 씁니다.',
+              params: [P.selector('[data-col="fixed"]'), P.root],
+            }),
+            ttDoc({
+              key: 'none',
+              title: '대상 없이 설명만 띄우기',
+              desc: '비출 곳 없이 화면 가운데에 설명창만 띄웁니다. 캔버스 라벨처럼 가리킬 수 없는 대상은 content에 그림으로 안내합니다.',
+              params: [],
+            }),
+          ],
+        },
+        {
+          title: '상황별 함수',
+          items: [
+            ttDoc({
+              key: 'query',
+              title: '선택자로 찾아 비추기',
+              desc: '범위 안에서 선택자에 맞는 첫 번째 요소를 비춥니다. Modal 밖의 라이브러리 내부 요소에 씁니다.',
+              params: [P.selector('.ag-header'), P.root],
+            }),
+            ttDoc({
+              key: 'id',
+              title: 'id로 찾아 비추기',
+              desc: 'document.getElementById로 찾습니다.',
+              params: [{ name: 'id', type: 'string', desc: '요소의 id (# 없이)' }],
+            }),
+            ttDoc({
+              key: 'union',
+              title: '서로 다른 요소 함께 비추기',
+              desc: '떨어져 있는 요소 여러 개를 하나의 사각형으로 함께 감쌉니다.',
+              params: [P.targets('함께 비출 대상들. 못 찾은 대상은 빼고 감쌉니다')],
+            }),
+            ttDoc({
+              key: 'first',
+              title: '못 찾으면 다른 대상으로 대체',
+              desc: '앞에서부터 차례로 찾아 처음 찾아지는 대상을 비춥니다. 상황에 따라 없을 수 있는 요소에 대비할 때 씁니다.',
+              params: [P.targets('후보 대상들 (앞쪽이 우선)')],
+            }),
+            ttDoc({
+              key: 'diagramPart',
+              title: '캔버스(GoJS) 노드 비추기',
+              desc: 'DOM이 없는 캔버스 요소의 화면 위치를 계산해 비춥니다. (미리보기는 가짜 캔버스)',
+              params: [
+                {
+                  name: 'getDiagram',
+                  type: '() => go.Diagram',
+                  desc: 'Diagram을 돌려주는 함수 (예: () => diagramRef.current?.getDiagram())',
+                },
+                {
+                  name: 'getPart',
+                  type: '(diagram) => go.Part | null',
+                  desc: '비출 노드를 찾는 함수 (예: d => d.findNodeForKey(key))',
+                },
+              ],
+            }),
+            ttDoc({
+              key: 'modalOf',
+              title: '모달 틀을 범위로 쓰기',
+              desc: 'ref 요소가 들어있는 Modal 바깥 틀을 돌려주는 함수입니다. 다른 함수의 "범위" 인자로 넘겨 그 모달 안에서만 찾게 합니다.',
+              params: [P.ref('Modal 안에 있는 아무 요소의 ref (기준점)')],
+            }),
+          ],
+        },
+        {
+          title: '직접 계산용 유틸',
+          desc: "target 함수를 직접 짤 때만 필요합니다. import { unionRect, findButton, modalWrapOf } from 'seed-ui'",
+          items: [
+            ttDoc({
+              key: 'unionRect',
+              title: '여러 요소를 감싸는 사각형 계산',
+              desc: '크기가 0인 요소는 빼고 계산합니다.',
+              params: [
+                {
+                  name: 'items',
+                  type: 'Array<HTMLElement | DOMRect>',
+                  desc: '감쌀 요소·영역 목록 (null 섞여도 됨)',
+                },
+              ],
+              returns: '{ top, left, width, height } | null',
+            }),
+            ttDoc({
+              key: 'findButton',
+              title: '버튼 글자로 요소 찾기',
+              desc: 'tourTarget.button 안에서 쓰는 함수. 함수가 아니라 요소를 바로 돌려줍니다.',
+              params: [P.text('버튼에 적힌 글자'), P.root],
+              returns: 'HTMLButtonElement | null',
+            }),
+            ttDoc({
+              key: 'modalWrapOf',
+              title: '요소가 든 모달 틀 찾기',
+              desc: 'seed-ui Modal 바깥 틀(.modal-wrap)을 돌려줍니다.',
+              params: [{ name: 'el', type: 'HTMLElement', desc: 'Modal 안에 있는 요소' }],
+              returns: 'HTMLElement | null',
+            }),
+          ],
+        },
+      ],
+      notes: [
+        'steps 배열은 useMemo 또는 모듈 상수로 고정하세요. 렌더마다 새 배열이면 단계가 처음으로 돌아갑니다.',
+        'all · union 처럼 여러 요소를 묶은 대상은 화면 밖에 있어도 자동 스크롤되지 않습니다.',
+      ],
+      usedIn: [
+        {
+          file: 'page/work/workGroup/modal/WorkGroupCategoryModal.jsx',
+          what: 'ref · inModal · button · none',
+        },
+        { file: 'page/work/workGroup/component/DiagramViewOptions.jsx', what: 'all · button' },
+      ],
+    },
+    render: () => null,
+    snippet: () => '',
   },
   {
     category: 'Feedback',
@@ -1622,32 +1864,67 @@ const steps = useMemo(() => [
     category: 'Feedback',
     name: 'EscStack',
     parent: 'Modal',
-    realUsage: {
-      file: 'components/ToastAlert.jsx',
-      code: `import { EscStack } from 'seed-ui';
-
-// 토스트 컴포넌트. id = 이 토스트의 고유 id(prop)
-function ToastAlert({ id, interval }) {
-  useLayoutEffect(() => {
-    // handler = ESC 눌렀을 때 이 토스트를 닫는 함수
-    const handler = () => deleteAlert(id);
-    EscStack.push(handler);                // 스택 맨 위에 등록 → ESC는 최상단부터 닫음
-    return () => EscStack.remove(handler); // 언마운트 시 스택에서 제거
-  }, [id]);
-}`,
-    },
     controls: [],
     initialState: { open1: false, open2: false },
+    docs: {
+      summary:
+        'ESC 키로 닫히는 것들을 하나의 스택으로 관리해, 가장 나중에 열린 것부터 하나씩 닫히게 합니다.',
+      whenToUse: [
+        'Modal이 아닌 직접 만든 오버레이(토스트, 드롭다운, 팝오버 등)를 ESC로 닫고 싶을 때',
+        '모달 위에 띄운 오버레이가 ESC에 모달보다 먼저 닫혀야 할 때',
+      ],
+      quickStart: `import { EscStack } from 'seed-ui';
+
+useLayoutEffect(() => {
+  const handler = () => close();          // ESC 눌렀을 때 실행할 함수
+  EscStack.push(handler);                 // 열릴 때 등록
+  return () => EscStack.remove(handler);  // 닫힐 때(언마운트) 제거
+}, []);`,
+      groups: [
+        {
+          title: '함수',
+          items: [
+            {
+              title: 'ESC 닫기 등록',
+              desc: '스택 맨 위에 올립니다. ESC를 누르면 맨 위에 있는 handler 하나만 실행됩니다. 열릴 때 호출하세요.',
+              params: [
+                {
+                  name: 'handler',
+                  type: '() => void',
+                  desc: 'ESC를 눌렀을 때 실행할 함수 (보통 닫기)',
+                },
+              ],
+              example: 'EscStack.push(handler)',
+            },
+            {
+              title: 'ESC 닫기 해제',
+              desc: '등록한 handler를 스택에서 뺍니다. 닫힐 때(언마운트) 호출하세요.',
+              params: [
+                {
+                  name: 'handler',
+                  type: '() => void',
+                  desc: 'push에 넘긴 것과 같은 함수 (새로 만든 함수를 넘기면 빠지지 않음)',
+                },
+              ],
+              example: 'EscStack.remove(handler)',
+            },
+          ],
+        },
+      ],
+      notes: [
+        'seed-ui Modal · ToastNotify · GuideTour는 이미 내부에서 등록합니다. 그냥 쓰면 ESC로 닫히니 따로 등록하지 마세요.',
+        'ESC가 스택에서 처리되면 다른 keydown 리스너로 전달되지 않습니다 (stopImmediatePropagation).',
+        'remove에는 push한 것과 같은 함수 참조가 필요합니다. 화살표 함수를 매번 새로 만들어 넘기면 빠지지 않습니다.',
+      ],
+      usedIn: [
+        {
+          file: 'seed-ui Modal · ToastNotify · GuideTour',
+          what: '내부에서 자동 등록 (CLM 코드에서 직접 호출 없음)',
+        },
+      ],
+    },
     render: (p, { state, setState }) => (
-      <div style={{ maxWidth: 520 }}>
-        <div style={{ fontSize: 13, color: 'var(--pg-muted)', marginBottom: 10, lineHeight: 1.7 }}>
-          ESC로 닫는 것들을 <b>공용 스택(LIFO)</b>으로 관리합니다. ESC를 누르면 가장 최근에 열린
-          것부터 하나씩 닫혀요.
-          <br />• <b>seed-ui Modal은 자동 등록</b> — 그냥 쓰면 ESC로 닫힘(직접 안 해도 됨).
-          <br />• <b>Modal이 아닌 커스텀 오버레이</b>(토스트 등)만 직접{' '}
-          <code>EscStack.push(handler)</code> + 언마운트 시 <code>remove</code>하면, 모달들과 같은
-          스택에 얹혀 함께 LIFO로 닫힙니다.
-        </div>
+      <>
         <BlackButton onClick={() => setState({ open1: true })}>모달 1 열기</BlackButton>
         {state.open1 && (
           <Modal
@@ -1656,7 +1933,7 @@ function ToastAlert({ id, interval }) {
             callback={() => setState({ open1: false })}
           >
             <div style={{ fontSize: 14, marginBottom: 10 }}>
-              ESC를 누르면 이 모달이 닫혀요. 아래로 모달 2를 겹쳐 열고 ESC를 눌러보세요.
+              모달 2를 겹쳐 연 뒤 ESC를 눌러보세요.
             </div>
             <WhiteButton onClick={() => setState({ open2: true })}>모달 2 열기</WhiteButton>
           </Modal>
@@ -1669,20 +1946,13 @@ function ToastAlert({ id, interval }) {
             callback={() => setState({ open2: false })}
           >
             <div style={{ fontSize: 14 }}>
-              ESC → 모달 2가 먼저 닫히고, 다시 ESC → 모달 1이 닫힙니다 (스택 순서).
+              ESC → 모달 2가 먼저 닫히고, 다시 ESC → 모달 1이 닫힙니다.
             </div>
           </Modal>
         )}
-      </div>
+      </>
     ),
-    snippet: () => `import EscStack from 'seed-ui'; // export { EscStack }
-
-// 컴포넌트에서 ESC 닫기 등록 (Modal이 내부적으로 이렇게 사용)
-useLayoutEffect(() => {
-  const handler = () => close();
-  EscStack.push(handler);
-  return () => EscStack.remove(handler);
-}, []);`,
+    snippet: () => '',
   },
   {
     category: 'Navigation',
@@ -1700,17 +1970,63 @@ handleClose={() => {
 }}`,
     },
     controls: [],
+    docs: {
+      summary: 'SideTabs의 탭을 클릭하지 않고 코드로 선택합니다.',
+      whenToUse: [
+        '추가·삭제·수정 후 특정 탭(예: 전체)으로 돌아가야 할 때',
+        '다른 화면이나 모달에서 사이드 탭을 바꿔야 할 때',
+      ],
+      quickStart: `import { selectSideTab } from 'seed-ui';
+
+<TabButton value="b" onClick={onSelect}>그룹 B</TabButton>
+
+selectSideTab('b'); // value가 'b'인 탭을 클릭한 것과 같음 → onSelect 실행`,
+      groups: [
+        {
+          title: '함수',
+          items: [
+            {
+              title: '사이드 탭 코드로 선택',
+              desc: 'value가 같은 TabButton을 찾아 클릭합니다. 그 탭의 onClick도 함께 실행됩니다.',
+              params: [
+                {
+                  name: 'value',
+                  type: 'string | number',
+                  desc: '선택할 TabButton의 value (숫자도 문자열로 바꿔 비교)',
+                },
+              ],
+              example: 'selectSideTab(0)',
+            },
+          ],
+        },
+      ],
+      notes: [
+        '실제로 버튼을 클릭하므로 그 탭의 onClick도 실행됩니다.',
+        '화면에 렌더된 TabButton만 찾습니다. 같은 value 탭이 없으면 아무 일도 일어나지 않습니다.',
+      ],
+      usedIn: [
+        {
+          file: 'page/management/userGroup/modal/CreateGroupModal.jsx',
+          what: '그룹 추가 후 전체 탭 선택',
+        },
+        {
+          file: 'page/project/project/Modal/ProjectAddModal.jsx',
+          what: '프로젝트 추가 후 탭 선택',
+        },
+        {
+          file: 'page/work/workGroup/WorkGroupDashBoard.jsx',
+          what: '대시보드에서 업무 그룹 탭 선택',
+        },
+        { file: '그 외 13곳', what: '사이드 탭이 있는 화면 전반' },
+      ],
+    },
     render: () => (
-      <div>
-        <div style={{ fontSize: 13, color: 'var(--pg-muted)', marginBottom: 10 }}>
-          selectSideTab(value)는 SideTabs의 특정 탭을 <b>코드로 강제 선택</b>합니다. TabButton의
-          value와 매칭돼요. (SideTabs가 내부에서 쓰는 함수)
-        </div>
+      <div style={{ width: '100%' }}>
         <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
           <WhiteButton onClick={() => selectSideTab('b')}>그룹 B 선택</WhiteButton>
           <WhiteButton onClick={() => selectSideTab('c')}>그룹 C 선택</WhiteButton>
         </div>
-        <div style={{ height: 260, display: 'flex', overflow: 'hidden' }}>
+        <div style={{ height: 220, display: 'flex', overflow: 'hidden' }}>
           <SideTabs>
             <MainTabButton onClick={() => {}}>메인</MainTabButton>
             <SideScrollWrap>
@@ -1728,12 +2044,7 @@ handleClose={() => {
         </div>
       </div>
     ),
-    snippet: () => `import { selectSideTab } from 'seed-ui';
-
-<TabButton value="b" onClick={fn}>그룹 B</TabButton>
-
-// 어디서든 코드로 해당 탭을 선택
-selectSideTab('b');`,
+    snippet: () => '',
   },
   {
     category: 'Menu',
@@ -1751,47 +2062,116 @@ const dynamicRoutes = useMemo(() => {
 
 // createBrowserRouter / <Routes> 안에서 dynamicRoutes 를 사용`,
     },
-    controls: [{ key: 'menuList', type: 'json', default: SAMPLE_MENU_JSON }],
-    render: p => {
-      let menu = [];
-      try {
-        menu = JSON.parse(p.menuList);
-      } catch {
-        menu = [];
-      }
+    controls: [],
+    docs: {
+      summary: '메뉴 목록(menuList)으로 react-router의 중첩 <Route>를 자동으로 만들어 줍니다.',
+      whenToUse: [
+        '헤더·사이드 메뉴와 같은 메뉴 데이터로 라우트도 함께 만들 때',
+        '권한(role)에 따라 접근할 수 없는 메뉴의 라우트를 빼고 싶을 때',
+      ],
+      quickStart: `import { SetRoute } from 'seed-ui';
+
+<Routes>
+  <Route path="/" element={<Layout />}>
+    {SetRoute(menuList, role)}
+  </Route>
+</Routes>`,
+      groups: [
+        {
+          title: '함수',
+          items: [
+            {
+              title: '메뉴로 라우트 만들기',
+              desc: 'menuList를 돌며 subMenu까지 중첩 <Route>를 만듭니다. 반환값을 <Routes> 안에 그대로 넣습니다.',
+              params: [
+                {
+                  name: 'menuList',
+                  type: 'Array<MenuItem>',
+                  desc: '메뉴 목록 (아래 MenuItem 형태)',
+                },
+                {
+                  name: 'role',
+                  type: "'y' | 'n'",
+                  optional: true,
+                  desc: "'y' = 전체 라우트 생성(관리자), 'n' = menuRole 기준으로 제한. 기본 'n'",
+                },
+              ],
+              returns: 'ReactElement (<Route> 묶음)',
+              example: 'SetRoute(DepthList, role_a)',
+            },
+          ],
+        },
+        {
+          title: 'MenuItem 형태',
+          items: [
+            {
+              title: 'menuList 한 항목',
+              desc: 'HeaderCreator · AsideCreator와 같은 메뉴 데이터를 그대로 씁니다.',
+              params: [
+                {
+                  name: 'routePath',
+                  type: 'string',
+                  optional: true,
+                  desc: 'Route path. 없으면 link 사용',
+                },
+                { name: 'link', type: 'string', desc: '메뉴 링크 (routePath 없을 때 path)' },
+                {
+                  name: 'component',
+                  type: 'ReactElement',
+                  desc: 'Route element로 렌더할 화면 (JSX)',
+                },
+                { name: 'title', type: 'string', desc: 'Route key. 같은 단계에서 겹치지 않게' },
+                {
+                  name: 'subMenu',
+                  type: 'Array<MenuItem>',
+                  optional: true,
+                  desc: '하위 메뉴. 같은 형태로 재귀 생성',
+                },
+                {
+                  name: 'menuRole',
+                  type: 'number',
+                  optional: true,
+                  desc: "role이 'n'일 때 0보다 크거나 없으면 생성",
+                },
+                {
+                  name: 'isPublic',
+                  type: 'boolean',
+                  optional: true,
+                  desc: 'true면 권한과 상관없이 생성',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      notes: [
+        'display(메뉴 노출 여부)는 보지 않습니다. 메뉴에 숨긴 항목도 권한만 있으면 라우트는 생깁니다.',
+      ],
+      usedIn: [{ file: 'App.jsx', what: '로그인 후 메뉴(DepthList)로 전체 라우트 생성' }],
+    },
+    render: () => {
       const flat = [];
       const walk = (arr, depth = 0) =>
         arr.forEach(m => {
           flat.push({ depth, path: m.routePath || m.link, title: m.title });
           if (m.subMenu) walk(m.subMenu, depth + 1);
         });
-      walk(menu);
+      walk(parseJson(SAMPLE_MENU_JSON, []));
       return (
-        <div style={{ width: '100%', maxWidth: 560 }}>
-          <div style={{ fontSize: 13, color: 'var(--pg-muted)', marginBottom: 10 }}>
-            SetRoute(menuList, role)는 menuList를 순회하며 각 항목의 routePath(없으면 link)와
-            component로 <b>중첩 &lt;Route&gt;를 자동 생성</b>합니다. App의 &lt;Routes&gt; 안에서
-            사용해요. (라우팅 함수 — 별도 UI 없음)
+        <div style={{ fontFamily: CODE_FONT, fontSize: 14, lineHeight: 1.7 }}>
+          <div style={{ color: 'var(--pg-muted)', marginBottom: 4 }}>
+            예시 메뉴로 생성되는 라우트 구조:
           </div>
-          <div style={{ fontFamily: 'monospace', fontSize: 13, lineHeight: 1.7 }}>
-            <div style={{ color: 'var(--pg-muted)', marginBottom: 4 }}>생성될 라우트 구조:</div>
-            {flat.map(r => (
-              <div key={`${r.depth}-${r.path}-${r.title}`} style={{ paddingLeft: r.depth * 18 }}>
-                {`<Route path="${r.path}">`}{' '}
-                <span style={{ color: 'var(--pg-muted)' }}>— {r.title}</span>
-              </div>
-            ))}
-          </div>
+          {flat.map(r => (
+            <div key={`${r.depth}-${r.path}-${r.title}`} style={{ paddingLeft: r.depth * 18 }}>
+              {`<Route path="${r.path}">`}{' '}
+              <span style={{ color: 'var(--pg-muted)' }}>— {r.title}</span>
+            </div>
+          ))}
         </div>
       );
     },
-    snippet: () => `import { SetRoute } from 'seed-ui';
-
-<Routes>
-  <Route path="/" element={<Layout />}>
-    {SetRoute(menuList, role)}   {/* menuList → 중첩 Route 자동 생성 */}
-  </Route>
-</Routes>`,
+    snippet: () => '',
   },
 
   // ─── CLM 이식: 알림 시스템 (토스트 + 컨펌) ────────────────
@@ -1985,9 +2365,286 @@ function ControlRow({ control, value, onChange }) {
 
 function buildCode(story, props) {
   const body = story.snippet(props);
+  if (body.startsWith('import ')) return body; // snippet이 import를 직접 적은 경우 그대로
   const imports = [`import { ${story.name} } from 'seed-ui';`];
   if (body.includes('useState')) imports.unshift(`import { useState } from 'react';`);
   return `${imports.join('\n')}\n\n${body}`;
+}
+
+/**
+ * 함수·유틸 문서 페이지 템플릿 — story.docs 가 있으면 데모판·Controls 대신 이 페이지를 보여줌
+ * story.docs = {
+ *   summary   : 무엇을 하는지 한 문장
+ *   whenToUse : 언제 쓰는지 (문자열 배열)
+ *   quickStart: 그대로 복사해 쓰는 최소 코드
+ *   groups    : [{ title, desc?, items: [{ title, desc, params?, returns?, preview?, example? }] }]  → 함수별 카드
+ *               title = 무엇을 하는지(주제), params = [{ name, type, desc, optional? }]
+ *               preview = 그 함수가 실제로 어떻게 동작하는지 보여주는 화면 (ReactNode)
+ *   rootNote  : 공통 인자 설명 (선택)
+ *   notes     : 주의사항 (문자열 배열)
+ *   usedIn    : [{ file, what? }]  CLM 사용처
+ * }
+ * story.render 결과가 있으면 '직접 해보기'에 데모로 표시 (점 무늬 판·Controls 없이)
+ */
+const docCode = (code, fontSize = 14) => (
+  <SyntaxHighlighter
+    language="jsx"
+    style={oneDark}
+    customStyle={{ margin: 0, borderRadius: 6, fontSize, padding: '10px 14px' }}
+  >
+    {code}
+  </SyntaxHighlighter>
+);
+
+const controlType = c => {
+  if (c.type === 'select') return c.options.map(o => `'${o}'`).join(' | ');
+  if (c.type === 'text') return 'string';
+  if (c.type === 'color') return 'string (색상)';
+  if (c.type === 'json') return 'Array';
+  return c.type; // boolean · number
+};
+
+const controlProps = controls =>
+  controls.map(c => {
+    const desc = c.desc || COMMON_DESC[c.key] || '';
+    const def = c.type === 'json' ? undefined : JSON.stringify(c.default);
+    return { name: c.key, type: controlType(c), def, desc, optional: true };
+  });
+
+// Controls에서 만든 props + 문서에 적은 props (같은 이름이면 문서 쪽 설명 우선)
+const mergeProps = (fromControls, fromDocs = []) => {
+  const names = new Set(fromDocs.map(p => p.name));
+  return [...fromControls.filter(p => !names.has(p.name)), ...fromDocs];
+};
+
+// 긴 타입(유니온)은 ' | ' 앞에서만 줄바꿈되게 조각으로 나눔 (조각 하나면 그냥 줄바꿈)
+function TypeText({ type }) {
+  const parts = String(type).split(' | ');
+  if (parts.length === 1) return <DocType>{type}</DocType>;
+  return (
+    <DocType>
+      {parts.map((part, i) => (
+        <React.Fragment key={part}>
+          {i > 0 && ' | '}
+          <span>{part}</span>
+        </React.Fragment>
+      ))}
+    </DocType>
+  );
+}
+
+// 인자·Props 표: 이름 | 타입 | 기본값(있을 때만) | 설명
+function ParamTable({ rows }) {
+  const hasDefault = rows.some(r => r.def !== undefined);
+  return (
+    <DocTableWrap>
+      <DocParamTable $cols={hasDefault ? 4 : 3}>
+        <thead>
+          <tr>
+            <th>이름</th>
+            <th>타입</th>
+            {hasDefault && <th>기본값</th>}
+            <th>설명</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(r => (
+            <tr key={r.name}>
+              <td>
+                <code>{r.name}</code>
+                {r.optional && <em>선택</em>}
+              </td>
+              <td>
+                <TypeText type={r.type} />
+              </td>
+              {hasDefault && <td>{r.def !== undefined ? <code>{r.def}</code> : '—'}</td>}
+              <td>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </DocParamTable>
+    </DocTableWrap>
+  );
+}
+
+function DocsPage({ name, docs, demo, propsList, usage }) {
+  const pageRef = useRef(null);
+  const [activeId, setActiveId] = useState(null);
+  const clickedRef = useRef(null); // 목차로 이동한 항목 — 사용자가 직접 스크롤하기 전까지 유지
+
+  // 오른쪽 목차: 섹션 제목(1단) + 함수 카드 제목(2단)
+  const toc = useMemo(() => {
+    const list = [];
+    if (docs.whenToUse?.length) list.push({ id: 'doc-when', label: '언제 쓰나요' });
+    if (docs.quickStart) list.push({ id: 'doc-quick', label: '바로 쓰기' });
+    if (demo) list.push({ id: 'doc-demo', label: '직접 해보기' });
+    if (propsList?.length) list.push({ id: 'doc-props', label: 'Props' });
+    docs.groups?.forEach((g, gi) => {
+      list.push({ id: `doc-g${gi}`, label: g.title });
+      g.items.forEach((it, ci) =>
+        list.push({ id: `doc-g${gi}-${ci}`, label: it.title, sub: true }),
+      );
+    });
+    if (usage) list.push({ id: 'doc-usage', label: 'CLM30 사용 예' });
+    if (docs.notes?.length) list.push({ id: 'doc-notes', label: '주의' });
+    if (docs.usedIn?.length) list.push({ id: 'doc-used', label: 'CLM30 사용처' });
+    return list;
+  }, [docs, demo, propsList, usage]);
+
+  // 스크롤 위치에 맞춰 현재 보고 있는 항목 표시 (스크롤 영역 = Main)
+  useEffect(() => {
+    const scroller = pageRef.current?.closest('main');
+    if (!scroller) return undefined;
+    const onScroll = () => {
+      if (clickedRef.current) return;
+      const top = scroller.getBoundingClientRect().top + 80;
+      let current = toc[0]?.id;
+      toc.forEach(t => {
+        const el = document.getElementById(t.id);
+        if (el && el.getBoundingClientRect().top <= top) current = t.id;
+      });
+      // 맨 아래까지 내리면 마지막 항목 (짧은 끝 섹션은 위까지 못 올라오므로)
+      if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2) {
+        current = toc[toc.length - 1]?.id;
+      }
+      setActiveId(current);
+    };
+    // 휠·터치·키보드로 직접 움직이면 클릭 고정 해제
+    const release = () => {
+      clickedRef.current = null;
+    };
+    const userEvents = ['wheel', 'touchstart', 'keydown', 'mousedown'];
+    onScroll();
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    userEvents.forEach(ev => scroller.addEventListener(ev, release, { passive: true }));
+    return () => {
+      scroller.removeEventListener('scroll', onScroll);
+      userEvents.forEach(ev => scroller.removeEventListener(ev, release));
+    };
+  }, [toc]);
+
+  const jump = id => {
+    clickedRef.current = id;
+    setActiveId(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  return (
+    <DocLayout ref={pageRef}>
+      <DocPage>
+        <DocLead>{docs.summary}</DocLead>
+
+        {docs.whenToUse?.length > 0 && (
+          <DocSection id="doc-when">
+            <DocTitle>언제 쓰나요</DocTitle>
+            <DocList>
+              {docs.whenToUse.map(t => (
+                <li key={t}>{t}</li>
+              ))}
+            </DocList>
+          </DocSection>
+        )}
+
+        {docs.quickStart && (
+          <DocSection id="doc-quick">
+            <DocTitle>바로 쓰기</DocTitle>
+            {docCode(docs.quickStart, 15)}
+          </DocSection>
+        )}
+
+        {demo && (
+          <DocSection id="doc-demo">
+            <DocTitle>직접 해보기</DocTitle>
+            <DocDemo>{demo}</DocDemo>
+          </DocSection>
+        )}
+
+        {propsList?.length > 0 && (
+          <DocSection id="doc-props">
+            <DocTitle>Props</DocTitle>
+            <ParamTable rows={propsList} />
+          </DocSection>
+        )}
+
+        {docs.groups?.map((g, gi) => (
+          <DocSection key={g.title} id={`doc-g${gi}`}>
+            <DocTitle>{g.title}</DocTitle>
+            {g.desc && <DocDesc>{g.desc}</DocDesc>}
+            <DocCards>
+              {g.items.map((it, ci) => (
+                <DocCard key={it.title} id={`doc-g${gi}-${ci}`}>
+                  <DocCardTitle>{it.title}</DocCardTitle>
+                  <DocDesc>{it.desc}</DocDesc>
+                  {it.params?.length > 0 && <ParamTable rows={it.params} />}
+                  {it.returns && (
+                    <DocReturns>
+                      반환 <DocType>{it.returns}</DocType>
+                    </DocReturns>
+                  )}
+                  {it.preview}
+                  {it.example && docCode(it.example)}
+                </DocCard>
+              ))}
+            </DocCards>
+          </DocSection>
+        ))}
+
+        {docs.rootNote && <DocCallout>{docs.rootNote}</DocCallout>}
+
+        {usage && (
+          <DocSection id="doc-usage">
+            <DocTitle>CLM30 사용 예</DocTitle>
+            <DocDesc>
+              <code>{usage.file}</code>
+            </DocDesc>
+            {docCode(usage.code)}
+          </DocSection>
+        )}
+
+        {docs.notes?.length > 0 && (
+          <DocSection id="doc-notes">
+            <DocTitle>주의</DocTitle>
+            <DocList>
+              {docs.notes.map(n => (
+                <li key={n}>{n}</li>
+              ))}
+            </DocList>
+          </DocSection>
+        )}
+
+        {docs.usedIn?.length > 0 && (
+          <DocSection id="doc-used">
+            <DocTitle>CLM30 사용처</DocTitle>
+            <DocList>
+              {docs.usedIn.map(u => (
+                <li key={u.file}>
+                  <code>{u.file}</code>
+                  {u.what && ` — ${u.what}`}
+                </li>
+              ))}
+            </DocList>
+          </DocSection>
+        )}
+      </DocPage>
+
+      {/* 오른쪽에 따라다니는 목차 */}
+      <DocToc aria-label={`${name} 목차`}>
+        <strong>{name}</strong>
+        {toc.map(t => (
+          <DocTocItem
+            key={t.id}
+            type="button"
+            $sub={t.sub}
+            data-active={t.id === activeId}
+            onMouseDown={e => e.stopPropagation()}
+            onClick={() => jump(t.id)}
+          >
+            {t.label}
+          </DocTocItem>
+        ))}
+      </DocToc>
+    </DocLayout>
+  );
 }
 
 function Playground() {
@@ -2081,8 +2738,63 @@ function Playground() {
     navigate(`/playground/${storyName}`);
   };
 
+  // 문서 내용: 함수 문서(story.docs) 또는 컴포넌트 문서(componentDocs)
+  const docs = active.docs ?? COMPONENT_DOCS[active.name] ?? { summary: '' };
+  const badgeOf = s => COMPONENT_DOCS[s.name]?.badge; // 메뉴 스티커
+
   const readoutProps = Object.fromEntries(
     active.controls.filter(c => c.type !== 'json').map(c => [c.key, props[c.key]]),
+  );
+
+  const preview = active.render(props, { state, setState });
+  const demo = active.docs ? (
+    preview
+  ) : (
+    <>
+      <DemoPreview>{preview}</DemoPreview>
+      <DemoGrid>
+        <Panel>
+          <PanelHead>
+            <span>Controls</span>
+            <ResetBtn onClick={reset}>reset</ResetBtn>
+          </PanelHead>
+          {active.controls.length === 0 ? (
+            <Empty>조절 가능한 props 없음 (상호작용만 지원)</Empty>
+          ) : (
+            active.controls.map(c => (
+              <ControlRow
+                key={c.key}
+                control={c}
+                value={props[c.key]}
+                onChange={v => setProp(c.key, v)}
+              />
+            ))
+          )}
+          {Object.keys(readoutProps).length > 0 && (
+            <PropsReadout>
+              <span>current props</span>
+              <pre>{JSON.stringify(readoutProps, null, 2)}</pre>
+            </PropsReadout>
+          )}
+        </Panel>
+        <Panel>
+          <PanelHead>
+            <span>Code</span>
+            <CopyBtn onClick={copyCode} data-copied={copied}>
+              {copied ? '✓ 복사됨' : '복사'}
+            </CopyBtn>
+          </PanelHead>
+          <SyntaxHighlighter
+            language="jsx"
+            style={oneDark}
+            customStyle={{ margin: 0, borderRadius: 6, fontSize: 14, padding: '14px 16px' }}
+            wrapLongLines
+          >
+            {code}
+          </SyntaxHighlighter>
+        </Panel>
+      </DemoGrid>
+    </>
   );
 
   return (
@@ -2117,6 +2829,7 @@ function Playground() {
                 <React.Fragment key={s.name}>
                   <NavItem data-active={s.name === activeName} onClick={() => selectStory(s.name)}>
                     {s.name}
+                    {badgeOf(s) && <Badge data-kind={badgeOf(s)}>{badgeOf(s)}</Badge>}
                   </NavItem>
                   {childrenOf(s.name).map(c => (
                     <NavSubItem
@@ -2126,6 +2839,7 @@ function Playground() {
                       title={`${s.name} 내부에서 쓰이는 유틸`}
                     >
                       ↳ {c.name}
+                      {badgeOf(c) && <Badge data-kind={badgeOf(c)}>{badgeOf(c)}</Badge>}
                     </NavSubItem>
                   ))}
                 </React.Fragment>
@@ -2138,79 +2852,18 @@ function Playground() {
       <Main>
         <MainHead>
           <h1>{active.name}</h1>
+          {badgeOf(active) && <Badge data-kind={badgeOf(active)}>{badgeOf(active)}</Badge>}
           <Category>{active.category}</Category>
           <UrlHint>/playground/{active.name}</UrlHint>
         </MainHead>
 
-        <Stage>
-          <StageInner>{active.render(props, { state, setState })}</StageInner>
-        </Stage>
-
-        <Grid>
-          <Panel>
-            <PanelHead>
-              <span>Controls</span>
-              <ResetBtn onClick={reset}>reset</ResetBtn>
-            </PanelHead>
-            {active.controls.length === 0 ? (
-              <Empty>조절 가능한 props 없음 (상호작용만 지원)</Empty>
-            ) : (
-              active.controls.map(c => (
-                <ControlRow
-                  key={c.key}
-                  control={c}
-                  value={props[c.key]}
-                  onChange={v => setProp(c.key, v)}
-                />
-              ))
-            )}
-            {Object.keys(readoutProps).length > 0 && (
-              <PropsReadout>
-                <span>current props</span>
-                <pre>{JSON.stringify(readoutProps, null, 2)}</pre>
-              </PropsReadout>
-            )}
-          </Panel>
-
-          <Panel>
-            <PanelHead>
-              <span>Code</span>
-              <CopyBtn onClick={copyCode} data-copied={copied}>
-                {copied ? '✓ 복사됨' : '복사'}
-              </CopyBtn>
-            </PanelHead>
-            <SyntaxHighlighter
-              language="jsx"
-              style={oneDark}
-              customStyle={{
-                margin: 0,
-                borderRadius: 6,
-                fontSize: 12.5,
-                padding: '14px 16px',
-              }}
-              wrapLongLines
-            >
-              {code}
-            </SyntaxHighlighter>
-          </Panel>
-        </Grid>
-
-        {usage && (
-          <Panel style={{ marginTop: 20 }}>
-            <PanelHead>
-              <span>본 프로젝트(CLM30) 사용 예</span>
-              <UrlHint>{usage.file}</UrlHint>
-            </PanelHead>
-            <SyntaxHighlighter
-              language="jsx"
-              style={oneDark}
-              customStyle={{ margin: 0, borderRadius: 6, fontSize: 12.5, padding: '14px 16px' }}
-              wrapLongLines
-            >
-              {usage.code}
-            </SyntaxHighlighter>
-          </Panel>
-        )}
+        <DocsPage
+          name={active.name}
+          docs={docs}
+          demo={demo}
+          propsList={active.docs ? null : mergeProps(controlProps(active.controls), docs.props)}
+          usage={usage}
+        />
       </Main>
     </Layout>
   );
@@ -2270,10 +2923,24 @@ const Layout = styled.div`
   background: var(--pg-bg);
   color: var(--pg-text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* 버튼은 브라우저 기본(Arial) 대신 본문 글꼴 */
+  button,
+  input {
+    font-family: inherit;
+  }
+
+  /* 코드 글꼴 통일: 기본 monospace(윈도우=Courier New)는 가늘고 흐려서 개발용 글꼴 우선
+     코드 블록(SyntaxHighlighter)은 글꼴을 인라인 스타일로 넣어서 !important로 덮음 */
+  code,
+  pre,
+  pre * {
+    font-family: ${CODE_FONT} !important;
+  }
 `;
 
 const Sidebar = styled.aside`
-  width: 240px;
+  width: clamp(300px, 18vw, 420px); /* 넓은 화면에서 같이 넓어짐 */
   flex-shrink: 0;
   background: var(--pg-sidebar);
   color: var(--pg-sidebar-text);
@@ -2289,7 +2956,7 @@ const BrandRow = styled.div`
 `;
 
 const Brand = styled.div`
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 700;
   color: #fff;
 `;
@@ -2312,13 +2979,13 @@ const SearchBox = styled.input`
   display: block;
   width: calc(100% - 40px);
   margin: 0 20px 8px;
-  padding: 7px 10px;
+  padding: 8px 12px;
   box-sizing: border-box;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
-  font-size: 13px;
+  font-size: 15px;
   outline: none;
 
   &::placeholder {
@@ -2331,7 +2998,7 @@ const SearchBox = styled.input`
 
 const NoResult = styled.div`
   padding: 10px 20px;
-  font-size: 13px;
+  font-size: 15px;
   color: #9e9e9e;
 `;
 
@@ -2340,7 +3007,7 @@ const Group = styled.div`
 `;
 
 const GroupTitle = styled.div`
-  font-size: 11px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #9e9e9e;
@@ -2354,8 +3021,8 @@ const NavItem = styled.button`
   background: none;
   border: none;
   color: inherit;
-  font-size: 14px;
-  padding: 8px 20px;
+  font-size: 16px;
+  padding: 9px 20px;
   cursor: pointer;
 
   &:hover {
@@ -2371,13 +3038,13 @@ const NavItem = styled.button`
 // 부모 컴포넌트 아래 들여쓰기되는 하위(유틸) 항목
 const NavSubItem = styled(NavItem)`
   padding-left: 36px;
-  font-size: 13px;
+  font-size: 16px;
   color: #b7b7bd;
 `;
 
 const Main = styled.main`
   flex: 1;
-  padding: 32px 40px;
+  padding: 32px clamp(40px, 3.5vw, 96px);
   overflow-y: auto;
 `;
 
@@ -2389,7 +3056,7 @@ const MainHead = styled.div`
   flex-wrap: wrap;
 
   h1 {
-    font-size: 22px;
+    font-size: 32px;
     font-weight: 700;
   }
 `;
@@ -2405,37 +3072,6 @@ const Category = styled.span`
 const UrlHint = styled.code`
   font-size: 12px;
   color: var(--pg-muted);
-`;
-
-const Stage = styled.div`
-  background: var(--pg-stage);
-  border: 1px solid var(--pg-border);
-  border-radius: 8px;
-  min-height: 240px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
-  margin-bottom: 20px;
-  background-image: radial-gradient(var(--pg-stage-dot) 1px, transparent 1px);
-  background-size: 16px 16px;
-  color: var(--pg-text);
-`;
-
-const StageInner = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const Panel = styled.div`
@@ -2535,7 +3171,7 @@ const JsonRow = styled.div`
     border-radius: 5px;
     padding: 8px 10px;
     font-size: 12px;
-    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-family: ${CODE_FONT};
     line-height: 1.5;
   }
 `;
@@ -2546,7 +3182,7 @@ const RowLabel = styled.div`
   display: flex;
   align-items: center;
   font-size: 13px;
-  font-family: monospace;
+  font-family: ${CODE_FONT};
   color: var(--pg-muted);
 `;
 
@@ -2574,6 +3210,287 @@ const SegItem = styled.button`
     color: #fff;
     border-color: #3e3e3e;
   }
+`;
+
+// 본문 + 오른쪽 목차 (화면이 좁으면 목차 숨김)
+// 컴포넌트 미리보기 판 (점 무늬 배경 — 컴포넌트가 떠 보이게)
+const DemoPreview = styled.div`
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  margin-bottom: 16px;
+  border: 1px solid var(--pg-border);
+  border-radius: 8px;
+  background: var(--pg-stage);
+  background-image: radial-gradient(var(--pg-stage-dot) 1px, transparent 1px);
+  background-size: 16px 16px;
+  color: var(--pg-text);
+
+  & > * {
+    max-width: 100%;
+  }
+`;
+
+const DemoGrid = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+`;
+
+// 메뉴·제목 옆 스티커 (NEW = 새 기능, UPDATE = 기능 추가)
+const Badge = styled.span`
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  color: #fff;
+  background: #2e7d32;
+
+  &[data-kind='NEW'] {
+    background: #fb5b5b;
+  }
+
+  h1 + & {
+    font-size: 12px;
+    line-height: 20px;
+  }
+`;
+
+const DocLayout = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(240px, 15vw, 360px); /* 본문·목차 모두 화면 폭에 비례 */
+  gap: clamp(40px, 3vw, 80px);
+  align-items: start;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: minmax(0, 1fr);
+
+    & > nav {
+      display: none;
+    }
+  }
+`;
+
+const DocToc = styled.nav`
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  & > strong {
+    margin-bottom: 10px;
+    padding-left: 14px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--pg-text);
+  }
+`;
+
+// 항목마다 왼쪽 세로줄, 활성이면 그 줄이 굵은 강조색 + 옅은 배경
+const DocTocItem = styled.button`
+  padding: 6px 10px 6px ${({ $sub }) => ($sub ? '28px' : '14px')};
+  border: none;
+  border-left: 2px solid var(--pg-border);
+  border-radius: 0 4px 4px 0;
+  background: none;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--pg-muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--pg-text);
+  }
+
+  &[data-active='true'] {
+    border-left: 3px solid #fb5b5b;
+    padding-left: ${({ $sub }) => ($sub ? '27px' : '13px')};
+    background: rgba(251, 91, 91, 0.1);
+    color: var(--pg-text);
+    font-weight: 700;
+  }
+`;
+
+const DocPage = styled.div`
+  min-width: 0;
+  color: var(--pg-text);
+  font-size: 16px;
+  line-height: 1.7;
+
+  code {
+    font-size: 14px;
+  }
+`;
+
+const DocLead = styled.p`
+  margin: 0 0 20px;
+  font-size: 20px;
+`;
+
+const DocSection = styled.section`
+  margin-top: 56px;
+  scroll-margin-top: 16px;
+`;
+
+const DocTitle = styled.h2`
+  margin: 0 0 20px;
+  font-size: 24px;
+  font-weight: 700;
+`;
+
+const DocDesc = styled.div`
+  margin-bottom: 20px;
+  color: var(--pg-muted);
+  font-size: 15px;
+`;
+
+const DocList = styled.ul`
+  margin: 0;
+  padding-left: 20px;
+
+  li + li {
+    margin-top: 10px;
+  }
+`;
+
+const DocCards = styled.div`
+  display: grid;
+  gap: 24px;
+`;
+
+const DocCard = styled.div`
+  scroll-margin-top: 16px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  /* 카드 안에서는 gap으로 문단 간격을 주므로 개별 여백 제거 */
+  & > * {
+    margin: 0 !important;
+  }
+  border: 1px solid var(--pg-border);
+  border-radius: 8px;
+  background: var(--pg-panel);
+`;
+
+const DocCardTitle = styled.h3`
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+`;
+
+// 인자·Props 표 (가로로 넘치면 표만 스크롤)
+const DocTableWrap = styled.div`
+  overflow-x: auto;
+  border: 1px solid var(--pg-border);
+  border-radius: 8px;
+`;
+
+const DocParamTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.55;
+
+  th,
+  td {
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--pg-border);
+  }
+
+  tbody tr:last-of-type td {
+    border-bottom: none;
+  }
+
+  th {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pg-muted);
+    background: var(--pg-chip-bg);
+    white-space: nowrap;
+  }
+
+  /* 이름: 줄바꿈 없이 / 타입: 최대 폭 안에서 '|' 단위로 줄바꿈 / 기본값: 좁게 / 설명: 나머지 */
+  td:nth-of-type(1) {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  td:nth-of-type(2) {
+    width: 30%;
+    min-width: 160px;
+  }
+
+  ${({ $cols }) =>
+    $cols === 4 &&
+    `td:nth-of-type(3) {
+      width: 1%;
+      white-space: nowrap;
+    }`}
+
+  td > code {
+    font-weight: 700;
+  }
+
+  em {
+    display: block;
+    width: fit-content;
+    margin-top: 4px;
+    padding: 0 5px;
+    border: 1px solid var(--pg-border);
+    border-radius: 3px;
+    font-size: 11px;
+    font-style: normal;
+    color: var(--pg-muted);
+  }
+`;
+
+const DocType = styled.code`
+  color: #c2185b;
+  word-break: keep-all;
+
+  & > span {
+    white-space: nowrap;
+  }
+`;
+
+const DocReturns = styled.div`
+  margin: 0;
+  font-size: 15px;
+  color: var(--pg-muted);
+`;
+
+const DocDemo = styled.div`
+  padding: 20px;
+  border: 1px solid var(--pg-border);
+  border-radius: 8px;
+  background: var(--pg-panel);
+`;
+
+const DocCallout = styled.div`
+  margin-top: 56px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--pg-muted);
+  border-radius: 4px;
+  background: var(--pg-chip-bg);
+  font-size: 15px;
 `;
 
 const PropsReadout = styled.div`

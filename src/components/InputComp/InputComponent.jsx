@@ -94,12 +94,18 @@ const DataListInputComp = styled(TextInputComp)`
   padding: 8px 36px 6px 12px;
 `;
 
-export function LabelCheckBox(props) {
+/**
+ * LabelCheckBox
+ *  - label : 체크박스 옆 글자
+ *  - size  : 체크박스 가로·세로(px), 기본 18 (체크 표시도 비율대로 줄어듦)
+ *  - 그 외 props는 input에 그대로 전달 (checked, disabled, onChange, title ...)
+ */
+export function LabelCheckBox({ label, size = 18, ...props }) {
   return (
-    <CheckBoxWrap>
+    <CheckBoxWrap $size={size}>
       <label htmlFor={props.id}>
-        <input id={props.id} type="checkbox" {...props} />
-        {props.label}
+        <input type="checkbox" {...props} />
+        {label}
       </label>
     </CheckBoxWrap>
   );
@@ -117,33 +123,51 @@ const CheckBoxWrap = styled.div`
     font-size: 14px;
     color: var(--seed-text);
 
+    /* 체크박스 색은 테마와 상관없이 고정 (원래 어두운 회색 톤이라 다크모드에서도 그대로) */
     & input {
-      width: 18px;
-      height: 18px;
+      flex-shrink: 0;
+      width: ${({ $size }) => $size}px;
+      height: ${({ $size }) => $size}px;
       -webkit-appearance: none;
       appearance: none;
       border-radius: 0.15em;
-      border: 1px solid var(--x-545454);
+      border: 1px solid #545454;
       outline: none;
       cursor: pointer;
 
       &:disabled {
-        border: 1px solid var(--x-d1d1d1);
-        background-color: var(--x-f9f9f9);
+        border: 1px solid #d1d1d1;
+        background-color: #f9f9f9;
+        cursor: not-allowed;
       }
 
       &:checked {
-        background-color: var(--x-545454);
+        background-color: #545454;
 
         &::before {
           content: '\\2714';
-          color: var(--seed-invert-text);
-          font-size: 14px;
+          color: #ffffff;
+          /* 18px 기준(글자 14px, 오른쪽·위 2px) 비율로 크기·위치 맞춤 */
+          font-size: ${({ $size }) => ($size * 14) / 18}px;
           position: relative;
-          left: 2px;
-          top: -2px;
+          left: ${({ $size }) => ($size * 2) / 18}px;
+          top: ${({ $size }) => (-$size * 2) / 18}px;
         }
       }
+
+      /* 체크된 채 잠김: 채운 배경 대신 잠긴 칸 + 회색 체크 → 일반 체크보다 약해 보이게 */
+      &:disabled:checked {
+        border-color: #d1d1d1;
+        background-color: #f9f9f9;
+
+        &::before {
+          color: #aaaaaa;
+        }
+      }
+    }
+
+    &:has(input:disabled) {
+      cursor: not-allowed;
     }
   }
 `;

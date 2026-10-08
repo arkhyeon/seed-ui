@@ -20,15 +20,7 @@ import { BlackButton, WhiteButton } from './Button/Button';
  *      onLeave : 단계 이탈 시 실행 (onEnter 원복)
  *  - onClose : 닫기(×·Esc) / 완료 시 콜백
  *
- * target 지정 방법
- *  1) ref          : target: () => inputRef.current
- *  2) id           : target: () => document.getElementById('save-btn')
- *  3) 범위 안 선택자 : target: () => wrapRef.current?.querySelector('.ag-header-cell[col-id="name"]')
- *                    (ref·id를 못 다는 라이브러리 내부 요소: ag-grid 헤더, Modal 버튼 등)
- *  4) 대체 대상     : target: () => wrap.querySelector('.a') ?? wrap.querySelector('.b')
- *  5) 좌표(DOMRect) : target: () => ({ top, left, width, height })
- *                    (DOM이 없는 캔버스 요소: GoJS 노드, chart 영역 등을 직접 계산)
- *  6) 없음          : target: () => null  → 가운데 설명창 (예시 그림을 content에 넣어 안내)
+ * target 지정: tourTarget 헬퍼(./guideTourTarget.js) — 사용법·API는 플레이그라운드 /playground/tourTarget
  *
  * 키보드
  *  - Esc            : 닫기 (EscStack·Modal보다 먼저 받음 → 투어만 닫힘)

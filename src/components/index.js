@@ -5,6 +5,7 @@ import AsideCreator from './Menu/AsideCreator';
 import Tooltip from './Tooltip';
 import HelpIcon from './HelpIcon';
 import GuideTour from './GuideTour';
+import { tourTarget, unionRect, findButton, modalWrapOf } from './guideTourTarget';
 import Modal from './Modal';
 import Slider from './Slider';
 import DatePicker from './DateTime/DatePicker';
@@ -61,7 +62,7 @@ export { Tooltip };
 
 export { HelpIcon };
 
-export { GuideTour };
+export { GuideTour, tourTarget, unionRect, findButton, modalWrapOf };
 
 export { Modal };
 
