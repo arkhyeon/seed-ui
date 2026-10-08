@@ -65,7 +65,7 @@
 메뉴에 들어갈 메뉴 이름으로 Key 역할[unique]
 <center>
 <img
-src="./readmeImg/1title.jpg"
+src="../readmeImg/1title.jpg"
 />
 </center>
 
@@ -237,7 +237,7 @@ function App() {
 HeaderCreator로 Logo, TopMenu, Personal Menu 구성할 수 있습니다.
 
 <div style="text-align: center;">
-    <img src="./readmeImg/topmenu.jpg" />
+    <img src="../readmeImg/topmenu.jpg" />
 </div>
 
 1. <code>logoSeeting {Object}</code>
@@ -324,7 +324,7 @@ function Index(props) {
    해당 title로 현재 메뉴가 어떤 메뉴로 사이드 메뉴를 구성할 지 판단
 
 <div style="text-align: center;">
-    <img src="./readmeImg/sidemenu.jpg" />
+    <img src="../readmeImg/sidemenu.jpg" />
 </div>
 
 ```javascript
