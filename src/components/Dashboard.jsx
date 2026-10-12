@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom/client';
+import { createPortal } from 'react-dom';
 import { GridStack } from 'gridstack';
 import styled from '@emotion/styled';
 import 'gridstack/dist/gridstack.css';
@@ -61,23 +61,54 @@ function TabComponent({ title, onRemove }) {
   );
 }
 
+// 위젯 리사이즈 제약 (최소/최대 너비 및 높이)
+const SIZE_LIMIT = { minW: 2, maxW: 8, minH: 2, maxH: 6 };
+
+const defaultRenderWidget = (widget, { onRemove }) => (
+  <TabComponent title={widget.title} onRemove={onRemove} />
+);
+
 /**
  * 대시보드 메인 레이아웃
- * GridStack 초기화 사이드바 및 탭 배치.
+ * GridStack 은 위젯 틀(DOM)과 배치만 담당하고, 위젯 내용은 createPortal 로 렌더링한다.
+ * → 위젯이 부모 React 트리 안에 있으므로 Provider(테마, 라우터 등) Context 가 그대로 전달된다.
+ *
+ * @param {Object} props
+ * @param {string} props.title - 대시보드 상단 제목
+ * @param {string} props.width - 전체 너비
+ * @param {number|string} props.height - 전체 높이 (숫자면 px)
+ * @param {{ id: string, title: string, x: number, y: number, w: number, h: number }[]} props.currentTabs - 기본 배치
+ * @param {{ id: string, title: string, w: number, h: number }[]} props.sidebarTabs - 위젯 라이브러리 목록
+ * @param {string|null} [props.storageKey='grid-layout'] - 배치를 저장할 localStorage 키. null 이면 저장 안 함
+ * @param {Function} [props.onLayoutChange] - 배치가 바뀔 때 호출. 인자는 currentTabs 와 같은 형태의 배열
+ * @param {Function} [props.renderWidget] - (widget: { id, title }, { onRemove }) => ReactNode. 위젯 내용 렌더링
  */
-function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
+function Dashboard({
+  width,
+  height,
+  title,
+  currentTabs,
+  sidebarTabs,
+  storageKey = 'grid-layout',
+  onLayoutChange,
+  renderWidget = defaultRenderWidget,
+}) {
   // height 가 숫자면 px 로 보정 (CSS 값에 단위 없으면 무시됨)
   const cssHeight = typeof height === 'number' ? `${height}px` : height;
   const rootContainerRef = useRef(null); // 루트 컨테이너 DOM 참조
   const gridContainerRef = useRef(null); // GridStack이 적용될 컨테이너 DOM 참조
+  const sidebarContentRef = useRef(null); // 사이드바 위젯 목록 DOM 참조 (드래그 대상 한정용)
   const gridRef = useRef(null); // GridStack 인스턴스 참조
   const [dashboardWidth, setDashboardWidth] = useState(0); // 현재 화면 너비 (반응형 컬럼 조정을 위함)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 사이드바 열림/닫힘 상태
   const [isEditable, setIsEditable] = useState(true); // 레이아웃 편집 모드 (드래그/리사이즈 활성화 여부)
 
+  // 그리드에 배치된 위젯 — { id, title, itemEl(GridStack 위젯 DOM), contentEl(portal 대상) }
+  const [mountedWidgets, setMountedWidgets] = useState([]);
+
   // 로컬 스토리지에서 저장된 레이아웃을 불러오거나 기본 레이아웃을 설정
   const [initialLayout] = useState(() => {
-    const saved = localStorage.getItem('grid-layout');
+    const saved = storageKey ? localStorage.getItem(storageKey) : null;
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -92,9 +123,13 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
     return currentTabs;
   });
 
-  // 현재 그리드에 배치된 위젯들의 ID 목록
-  const [activeWidgetIds, setActiveWidgetIds] = useState(() => initialLayout.map(item => item.id));
-  const rootsRef = useRef(new Map()); // 인스턴스를 저장하여 메모리 누수 방지
+  // GridStack 이벤트 핸들러(마운트 시 1회 등록)에서 항상 최신 props 를 읽기 위한 ref
+  const latestRef = useRef({});
+  latestRef.current = {
+    storageKey,
+    onLayoutChange,
+    titles: new Map([...sidebarTabs, ...currentTabs, ...initialLayout].map(t => [t.id, t.title])),
+  };
 
   // 화면 크기 변경 감지를 위한 ResizeObserver 설정
   useEffect(() => {
@@ -114,136 +149,118 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
   useEffect(() => {
     if (!gridContainerRef.current) return undefined;
 
-    if (!gridRef.current) {
-      // GridStack 인스턴스 생성
-      const grid = GridStack.init(
-        {
-          cellHeight: 60,
-          margin: 10,
-          handle: '.drag-handle', // 드래그를 활성화할 CSS 셀렉터
-          acceptWidgets: true, // 외부(사이드바)에서 드래그 앤 드롭으로 위젯 추가 허용
-          disableOneColumnMode: true, // 모바일에서 강제로 1열 모드로 변하는 것을 방지
-          float: false, // true면 위젯들이 위로 빈 공간을 채우지 않고 자유롭게 배치되도록 설정
-          resizable: { handles: 'se', autoHide: false }, // 탭 우측 하단 리사이즈 핸들 설정
-          alwaysShowPlaceholder: true, // 드래그 중 배치 예정 위치 항상 표시
-          animate: true, // 이동/리사이즈 시 애니메이션 적용
-        },
-        gridContainerRef.current,
-      );
-      gridRef.current = grid;
+    // GridStack 인스턴스 생성
+    const grid = GridStack.init(
+      {
+        cellHeight: 60,
+        margin: 10,
+        handle: '.drag-handle', // 드래그를 활성화할 CSS 셀렉터
+        acceptWidgets: true, // 외부(사이드바)에서 드래그 앤 드롭으로 위젯 추가 허용
+        disableOneColumnMode: true, // 모바일에서 강제로 1열 모드로 변하는 것을 방지
+        float: false, // true면 위젯들이 위로 빈 공간을 채우지 않고 자유롭게 배치되도록 설정
+        resizable: { handles: 'se', autoHide: false }, // 탭 우측 하단 리사이즈 핸들 설정
+        alwaysShowPlaceholder: true, // 드래그 중 배치 예정 위치 항상 표시
+        animate: true, // 이동/리사이즈 시 애니메이션 적용
+      },
+      gridContainerRef.current,
+    );
+    gridRef.current = grid;
+    let isLoading = true; // 초기 배치 중에는 저장/onLayoutChange 생략
 
-      /**
-       * GridStack 아이템 내부에 React 컴포넌트를 마운트하는 헬퍼 함수
-       * @param {HTMLElement} el - GridStack 위젯 DOM 요소
-       * @param {string} title - 위젯 제목
-       */
-      const renderWidget = (el, dataTitle) => {
-        let contentEl = el.querySelector('.grid-stack-item-content');
+    /**
+     * 현재 배치를 저장하고 onLayoutChange 로 알림 (currentTabs 와 같은 형태)
+     */
+    const saveLayout = () => {
+      if (isLoading) return;
+      const { storageKey: key, onLayoutChange: onChange, titles } = latestRef.current;
+      const layout = grid.engine.nodes.map(node => ({
+        id: node.id,
+        title: titles.get(node.id) ?? '새 위젯',
+        x: node.x,
+        y: node.y,
+        w: node.w,
+        h: node.h,
+      }));
+      if (key) {
+        if (layout.length > 0) {
+          localStorage.setItem(key, JSON.stringify(layout));
+        } else {
+          localStorage.removeItem(key);
+        }
+      }
+      onChange?.(layout);
+    };
+
+    grid.on('change', saveLayout);
+
+    // 새 위젯이 그리드에 추가되었을 때 (초기 배치, 사이드바 드롭) — portal 대상 등록
+    grid.on('added', (event, items) => {
+      const added = items.map(item => {
+        // 추가된 위젯에 동적으로 리사이징 제약 조건 적용 (최소/최대 너비 및 높이)
+        grid.update(item.el, SIZE_LIMIT);
+
+        // 사이드바에서 드래그해 올 때 복제된 사이드바 DOM 정리
+        const childrenToKeep = [];
+        Array.from(item.el.children).forEach(child => {
+          const className = child.className || '';
+          const isContent =
+            typeof className === 'string' && className.includes('grid-stack-item-content');
+          const isResizable = typeof className === 'string' && className.includes('ui-resizable');
+
+          if (isContent) {
+            // eslint-disable-next-line no-param-reassign
+            child.innerHTML = '';
+            childrenToKeep.push(child);
+          } else if (isResizable) {
+            childrenToKeep.push(child);
+          }
+        });
+        while (item.el.firstChild) {
+          item.el.removeChild(item.el.firstChild);
+        }
+        childrenToKeep.forEach(child => {
+          item.el.appendChild(child);
+        });
+
+        let contentEl = item.el.querySelector('.grid-stack-item-content');
         if (!contentEl) {
           contentEl = document.createElement('div');
           contentEl.className = 'grid-stack-item-content';
-          el.appendChild(contentEl);
+          item.el.appendChild(contentEl);
         }
-        if (rootsRef.current.has(el)) rootsRef.current.get(el).unmount();
-        const root = ReactDOM.createRoot(contentEl);
-        root.render(<TabComponent title={dataTitle} onRemove={() => grid.removeWidget(el)} />);
-        rootsRef.current.set(el, root);
-      };
-
-      /**
-       * 현재 그리드의 위젯 배치 상태를 로컬 스토리지에 저장하는 함수
-       */
-      const saveLayout = () => {
-        if (!gridRef.current) return;
-        const layout = gridRef.current.engine.nodes.map(node => ({
-          id: node.el.getAttribute('data-id'),
-          title: node.el.getAttribute('data-title'),
-          x: node.x,
-          y: node.y,
-          w: node.w,
-          h: node.h,
-        }));
-        if (layout.length > 0) {
-          localStorage.setItem('grid-layout', JSON.stringify(layout));
-        } else {
-          localStorage.removeItem('grid-layout');
-        }
-      };
-
-      grid.on('change', saveLayout);
-
-      // 새 위젯이 그리드에 추가되었을 때 발생하는 이벤트
-      grid.on('added', (event, items) => {
-        items.forEach(item => {
-          // 추가된 위젯에 동적으로 리사이징 제약 조건 적용 (최소/최대 너비 및 높이)
-          grid.update(item.el, { minW: 2, maxW: 8, minH: 2, maxH: 6 });
-
-          // 사이드바에서 드래그해 올 때 생긴 잔여 DOM 요소 정리
-          const childrenToKeep = [];
-          Array.from(item.el.children).forEach(child => {
-            const className = child.className || '';
-            const isContent =
-              typeof className === 'string' && className.includes('grid-stack-item-content');
-            const isResizable = typeof className === 'string' && className.includes('ui-resizable');
-
-            if (isContent) {
-              // eslint-disable-next-line no-param-reassign
-              child.innerHTML = '';
-              childrenToKeep.push(child);
-            } else if (isResizable) {
-              childrenToKeep.push(child);
-            }
-          });
-
-          // 기존 자식들을 모두 제거
-          while (item.el.firstChild) {
-            item.el.removeChild(item.el.firstChild);
-          }
-
-          // 유지해야 할 자식들만 다시 추가
-          childrenToKeep.forEach(child => {
-            item.el.appendChild(child);
-          });
-
-          const id = item.el.getAttribute('data-id');
-          const dataTitle = item.el.getAttribute('data-title') || '새 위젯';
-          if (id) {
-            setActiveWidgetIds(prev => Array.from(new Set([...prev, id])));
-          }
-          renderWidget(item.el, dataTitle);
-        });
-        saveLayout();
+        const id = item.id ?? item.el.getAttribute('data-id');
+        const widgetTitle =
+          latestRef.current.titles.get(id) ?? item.el.getAttribute('data-title') ?? '새 위젯';
+        return { id, title: widgetTitle, itemEl: item.el, contentEl };
       });
+      const addedIds = added.map(w => w.id);
+      setMountedWidgets(prev => [...prev.filter(w => !addedIds.includes(w.id)), ...added]);
+      saveLayout();
+    });
 
-      // 위젯이 그리드에서 제거되었을 때 발생하는 이벤트
-      grid.on('removed', (event, items) => {
-        items.forEach(item => {
-          const id = item.el.getAttribute('data-id');
-          if (id) {
-            setActiveWidgetIds(prev => prev.filter(activeId => activeId !== id));
-          }
-          if (rootsRef.current.has(item.el)) {
-            rootsRef.current.get(item.el).unmount(); // React 컴포넌트 언마운트 처리
-            rootsRef.current.delete(item.el);
-          }
-        });
-        saveLayout();
-      });
+    // 위젯이 그리드에서 제거되었을 때 — portal 해제 (React 가 위젯 내용을 언마운트)
+    grid.on('removed', (event, items) => {
+      const removedIds = items.map(item => item.id);
+      setMountedWidgets(prev => prev.filter(w => !removedIds.includes(w.id)));
+      saveLayout();
+    });
 
-      // 초기 렌더링 시점에 존재하는 기본 위젯들을 초기화
-      const staticItems = gridContainerRef.current.querySelectorAll('.grid-stack-item');
-      staticItems.forEach(el => {
-        grid.update(el, { minW: 2, maxW: 8, minH: 2, maxH: 6 }); // 기본 위젯에 리사이징 제약 적용
-        renderWidget(el, el.getAttribute('data-title'));
-      });
-    }
+    // 초기 위젯: 위젯 틀은 GridStack 이 만들고, 'added' 이벤트에서 portal 대상으로 등록
+    grid.batchUpdate();
+    initialLayout.forEach(({ id, x, y, w, h }) => grid.addWidget({ id, x, y, w, h }));
+    grid.batchUpdate(false);
+    isLoading = false;
 
     return () => {
-      if (gridRef.current) {
-        gridRef.current.destroy(false);
-        gridRef.current = null;
-      }
+      grid.offAll();
+      // GridStack 이 만든 위젯 DOM 제거 (StrictMode 재실행 시 중복 방지). 컨테이너는 React 소유라 유지
+      grid.removeAll(true, false);
+      grid.destroy(false);
+      gridRef.current = null;
+      setMountedWidgets([]);
     };
+    // initialLayout 은 마운트 시 1회 사용하는 초기값 (useState 로 고정)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 편집 모드 상태 변경 시 GridStack 활성화/비활성화 처리
@@ -255,27 +272,36 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
         gridRef.current.disable();
       }
     }
+    // className prop 으로 바꾸면 GridStack 이 붙인 클래스(gs-8 등)까지 덮어쓰므로 classList 로 토글
+    gridContainerRef.current?.classList.toggle('is-static', !isEditable);
   }, [isEditable]);
 
-  // 사이드바가 열렸을 때 드래그 가능한 아이템 설정
+  const activeWidgetIds = mountedWidgets.map(widget => widget.id);
+  const activeWidgetKey = activeWidgetIds.join(',');
+
+  // 사이드바가 열렸을 때 드래그 가능한 아이템 설정 — 이 대시보드의 사이드바 요소만 대상으로 한정
   useEffect(() => {
     if (isSidebarOpen) {
       const timer = setTimeout(() => {
-        GridStack.setupDragIn('.sidebar-item', {
-          revert: 'invalid', // 유효하지 않은 드롭 위치일 경우 원래 자리로 되돌아감
-          scroll: false,
-          appendTo: 'body', // 드래그 헬퍼 요소를 body에 추가하여 z-index 문제 방지
-          helper: el => {
-            const clone = el.cloneNode(true);
-            clone.style.zIndex = '100';
-            return clone;
+        if (!sidebarContentRef.current) return;
+        GridStack.setupDragIn(
+          Array.from(sidebarContentRef.current.querySelectorAll('.sidebar-item')),
+          {
+            revert: 'invalid', // 유효하지 않은 드롭 위치일 경우 원래 자리로 되돌아감
+            scroll: false,
+            appendTo: 'body', // 드래그 헬퍼 요소를 body에 추가하여 z-index 문제 방지
+            helper: el => {
+              const clone = el.cloneNode(true);
+              clone.style.zIndex = '100';
+              return clone;
+            },
           },
-        });
+        );
       }, 100);
       return () => clearTimeout(timer);
     }
     return () => {};
-  }, [isSidebarOpen, activeWidgetIds]);
+  }, [isSidebarOpen, activeWidgetKey]);
 
   // 반응형 레이아웃 처리: 브라우저 너비에 따라 GridStack의 전체 컬럼 수를 조정
   useEffect(() => {
@@ -295,14 +321,20 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
   }, [dashboardWidth]);
 
   /**
-   * 저장된 레이아웃을 초기화하고 페이지를 새로고침하는 함수
+   * 기본 배치(currentTabs)로 초기화 — 페이지 새로고침 없이 위젯을 다시 배치
    */
   const handleReset = () => {
     // eslint-disable-next-line no-alert
-    if (window.confirm('정말 초기화하시겠습니까?')) {
-      localStorage.removeItem('grid-layout');
-      window.location.reload();
-    }
+    if (!window.confirm('정말 초기화하시겠습니까?')) return;
+    const grid = gridRef.current;
+    if (!grid) return;
+    // 이벤트 없이 기존 위젯 제거 → 다시 추가할 때 'added' 에서 한 번만 저장/onLayoutChange
+    grid.removeAll(true, false);
+    setMountedWidgets([]);
+    if (storageKey) localStorage.removeItem(storageKey);
+    grid.batchUpdate();
+    currentTabs.forEach(({ id, x, y, w, h }) => grid.addWidget({ id, x, y, w, h }));
+    grid.batchUpdate(false);
   };
 
   /**
@@ -337,32 +369,31 @@ function Dashboard({ width, height, title, currentTabs, sidebarTabs }) {
 
       <MainLayout>
         <GridWrapper height={cssHeight}>
-          <div className={`grid-stack ${!isEditable ? 'is-static' : ''}`} ref={gridContainerRef}>
-            {initialLayout.map(item => (
-              <div
-                key={item.id}
-                className="grid-stack-item"
-                gs-x={item.x}
-                gs-y={item.y}
-                gs-w={item.w}
-                gs-h={item.h}
-                data-id={item.id}
-                data-title={item.title}
-              />
-            ))}
-          </div>
+          {/* 위젯 DOM 은 GridStack 이 직접 관리 — React 는 컨테이너만 렌더링 */}
+          <div className="grid-stack" ref={gridContainerRef} />
+          {mountedWidgets.map(widget =>
+            createPortal(
+              renderWidget(
+                { id: widget.id, title: widget.title },
+                { onRemove: () => gridRef.current?.removeWidget(widget.itemEl) },
+              ),
+              widget.contentEl,
+              widget.id,
+            ),
+          )}
         </GridWrapper>
 
         <Sidebar isOpen={isSidebarOpen} isNarrow={isSidebarNarrow}>
           <SidebarInner isNarrow={isSidebarNarrow}>
             <SidebarHeader>위젯 라이브러리</SidebarHeader>
-            <SidebarContent>
+            <SidebarContent ref={sidebarContentRef}>
               {sidebarTabs
                 .filter(item => !activeWidgetIds.includes(item.id))
                 .map(item => (
                   <div
                     key={item.id}
                     className="sidebar-item grid-stack-item"
+                    gs-id={item.id}
                     gs-w={item.w}
                     gs-h={item.h}
                     data-id={item.id}

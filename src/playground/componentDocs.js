@@ -319,6 +319,24 @@ const COMPONENT_DOCS = {
         '{ id: string, title: string, w: number, h: number }[]',
         '라이브러리(드래그) 위젯 목록 — 이미 배치된 건 자동 숨김\nid = 고유값, title = 위젯 제목, w·h = 칸 크기\n예: [{ id: "w1", title: "매출 현황", w: 4, h: 3 }]',
       ),
+      fn(
+        'storageKey',
+        'string | null',
+        "배치를 저장할 localStorage 키 (기본값 'grid-layout')\n한 화면에 여러 대시보드를 쓸 때 서로 다른 키 지정\nnull 이면 저장하지 않음",
+        true,
+      ),
+      fn(
+        'onLayoutChange',
+        '(layout) => void',
+        '사용자가 배치를 바꿀 때 호출 (마운트 시에는 호출 안 함)\nlayout = currentTabs 와 같은 형태의 배열\n서버 저장 등에 사용',
+        true,
+      ),
+      fn(
+        'renderWidget',
+        '(widget: { id, title }, { onRemove }) => ReactNode',
+        '위젯 내용 렌더링 (기본값: 제목·메뉴·상세 보기 카드)\n위젯이 앱 React 트리 안에서 렌더링되어 Provider(테마, 라우터 등)가 그대로 전달됨\n드래그 핸들은 className="drag-handle" 요소',
+        true,
+      ),
     ],
   },
 

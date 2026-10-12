@@ -38,6 +38,7 @@
   ],
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
+    "gridstack": "^12.6.0",
     "lodash": "^4.17.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
