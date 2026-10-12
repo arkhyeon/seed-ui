@@ -4,11 +4,11 @@ import styled from '@emotion/styled';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import { BlackButton, WhiteButton, RadioButton, SwitchButton } from '../components/Button/Button';
+import { BlackButton, RadioButton, SwitchButton, WhiteButton } from '../components/Button/Button';
 import Radio from '../components/Radio';
 import Switch from '../components/Switch';
 import Toggle from '../components/Toggle';
-import { TextInput, PasswordInput, LabelCheckBox } from '../components/InputComp/InputComponent';
+import { LabelCheckBox, PasswordInput, TextInput } from '../components/InputComp/InputComponent';
 import Count from '../components/Count/Count';
 import Tooltip from '../components/Tooltip';
 import HelpIcon from '../components/HelpIcon';
@@ -34,16 +34,17 @@ import Counter from '../components/Counter/Counter';
 import CountList from '../components/CountList/CountList';
 import LabelList from '../components/LabelList/LabelList';
 import {
-  SideTabs,
   MainTabButton,
-  TabButton,
-  SideScrollWrap,
   selectSideTab,
+  SideScrollWrap,
+  SideTabs,
+  TabButton,
 } from '../components/SideTabs/SideTabs';
 import DNDWrapper from '../FuntionalComponent/dnd/DNDWrapper';
 import HeaderCreator from '../components/Menu/HeaderCreator';
 import AsideCreator from '../components/Menu/AsideCreator';
 import OptionCard from '../components/Card/OptionCard/OptionCard';
+import Dashboard from '../components/Dashboard';
 import ToastNotify from '../components/Notify/ToastNotify';
 import { CLM } from '../R2wZustand';
 
@@ -1633,6 +1634,121 @@ const steps = useMemo(() => [
   <Card.Body>본문 내용</Card.Body>
 </Card>`,
   },
+  {
+    category: 'Layout',
+    name: 'Dashboard',
+    controls: [
+      { key: 'title', type: 'text', default: '대시보드', desc: '대시보드 상단 제목 (string)' },
+      {
+        key: 'width',
+        type: 'text',
+        default: '100%',
+        desc: "전체 너비 (string)\n예: '100%', '960px'",
+      },
+      {
+        key: 'height',
+        type: 'number',
+        default: 600,
+        desc: '전체 높이 (number | string)\n숫자면 px 로 처리',
+      },
+      {
+        key: 'currentTabs',
+        type: 'json',
+        default: JSON.stringify(
+          [
+            { id: 'w1', title: '매출 현황', x: 0, y: 0, w: 4, h: 3 },
+            { id: 'w2', title: '작업 진행', x: 4, y: 0, w: 4, h: 3 },
+          ],
+          null,
+          2,
+        ),
+        desc: '처음 배치되는 위젯 배열\n{ id, title, x, y, w, h }[]\nx·y = 위치, w·h = 칸 크기',
+      },
+      {
+        key: 'sidebarTabs',
+        type: 'json',
+        default: JSON.stringify(
+          [
+            { id: 'w1', title: '매출 현황', w: 4, h: 3 },
+            { id: 'w3', title: '알림', w: 3, h: 2 },
+          ],
+          null,
+          2,
+        ),
+        desc: '위젯 라이브러리(드래그) 목록\n{ id, title, w, h }[]\n이미 배치된 위젯은 자동 숨김',
+      },
+    ],
+    render: p => (
+      <div style={{ width: '100%' }}>
+        <div
+          style={{
+            marginBottom: 14,
+            padding: '14px 16px',
+            background: 'var(--pg-panel)',
+            border: '1px solid var(--pg-border)',
+            borderRadius: 8,
+            fontSize: 13,
+            lineHeight: 1.65,
+            color: 'var(--pg-text)',
+          }}
+        >
+          <div style={{ fontWeight: 600, margin: '4px 0 4px' }}>설치</div>
+          <div style={{}}>
+            📦 <strong>번들 분리</strong> —{' '}
+            <code>import Dashboard from &apos;seed-ui/dashboard&apos;</code>. GridStack이 무거워
+            메인 번들에서 분리했습니다. 사용 앱에 <code>gridstack</code> 설치가 필요합니다.
+          </div>
+          <pre
+            style={{
+              margin: '0 0 10px',
+              padding: '8px 10px',
+              background: 'var(--pg-code-bg)',
+              color: 'var(--pg-code-text)',
+              borderRadius: 6,
+              fontSize: 12,
+              overflowX: 'auto',
+            }}
+          >{`GridStack v12.6.0\n\nyarn add seed-ui gridstack\nnpm i seed-ui gridstack`}</pre>
+        </div>
+        {/* 데모 영역 고정 높이 + 스크롤 — 위젯 추가해도 아래 패널 안 밀림 */}
+        <div
+          style={{
+            width: '100%',
+            height: 600,
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            border: '1px solid var(--pg-border)',
+            borderRadius: 8,
+            resize: 'vertical',
+          }}
+        >
+          <Dashboard
+            key={`${p.currentTabs}|${p.sidebarTabs}`}
+            width={p.width}
+            height={p.height}
+            title={p.title}
+            currentTabs={parseJson(p.currentTabs, [])}
+            sidebarTabs={parseJson(p.sidebarTabs, [])}
+          />
+        </div>
+      </div>
+    ),
+    snippet: () => `import Dashboard from 'seed-ui/dashboard'; // gridstack 필요
+
+<Dashboard
+  width="100%"
+  height={480}
+  title="대시보드"
+  currentTabs={[
+    { id: 'w1', title: '매출 현황', x: 0, y: 0, w: 4, h: 3 },
+    { id: 'w2', title: '작업 진행', x: 4, y: 0, w: 4, h: 3 },
+  ]}
+  sidebarTabs={[
+    { id: 'w1', title: '매출 현황', w: 4, h: 3 },
+    { id: 'w3', title: '알림', w: 3, h: 2 },
+  ]}
+/>`,
+  },
   // ─── Data ─────────────────────────────────────────────────
   {
     category: 'Data',
@@ -2092,7 +2208,7 @@ useLayoutEffect(() => {
 // 각 탭은 value를 가짐: <TabButton value={0}>전체</TabButton>
 // 그룹 추가/수정 모달을 닫을 때, value=0(전체) 탭을 다시 선택
 handleClose={() => {
-  handleClose();
+  handleClose(); 
   selectSideTab(0); // 인자 = 선택할 탭의 value
 }}`,
     },
@@ -3571,6 +3687,11 @@ const DocParamTable = styled.table`
       width: 1%;
       white-space: nowrap;
     }`}
+
+  /* 설명(마지막 열): desc 안의 \n 을 실제 줄바꿈으로 */
+  td:last-of-type {
+    white-space: pre-line;
+  }
 
   td > code {
     font-weight: 700;

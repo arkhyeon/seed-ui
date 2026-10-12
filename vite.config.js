@@ -28,24 +28,31 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/components/index.js'),
-      name: 'seed-ui',
-      formats: ['es', 'umd'],
-      fileName: format => `seed-ui.${format}.js`,
+      // 멀티 엔트리: 메인(seed-ui)과 Dashboard(gridstack 포함)를 분리 빌드.
+      // umd는 멀티 엔트리 불가 → es만. (소비앱은 번들러(vite) 사용으로 es 소비)
+      entry: {
+        'seed-ui': path.resolve(__dirname, 'src/components/index.js'),
+        dashboard: path.resolve(__dirname, 'src/components/Dashboard.jsx'),
+      },
+      formats: ['es'],
     },
     rollupOptions: {
       external: [
-        'react',
-        'react-dom',
-        'react-router-dom',
-        '@emotion/styled',
-        '@emotion/react',
+        /^react($|\/)/,
+        /^react-dom($|\/)/,
+        /^react-router-dom($|\/)/,
+        /^@emotion\//,
         'lodash',
         'zustand',
         /^react-icons/,
         /^lodash\//,
+        // gridstack은 Dashboard 전용 → external+optional peer. 메인 번들서 제외
+        /^gridstack($|\/)/,
       ],
       output: {
+        entryFileNames: '[name].js',
+        chunkFileNames: 'chunks/[name]-[hash].js',
+        assetFileNames: 'assets/[name][extname]',
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',

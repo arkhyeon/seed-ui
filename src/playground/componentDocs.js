@@ -2,7 +2,7 @@
 // summary   : 무엇을 하는지 한 문장
 // whenToUse : 언제 쓰는지
 // props     : Controls로 조절 못 하는 props (Controls 항목은 자동으로 Props 표에 들어감)
-//             [{ name, type, desc, optional? }]
+//             [{ name, type, desc, optional? }]  optional=true 일 때만 '선택' 뱃지
 // notes     : 주의
 // badge     : 'NEW' | 'UPDATE' — 사이드바 메뉴 스티커 (신기능·기능 추가)
 
@@ -296,6 +296,28 @@ const COMPONENT_DOCS = {
         'boolean / function',
         '여러 카드 전체 접기 상태 공유',
         true,
+      ),
+    ],
+  },
+  Dashboard: {
+    summary:
+      'GridStack을 기반으로 위젯을 자유롭게 배치하고 관리할 수 있는 대시보드 레이아웃 컴포넌트입니다.',
+    whenToUse: [
+      '오른쪽 위젯 라이브러리에서 원하는 카드를 그리드 영역으로 드래그하여 배치할 수 있습니다. 각 위젯은 모서리를 드래그해 크기를 조절하고, 헤더를 드래그해 위치를 이동할 수 있으며, 메뉴(⋯)에서 제거할 수 있습니다. 위젯의 배치 상태는 localStorage에 자동 저장됩니다.',
+    ],
+    props: [
+      fn('title', 'string', '대시보드 상단 제목'),
+      fn('width', 'string', "전체 너비 (예: '100%', '960px')"),
+      fn('height', 'number | string', '전체 높이 (숫자면 px 로 처리)'),
+      fn(
+        'currentTabs',
+        '{ id: string, title: string, x: number, y: number, w: number, h: number }[]',
+        '처음 배치되는 위젯 배열\nid = 고유값, title = 위젯 제목\nx·y = 위치, w·h = 칸 크기\n예: [{ id: "w1", title: "매출 현황", x: 0, y: 0, w: 4, h: 3 }]',
+      ),
+      fn(
+        'sidebarTabs',
+        '{ id: string, title: string, w: number, h: number }[]',
+        '라이브러리(드래그) 위젯 목록 — 이미 배치된 건 자동 숨김\nid = 고유값, title = 위젯 제목, w·h = 칸 크기\n예: [{ id: "w1", title: "매출 현황", w: 4, h: 3 }]',
       ),
     ],
   },
