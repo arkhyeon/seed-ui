@@ -203,17 +203,21 @@ const unSelectedOptionButton = e => {
  * SideTab의 메인 기능 버튼 (사이드 폭 전체, 회색 배경)
  * - children 에 아이콘 + 글자를 넣으면 세로·가로 중앙 정렬 (예: <TbPlus /> 업무 추가)
  * - className="selectedTab" 을 주면 선택 상태로 표시 (해당 기능 페이지에 있을 때 등)
+ * - selectOption (기본 true) : 클릭 시 다른 탭 선택을 해제하고 이 버튼을 선택 상태로 만듦
+ *   모달만 여는 버튼처럼 페이지가 바뀌지 않으면 false → 닫은 뒤에도 기존 선택 탭 유지
  * @param props
  * @returns {JSX.Element}
  * @constructor
  */
-export function MainTabButton(props) {
+export function MainTabButton({ selectOption = true, ...props }) {
   return (
     <MainButton
       {...props}
       aria-label="side-tab-button"
       onClick={e => {
-        selectedButton(e);
+        if (selectOption) {
+          selectedButton(e);
+        }
         props.onClick(e);
       }}
     />

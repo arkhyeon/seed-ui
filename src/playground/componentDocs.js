@@ -269,8 +269,8 @@ const COMPONENT_DOCS = {
     props: [
       fn(
         'MainTabButton',
-        'component',
-        '맨 위 메인 버튼. 아이콘+글자 중앙 정렬, className="selectedTab"으로 선택 표시',
+        '{ onClick, selectOption? }',
+        '맨 위 메인 버튼. 아이콘+글자 중앙 정렬, className="selectedTab"으로 선택 표시. 모달만 여는 버튼은 selectOption={false}로 기존 선택 탭 유지',
       ),
       fn(
         'SideScrollWrap',
