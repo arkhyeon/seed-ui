@@ -262,14 +262,64 @@ const COMPONENT_DOCS = {
     ],
   },
   SideTabs: {
+    badge: 'UPDATE',
     summary:
-      '화면 왼쪽 세로 탭 메뉴입니다. 위 메인 버튼 + 스크롤되는 그룹 탭 + 아래 고정 탭으로 구성됩니다.',
+      '화면 왼쪽 세로 탭 메뉴입니다. 메인 버튼 + 전체 탭 + 섹션 제목·스크롤되는 그룹 탭 + 아래 고정 탭으로 구성됩니다.',
     whenToUse: ['그룹·프로젝트 목록을 왼쪽에 두고 고르는 화면'],
     props: [
-      fn('MainTabButton', 'component', '맨 위 메인 버튼'),
-      fn('SideScrollWrap', 'component', '스크롤되는 탭 영역'),
-      fn('TabButton', '{ value, onClick }', '탭 하나. value로 selectSideTab과 연결'),
+      fn(
+        'MainTabButton',
+        'component',
+        '맨 위 메인 버튼. 아이콘+글자 중앙 정렬, className="selectedTab"으로 선택 표시',
+      ),
+      fn(
+        'SideScrollWrap',
+        'component',
+        '스크롤되는 탭 목록. 남는 높이를 채워 뒤에 둔 탭은 최하단 고정',
+      ),
+      fn(
+        'TabButton',
+        '{ value, onClick, deleteFunction?, updateFunction?, logFunction? }',
+        '탭 하나. value로 selectSideTab과 연결. 아이콘 함수가 있을 때만 hover 시 우측 아이콘 표시',
+      ),
+      fn('SideTabLabel', 'component', '탭 안 라벨 (아이콘·개수·말줄임)', true),
+      fn('SideTabSection', 'component', '탭 목록 위 섹션 제목 (제목·개수·우측 버튼)', true),
     ],
+    notes: [
+      '요소 사이 간격은 SideTabs gap(10px), 탭 목록 안 간격도 SideScrollWrap gap(10px)으로만 잡습니다. 각 요소에 margin을 주지 마세요.',
+      '구분선이 필요하면 DividingLine을 요소로 넣습니다.',
+    ],
+  },
+  SideTabLabel: {
+    badge: 'NEW',
+    summary:
+      '탭 버튼 안에 넣는 라벨입니다. 아이콘·이름·개수를 한 줄로 맞추고 긴 이름은 말줄임합니다.',
+    whenToUse: ['전체 탭에 아이콘·총 개수 표시', '미지정 같은 보조 탭을 흐리게 표시'],
+    props: [
+      fn('children', 'ReactNode', '탭 이름'),
+      fn('icon', 'ReactNode', '이름 앞 아이콘', true),
+      fn('count', 'number', '우측 개수 (0도 표시, 없으면 숨김)', true),
+      fn('muted', 'boolean', '흐린 글자 (선택되면 일반 색)', true),
+      fn('title', 'string', '툴팁 (기본: 이름 문자열)', true),
+    ],
+    notes: ['글자색은 버튼 색을 상속하므로 선택 탭(배경 반전)에서도 그대로 읽힙니다.'],
+  },
+  SideTabSection: {
+    badge: 'NEW',
+    summary: '탭 목록 위의 섹션 제목 줄입니다. 제목·개수 배지와 우측 작은 버튼을 둡니다.',
+    whenToUse: ['"그룹 18 [+]"처럼 목록 제목과 추가 버튼을 함께 둘 때'],
+    props: [
+      fn('title', 'ReactNode', '섹션 제목'),
+      fn('count', 'number', '제목 옆 개수 배지', true),
+      fn('action', 'ReactNode', '우측 버튼 (보통 SideTabSectionButton)', true),
+      fn(
+        'SideTabSectionButton',
+        '{ title, onClick }',
+        '24px 아이콘 버튼. title은 툴팁·aria-label로 사용',
+      ),
+      fn('SideTabEmpty', '{ children }', '목록이 비었을 때 문구 (SideScrollWrap 안)', true),
+    ],
+    notes: ['권한에 따라 버튼을 숨기려면 사용하는 쪽에서 감싸 action으로 넘기세요.'],
   },
 
   // ─── Layout ──────────────────────────────────

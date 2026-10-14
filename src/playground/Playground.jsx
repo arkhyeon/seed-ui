@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+import { TbCategoryPlus, TbLayoutGrid, TbPlus } from 'react-icons/tb';
 import { BlackButton, RadioButton, SwitchButton, WhiteButton } from '../components/Button/Button';
 import Radio from '../components/Radio';
 import Switch from '../components/Switch';
@@ -37,7 +38,11 @@ import {
   MainTabButton,
   selectSideTab,
   SideScrollWrap,
+  SideTabEmpty,
+  SideTabLabel,
   SideTabs,
+  SideTabSection,
+  SideTabSectionButton,
   TabButton,
 } from '../components/SideTabs/SideTabs';
 import DNDWrapper from '../FuntionalComponent/dnd/DNDWrapper';
@@ -1534,29 +1539,155 @@ const steps = useMemo(() => [
     render: p => {
       const count = Math.max(1, Math.min(p.tabCount || 1, 30));
       return (
-        <div style={{ height: 320, display: 'flex', overflow: 'hidden' }}>
+        <div style={{ height: 480, display: 'flex', overflow: 'hidden' }}>
           <SideTabs>
-            <MainTabButton onClick={() => {}}>메인 버튼</MainTabButton>
+            <MainTabButton onClick={() => {}}>
+              <TbPlus /> 업무 추가
+            </MainTabButton>
+            <DividingLine />
+            <TabButton value={0} onClick={() => {}}>
+              <SideTabLabel icon={<TbLayoutGrid />} count={128}>
+                전체 업무
+              </SideTabLabel>
+            </TabButton>
+            <DividingLine />
+            <SideTabSection
+              title="그룹"
+              count={count}
+              action={
+                <SideTabSectionButton title="그룹 추가" onClick={() => {}}>
+                  <TbCategoryPlus />
+                </SideTabSectionButton>
+              }
+            />
             <SideScrollWrap>
               {Array.from({ length: count }, (_, i) => (
-                <TabButton key={i} onClick={() => {}}>
-                  {`그룹 ${i + 1}`}
+                <TabButton
+                  key={i}
+                  value={i + 1}
+                  onClick={() => {}}
+                  deleteFunction={() => {}}
+                  updateFunction={() => {}}
+                >
+                  <SideTabLabel>{`그룹 ${i + 1}`}</SideTabLabel>
                 </TabButton>
               ))}
             </SideScrollWrap>
-            <TabButton onClick={() => {}}>설정</TabButton>
+            <DividingLine />
+            <TabButton value={-1} onClick={() => {}}>
+              <SideTabLabel count={3} muted>
+                미지정
+              </SideTabLabel>
+            </TabButton>
           </SideTabs>
         </div>
       );
     },
     snippet: () => `<SideTabs>
-  <MainTabButton onClick={fn}>메인 버튼</MainTabButton>
+  <MainTabButton onClick={fn}>
+    <TbPlus /> 업무 추가
+  </MainTabButton>
+  <DividingLine />
+  <TabButton value={0} onClick={fn}>
+    <SideTabLabel icon={<TbLayoutGrid />} count={128}>전체 업무</SideTabLabel>
+  </TabButton>
+  <DividingLine />
+  <SideTabSection
+    title="그룹"
+    count={groupList.length}
+    action={
+      <SideTabSectionButton title="그룹 추가" onClick={fn}>
+        <TbCategoryPlus />
+      </SideTabSectionButton>
+    }
+  />
   <SideScrollWrap>
-    <TabButton onClick={fn}>그룹 1</TabButton>
-    <TabButton onClick={fn}>그룹 2</TabButton>
+    <TabButton value={1} onClick={fn} deleteFunction={fn} updateFunction={fn}>
+      <SideTabLabel>그룹 1</SideTabLabel>
+    </TabButton>
   </SideScrollWrap>
-  <TabButton onClick={fn}>설정</TabButton>
+  <DividingLine />
+  <TabButton value={-1} onClick={fn}>
+    <SideTabLabel count={3} muted>미지정</SideTabLabel>
+  </TabButton>
 </SideTabs>`,
+  },
+  {
+    category: 'Navigation',
+    name: 'SideTabLabel',
+    parent: 'SideTabs',
+    controls: [
+      { key: 'name', type: 'text', default: '아주 긴 그룹 이름은 말줄임으로 표시됩니다' },
+      { key: 'count', type: 'number', default: 12 },
+      { key: 'muted', type: 'boolean', default: false },
+    ],
+    render: p => (
+      <div style={{ height: 160, display: 'flex', overflow: 'hidden' }}>
+        <SideTabs>
+          <TabButton value="label-a" onClick={() => {}}>
+            <SideTabLabel icon={<TbLayoutGrid />} count={p.count} muted={p.muted}>
+              {p.name}
+            </SideTabLabel>
+          </TabButton>
+          <TabButton value="label-b" onClick={() => {}}>
+            <SideTabLabel count={0}>개수 0 탭</SideTabLabel>
+          </TabButton>
+        </SideTabs>
+      </div>
+    ),
+    snippet: p => `<TabButton value={0} onClick={fn}>
+  <SideTabLabel icon={<TbLayoutGrid />} count={${p.count}}${p.muted ? ' muted' : ''}>
+    ${p.name}
+  </SideTabLabel>
+</TabButton>`,
+  },
+  {
+    category: 'Navigation',
+    name: 'SideTabSection',
+    parent: 'SideTabs',
+    controls: [
+      { key: 'title', type: 'text', default: '그룹' },
+      { key: 'tabCount', type: 'number', default: 0 },
+    ],
+    render: p => {
+      const count = Math.max(0, Math.min(p.tabCount || 0, 20));
+      return (
+        <div style={{ height: 240, display: 'flex', overflow: 'hidden' }}>
+          <SideTabs>
+            <SideTabSection
+              title={p.title}
+              count={count}
+              action={
+                <SideTabSectionButton title="그룹 추가" onClick={() => {}}>
+                  <TbCategoryPlus />
+                </SideTabSectionButton>
+              }
+            />
+            <SideScrollWrap>
+              {count === 0 && <SideTabEmpty>등록된 그룹이 없습니다.</SideTabEmpty>}
+              {Array.from({ length: count }, (_, i) => (
+                <TabButton key={i} value={`section-${i}`} onClick={() => {}}>
+                  <SideTabLabel>{`그룹 ${i + 1}`}</SideTabLabel>
+                </TabButton>
+              ))}
+            </SideScrollWrap>
+          </SideTabs>
+        </div>
+      );
+    },
+    snippet: p => `<SideTabSection
+  title="${p.title}"
+  count={groupList.length}
+  action={
+    <SideTabSectionButton title="그룹 추가" onClick={openAddModal}>
+      <TbCategoryPlus />
+    </SideTabSectionButton>
+  }
+/>
+<SideScrollWrap>
+  {groupList.length === 0 && <SideTabEmpty>등록된 그룹이 없습니다.</SideTabEmpty>}
+  {groupList.map(renderTab)}
+</SideScrollWrap>`,
   },
 
   // ─── Layout ───────────────────────────────────────────────
