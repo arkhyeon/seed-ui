@@ -160,6 +160,23 @@ const COMPONENT_DOCS = {
     ],
     props: [fn('onClick', '() => void', '있으면 버튼으로 렌더. 보통 GuideTour 열기', true)],
   },
+  HelpPopover: {
+    badge: 'NEW',
+    summary: '? 아이콘을 누르면 도움말 창(Popover)이 열립니다. 길거나 서식 있는 도움말용.',
+    whenToUse: [
+      '여러 줄·목록·강조가 있는 도움말 (짧은 한 줄 힌트는 HelpIcon message)',
+      'Popover를 그대로 재사용 — 바깥클릭·Esc·위치 로직 중복 없음',
+    ],
+    props: [
+      fn('title', 'string', '창 상단 제목', true),
+      fn('children', 'ReactNode | ({ close }) => ReactNode', '도움말 본문'),
+      fn('symbol', 'string', "아이콘 글자 (기본 '?')", true),
+      fn('size', 'number', '아이콘 크기(px, 기본 18)', true),
+      fn('placement', "'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'", '창 위치', true),
+      fn('width', 'number | string', '창 너비', true),
+      fn('…popoverProps', 'any', 'keepOpen · open · onOpenChange 등 Popover props 그대로 전달', true),
+    ],
+  },
   GuideTour: {
     badge: 'NEW',
     summary: '화면을 어둡게 덮고 설명할 곳만 밝게 비추며 단계별로 사용법을 안내합니다.',

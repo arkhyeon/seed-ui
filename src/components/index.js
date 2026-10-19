@@ -4,6 +4,7 @@ import { SetRoute } from './Menu/RouteGenerator';
 import AsideCreator from './Menu/AsideCreator';
 import Tooltip from './Tooltip';
 import HelpIcon from './HelpIcon';
+import HelpPopover from './HelpPopover';
 import GuideTour from './GuideTour';
 import Popover, { PopoverTitle, PopoverItem } from './Popover/Popover';
 import MenuButton from './Popover/MenuButton';
@@ -67,6 +68,8 @@ export { BlackButton, WhiteButton, SwitchButton };
 export { Tooltip };
 
 export { HelpIcon };
+
+export { HelpPopover };
 
 export { GuideTour, tourTarget, unionRect, findButton, modalWrapOf };
 
