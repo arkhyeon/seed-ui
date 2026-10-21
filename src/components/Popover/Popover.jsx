@@ -1,6 +1,18 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import EscStack from '../../common/EscStack';
+
+// 팝오버 겉틀(surface) — Popover의 Panel이 쓰며, Popover로 감쌀 수 없는 곳(라벨·글자를
+// 눌러 뜨는 창, ag-grid 셀 등 위치를 직접 계산하는 창)도 이것만 가져다 쓰면 모양이 통일된다.
+export const popoverSurface = css`
+  box-sizing: border-box;
+  border: 1px solid var(--seed-border);
+  border-radius: 8px;
+  background: var(--seed-surface);
+  color: var(--seed-text);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+`;
 
 /**
  * Popover — 버튼을 누르면 버튼 옆에 작은 창을 띄움 (바깥 클릭·Esc로 닫힘)
@@ -34,6 +46,27 @@ function Popover({
   const toggle = () => setOpen(v => !v);
   const close = useCallback(() => setOpen(false), [setOpen]);
 
+  // trigger 가 "클릭을 받을 수 있는 요소"(HelpIcon·버튼 등)면 그대로 쓰고 onClick만 자동 연결.
+  // 문자열·숫자·Fragment면 기존 기본 네모 버튼(TriggerButton)으로 감싼다.
+  const triggerIsElement = React.isValidElement(trigger) && trigger.type !== React.Fragment;
+  const renderTriggerNode = () => {
+    if (renderTrigger) return renderTrigger({ open, toggle, close });
+    if (triggerIsElement) {
+      return React.cloneElement(trigger, {
+        'data-open': open,
+        onClick: e => {
+          trigger.props.onClick?.(e);
+          toggle();
+        },
+      });
+    }
+    return (
+      <TriggerButton type="button" title={triggerTitle} data-open={open} onClick={toggle}>
+        {trigger}
+      </TriggerButton>
+    );
+  };
+
   // 바깥 클릭으로 닫기 (keepOpen이면 유지 — 가이드 투어 등 창 밖 UI를 쓰는 동안)
   useEffect(() => {
     if (!open || keepOpen) return undefined;
@@ -53,13 +86,7 @@ function Popover({
 
   return (
     <Wrap ref={wrapRef}>
-      {renderTrigger ? (
-        renderTrigger({ open, toggle, close })
-      ) : (
-        <TriggerButton type="button" title={triggerTitle} data-open={open} onClick={toggle}>
-          {trigger}
-        </TriggerButton>
-      )}
+      {renderTriggerNode()}
       {open && (
         <Panel data-placement={placement} style={width ? { width } : undefined} role="dialog">
           {title && <PopoverTitle>{title}</PopoverTitle>}
@@ -139,13 +166,8 @@ const Panel = styled.div`
   position: absolute;
   z-index: 10;
   min-width: 160px;
-  box-sizing: border-box;
   padding: 12px;
-  border: 1px solid var(--seed-border);
-  border-radius: 8px;
-  background: var(--seed-surface);
-  color: var(--seed-text);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  ${popoverSurface}
 
   &[data-placement^='bottom'] {
     top: calc(100% + 6px);

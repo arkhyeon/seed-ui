@@ -13,7 +13,6 @@ import { LabelCheckBox, PasswordInput, TextInput } from '../components/InputComp
 import Count from '../components/Count/Count';
 import Tooltip from '../components/Tooltip';
 import HelpIcon from '../components/HelpIcon';
-import HelpPopover from '../components/HelpPopover';
 import GuideTour from '../components/GuideTour';
 import { tourTarget } from '../components/guideTourTarget';
 import { TargetPreview, TOUR_TARGET_DEMOS } from './TargetPreview';
@@ -1101,46 +1100,6 @@ const [end, setEnd] = useState('');
   },
   {
     category: 'Feedback',
-    name: 'HelpPopover',
-    controls: [
-      { key: 'title', type: 'text', default: '도움말', desc: '창 상단 제목' },
-      { key: 'symbol', type: 'text', default: '?', desc: "아이콘 글자 (기본 '?')" },
-      { key: 'size', type: 'number', default: 18, desc: '아이콘 크기(px)' },
-      {
-        key: 'placement',
-        type: 'select',
-        options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
-        default: 'bottom-start',
-        desc: '창이 뜨는 위치',
-      },
-      { key: 'width', type: 'number', default: 240, desc: '창 너비(px)' },
-    ],
-    render: p => (
-      <span style={{ display: 'inline-flex', alignItems: 'center' }}>
-        배포 전략
-        <HelpPopover
-          title={p.title}
-          symbol={p.symbol}
-          size={p.size}
-          placement={p.placement}
-          width={p.width}
-        >
-          <div style={{ fontSize: 13, lineHeight: 1.7 }}>
-            길거나 서식 있는 도움말은 창으로 보여 줍니다.
-            <ul style={{ margin: '8px 0 0', paddingLeft: 18 }}>
-              <li>여러 줄 설명</li>
-              <li>목록·강조 자유</li>
-            </ul>
-          </div>
-        </HelpPopover>
-      </span>
-    ),
-    snippet: p => `<HelpPopover title="${p.title}" placement="${p.placement}" width={${p.width}}>
-  <div>길거나 서식 있는 도움말 본문…</div>
-</HelpPopover>`,
-  },
-  {
-    category: 'Feedback',
     name: 'GuideTour',
     controls: [],
     initialState: { modal: false, tour: false },
@@ -1408,6 +1367,7 @@ const steps = useMemo(() => [
         style={{
           minHeight: 200,
           display: 'flex',
+          gap: 16,
           alignItems: p.placement.startsWith('top') ? 'flex-end' : 'flex-start',
         }}
       >
@@ -1434,6 +1394,25 @@ const steps = useMemo(() => [
             </div>
           ))}
         </Popover>
+
+        {/* trigger에 요소를 직접 주면 네모 버튼 없이 그대로 쓰고 클릭만 자동 연결 (도움말 등) */}
+        <span style={{ display: 'inline-flex', alignItems: 'center', fontSize: 13 }}>
+          배포 전략
+          <Popover
+            trigger={<HelpIcon symbol="?" size={16} />}
+            title={p.title || '도움말'}
+            width={p.width || undefined}
+            placement={p.placement}
+          >
+            <div style={{ fontSize: 13, lineHeight: 1.7 }}>
+              길거나 서식 있는 도움말은 창으로.
+              <ul style={{ margin: '8px 0 0', paddingLeft: 18 }}>
+                <li>여러 줄 설명</li>
+                <li>목록·강조 자유</li>
+              </ul>
+            </div>
+          </Popover>
+        </span>
       </div>
     ),
     snippet: p => `<Popover
