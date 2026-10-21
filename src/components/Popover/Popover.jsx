@@ -1,4 +1,13 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  isValidElement,
+  cloneElement,
+  Fragment,
+} from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import EscStack from '../../common/EscStack';
@@ -48,11 +57,11 @@ function Popover({
 
   // trigger 가 "클릭을 받을 수 있는 요소"(HelpIcon·버튼 등)면 그대로 쓰고 onClick만 자동 연결.
   // 문자열·숫자·Fragment면 기존 기본 네모 버튼(TriggerButton)으로 감싼다.
-  const triggerIsElement = React.isValidElement(trigger) && trigger.type !== React.Fragment;
+  const triggerIsElement = isValidElement(trigger) && trigger.type !== Fragment;
   const renderTriggerNode = () => {
     if (renderTrigger) return renderTrigger({ open, toggle, close });
     if (triggerIsElement) {
-      return React.cloneElement(trigger, {
+      return cloneElement(trigger, {
         'data-open': open,
         onClick: e => {
           trigger.props.onClick?.(e);
