@@ -15,7 +15,18 @@ import useSeedFloating from '../../common/useSeedFloating';
 import { FLOATING_PROP, clickedInsideFloating } from '../../common/floating';
 import { TextInput } from '../InputComp/InputComponent';
 import { formatDate } from './timeComponents/PickerCommonFunc';
-import { WEEK_DAYS, PickerNav, Wrapper, WeekWrapper } from './dateComponents/PickerShared';
+import {
+  WEEK_DAYS,
+  CALENDAR_WIDTH,
+  PickerNav,
+  PickerInputIcon,
+  Wrapper,
+  WeekWrapper,
+  DayGrid,
+  panelStyle,
+  todayDot,
+  isSameDay,
+} from './dateComponents/PickerShared';
 
 const RangePickerContext = createContext(null);
 function useRangePicker() {
@@ -136,8 +147,6 @@ const isValidTime = str => {
   const [h, m] = str.split(':').map(Number);
   return h >= 0 && h <= 23 && m >= 0 && m <= 59;
 };
-
-const PICKER_WIDTH = 520;
 
 const NO_END = '9999-12-31';
 
@@ -334,14 +343,14 @@ function QuickRangeButtons() {
   ];
 
   return (
-    <div style={{ display: 'flex' }}>
+    <QuickRow>
       <QuickWrap>
         {allowPast && (
           <QuickGroup>
             <QuickGroupLabel>과거</QuickGroupLabel>
             <QuickButtons>
               {pastButtons.map(({ label, action }) => (
-                <QuickBtn key={label} onClick={action}>
+                <QuickBtn type="button" key={label} onClick={action}>
                   {label}
                 </QuickBtn>
               ))}
@@ -353,7 +362,7 @@ function QuickRangeButtons() {
             <QuickGroupLabel>미래</QuickGroupLabel>
             <QuickButtons>
               {futureButtons.map(({ label, action }) => (
-                <QuickBtn key={label} onClick={action}>
+                <QuickBtn type="button" key={label} onClick={action}>
                   {label}
                 </QuickBtn>
               ))}
@@ -361,20 +370,10 @@ function QuickRangeButtons() {
           </QuickGroup>
         )}
       </QuickWrap>
-      <QuickBtn
-        onClick={() => setRange(today, today)}
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: 'auto',
-          margin: '2px 4px 2px 2px',
-        }}
-      >
+      <TodayBtn type="button" onClick={() => setRange(today, today)}>
         오늘
-      </QuickBtn>
-    </div>
+      </TodayBtn>
+    </QuickRow>
   );
 }
 
@@ -409,42 +408,55 @@ function RangeDay({ dateViewed }) {
   const isStartBoundaryMonth = viewedYear === sy && viewedMonth === sm;
   const isEndBoundaryMonth = viewedYear === ey && viewedMonth === em;
 
+  const today = useMemo(() => new Date(), []);
+
   const getDayStatus = useCallback(
     day => {
-      if (!day) return { isStart: false, isEnd: false, inRange: false };
+      const empty = { isStart: false, isEnd: false, inRange: false, isHover: false, band: null };
+      if (!day) return empty;
       const d = new Date(viewedYear, viewedMonth - 1, day);
       const effectiveEnd = rangeEnd || hoverDate;
-      const isStart = rangeStart && d.getTime() === rangeStart.getTime();
-      const isEnd = rangeEnd && d.getTime() === rangeEnd.getTime();
+      const isStart = !!rangeStart && d.getTime() === rangeStart.getTime();
+      const isEnd = !!rangeEnd && d.getTime() === rangeEnd.getTime();
+      const isHover = !rangeEnd && !!hoverDate && d.getTime() === hoverDate.getTime();
       let inRange = false;
-      if (rangeStart && effectiveEnd) {
+      // 선택 구간 띠: 양 끝 칸은 반쪽만 칠해서 원형 끝점과 자연스럽게 이어지게
+      let band = null;
+      if (rangeStart && effectiveEnd && rangeStart.getTime() !== effectiveEnd.getTime()) {
         const lo = rangeStart < effectiveEnd ? rangeStart : effectiveEnd;
         const hi = rangeStart < effectiveEnd ? effectiveEnd : rangeStart;
         inRange = d > lo && d < hi;
+        if (d.getTime() === lo.getTime()) band = 'right';
+        else if (d.getTime() === hi.getTime()) band = 'left';
+        else if (inRange) band = 'full';
       }
-      return { isStart, isEnd, inRange };
+      return { isStart, isEnd, inRange, isHover, band };
     },
     [viewedYear, viewedMonth, rangeStart, rangeEnd, hoverDate],
   );
 
   return (
-    <DayWrapper>
+    <DayGrid>
       {dayRange.map((day, idx) => {
         const disabled =
           isMonthBeforeStart ||
           isMonthAfterEnd ||
           (isStartBoundaryMonth && sd > day) ||
           (isEndBoundaryMonth && ed < day);
-        const { isStart, isEnd, inRange } = getDayStatus(day);
+        const { isStart, isEnd, isHover, band } = getDayStatus(day);
         const clickable = !disabled && !!day;
+        const col = idx % 7;
         return (
           <RangeDayCell
             key={`day-${idx}`}
-            day={day}
-            disabled={disabled || !day}
-            isStart={isStart}
-            isEnd={isEnd}
-            inRange={inRange}
+            $day={day}
+            $disabled={disabled || !day}
+            $selected={isStart || isEnd}
+            $hover={isHover}
+            $band={band}
+            $rowStart={col === 0 || day === 1}
+            $rowEnd={col === 6 || !dayRange[idx + 1]}
+            $today={!!day && isSameDay(new Date(viewedYear, viewedMonth - 1, day), today)}
             onClick={
               clickable ? () => handleDayClick(new Date(viewedYear, viewedMonth - 1, day)) : null
             }
@@ -455,11 +467,11 @@ function RangeDay({ dateViewed }) {
             }
             onMouseLeave={!rangeEnd ? () => setHoverDate(null) : null}
           >
-            {day}
+            <span>{day}</span>
           </RangeDayCell>
         );
       })}
-    </DayWrapper>
+    </DayGrid>
   );
 }
 
@@ -673,6 +685,7 @@ function RangeDatePickerProvider({
           readOnly
           disabled={disabled}
         />
+        <PickerInputIcon />
         {isOpen &&
           createPortal(
             <RangePickerWrapper ref={refs.setFloating} {...FLOATING_PROP} style={floatingStyles}>
@@ -687,7 +700,9 @@ function RangeDatePickerProvider({
               )}
               {endDt !== NO_END && onApply && (
                 <ApplyRow>
-                  <ApplyBtn onClick={handleApply}>적용</ApplyBtn>
+                  <ApplyBtn type="button" onClick={handleApply}>
+                    적용
+                  </ApplyBtn>
                 </ApplyRow>
               )}
             </RangePickerWrapper>,
@@ -845,197 +860,257 @@ function RangeDatePicker({
 // ─── Styled ───────────────────────────────────────────────────────────────────
 
 const RangePickerWrapper = styled.div`
-  background: var(--seed-surface);
-  z-index: 10000;
-  border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-  padding: 8px;
-  width: fit-content;
+  ${panelStyle};
+  padding: 14px;
+  /* 달력 2개 너비에 맞춤(빠른 선택 버튼이 패널을 넓히지 않게) */
+  width: ${CALENDAR_WIDTH * 2 + 20 + 30}px;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
+  font-size: 14px;
 `;
 
 const CalendarsRow = styled.div`
   display: flex;
-  gap: 0;
+  gap: 20px;
 `;
 
 const PanelDivider = styled.div`
   height: 1px;
-  background: var(--seed-scrollbar-track);
-  margin: 8px 0;
+  background: var(--seed-border);
+  margin: 12px 0;
 `;
 
 const CalendarWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 250px;
-`;
-
-const DayWrapper = styled.ul`
-  width: 100% !important;
-  height: 198px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 8px;
+  width: ${CALENDAR_WIDTH}px;
 `;
 
 const RangeDayCell = styled.li`
-  width: 32px !important;
-  height: 32px;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
-  margin-top: 1px;
-  font-size: 13px;
-  color: var(--seed-text);
-  transition: background 0.1s;
 
-  ${({ inRange }) =>
-    inRange &&
+  & > span {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--seed-text);
+    transition: background-color 0.12s, color 0.12s;
+  }
+
+  /* 선택 구간 띠 */
+  ${({ $band, $rowStart, $rowEnd }) =>
+    $band &&
     css`
-      background-color: var(--x-fde8e8);
-      border-radius: 0;
-    `}
-  ${({ isStart }) =>
-    isStart &&
-    css`
-      background-color: var(--seed-primary) !important;
-      color: var(--seed-invert-text);
-      border-radius: 4px 0 0 4px;
-      box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    `}
-  ${({ isEnd }) =>
-    isEnd &&
-    css`
-      background-color: var(--seed-primary) !important;
-      color: var(--seed-invert-text);
-      border-radius: 0 4px 4px 0;
-      box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    `}
-  ${({ day, disabled }) =>
-    day &&
-    !disabled &&
-    css`
-      cursor: pointer;
-      &:hover {
-        background-color: var(--x-f0b0b0);
-        color: var(--seed-invert-text);
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: ${$band === 'right' ? '50%' : 0};
+        right: ${$band === 'left' ? '50%' : 0};
+        background: var(--x-fde8e8);
+        border-top-left-radius: ${$band === 'full' && $rowStart ? '10px' : 0};
+        border-bottom-left-radius: ${$band === 'full' && $rowStart ? '10px' : 0};
+        border-top-right-radius: ${$band === 'full' && $rowEnd ? '10px' : 0};
+        border-bottom-right-radius: ${$band === 'full' && $rowEnd ? '10px' : 0};
       }
     `}
-  ${({ day, disabled }) =>
-    day &&
-    disabled &&
+
+  ${({ $day, $disabled }) =>
+    $day &&
+    !$disabled &&
+    css`
+      cursor: pointer;
+      &:hover > span {
+        background-color: var(--seed-hover);
+      }
+    `}
+
+  ${({ $today }) =>
+    $today &&
+    css`
+      & > span {
+        color: var(--seed-primary);
+        font-weight: 600;
+        ${todayDot};
+      }
+    `}
+
+  ${({ $hover }) =>
+    $hover &&
+    css`
+      & > span,
+      &:hover > span {
+        background-color: var(--seed-surface);
+        box-shadow: inset 0 0 0 1.5px var(--seed-primary);
+        color: var(--seed-primary);
+      }
+    `}
+
+  ${({ $selected }) =>
+    $selected &&
+    css`
+      & > span,
+      &:hover > span {
+        background-color: var(--seed-primary);
+        color: var(--seed-invert-text);
+        font-weight: 600;
+        box-shadow: 0 4px 10px -3px var(--seed-primary);
+      }
+    `}
+
+  ${({ $day, $disabled }) =>
+    $day &&
+    $disabled &&
     css`
       cursor: default;
-      background-color: var(--x-ebebeb) !important;
-      color: var(--x-bbb);
+      & > span {
+        color: var(--seed-text-muted);
+        opacity: 0.45;
+      }
     `}
 `;
 
 const InputRowWrap = styled.div`
   display: flex;
   width: 100%;
-  gap: 0;
+  gap: 20px;
 `;
 
 const InputHalf = styled.div`
   flex: 1;
-  max-width: 250px;
+  max-width: ${CALENDAR_WIDTH}px;
   display: grid;
   grid-template-columns: ${({ cols }) => `repeat(${cols}, 1fr)`};
-  gap: 6px;
-  padding: 2px 4px;
+  gap: 8px;
   box-sizing: border-box;
 `;
 
 const InputCell = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
-  overflow: hidden;
 `;
 
 const InputLabel = styled.span`
-  font-size: 13px;
-  color: var(--x-666);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--seed-text-secondary);
   white-space: nowrap;
 `;
 
 const StyledInput = styled.input`
-  height: 28px;
+  height: 34px;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: 1px solid var(--x-d0d0d0);
-  border-radius: 3px;
+  border: 1px solid var(--seed-border);
+  border-radius: 8px;
   background: var(--seed-surface);
   color: var(--seed-text);
-  padding: 0 6px;
+  padding: 0 10px;
   font-size: 13px;
+  font-variant-numeric: tabular-nums;
   outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
   &:focus {
     border-color: var(--seed-primary);
+    box-shadow: 0 0 0 3px var(--x-fde8e8);
+  }
+  &:disabled {
+    background: var(--seed-surface-alt);
+    color: var(--seed-text-muted);
   }
   &::placeholder {
-    color: var(--x-bbb);
+    color: var(--seed-text-muted);
   }
 `;
 
+const QuickRow = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
 const QuickWrap = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 2px 4px;
+  gap: 8px;
 `;
 
 const QuickGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 `;
 
 const QuickGroupLabel = styled.span`
   font-size: 12px;
-  color: var(--x-888);
+  font-weight: 500;
+  color: var(--seed-text-muted);
   white-space: nowrap;
-  width: 30px;
+  width: 28px;
 `;
 
 const QuickButtons = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 5px;
 `;
 
 const QuickBtn = styled.button`
   all: unset;
   cursor: pointer;
   font-size: 12px;
-  height: 30px;
+  height: 28px;
   padding: 0 10px;
-  border-radius: 3px;
-  background: var(--x-f5f5f5);
-  color: var(--x-444);
-  border: 1px solid var(--x-e0e0e0);
+  border-radius: 999px;
+  background: var(--seed-surface);
+  color: var(--seed-text-secondary);
+  border: 1px solid var(--seed-border);
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  transition: background 0.1s;
+  transition: background-color 0.12s, color 0.12s, border-color 0.12s;
   &:hover {
-    background: var(--seed-primary);
-    color: var(--seed-invert-text);
+    background: var(--x-fde8e8);
+    color: var(--seed-primary);
     border-color: var(--seed-primary);
   }
 `;
 
+const TodayBtn = styled.button`
+  all: unset;
+  cursor: pointer;
+  box-sizing: border-box;
+  min-width: 56px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--x-fde8e8);
+  color: var(--seed-primary);
+  transition: background-color 0.12s, color 0.12s;
+  &:hover {
+    background: var(--seed-primary);
+    color: var(--seed-invert-text);
+  }
+`;
+
 const ApplyRow = styled.div`
-  margin-top: 8px;
+  margin-top: 12px;
 `;
 
 const ApplyBtn = styled.button`
@@ -1043,15 +1118,18 @@ const ApplyBtn = styled.button`
   cursor: pointer;
   display: block;
   width: 100%;
-  height: 30px;
+  height: 36px;
   box-sizing: border-box;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 600;
   text-align: center;
-  border-radius: 4px;
-  background: var(--seed-invert-bg);
+  border-radius: 10px;
+  background: var(--seed-primary);
   color: var(--seed-invert-text);
+  box-shadow: 0 4px 12px -4px var(--seed-primary);
+  transition: filter 0.12s;
   &:hover {
-    background: var(--seed-primary);
+    filter: brightness(0.94);
   }
 `;
 

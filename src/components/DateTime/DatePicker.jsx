@@ -9,15 +9,25 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import _ from 'lodash';
 import { css } from '@emotion/react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import useSeedFloating from '../../common/useSeedFloating';
 import { FLOATING_PROP, clickedInsideFloating } from '../../common/floating';
 import { TextInput } from '../InputComp/InputComponent';
-import DataList from '../InputComp/DataList';
-import { addDays, addMonths, arrayRange, formatDate } from './timeComponents/PickerCommonFunc';
+import { addDays, addMonths, formatDate } from './timeComponents/PickerCommonFunc';
+import {
+  WEEK_DAYS,
+  CALENDAR_WIDTH,
+  PickerNav,
+  PickerInputIcon,
+  Wrapper,
+  WeekWrapper,
+  DayGrid,
+  panelStyle,
+  todayDot,
+  isSameDay,
+} from './dateComponents/PickerShared';
 
 const DatePickerContext = createContext(null);
 
@@ -27,92 +37,6 @@ function useDatePicker() {
     throw new Error('useDatePicker must be used within a DatePickerProvider');
   }
   return context;
-}
-
-const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
-
-function Year() {
-  const { dateViewed, setDateViewed, startYear, endYear, startMonth, endMonth } = useDatePicker();
-
-  const viewedYear = dateViewed.getFullYear();
-
-  const yearRange = useMemo(() => {
-    const range = arrayRange(endYear - startYear + 1, startYear);
-    if (!range.includes(viewedYear)) {
-      range.push(viewedYear);
-      range.sort((a, b) => a - b);
-    }
-    return range;
-  }, [startYear, endYear, viewedYear]);
-
-  const changeYear = useCallback(
-    value => {
-      const tempDate = new Date(dateViewed);
-      tempDate.setFullYear(value);
-
-      if (startYear === value && tempDate.getMonth() < startMonth - 1) {
-        tempDate.setMonth(startMonth - 1);
-      } else if (endYear === value && tempDate.getMonth() > endMonth - 1) {
-        tempDate.setMonth(endMonth - 1);
-      }
-
-      setDateViewed(tempDate);
-    },
-    [dateViewed, endMonth, endYear, setDateViewed, startMonth, startYear],
-  );
-
-  return (
-    <DataList
-      valueList={yearRange}
-      setData={changeYear}
-      select
-      defaultValue={viewedYear}
-      height="200px"
-    />
-  );
-}
-
-function Month() {
-  const { dateViewed, setDateViewed, startYear, endYear, startMonth, endMonth } = useDatePicker();
-
-  const viewedYear = dateViewed.getFullYear();
-  const viewedMonth = dateViewed.getMonth() + 1;
-
-  const changeMonth = useCallback(
-    value => {
-      const dupDate = new Date(dateViewed);
-      dupDate.setMonth(value - 1);
-      setDateViewed(dupDate);
-    },
-    [dateViewed, setDateViewed],
-  );
-
-  const monthRange = useMemo(() => {
-    let range;
-    if (startYear === viewedYear) {
-      range = arrayRange(12 - startMonth + 1, startMonth);
-    } else if (endYear === viewedYear) {
-      range = arrayRange(endMonth, 1);
-    } else {
-      range = arrayRange(12, 1);
-    }
-
-    if (!range.includes(viewedMonth)) {
-      range.push(viewedMonth);
-      range.sort((a, b) => a - b);
-    }
-    return range;
-  }, [viewedYear, viewedMonth, startYear, startMonth, endYear, endMonth]);
-
-  return (
-    <DataList
-      valueList={monthRange}
-      setData={changeMonth}
-      select
-      defaultValue={viewedMonth}
-      height="200px"
-    />
-  );
 }
 
 function Day() {
@@ -129,6 +53,8 @@ function Day() {
     endMonth,
     endDay,
   } = useDatePicker();
+
+  const today = useMemo(() => new Date(), []);
 
   const handleDayClick = useCallback(
     day => {
@@ -170,29 +96,30 @@ function Day() {
   const selectedDate = date.getDate();
 
   return (
-    <DayWrapper>
+    <DayGrid>
       {dayRange.map((day, idx) => {
         const cantSelected =
           isMonthBeforeStart ||
           isMonthAfterEnd ||
           (isStartBoundaryMonth && startDay > day) ||
           (isEndBoundaryMonth && endDay < day);
+        const selected = isSameYM && day === selectedDate;
 
         return (
           <Days
-            className={
-              isSameYM && day === selectedDate ? 'selected-day day' : 'non-selected-day day'
-            }
+            className={selected ? 'selected-day day' : 'non-selected-day day'}
             key={`day-${idx}`}
             onClick={cantSelected || !day ? null : () => handleDayClick(day)}
-            day={day}
-            sdt={cantSelected || !day}
+            $day={day}
+            $disabled={cantSelected || !day}
+            $selected={selected}
+            $today={!!day && isSameDay(new Date(viewedYear, viewedMonth - 1, day), today)}
           >
             {day}
           </Days>
         );
       })}
-    </DayWrapper>
+    </DayGrid>
   );
 }
 
@@ -239,23 +166,23 @@ function SelectDays() {
   return (
     <SelectDaysWrap>
       {buttons.map(({ label, days, months }) => (
-        <div key={label}>
-          {label}
-          <span
-            onClick={() => (days ? addDaysButton(days) : addMonthsButton(months))}
-            role="button"
-            aria-hidden
-          >
-            <FaPlus />
-          </span>
-          <span
+        <Stepper key={label}>
+          <button
+            type="button"
+            aria-label={`${label} 전`}
             onClick={() => (days ? addDaysButton(-days) : addMonthsButton(-months))}
-            role="button"
-            aria-hidden
           >
             <FaMinus />
-          </span>
-        </div>
+          </button>
+          <span>{label}</span>
+          <button
+            type="button"
+            aria-label={`${label} 후`}
+            onClick={() => (days ? addDaysButton(days) : addMonthsButton(months))}
+          >
+            <FaPlus />
+          </button>
+        </Stepper>
       ))}
     </SelectDaysWrap>
   );
@@ -301,7 +228,7 @@ function DatePickerProvider({
   // 달력 위치: Floating UI(포털+flip). 화면 하단/스크롤 컨테이너에서 안 잘림.
   const { refs, floatingStyles } = useSeedFloating(isOpen, {
     placement: 'bottom-start',
-    gap: 4,
+    gap: 6,
     clampHeight: false,
   });
 
@@ -409,6 +336,7 @@ function DatePickerProvider({
           readOnly
           disabled={disabled}
         />
+        <PickerInputIcon />
         {isOpen &&
           createPortal(
             <PickerWrapper
@@ -417,32 +345,25 @@ function DatePickerProvider({
               {...FLOATING_PROP}
               style={floatingStyles}
             >
-            <PickerHeader className="date-picker-head">
-              <Button
-                onClick={() => handleMonthChange(-1)}
-                className="date-picker-button date-picker-button-left"
-              >
-                <AiOutlineLeft />
-              </Button>
-              <SelectWrapper>
-                <Year />
-                <Month />
-              </SelectWrapper>
-              <Button
-                onClick={() => handleMonthChange(1)}
-                className="date-picker-button date-picker-button-right"
-              >
-                <AiOutlineRight />
-              </Button>
-            </PickerHeader>
-            <WeekWrapper>
-              {WEEK_DAYS.map(week => (
-                <li key={`weekday-${week}`} className="date-picker-week">
-                  {week}
-                </li>
-              ))}
-            </WeekWrapper>
-            {children}
+              <PickerNav
+                className="date-picker-head"
+                onPrev={() => handleMonthChange(-1)}
+                onNext={() => handleMonthChange(1)}
+                dateViewed={dateViewed}
+                setDateViewed={setDateViewed}
+                startYear={startYear}
+                endYear={endYear}
+                startMonth={startMonth}
+                endMonth={endMonth}
+              />
+              <WeekWrapper>
+                {WEEK_DAYS.map(week => (
+                  <li key={`weekday-${week}`} className="date-picker-week">
+                    {week}
+                  </li>
+                ))}
+              </WeekWrapper>
+              {children}
             </PickerWrapper>,
             document.body,
           )}
@@ -472,172 +393,109 @@ function DatePicker({
   );
 }
 
-const Wrapper = styled.div`
-  width: 100%;
-  position: relative;
-`;
-
 const PickerWrapper = styled.div`
-  background: var(--seed-surface);
-  width: 250px !important;
-  z-index: 10000;
+  ${panelStyle};
+  width: ${CALENDAR_WIDTH + 24}px !important;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border-radius: 4px;
-  font-size: 15px;
-  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-
-  -webkit-touch-callout: none;
-  user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-`;
-
-const PickerHeader = styled.div`
-  height: 40px;
-  width: 100% !important;
-  background: var(--seed-invert-bg);
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-`;
-
-const SelectWrapper = styled.div`
-  width: auto !important;
-  display: flex;
-  gap: 5px;
-
-  & div {
-    width: 85px !important;
-
-    &:last-of-type {
-      width: 65px !important;
-    }
-    & input {
-      cursor: default;
-      padding: 3.5px 7px;
-    }
-
-    & li {
-      padding: 0.375rem 1.25rem 0.375rem 0.75rem;
-    }
-  }
-`;
-
-const Button = styled.div`
-  width: 25px !important;
-  height: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: var(--seed-invert-text);
-
-  svg {
-    width: 25px;
-    height: 25px;
-  }
-`;
-
-const WeekWrapper = styled.ul`
-  display: flex;
-  width: 100% !important;
-  background: var(--seed-invert-bg);
-  color: var(--seed-invert-text);
-  justify-content: center;
-
-  & li {
-    font-weight: bolder;
-    width: 32px !important;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
-const DayWrapper = styled.ul`
-  width: 100% !important;
-  height: 198px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 8px;
-
-  .selected-day {
-    background: var(--seed-primary) !important;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    color: var(--seed-invert-text);
-  }
+  font-size: 14px;
 `;
 
 const Days = styled.li`
-  width: 32px !important;
-  height: 32px;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
-  margin-top: 1px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
   color: var(--seed-text);
+  transition: background-color 0.12s, color 0.12s;
 
-  ${({ day }) =>
-    day &&
+  ${({ $day, $disabled }) =>
+    $day &&
+    !$disabled &&
     css`
-      &:hover {
-        background-color: var(--seed-surface-header);
-      }
       cursor: pointer;
+      &:hover {
+        background-color: var(--seed-hover);
+      }
     `}
 
-  ${({ sdt, day }) =>
-    day &&
-    sdt &&
+  ${({ $today }) =>
+    $today &&
+    css`
+      color: var(--seed-primary);
+      font-weight: 600;
+      ${todayDot};
+    `}
+
+  ${({ $selected }) =>
+    $selected &&
+    css`
+      background-color: var(--seed-primary) !important;
+      color: var(--seed-invert-text);
+      font-weight: 600;
+      box-shadow: 0 4px 10px -3px var(--seed-primary);
+    `}
+
+  ${({ $day, $disabled }) =>
+    $day &&
+    $disabled &&
     css`
       cursor: default;
-      background-color: var(--x-ebebeb) !important;
+      color: var(--seed-text-muted);
+      opacity: 0.45;
     `}
 `;
 
 const SelectDaysWrap = styled.div`
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--seed-border);
+`;
+
+const Stepper = styled.div`
+  height: 30px;
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 8px;
-  font-size: 14px;
-
-  & div {
-    width: 50px;
-    height: 24px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--seed-invert-text);
-    background-color: var(--seed-invert-bg);
-    border-radius: 3px;
-    cursor: pointer;
-  }
-
-  & div:hover span {
-    display: block;
-  }
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--seed-border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--seed-text-secondary);
 
   & span {
-    width: 50%;
-    left: 0;
-    position: absolute;
-    display: none;
+    flex: 1;
     text-align: center;
-    background-color: var(--seed-invert-bg);
+    font-weight: 500;
   }
 
-  & span:nth-of-type(2) {
-    left: 50%;
-    border-left: 1px solid var(--x-ebebeb);
+  & button {
+    all: unset;
     box-sizing: border-box;
+    width: 28px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--seed-text-muted);
+    transition: background-color 0.12s, color 0.12s;
+
+    &:hover {
+      background: var(--x-fde8e8);
+      color: var(--seed-primary);
+    }
+
+    svg {
+      width: 9px;
+      height: 9px;
+    }
   }
 `;
 

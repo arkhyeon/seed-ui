@@ -1,10 +1,15 @@
 import React, { useCallback, useMemo } from 'react';
 import styled from '@emotion/styled';
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { css, keyframes } from '@emotion/react';
+import { AiOutlineCalendar, AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import { arrayRange } from '../timeComponents/PickerCommonFunc';
 import DataList from '../../InputComp/DataList';
 
 export const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+
+// 달력 한 칸 크기(px) — 7칸 * CELL = 달력 본문 너비
+export const CELL = 36;
+export const CALENDAR_WIDTH = CELL * 7;
 
 export function Year({ dateViewed, setDateViewed, startYear, endYear, startMonth, endMonth }) {
   const viewedYear = dateViewed.getFullYear();
@@ -17,6 +22,8 @@ export function Year({ dateViewed, setDateViewed, startYear, endYear, startMonth
     }
     return range;
   }, [startYear, endYear, viewedYear]);
+
+  const yearLabels = useMemo(() => yearRange.map(y => `${y}년`), [yearRange]);
 
   const changeYear = useCallback(
     value => {
@@ -32,6 +39,7 @@ export function Year({ dateViewed, setDateViewed, startYear, endYear, startMonth
   return (
     <DataList
       valueList={yearRange}
+      labelList={yearLabels}
       setData={changeYear}
       select
       defaultValue={viewedYear}
@@ -56,6 +64,8 @@ export function Month({ dateViewed, setDateViewed, startYear, endYear, startMont
     return range;
   }, [viewedYear, viewedMonth, startYear, startMonth, endYear, endMonth]);
 
+  const monthLabels = useMemo(() => monthRange.map(m => `${m}월`), [monthRange]);
+
   const changeMonth = useCallback(
     value => {
       const d = new Date(dateViewed);
@@ -68,6 +78,7 @@ export function Month({ dateViewed, setDateViewed, startYear, endYear, startMont
   return (
     <DataList
       valueList={monthRange}
+      labelList={monthLabels}
       setData={changeMonth}
       select
       defaultValue={viewedMonth}
@@ -85,10 +96,11 @@ export function PickerNav({
   endYear,
   startMonth,
   endMonth,
+  className,
 }) {
   return (
-    <PickerHeader>
-      <NavButton onClick={onPrev}>
+    <PickerHeader className={className}>
+      <NavButton type="button" onClick={onPrev} aria-label="이전 달">
         <AiOutlineLeft />
       </NavButton>
       <SelectWrapper>
@@ -109,74 +121,190 @@ export function PickerNav({
           endMonth={endMonth}
         />
       </SelectWrapper>
-      <NavButton onClick={onNext}>
+      <NavButton type="button" onClick={onNext} aria-label="다음 달">
         <AiOutlineRight />
       </NavButton>
     </PickerHeader>
   );
 }
 
+// 입력창 오른쪽 달력 아이콘
+export function PickerInputIcon() {
+  return (
+    <InputIconWrap aria-hidden>
+      <AiOutlineCalendar />
+    </InputIconWrap>
+  );
+}
+
+export const isSameDay = (a, b) =>
+  !!a &&
+  !!b &&
+  a.getFullYear() === b.getFullYear() &&
+  a.getMonth() === b.getMonth() &&
+  a.getDate() === b.getDate();
+
+const popIn = keyframes`
+  from { opacity: 0; translate: 0 -4px; }
+  to { opacity: 1; translate: 0 0; }
+`;
+
+// 떠있는 달력 패널 공통 스타일
+export const panelStyle = css`
+  background: var(--seed-surface);
+  color: var(--seed-text);
+  z-index: 10000;
+  border: 1px solid var(--seed-border);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px -8px var(--seed-shadow), 0 4px 10px -4px var(--seed-shadow);
+  padding: 12px;
+  box-sizing: border-box;
+  animation: ${popIn} 0.14s ease-out;
+
+  -webkit-touch-callout: none;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+`;
+
 export const Wrapper = styled.div`
   width: 100%;
   position: relative;
+
+  & input {
+    cursor: pointer;
+    padding-right: 34px;
+  }
+  & input:disabled {
+    cursor: default;
+  }
+`;
+
+const InputIconWrap = styled.span`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  pointer-events: none;
+  color: var(--seed-text-muted);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 export const PickerHeader = styled.div`
-  height: 40px;
+  height: 36px;
   width: 100% !important;
-  background: var(--seed-invert-bg);
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 6px;
 `;
 
 export const SelectWrapper = styled.div`
   width: auto !important;
   display: flex;
-  gap: 5px;
+  gap: 2px;
 
-  & div {
-    width: 85px !important;
+  & > div {
+    width: 86px !important;
     &:last-of-type {
-      width: 65px !important;
+      width: 66px !important;
     }
-    & input {
-      cursor: default;
-      padding: 3.5px 7px;
-    }
-    & li {
-      padding: 0.375rem 1.25rem 0.375rem 0.75rem;
+  }
+
+  & input {
+    cursor: pointer;
+    height: 30px;
+    padding: 0 22px 0 8px;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    background-position: right 6px center;
+    background-size: 12px 10px;
+    color: var(--seed-text);
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.15s;
+
+    &:hover,
+    &:focus {
+      background-color: var(--seed-hover);
     }
   }
 `;
 
-export const NavButton = styled.div`
-  width: 25px !important;
-  height: 25px;
+export const NavButton = styled.button`
+  all: unset;
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 8px;
   cursor: pointer;
-  color: var(--seed-invert-text);
+  color: var(--seed-text-secondary);
+  transition: background-color 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--seed-hover);
+    color: var(--seed-text);
+  }
+
   svg {
-    width: 25px;
-    height: 25px;
+    width: 14px;
+    height: 14px;
   }
 `;
 
 export const WeekWrapper = styled.ul`
-  display: flex;
-  width: 100% !important;
-  background: var(--seed-invert-bg);
-  color: var(--seed-invert-text);
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(7, ${CELL}px);
+  width: ${CALENDAR_WIDTH}px !important;
+  margin: 0 auto 2px;
 
   & li {
-    font-weight: bolder;
-    width: 32px !important;
-    height: 32px;
+    height: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--seed-text-muted);
+  }
+  & li:first-of-type {
+    color: var(--seed-danger);
+  }
+`;
+
+export const DayGrid = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(7, ${CELL}px);
+  grid-auto-rows: ${CELL}px;
+  row-gap: 2px;
+  width: ${CALENDAR_WIDTH}px !important;
+  min-height: ${CELL * 6 + 2 * 5}px;
+  align-content: start;
+  margin: 0 auto;
+`;
+
+// 오늘 표시(숫자 아래 점)
+export const todayDot = css`
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+    background: currentColor;
   }
 `;
