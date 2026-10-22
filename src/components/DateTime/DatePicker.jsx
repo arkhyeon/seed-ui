@@ -27,6 +27,12 @@ import {
   panelStyle,
   todayDot,
   isSameDay,
+  formatKoDate,
+  SummaryBar,
+  SummaryIcon,
+  SummaryText,
+  SummaryLabel,
+  SummaryValue,
 } from './dateComponents/PickerShared';
 
 const DatePickerContext = createContext(null);
@@ -345,6 +351,13 @@ function DatePickerProvider({
               {...FLOATING_PROP}
               style={floatingStyles}
             >
+              <SummaryBar $inset={12}>
+                <SummaryIcon />
+                <SummaryText>
+                  <SummaryLabel>선택한 날짜</SummaryLabel>
+                  <SummaryValue>{formatKoDate(dateAsObject)}</SummaryValue>
+                </SummaryText>
+              </SummaryBar>
               <PickerNav
                 className="date-picker-head"
                 onPrev={() => handleMonthChange(-1)}

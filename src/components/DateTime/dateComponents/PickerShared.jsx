@@ -137,6 +137,22 @@ export function PickerInputIcon() {
   );
 }
 
+// 상단 요약 바 아이콘(primary 배경 + 달력)
+export function SummaryIcon() {
+  return (
+    <SummaryIconWrap aria-hidden>
+      <AiOutlineCalendar />
+    </SummaryIconWrap>
+  );
+}
+
+// 'YYYY.MM.DD (요일)' — 요약 바 표시용
+export const formatKoDate = d =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(
+    2,
+    '0',
+  )} (${WEEK_DAYS[d.getDay()]})`;
+
 export const isSameDay = (a, b) =>
   !!a &&
   !!b &&
@@ -306,5 +322,61 @@ export const todayDot = css`
     margin-left: -2px;
     border-radius: 50%;
     background: currentColor;
+  }
+`;
+
+// 패널 상단 요약 바 — $inset 은 패널 padding(px) 만큼 바깥으로 꽉 채우기
+export const SummaryBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: ${({ $inset = 12 }) => `-${$inset}px -${$inset}px 10px`};
+  padding: 14px 16px;
+  border-radius: 13px 13px 0 0;
+  border-bottom: 1px solid var(--seed-border);
+  background: linear-gradient(135deg, var(--x-fde8e8) 0%, var(--seed-surface) 100%);
+`;
+
+const SummaryIconWrap = styled.span`
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--seed-primary);
+  color: var(--seed-invert-text);
+  box-shadow: 0 4px 10px -3px var(--seed-primary);
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+`;
+
+export const SummaryText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+`;
+
+export const SummaryLabel = styled.span`
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--seed-text-secondary);
+`;
+
+export const SummaryValue = styled.span`
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--seed-text);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  &[data-empty='true'] {
+    font-weight: 500;
+    color: var(--seed-text-muted);
   }
 `;
