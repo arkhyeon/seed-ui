@@ -15,6 +15,7 @@ function DataList({
   height = '400px',
   disabled = false,
   placeholder = '',
+  listMinWidth,
 }) {
   const ref = useRef();
   const dataListWrapRef = useRef();
@@ -134,7 +135,7 @@ function DataList({
               }}
               {...FLOATING_PROP}
               height={height}
-              style={{ ...floatingStyles, display: 'block' }}
+              style={{ ...floatingStyles, display: 'block', minWidth: listMinWidth }}
             >
               {filteredList.map(data => (
                 <DataListItem

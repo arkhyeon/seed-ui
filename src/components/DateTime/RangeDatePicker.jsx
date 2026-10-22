@@ -10,6 +10,7 @@ import React, {
 import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import { AiOutlineArrowRight } from 'react-icons/ai';
 import _ from 'lodash';
 import useSeedFloating from '../../common/useSeedFloating';
 import { FLOATING_PROP, clickedInsideFloating } from '../../common/floating';
@@ -24,9 +25,14 @@ import {
   WeekWrapper,
   DayGrid,
   panelStyle,
-  headerBand,
   todayDot,
   isSameDay,
+  formatKoDate,
+  SummaryBar,
+  SummaryIcon,
+  SummaryText,
+  SummaryLabel,
+  SummaryValue,
 } from './dateComponents/PickerShared';
 
 const RangePickerContext = createContext(null);
@@ -241,9 +247,6 @@ function InputRow() {
   const hasStartTime = startTime !== undefined;
   const hasEndTime = endTime !== undefined;
   const noEnd = endDt === NO_END;
-  const s = toDate(startDt);
-  const e = toDate(endDt);
-  const dayCount = s && e && !noEnd ? Math.round(Math.abs(e - s) / 86400000) + 1 : null;
 
   return (
     <InputRowWrap>
@@ -266,10 +269,7 @@ function InputRow() {
       </InputHalf>
       <InputHalf cols={hasEndTime ? 2 : 1}>
         <InputCell>
-          <InputLabel>
-            종료일
-            {dayCount && <DayCount>{dayCount}일</DayCount>}
-          </InputLabel>
+          <InputLabel>종료일</InputLabel>
           <DateInput
             value={endDt}
             onChange={setEndDt}
@@ -381,6 +381,42 @@ function QuickRangeButtons() {
         오늘
       </TodayBtn>
     </QuickRow>
+  );
+}
+
+// ─── RangeSummary ────────────────────────────────────────────────────────────
+
+function RangeSummary() {
+  const { rangeStart, rangeEnd, endDt } = useRangePicker();
+  const noEnd = endDt === NO_END;
+
+  const dayCount =
+    rangeStart && rangeEnd && !noEnd
+      ? Math.round(Math.abs(rangeEnd - rangeStart) / 86400000) + 1
+      : null;
+
+  let endText = '선택 안 함';
+  if (noEnd) endText = '종료 없음';
+  else if (rangeEnd) endText = formatKoDate(rangeEnd);
+
+  return (
+    <SummaryBar $inset={14}>
+      <SummaryIcon />
+      <SummaryText>
+        <SummaryLabel>시작일</SummaryLabel>
+        <SummaryValue data-empty={!rangeStart}>
+          {rangeStart ? formatKoDate(rangeStart) : '선택 안 함'}
+        </SummaryValue>
+      </SummaryText>
+      <SummaryArrow>
+        <AiOutlineArrowRight />
+      </SummaryArrow>
+      <SummaryText>
+        <SummaryLabel>종료일</SummaryLabel>
+        <SummaryValue data-empty={!rangeEnd || noEnd}>{endText}</SummaryValue>
+      </SummaryText>
+      {dayCount && <DayCount>{dayCount}일</DayCount>}
+    </SummaryBar>
   );
 }
 
@@ -696,6 +732,7 @@ function RangeDatePickerProvider({
         {isOpen &&
           createPortal(
             <RangePickerWrapper ref={refs.setFloating} {...FLOATING_PROP} style={floatingStyles}>
+              <RangeSummary />
               <CalendarsRow>{children}</CalendarsRow>
               <PanelDivider />
               <InputRow />
@@ -868,12 +905,33 @@ function RangeDatePicker({
 
 const RangePickerWrapper = styled.div`
   ${panelStyle};
-  ${headerBand(14)};
   padding: 14px;
   /* 달력 2개 너비에 맞춤(빠른 선택 버튼이 패널을 넓히지 않게) */
   width: ${CALENDAR_WIDTH * 2 + 20 + 30}px;
   overflow: hidden;
   font-size: 14px;
+`;
+
+const SummaryArrow = styled.span`
+  display: flex;
+  color: var(--seed-text-muted);
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
+const DayCount = styled.span`
+  margin-left: auto;
+  height: 24px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--seed-primary);
+  color: var(--seed-invert-text);
 `;
 
 const CalendarsRow = styled.div`
@@ -1007,16 +1065,6 @@ const InputCell = styled.div`
   flex-direction: column;
   gap: 4px;
   min-width: 0;
-`;
-
-const DayCount = styled.span`
-  margin-left: 6px;
-  padding: 1px 7px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  background: var(--x-fde8e8);
-  color: var(--seed-primary);
 `;
 
 const InputLabel = styled.span`

@@ -11,8 +11,6 @@ export const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 export const CELL = 36;
 export const ROW_HEIGHT = 32;
 export const CALENDAR_WIDTH = CELL * 7;
-// 상단 헤더(연/월 이동 36 + 간격 4 + 요일 26) 높이 — 패널 배경 색띠 높이 계산용
-const HEADER_HEIGHT = 36 + 4 + 26;
 
 export function Year({ dateViewed, setDateViewed, startYear, endYear, startMonth, endMonth }) {
   const viewedYear = dateViewed.getFullYear();
@@ -47,6 +45,7 @@ export function Year({ dateViewed, setDateViewed, startYear, endYear, startMonth
       select
       defaultValue={viewedYear}
       height="200px"
+      listMinWidth="104px"
     />
   );
 }
@@ -86,6 +85,7 @@ export function Month({ dateViewed, setDateViewed, startYear, endYear, startMont
       select
       defaultValue={viewedMonth}
       height="200px"
+      listMinWidth="88px"
     />
   );
 }
@@ -140,6 +140,22 @@ export function PickerInputIcon() {
   );
 }
 
+// 상단 요약 바 아이콘(primary 배경 + 달력)
+export function SummaryIcon() {
+  return (
+    <SummaryIconWrap aria-hidden>
+      <AiOutlineCalendar />
+    </SummaryIconWrap>
+  );
+}
+
+// 'YYYY.MM.DD (요일)' — 요약 바 표시용
+export const formatKoDate = d =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(
+    2,
+    '0',
+  )} (${WEEK_DAYS[d.getDay()]})`;
+
 export const isSameDay = (a, b) =>
   !!a &&
   !!b &&
@@ -150,15 +166,6 @@ export const isSameDay = (a, b) =>
 const popIn = keyframes`
   from { opacity: 0; translate: 0 -4px; }
   to { opacity: 1; translate: 0 0; }
-`;
-
-// 패널 상단(연/월 이동 + 요일)에 연한 primary 색띠 + 구분선 — 레이아웃 높이 추가 없음
-export const headerBand = padding => css`
-  background: linear-gradient(var(--seed-border), var(--seed-border)) 0
-      ${padding + HEADER_HEIGHT}px / 100% 1px no-repeat,
-    linear-gradient(180deg, var(--x-fde8e8), var(--x-fde8e8)) 0 0 / 100%
-      ${padding + HEADER_HEIGHT}px no-repeat,
-    var(--seed-surface);
 `;
 
 // 떠있는 달력 패널 공통 스타일
@@ -209,12 +216,12 @@ const InputIconWrap = styled.span`
 `;
 
 export const PickerHeader = styled.div`
-  height: 36px;
+  height: 28px;
   width: 100% !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 `;
 
 export const SelectWrapper = styled.div`
@@ -223,23 +230,25 @@ export const SelectWrapper = styled.div`
   gap: 2px;
 
   & > div {
-    width: 86px !important;
+    width: 84px !important;
     &:last-of-type {
-      width: 66px !important;
+      width: 64px !important;
     }
   }
 
   & input {
     cursor: pointer;
-    height: 30px;
-    padding: 0 22px 0 8px;
+    height: 26px;
+    padding: 0 20px 0 6px;
+    text-overflow: clip;
     border: none;
     border-radius: 8px;
     background-color: transparent;
-    background-position: right 6px center;
+    background-position: right 4px center;
     background-size: 12px 10px;
     color: var(--seed-text);
     font-size: 14px;
+    letter-spacing: -0.2px;
     font-weight: 600;
     transition: background-color 0.15s;
 
@@ -253,8 +262,8 @@ export const SelectWrapper = styled.div`
 export const NavButton = styled.button`
   all: unset;
   box-sizing: border-box;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
   display: flex;
   justify-content: center;
@@ -301,9 +310,8 @@ export const DayGrid = styled.ul`
   grid-auto-rows: ${ROW_HEIGHT}px;
   row-gap: 2px;
   width: ${CALENDAR_WIDTH}px !important;
-  min-height: ${ROW_HEIGHT * 6 + 2 * 5}px;
   align-content: start;
-  margin: 8px auto 0;
+  margin: 0 auto;
 `;
 
 // 오늘 표시(숫자 아래 점)
@@ -318,5 +326,61 @@ export const todayDot = css`
     margin-left: -2px;
     border-radius: 50%;
     background: currentColor;
+  }
+`;
+
+// 패널 상단 요약 바 — $inset 은 패널 padding(px) 만큼 바깥으로 꽉 채우기
+export const SummaryBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: ${({ $inset = 12 }) => `-${$inset}px -${$inset}px 8px`};
+  padding: 10px 14px;
+  border-radius: 13px 13px 0 0;
+  border-bottom: 1px solid var(--seed-border);
+  background: linear-gradient(135deg, var(--x-fde8e8) 0%, var(--seed-surface) 100%);
+`;
+
+const SummaryIconWrap = styled.span`
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--seed-primary);
+  color: var(--seed-invert-text);
+  box-shadow: 0 4px 10px -3px var(--seed-primary);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
+export const SummaryText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+`;
+
+export const SummaryLabel = styled.span`
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--seed-text-secondary);
+`;
+
+export const SummaryValue = styled.span`
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--seed-text);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  &[data-empty='true'] {
+    font-weight: 500;
+    color: var(--seed-text-muted);
   }
 `;
