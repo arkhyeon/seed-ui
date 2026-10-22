@@ -9,7 +9,10 @@ export const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 // 달력 한 칸 크기(px) — 7칸 * CELL = 달력 본문 너비
 export const CELL = 36;
+export const ROW_HEIGHT = 32;
 export const CALENDAR_WIDTH = CELL * 7;
+// 상단 헤더(연/월 이동 36 + 간격 4 + 요일 26) 높이 — 패널 배경 색띠 높이 계산용
+const HEADER_HEIGHT = 36 + 4 + 26;
 
 export function Year({ dateViewed, setDateViewed, startYear, endYear, startMonth, endMonth }) {
   const viewedYear = dateViewed.getFullYear();
@@ -137,22 +140,6 @@ export function PickerInputIcon() {
   );
 }
 
-// 상단 요약 바 아이콘(primary 배경 + 달력)
-export function SummaryIcon() {
-  return (
-    <SummaryIconWrap aria-hidden>
-      <AiOutlineCalendar />
-    </SummaryIconWrap>
-  );
-}
-
-// 'YYYY.MM.DD (요일)' — 요약 바 표시용
-export const formatKoDate = d =>
-  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(
-    2,
-    '0',
-  )} (${WEEK_DAYS[d.getDay()]})`;
-
 export const isSameDay = (a, b) =>
   !!a &&
   !!b &&
@@ -163,6 +150,15 @@ export const isSameDay = (a, b) =>
 const popIn = keyframes`
   from { opacity: 0; translate: 0 -4px; }
   to { opacity: 1; translate: 0 0; }
+`;
+
+// 패널 상단(연/월 이동 + 요일)에 연한 primary 색띠 + 구분선 — 레이아웃 높이 추가 없음
+export const headerBand = padding => css`
+  background: linear-gradient(var(--seed-border), var(--seed-border)) 0
+      ${padding + HEADER_HEIGHT}px / 100% 1px no-repeat,
+    linear-gradient(180deg, var(--x-fde8e8), var(--x-fde8e8)) 0 0 / 100%
+      ${padding + HEADER_HEIGHT}px no-repeat,
+    var(--seed-surface);
 `;
 
 // 떠있는 달력 패널 공통 스타일
@@ -218,7 +214,7 @@ export const PickerHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 `;
 
 export const SelectWrapper = styled.div`
@@ -286,7 +282,7 @@ export const WeekWrapper = styled.ul`
   margin: 0 auto 2px;
 
   & li {
-    height: 28px;
+    height: 26px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -302,12 +298,12 @@ export const WeekWrapper = styled.ul`
 export const DayGrid = styled.ul`
   display: grid;
   grid-template-columns: repeat(7, ${CELL}px);
-  grid-auto-rows: ${CELL}px;
+  grid-auto-rows: ${ROW_HEIGHT}px;
   row-gap: 2px;
   width: ${CALENDAR_WIDTH}px !important;
-  min-height: ${CELL * 6 + 2 * 5}px;
+  min-height: ${ROW_HEIGHT * 6 + 2 * 5}px;
   align-content: start;
-  margin: 0 auto;
+  margin: 8px auto 0;
 `;
 
 // 오늘 표시(숫자 아래 점)
@@ -315,68 +311,12 @@ export const todayDot = css`
   &::after {
     content: '';
     position: absolute;
-    bottom: 4px;
+    bottom: 3px;
     left: 50%;
     width: 4px;
     height: 4px;
     margin-left: -2px;
     border-radius: 50%;
     background: currentColor;
-  }
-`;
-
-// 패널 상단 요약 바 — $inset 은 패널 padding(px) 만큼 바깥으로 꽉 채우기
-export const SummaryBar = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: ${({ $inset = 12 }) => `-${$inset}px -${$inset}px 10px`};
-  padding: 14px 16px;
-  border-radius: 13px 13px 0 0;
-  border-bottom: 1px solid var(--seed-border);
-  background: linear-gradient(135deg, var(--x-fde8e8) 0%, var(--seed-surface) 100%);
-`;
-
-const SummaryIconWrap = styled.span`
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  background: var(--seed-primary);
-  color: var(--seed-invert-text);
-  box-shadow: 0 4px 10px -3px var(--seed-primary);
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
-`;
-
-export const SummaryText = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-`;
-
-export const SummaryLabel = styled.span`
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--seed-text-secondary);
-`;
-
-export const SummaryValue = styled.span`
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--seed-text);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-
-  &[data-empty='true'] {
-    font-weight: 500;
-    color: var(--seed-text-muted);
   }
 `;
