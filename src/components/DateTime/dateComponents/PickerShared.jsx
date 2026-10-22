@@ -154,14 +154,15 @@ const popIn = keyframes`
   to { opacity: 1; translate: 0 0; }
 `;
 
-// 패널 상단(연/월 이동 + 요일)에 연한 primary 색띠 + 구분선 — 레이아웃 높이 추가 없음
+// 패널 상단(연/월 이동 + 요일)에 어두운 색띠 — 레이아웃 높이 추가 없음
 export const headerBand = padding => css`
-  background: linear-gradient(var(--seed-border), var(--seed-border)) 0
-      ${padding + HEADER_HEIGHT}px / 100% 1px no-repeat,
-    linear-gradient(180deg, var(--x-fde8e8), var(--x-fde8e8)) 0 0 / 100%
+  background: linear-gradient(var(--seed-invert-bg), var(--seed-invert-bg)) 0 0 / 100%
       ${padding + HEADER_HEIGHT}px no-repeat,
     var(--seed-surface);
 `;
+
+// 어두운 헤더 위 호버 오버레이
+const HEADER_HOVER = 'rgba(255, 255, 255, 0.14)';
 
 // 떠있는 달력 패널 공통 스타일
 export const panelStyle = css`
@@ -241,7 +242,7 @@ export const SelectWrapper = styled.div`
     background-color: transparent;
     background-position: right 4px center;
     background-size: 12px 10px;
-    color: var(--seed-text);
+    color: var(--seed-invert-text);
     font-size: 14px;
     letter-spacing: -0.2px;
     font-weight: 600;
@@ -249,7 +250,7 @@ export const SelectWrapper = styled.div`
 
     &:hover,
     &:focus {
-      background-color: var(--seed-hover);
+      background-color: ${HEADER_HOVER};
     }
   }
 `;
@@ -265,12 +266,13 @@ export const NavButton = styled.button`
   align-items: center;
   border-radius: 8px;
   cursor: pointer;
-  color: var(--seed-text-secondary);
-  transition: background-color 0.15s, color 0.15s;
+  color: var(--seed-invert-text);
+  opacity: 0.8;
+  transition: background-color 0.15s, opacity 0.15s;
 
   &:hover {
-    background: var(--seed-hover);
-    color: var(--seed-text);
+    background: ${HEADER_HOVER};
+    opacity: 1;
   }
 
   svg {
@@ -292,10 +294,12 @@ export const WeekWrapper = styled.ul`
     align-items: center;
     font-size: 12px;
     font-weight: 500;
-    color: var(--seed-text-muted);
+    color: var(--seed-invert-text);
+    opacity: 0.6;
   }
   & li:first-of-type {
-    color: var(--seed-danger);
+    color: var(--seed-primary);
+    opacity: 1;
   }
 `;
 

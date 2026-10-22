@@ -1027,8 +1027,8 @@ const StyledInput = styled.input`
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
   &:focus {
-    border-color: var(--seed-primary);
-    box-shadow: 0 0 0 3px var(--x-fde8e8);
+    border-color: var(--seed-btn-primary-bg);
+    box-shadow: 0 0 0 3px var(--seed-scrollbar-track);
   }
   &:disabled {
     background: var(--seed-surface-alt);
@@ -1086,9 +1086,9 @@ const QuickBtn = styled.button`
   align-items: center;
   transition: background-color 0.12s, color 0.12s, border-color 0.12s;
   &:hover {
-    background: var(--x-fde8e8);
-    color: var(--seed-primary);
-    border-color: var(--seed-primary);
+    background: var(--seed-btn-primary-bg);
+    color: var(--seed-btn-primary-text);
+    border-color: var(--seed-btn-primary-bg);
   }
 `;
 
@@ -1104,12 +1104,11 @@ const TodayBtn = styled.button`
   border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  background: var(--x-fde8e8);
-  color: var(--seed-primary);
-  transition: background-color 0.12s, color 0.12s;
+  background: var(--seed-btn-primary-bg);
+  color: var(--seed-btn-primary-text);
+  transition: background-color 0.12s;
   &:hover {
-    background: var(--seed-primary);
-    color: var(--seed-invert-text);
+    background: var(--seed-btn-primary-hover);
   }
 `;
 
@@ -1128,12 +1127,11 @@ const ApplyBtn = styled.button`
   font-weight: 600;
   text-align: center;
   border-radius: 10px;
-  background: var(--seed-primary);
-  color: var(--seed-invert-text);
-  box-shadow: 0 4px 12px -4px var(--seed-primary);
-  transition: filter 0.12s;
+  background: var(--seed-btn-primary-bg);
+  color: var(--seed-btn-primary-text);
+  transition: background-color 0.12s;
   &:hover {
-    filter: brightness(0.94);
+    background: var(--seed-btn-primary-hover);
   }
 `;
 

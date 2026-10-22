@@ -490,8 +490,8 @@ const Stepper = styled.div`
     transition: background-color 0.12s, color 0.12s;
 
     &:hover {
-      background: var(--x-fde8e8);
-      color: var(--seed-primary);
+      background: var(--seed-btn-primary-bg);
+      color: var(--seed-btn-primary-text);
     }
 
     svg {
