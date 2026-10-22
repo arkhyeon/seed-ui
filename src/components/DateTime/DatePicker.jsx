@@ -7,11 +7,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import _ from 'lodash';
 import { css } from '@emotion/react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
+import useSeedFloating from '../../common/useSeedFloating';
+import { FLOATING_PROP, clickedInsideFloating } from '../../common/floating';
 import { TextInput } from '../InputComp/InputComponent';
 import DataList from '../InputComp/DataList';
 import { addDays, addMonths, arrayRange, formatDate } from './timeComponents/PickerCommonFunc';
@@ -295,6 +298,13 @@ function DatePickerProvider({
   const [inputValue, setInputValue] = useState(inputValueString);
   const [isOpen, setIsOpen] = useState(false);
 
+  // 달력 위치: Floating UI(포털+flip). 화면 하단/스크롤 컨테이너에서 안 잘림.
+  const { refs, floatingStyles } = useSeedFloating(isOpen, {
+    placement: 'bottom-start',
+    gap: 4,
+    clampHeight: false,
+  });
+
   const startYear = startDate.getFullYear();
   const startMonth = startDate.getMonth() + 1;
   const startDay = startDate.getDate();
@@ -309,9 +319,9 @@ function DatePickerProvider({
   }, [dateAsObject, inputValueString]);
 
   const handleClose = useCallback(({ target }) => {
-    if (pickerRef.current && !pickerRef.current.contains(target)) {
-      setIsOpen(false);
-    }
+    // 입력 영역 안이거나, (중첩) 떠있는 요소(달력·연/월 드롭다운) 안이면 유지
+    if (pickerRef.current?.contains(target) || clickedInsideFloating(target)) return;
+    setIsOpen(false);
   }, []);
 
   useEffect(() => {
@@ -386,7 +396,12 @@ function DatePickerProvider({
 
   return (
     <DatePickerContext.Provider value={value}>
-      <Wrapper ref={pickerRef}>
+      <Wrapper
+        ref={node => {
+          pickerRef.current = node;
+          refs.setReference(node);
+        }}
+      >
         <TextInput
           className="date-picker-input"
           value={inputValue}
@@ -394,8 +409,14 @@ function DatePickerProvider({
           readOnly
           disabled={disabled}
         />
-        {isOpen && (
-          <PickerWrapper className="date-picker">
+        {isOpen &&
+          createPortal(
+            <PickerWrapper
+              className="date-picker"
+              ref={refs.setFloating}
+              {...FLOATING_PROP}
+              style={floatingStyles}
+            >
             <PickerHeader className="date-picker-head">
               <Button
                 onClick={() => handleMonthChange(-1)}
@@ -422,8 +443,9 @@ function DatePickerProvider({
               ))}
             </WeekWrapper>
             {children}
-          </PickerWrapper>
-        )}
+            </PickerWrapper>,
+            document.body,
+          )}
       </Wrapper>
     </DatePickerContext.Provider>
   );
@@ -456,11 +478,9 @@ const Wrapper = styled.div`
 `;
 
 const PickerWrapper = styled.div`
-  position: absolute;
-  margin-top: 4px;
   background: var(--seed-surface);
   width: 250px !important;
-  z-index: 80;
+  z-index: 10000;
   display: flex;
   flex-direction: column;
   align-items: center;

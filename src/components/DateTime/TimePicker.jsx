@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
+import useSeedFloating from '../../common/useSeedFloating';
+import { FLOATING_PROP } from '../../common/floating';
 import TimePickerSelection from './timeComponents/TimePickerSelection';
 import { TextInput } from '../InputComp/InputComponent';
 
@@ -7,30 +10,40 @@ function TimePicker({ time = '00:00', itemHeight = 32, onChange = () => {}, disa
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(time);
 
+  // 시간 선택 위치: Floating UI(포털+flip). 화면 하단/스크롤에서 안 잘림.
+  const { refs, floatingStyles } = useSeedFloating(isOpen, {
+    placement: 'bottom-start',
+    gap: 3,
+    clampHeight: false,
+  });
+
   useEffect(() => {
     setInputValue(time);
   }, [time]);
 
   return (
-    <Wrapper>
+    <Wrapper ref={refs.setReference}>
       <TextInput
         value={inputValue === null ? '' : inputValue}
         readOnly
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
       />
-      {isOpen && !disabled && (
-        <TimeWrap>
-          <TimeWrapOverlay onClick={() => setIsOpen(!isOpen)} />
-          <TimePickerSelection
-            onChange={onChange}
-            itemHeight={itemHeight}
-            setInputValue={setInputValue}
-            time={time}
-            isOpen={isOpen}
-          />
-        </TimeWrap>
-      )}
+      {isOpen &&
+        !disabled &&
+        createPortal(
+          <TimeWrap ref={refs.setFloating} {...FLOATING_PROP} style={floatingStyles}>
+            <TimeWrapOverlay onClick={() => setIsOpen(!isOpen)} />
+            <TimePickerSelection
+              onChange={onChange}
+              itemHeight={itemHeight}
+              setInputValue={setInputValue}
+              time={time}
+              isOpen={isOpen}
+            />
+          </TimeWrap>,
+          document.body,
+        )}
     </Wrapper>
   );
 }
@@ -44,9 +57,7 @@ const TimeWrap = styled.div`
   display: flex;
   justify-content: start;
   align-items: flex-end;
-  z-index: 99998;
-  margin-top: 3px;
-  position: absolute;
+  z-index: 10000;
   background-color: var(--seed-surface);
 `;
 

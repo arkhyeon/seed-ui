@@ -5,7 +5,7 @@ import AsideCreator from './Menu/AsideCreator';
 import Tooltip from './Tooltip';
 import HelpIcon from './HelpIcon';
 import GuideTour from './GuideTour';
-import Popover, { PopoverTitle, PopoverItem, popoverSurface } from './Popover/Popover';
+import Popover, { PopoverTitle, PopoverItem } from './Popover/Popover';
 import MenuButton from './Popover/MenuButton';
 import { tourTarget, unionRect, findButton, modalWrapOf } from './guideTourTarget';
 import Modal from './Modal';
@@ -72,7 +72,7 @@ export { GuideTour, tourTarget, unionRect, findButton, modalWrapOf };
 
 export { Modal };
 
-export { Popover, PopoverTitle, PopoverItem, MenuButton, popoverSurface };
+export { Popover, PopoverTitle, PopoverItem, MenuButton };
 
 export { Slider };
 

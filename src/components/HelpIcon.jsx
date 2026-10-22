@@ -1,149 +1,75 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
-import ReactDOM from 'react-dom';
+import styled from '@emotion/styled';
+import FloatingBubble from './FloatingBubble';
 
 /**
- * HelpIcon Component
+ * HelpIcon — ? / ! 동그란 아이콘.
+ *  - message 있으면 마우스 올릴 때 말풍선(FloatingBubble, 화면 밖이면 자동 flip)
+ *  - onClick 있으면 button으로 렌더 (보통 GuideTour 열기)
  *
  * props
- *  - message : 마우스 올리면 뜨는 말풍선 (없으면 말풍선 없음)
+ *  - message : 말풍선 내용 (없으면 말풍선 없음)
  *  - size    : 아이콘 크기(px)
  *  - symbol  : 아이콘 글자 (기본 '!', 사용법 안내용은 '?')
- *  - onClick : 클릭 시 실행 (예: GuideTour 열기). 있으면 button으로 렌더
+ *  - onClick : 클릭 시 실행. 있으면 button으로 렌더
  */
 function HelpIcon({ message = '', size = 20, symbol = '!', onClick }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, left: 0 });
-  const iconRef = useRef(null);
+  const icon = onClick ? (
+    <IconBtn
+      type="button"
+      $size={size}
+      onClick={onClick}
+      aria-label={typeof message === 'string' && message ? message : '도움말'}
+    >
+      {symbol}
+    </IconBtn>
+  ) : (
+    <IconSpan $size={size}>{symbol}</IconSpan>
+  );
 
-  const colors = {
-    gray600: 'var(--x-6c757d)',
-    gray800: 'var(--seed-help-popup)',
-    border: 'var(--seed-help-border)',
-  };
-
-  // 아이콘의 위치를 계산하여 포털 팝업의 위치를 결정합니다.
-  const updatePosition = () => {
-    if (iconRef.current) {
-      const rect = iconRef.current.getBoundingClientRect();
-      setCoords({
-        top: rect.top + rect.height / 2, // 수직 중앙
-        left: rect.left + rect.width + 12, // 아이콘 우측 12px 지점
-      });
-    }
-  };
-
-  // 팝업이 열릴 때나 스크롤/리사이즈 시 위치 업데이트
-  useLayoutEffect(() => {
-    if (isVisible) {
-      updatePosition();
-      window.addEventListener('resize', updatePosition);
-      window.addEventListener('scroll', updatePosition, true);
-    }
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
-    };
-  }, [isVisible]);
-
-  const iconStyle = {
-    width: `${size}px`,
-    height: `${size}px`,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '50%',
-    border: `1.5px solid ${colors.border}`,
-    color: colors.gray600,
-    fontSize: `${size * 0.65}px`,
-    fontWeight: '700',
-    backgroundColor: isVisible ? 'var(--x-f8f9fa)' : 'transparent',
-    transition: 'background-color 0.2s',
-    cursor: 'pointer',
-    marginLeft: '5px',
-    verticalAlign: 'middle',
-  };
-
-  const popupStyle = {
-    position: 'fixed',
-    top: `${coords.top}px`,
-    left: `${coords.left}px`,
-    transform: 'translateY(-50%)',
-
-    maxWidth: '250px',
-    width: 'max-content',
-    backgroundColor: colors.gray800,
-    color: '#fff',
-    padding: '10px 12px',
-    borderRadius: '6px',
-    fontSize: '12px',
-    lineHeight: '1.4',
-    zIndex: 10000, // 최상위 유지
-
-    /* 줄바꿈 설정 */
-    wordBreak: 'break-all',
-    overflowWrap: 'anywhere',
-
-    pointerEvents: 'none',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-    opacity: isVisible ? 1 : 0,
-    visibility: isVisible ? 'visible' : 'hidden',
-    transition: 'opacity 0.2s, visibility 0.2s',
-  };
-
-  const arrowStyle = {
-    position: 'absolute',
-    left: '-6px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    borderTop: '6px solid transparent',
-    borderBottom: '6px solid transparent',
-    borderRight: `6px solid ${colors.gray800}`,
-  };
+  if (!message) return icon;
 
   return (
-    <>
-      {/* 아이콘 부분 */}
-      {onClick ? (
-        <button
-          type="button"
-          ref={iconRef}
-          style={{
-            ...iconStyle,
-            padding: 0,
-            lineHeight: 1,
-            font: 'inherit',
-            fontSize: iconStyle.fontSize,
-            fontWeight: iconStyle.fontWeight,
-          }}
-          onClick={onClick}
-          onMouseEnter={() => setIsVisible(true)}
-          onMouseLeave={() => setIsVisible(false)}
-          aria-label={typeof message === 'string' && message ? message : '도움말'}
-        >
-          {symbol}
-        </button>
-      ) : (
-        <div
-          ref={iconRef}
-          style={iconStyle}
-          onMouseEnter={() => setIsVisible(true)}
-          onMouseLeave={() => setIsVisible(false)}
-        >
-          {symbol}
-        </div>
-      )}
-
-      {/* 포털을 이용한 말풍선 부분 */}
-      {message &&
-        ReactDOM.createPortal(
-          <div style={popupStyle}>
-            {message}
-            <div style={arrowStyle} />
-          </div>,
-          document.body,
-        )}
-    </>
+    <FloatingBubble
+      content={message}
+      placement="right"
+      color="var(--seed-help-popup)"
+      textColor="#fff"
+    >
+      {icon}
+    </FloatingBubble>
   );
 }
+
+const iconCss = $size => `
+  width: ${$size}px;
+  height: ${$size}px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--seed-help-border);
+  color: var(--x-6c757d);
+  font-size: ${$size * 0.65}px;
+  font-weight: 700;
+  line-height: 1;
+  background-color: transparent;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  margin-left: 5px;
+  vertical-align: middle;
+  &:hover {
+    background-color: var(--x-f8f9fa);
+  }
+`;
+
+const IconSpan = styled.span`
+  ${({ $size }) => iconCss($size)}
+`;
+
+const IconBtn = styled.button`
+  padding: 0;
+  font: inherit;
+  ${({ $size }) => iconCss($size)}
+`;
 
 export default HelpIcon;

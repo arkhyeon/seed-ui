@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
+import useSeedFloating from '../../common/useSeedFloating';
+import { FLOATING_PROP } from '../../common/floating';
 import { DataListInput } from './InputComponent';
 
 function DataList({
@@ -16,6 +19,14 @@ function DataList({
   const ref = useRef();
   const dataListWrapRef = useRef();
   const [isListOpen, setListOpen] = useState(false);
+
+  // 드롭다운 목록 위치: Floating UI(포털+flip+입력너비 맞춤). overflow에 안 잘림.
+  const { refs, floatingStyles } = useSeedFloating(isListOpen, {
+    placement: 'bottom-start',
+    gap: 2,
+    matchWidth: true,
+    clampHeight: false, // height prop(max-height)으로 높이 관리
+  });
 
   const dataMap = useMemo(() => {
     const map = new Map();
@@ -100,7 +111,7 @@ function DataList({
 
   return (
     <>
-      <DataListWrap>
+      <DataListWrap ref={refs.setReference}>
         <DataListInput
           id={id}
           ref={ref}
@@ -114,21 +125,31 @@ function DataList({
           disabled={disabled}
           placeholder={placeholder}
         />
-        {isListOpen && (
-          <DataListItemWrap ref={dataListWrapRef} height={height} style={{ display: 'block' }}>
-            {filteredList.map(data => (
-              <DataListItem
-                tabIndex={0}
-                key={data.value}
-                value={data.value}
-                onClick={() => handleItemClick(data.value)}
-                onKeyDown={arrowMove}
-              >
-                {data.label}
-              </DataListItem>
-            ))}
-          </DataListItemWrap>
-        )}
+        {isListOpen &&
+          createPortal(
+            <DataListItemWrap
+              ref={node => {
+                dataListWrapRef.current = node;
+                refs.setFloating(node);
+              }}
+              {...FLOATING_PROP}
+              height={height}
+              style={{ ...floatingStyles, display: 'block' }}
+            >
+              {filteredList.map(data => (
+                <DataListItem
+                  tabIndex={0}
+                  key={data.value}
+                  value={data.value}
+                  onClick={() => handleItemClick(data.value)}
+                  onKeyDown={arrowMove}
+                >
+                  {data.label}
+                </DataListItem>
+              ))}
+            </DataListItemWrap>,
+            document.body,
+          )}
       </DataListWrap>
     </>
   );
@@ -141,13 +162,12 @@ const DataListWrap = styled.div`
 `;
 
 const DataListItemWrap = styled.ul`
-  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   max-height: ${({ height }) => height};
-  display: none;
-  position: absolute;
-  top: 99%;
   background: var(--seed-surface);
-  z-index: 9999;
+  z-index: 10000;
   border: 1px solid var(--x-ced4da);
   border-radius: 0.25rem;
   overflow-y: auto;

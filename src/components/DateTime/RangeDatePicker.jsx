@@ -7,9 +7,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import _ from 'lodash';
+import useSeedFloating from '../../common/useSeedFloating';
+import { FLOATING_PROP, clickedInsideFloating } from '../../common/floating';
 import { TextInput } from '../InputComp/InputComponent';
 import { formatDate } from './timeComponents/PickerCommonFunc';
 import { WEEK_DAYS, PickerNav, Wrapper, WeekWrapper } from './dateComponents/PickerShared';
@@ -528,27 +531,24 @@ function RangeDatePickerProvider({
 }) {
   const wrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [alignRight, setAlignRight] = useState(false);
   const [hoverDate, setHoverDate] = useState(null);
   const [selectingPhase, setSelectingPhase] = useState('start');
+
+  // 달력 위치: Floating UI(포털+flip/shift). 좌우 넘침은 shift가 자동 보정(기존 alignRight 대체).
+  const { refs, floatingStyles } = useSeedFloating(isOpen, {
+    placement: 'bottom-start',
+    gap: 4,
+    clampHeight: false,
+  });
 
   const rangeStart = useMemo(() => toDate(startDt), [startDt]);
   const rangeEnd = useMemo(() => toDate(endDt), [endDt]);
 
-  // 클릭 시점에 rect 읽고 → alignRight 확정 → isOpen true
   const handleInputClick = useCallback(() => {
     if (disabled) return;
-    if (isOpen) {
-      setIsOpen(false);
-      return;
-    }
-    if (wrapperRef.current) {
-      const rect = wrapperRef.current.getBoundingClientRect();
-      setAlignRight(window.innerWidth - rect.left < PICKER_WIDTH);
-    }
-    setIsOpen(true);
+    setIsOpen(o => !o);
     setSelectingPhase('start');
-  }, [disabled, isOpen]);
+  }, [disabled]);
 
   const handleDayClick = useCallback(
     day => {
@@ -574,13 +574,13 @@ function RangeDatePickerProvider({
 
   useEffect(() => {
     const handler = ({ target }) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(target)) {
-        setIsOpen(false);
-        // start만 찍고 닫으면 end를 start로 맞춰 당일 범위로 완성 (미선택으로 인한 API 400 방지)
-        if (selectingPhase === 'end' && !rangeEnd && startDt) {
-          setEndDt(startDt);
-          setSelectingPhase('start');
-        }
+      // 입력 영역·(포털된) 달력 안이면 유지
+      if (wrapperRef.current?.contains(target) || clickedInsideFloating(target)) return;
+      setIsOpen(false);
+      // start만 찍고 닫으면 end를 start로 맞춰 당일 범위로 완성 (미선택으로 인한 API 400 방지)
+      if (selectingPhase === 'end' && !rangeEnd && startDt) {
+        setEndDt(startDt);
+        setSelectingPhase('start');
       }
     };
     document.addEventListener('mousedown', handler);
@@ -659,7 +659,12 @@ function RangeDatePickerProvider({
 
   return (
     <RangePickerContext.Provider value={value}>
-      <Wrapper ref={wrapperRef}>
+      <Wrapper
+        ref={node => {
+          wrapperRef.current = node;
+          refs.setReference(node);
+        }}
+      >
         <TextInput
           className="range-picker-input"
           value={inputText}
@@ -668,24 +673,26 @@ function RangeDatePickerProvider({
           readOnly
           disabled={disabled}
         />
-        {isOpen && (
-          <RangePickerWrapper alignRight={alignRight}>
-            <CalendarsRow>{children}</CalendarsRow>
-            <PanelDivider />
-            <InputRow />
-            {endDt !== NO_END && (
-              <>
-                <PanelDivider />
-                <QuickRangeButtons />
-              </>
-            )}
-            {endDt !== NO_END && onApply && (
-              <ApplyRow>
-                <ApplyBtn onClick={handleApply}>적용</ApplyBtn>
-              </ApplyRow>
-            )}
-          </RangePickerWrapper>
-        )}
+        {isOpen &&
+          createPortal(
+            <RangePickerWrapper ref={refs.setFloating} {...FLOATING_PROP} style={floatingStyles}>
+              <CalendarsRow>{children}</CalendarsRow>
+              <PanelDivider />
+              <InputRow />
+              {endDt !== NO_END && (
+                <>
+                  <PanelDivider />
+                  <QuickRangeButtons />
+                </>
+              )}
+              {endDt !== NO_END && onApply && (
+                <ApplyRow>
+                  <ApplyBtn onClick={handleApply}>적용</ApplyBtn>
+                </ApplyRow>
+              )}
+            </RangePickerWrapper>,
+            document.body,
+          )}
       </Wrapper>
     </RangePickerContext.Provider>
   );
@@ -838,10 +845,8 @@ function RangeDatePicker({
 // ─── Styled ───────────────────────────────────────────────────────────────────
 
 const RangePickerWrapper = styled.div`
-  position: absolute;
-  margin-top: 4px;
   background: var(--seed-surface);
-  z-index: 80;
+  z-index: 10000;
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   padding: 8px;
@@ -849,16 +854,6 @@ const RangePickerWrapper = styled.div`
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
-  ${({ alignRight }) =>
-    alignRight
-      ? css`
-          right: 0;
-          left: auto;
-        `
-      : css`
-          left: 0;
-          right: auto;
-        `}
 `;
 
 const CalendarsRow = styled.div`
