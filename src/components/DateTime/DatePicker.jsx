@@ -25,14 +25,9 @@ import {
   WeekWrapper,
   DayGrid,
   panelStyle,
+  headerBand,
   todayDot,
   isSameDay,
-  formatKoDate,
-  SummaryBar,
-  SummaryIcon,
-  SummaryText,
-  SummaryLabel,
-  SummaryValue,
 } from './dateComponents/PickerShared';
 
 const DatePickerContext = createContext(null);
@@ -351,13 +346,6 @@ function DatePickerProvider({
               {...FLOATING_PROP}
               style={floatingStyles}
             >
-              <SummaryBar $inset={12}>
-                <SummaryIcon />
-                <SummaryText>
-                  <SummaryLabel>선택한 날짜</SummaryLabel>
-                  <SummaryValue>{formatKoDate(dateAsObject)}</SummaryValue>
-                </SummaryText>
-              </SummaryBar>
               <PickerNav
                 className="date-picker-head"
                 onPrev={() => handleMonthChange(-1)}
@@ -408,6 +396,7 @@ function DatePicker({
 
 const PickerWrapper = styled.div`
   ${panelStyle};
+  ${headerBand(12)};
   width: ${CALENDAR_WIDTH + 24}px !important;
   display: flex;
   flex-direction: column;
