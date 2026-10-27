@@ -1,7 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { css, keyframes } from '@emotion/react';
-import { AiOutlineCalendar, AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import {
+  AiOutlineCalendar,
+  AiOutlineClockCircle,
+  AiOutlineLeft,
+  AiOutlineRight,
+} from 'react-icons/ai';
 import { arrayRange } from '../timeComponents/PickerCommonFunc';
 import DataList from '../../InputComp/DataList';
 
@@ -133,11 +138,11 @@ export function PickerNav({
   );
 }
 
-// 입력창 오른쪽 달력 아이콘
-export function PickerInputIcon() {
+// 입력창 오른쪽 아이콘(기본 달력, clock=시계)
+export function PickerInputIcon({ clock = false }) {
   return (
     <InputIconWrap aria-hidden>
-      <AiOutlineCalendar />
+      {clock ? <AiOutlineClockCircle /> : <AiOutlineCalendar />}
     </InputIconWrap>
   );
 }
@@ -155,9 +160,9 @@ const popIn = keyframes`
 `;
 
 // 패널 상단(연/월 이동 + 요일)에 어두운 색띠 — 레이아웃 높이 추가 없음
-export const headerBand = padding => css`
+export const headerBand = (padding, height = HEADER_HEIGHT) => css`
   background: linear-gradient(var(--seed-invert-bg), var(--seed-invert-bg)) 0 0 / 100%
-      ${padding + HEADER_HEIGHT}px no-repeat,
+      ${padding + height}px no-repeat,
     var(--seed-surface);
 `;
 

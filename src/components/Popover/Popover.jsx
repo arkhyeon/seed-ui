@@ -52,7 +52,10 @@ function Popover({
     gap: 6,
     hideWhenDetached,
   });
-  const detached = hideWhenDetached && middlewareData.hide?.referenceHidden;
+  // 스크롤 컨테이너 밖으로 잘렸거나(hide) 다른 요소에 덮였으면(occlusion) 숨김
+  const detached =
+    hideWhenDetached &&
+    (middlewareData.hide?.referenceHidden || middlewareData.occlusion?.occluded);
 
   const setOpen = useCallback(
     next => {

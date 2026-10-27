@@ -137,7 +137,7 @@ const COMPONENT_DOCS = {
     ],
   },
   TimePicker: {
-    summary: '시·분을 스크롤해서 고르는 시간 선택칸입니다.',
+    summary: '시·분 목록에서 고르거나, 팝업 상단에 0947·1430처럼 직접 쳐서 넣는 시간 선택칸입니다(24시간제).',
     whenToUse: ['실행 시각, 예약 시간 입력'],
     props: [
       fn('time', "string ('HH:mm')", '선택된 시간'),
