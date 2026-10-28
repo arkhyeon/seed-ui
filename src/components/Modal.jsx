@@ -1,7 +1,6 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { GrClose } from 'react-icons/gr';
-import { FaCheck } from 'react-icons/fa';
 import { createPortal } from 'react-dom';
 import { BlackButton, WhiteButton } from './Button/Button';
 import { useThrottle } from '../assets/CustomHook';
@@ -17,10 +16,9 @@ function ModalSteps({ steps, currentStep, onStepClick }) {
         else if (i === currentStep) state = 'current';
         const content = (
           <>
-            <StepCircle className={state}>
-              {state === 'past' ? <FaCheck aria-hidden /> : i + 1}
-            </StepCircle>
-            <span className="step-label">{label}</span>
+            <span className="step-label">
+              {i + 1} {label}
+            </span>
             {state === 'past' ? <SrOnly>(완료)</SrOnly> : null}
           </>
         );
@@ -348,7 +346,7 @@ const StepList = styled.ol`
   margin: 0 0 0 auto;
   padding: 0;
   list-style: none;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: normal;
   cursor: default;
 `;
@@ -375,8 +373,15 @@ const StepItem = styled.li`
   & > button {
     cursor: pointer;
   }
-  & > button:hover .step-label {
+  & > button .step-label {
     text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--seed-border-strong);
+    text-underline-offset: 3px;
+  }
+  & > button:hover .step-label {
+    color: var(--seed-text);
+    text-decoration-color: currentColor;
   }
 
   &.past {
@@ -390,32 +395,6 @@ const StepItem = styled.li`
   }
   &.future {
     color: var(--seed-text-muted);
-  }
-`;
-
-const StepCircle = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  font-size: 11px;
-  line-height: 1;
-
-  & svg {
-    font-size: 9px;
-  }
-  &.past {
-    border: 1px solid var(--seed-text-secondary);
-  }
-  &.current {
-    background: var(--seed-btn-primary-bg);
-    color: var(--seed-btn-primary-text);
-  }
-  &.future {
-    border: 1px solid var(--seed-border-strong);
   }
 `;
 
