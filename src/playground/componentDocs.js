@@ -60,6 +60,7 @@ const COMPONENT_DOCS = {
     props: [
       fn('value', 'number', '선택된 항목 번호 (1부터)'),
       fn('setValue', '(value) => void', '선택이 바뀌면 호출'),
+      fn('underline', 'boolean', '부모 너비(100%)만큼 아래 구분선 표시. 모달·카드 안에서 쓸 때', true),
     ],
   },
 

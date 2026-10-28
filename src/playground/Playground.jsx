@@ -119,6 +119,7 @@ const COMMON_DESC = {
   modalTitle: '모달 상단에 표시될 제목입니다.',
   movable: '헤더를 잡고 드래그해 모달을 이동할 수 있습니다.',
   isCloseBtn: '우상단 닫기(X) 버튼을 표시합니다.',
+  underline: '부모 너비(100%)만큼 아래 구분선을 긋습니다. 모달·카드 안에서 쓸 때 켭니다.',
   useSteps: '진행형 모달 데모(steps·leftButtonList)로 바꿉니다. 바깥 클릭으로는 닫히지 않습니다.',
   isDrag: '드래그로 순서 변경이 가능한지 여부입니다.',
   tabCount: '데모로 만들 탭 버튼 개수입니다.',
@@ -762,18 +763,24 @@ const stories = [
   {
     category: 'Selection',
     name: 'Toggle',
-    controls: [{ key: 'list', type: 'json', default: '["전체", "활성", "비활성"]' }],
+    controls: [
+      { key: 'list', type: 'json', default: '["전체", "활성", "비활성"]' },
+      { key: 'underline', type: 'boolean', default: false },
+    ],
     initialState: { value: 1 },
     render: (p, { state, setState }) => (
       <Toggle
         list={parseJson(p.list, [])}
         value={state.value}
         setValue={v => setState({ value: v })}
+        underline={p.underline}
       />
     ),
-    snippet: () => `const [value, setValue] = useState(1);
+    snippet: p => `const [value, setValue] = useState(1);
 
-<Toggle list={['전체', '활성', '비활성']} value={value} setValue={setValue} />`,
+<Toggle list={['전체', '활성', '비활성']} value={value} setValue={setValue}${
+      p.underline ? ' underline' : ''
+    } />`,
   },
 
   // ─── Inputs ───────────────────────────────────────────────

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 
-function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
+function Toggle({ list = ['아이템 없음'], value = 1, setValue = null, underline = false }) {
   /**
    * @param {String []} param.list
    * 토글에 들어갈 텍스트가 담긴 배열
@@ -14,6 +14,9 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
    * 선택된 버튼의 값을 바꾸는 함수
    * useState로 생성된 상태 관리 함수여야 함
    * default 값은 null
+   * @param {Boolean} param.underline
+   * true면 부모 너비(100%)만큼 아래 구분선을 긋고, 선택 표시가 그 선 위에 겹침
+   * default 값은 false
    * @returns {JSX.Element} Toggle Component
    */
 
@@ -42,7 +45,7 @@ function Toggle({ list = ['아이템 없음'], value = 1, setValue = null }) {
     );
   }, [handleToggle, list, value]);
 
-  return <Wrapper>{renderBtn()}</Wrapper>;
+  return <Wrapper underline={underline}>{renderBtn()}</Wrapper>;
 }
 
 const Wrapper = styled.div`
@@ -50,6 +53,17 @@ const Wrapper = styled.div`
   height: 32px;
   display: flex;
   align-items: center;
+
+  ${({ underline }) =>
+    underline &&
+    `
+    align-items: flex-end;
+    border-bottom: 1px solid var(--seed-border);
+
+    & > div {
+      margin-bottom: -1px;
+    }
+  `}
 `;
 
 const ToggleButton = styled.div`
