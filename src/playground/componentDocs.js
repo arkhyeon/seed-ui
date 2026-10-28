@@ -239,11 +239,22 @@ const COMPONENT_DOCS = {
     props: [
       fn('handleClose', '() => void', '닫기(×·ESC·취소)'),
       fn('callback', '() => void', '확인 버튼', true),
-      fn('buttonList', 'ReactNode[]', '하단 버튼 직접 지정', true),
+      fn('buttonList', 'ReactNode[]', '하단 오른쪽 버튼 직접 지정. Enter는 마지막 버튼', true),
+      fn('leftButtonList', 'ReactNode[]', '하단 왼쪽 기능 버튼 (테이블 옵션 등). Enter 대상 아님', true),
+      fn('steps', 'string[]', '진행 단계 라벨. 2개 이상이면 헤더에 단계 표시', true),
+      fn('currentStep', 'number', '현재 단계 (0부터). 기본 0', true),
+      fn('onStepClick', '(index) => void', '지난 단계 클릭 시. 없으면 클릭 불가', true),
+      fn('closeOnBackdrop', 'boolean', '바깥 클릭으로 닫기. 기본: steps 있으면 false, 없으면 true', true),
       fn('children', 'ReactNode', '본문'),
     ],
     notes: [
       '모달 위에 모달을 열 때는 자식이 아니라 형제로 렌더하세요. ESC는 위에 있는 것부터 닫힙니다.',
+      'Enter는 buttonList 마지막 버튼을 누릅니다. 모달이 겹치면 맨 위 모달만, 모달 안 버튼에 포커스가 있으면 그 버튼만 눌립니다. textarea에서는 동작하지 않습니다.',
+      '열리면 첫 text·password input에, 없으면 모달 자체에 포커스가 갑니다 (role="dialog"). currentStep이 바뀌면 다시 맞춥니다.',
+      '모달 안 input에서 Enter를 직접 처리할 때는 TextInput의 enterEvent를 쓰거나 onKeyDown에서 e.preventDefault()를 호출하세요. 안 그러면 모달 확인 버튼도 함께 실행됩니다.',
+      '하단 버튼을 좌우로 나눌 때는 buttonList 안에 div로 감싸지 말고 leftButtonList를 쓰세요. div로 감싸면 Enter가 동작하지 않습니다.',
+      '진행형: 단계별 본문·버튼은 부모가 currentStep으로 바꿔 넣습니다. Modal은 표시만 합니다.',
+      '진행형 버튼 권장: 1단계 [다음], 이후 [이전][적용]. 닫기는 X·ESC로 하고 "닫기" 버튼은 빼세요.',
     ],
   },
   ToastNotify: {

@@ -119,6 +119,7 @@ const COMMON_DESC = {
   modalTitle: '모달 상단에 표시될 제목입니다.',
   movable: '헤더를 잡고 드래그해 모달을 이동할 수 있습니다.',
   isCloseBtn: '우상단 닫기(X) 버튼을 표시합니다.',
+  useSteps: '진행형 모달 데모(steps·leftButtonList)로 바꿉니다. 바깥 클릭으로는 닫히지 않습니다.',
   isDrag: '드래그로 순서 변경이 가능한지 여부입니다.',
   tabCount: '데모로 만들 탭 버튼 개수입니다.',
   select: 'true면 드롭다운 선택형, false면 입력+필터형으로 동작합니다.',
@@ -1490,26 +1491,80 @@ const steps = useMemo(() => [
       { key: 'width', type: 'text', default: '480px' },
       { key: 'movable', type: 'boolean', default: true },
       { key: 'isCloseBtn', type: 'boolean', default: true },
+      { key: 'useSteps', type: 'boolean', default: false },
     ],
-    initialState: { open: false },
-    render: (p, { state, setState }) => (
-      <>
-        <BlackButton onClick={() => setState({ open: true })}>모달 열기</BlackButton>
-        {state.open && (
-          <Modal
-            modalTitle={p.modalTitle}
-            width={p.width}
-            movable={p.movable}
-            isCloseBtn={p.isCloseBtn}
-            handleClose={() => setState({ open: false })}
-            callback={() => setState({ open: false })}
-          >
-            <div style={{ fontSize: 14 }}>모달 본문 내용입니다.</div>
-          </Modal>
-        )}
-      </>
-    ),
-    snippet: p => `const [open, setOpen] = useState(false);
+    initialState: { open: false, step: 0 },
+    render: (p, { state, setState }) => {
+      const close = () => setState({ open: false, step: 0 });
+      const setStep = step => setState({ step });
+      return (
+        <>
+          <BlackButton onClick={() => setState({ open: true })}>모달 열기</BlackButton>
+          {state.open && !p.useSteps && (
+            <Modal
+              modalTitle={p.modalTitle}
+              width={p.width}
+              movable={p.movable}
+              isCloseBtn={p.isCloseBtn}
+              handleClose={close}
+              callback={close}
+            >
+              <div style={{ fontSize: 14 }}>모달 본문 내용입니다.</div>
+            </Modal>
+          )}
+          {state.open && p.useSteps && (
+            <Modal
+              modalTitle={p.modalTitle}
+              width={p.width}
+              movable={p.movable}
+              isCloseBtn={p.isCloseBtn}
+              handleClose={close}
+              steps={['그룹 선택', '스텝 선택']}
+              currentStep={state.step}
+              onStepClick={setStep}
+              leftButtonList={[<WhiteButton onClick={() => {}}>테이블 옵션</WhiteButton>]}
+              buttonList={
+                state.step === 0
+                  ? [<BlackButton onClick={() => setStep(1)}>다음</BlackButton>]
+                  : [
+                      <WhiteButton onClick={() => setStep(0)}>이전</WhiteButton>,
+                      <BlackButton onClick={close}>적용</BlackButton>,
+                    ]
+              }
+            >
+              <div style={{ fontSize: 14 }}>
+                {state.step === 0
+                  ? '1단계: 그룹을 고르는 본문입니다.'
+                  : '2단계: 스텝을 고르는 본문입니다.'}
+              </div>
+            </Modal>
+          )}
+        </>
+      );
+    },
+    snippet: p =>
+      p.useSteps
+        ? `const [step, setStep] = useState(0);
+
+<Modal
+  modalTitle="${p.modalTitle}"
+  handleClose={close}
+  steps={['그룹 선택', '스텝 선택']}
+  currentStep={step}
+  onStepClick={setStep}
+  leftButtonList={[<WhiteButton onClick={openTableOption}>테이블 옵션</WhiteButton>]}
+  buttonList={
+    step === 0
+      ? [<BlackButton onClick={() => setStep(1)}>다음</BlackButton>]
+      : [
+          <WhiteButton onClick={() => setStep(0)}>이전</WhiteButton>,
+          <BlackButton onClick={apply}>적용</BlackButton>,
+        ]
+  }
+>
+  {step === 0 ? <GroupSelect /> : <StepSelect />}
+</Modal>`
+        : `const [open, setOpen] = useState(false);
 
 <BlackButton onClick={() => setOpen(true)}>모달 열기</BlackButton>
 {open && (

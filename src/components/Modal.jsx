@@ -1,10 +1,53 @@
-import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { GrClose } from 'react-icons/gr';
+import { FaCheck } from 'react-icons/fa';
 import { createPortal } from 'react-dom';
 import { BlackButton, WhiteButton } from './Button/Button';
 import { useThrottle } from '../assets/CustomHook';
 import EscStack from '../common/EscStack';
+
+// 진행 단계 표시. 지난 단계만 onStepClick으로 돌아갈 수 있음
+function ModalSteps({ steps, currentStep, onStepClick }) {
+  return (
+    <StepList onMouseDown={e => e.stopPropagation()}>
+      {steps.map((label, i) => {
+        let state = 'future';
+        if (i < currentStep) state = 'past';
+        else if (i === currentStep) state = 'current';
+        const content = (
+          <>
+            <StepCircle className={state}>
+              {state === 'past' ? <FaCheck aria-hidden /> : i + 1}
+            </StepCircle>
+            <span className="step-label">{label}</span>
+            {state === 'past' ? <SrOnly>(완료)</SrOnly> : null}
+          </>
+        );
+        return (
+          <StepItem
+            key={label}
+            className={state}
+            aria-current={state === 'current' ? 'step' : undefined}
+          >
+            {i > 0 ? (
+              <span className="step-sep" aria-hidden>
+                ›
+              </span>
+            ) : null}
+            {state === 'past' && onStepClick ? (
+              <button type="button" onClick={() => onStepClick(i)}>
+                {content}
+              </button>
+            ) : (
+              <span className="step-body">{content}</span>
+            )}
+          </StepItem>
+        );
+      })}
+    </StepList>
+  );
+}
 
 function Modal({
   width = `600px`,
@@ -18,7 +61,19 @@ function Modal({
     <WhiteButton onClick={handleClose}>닫기</WhiteButton>,
     <BlackButton onClick={callback}>확인</BlackButton>,
   ],
+  leftButtonList = [],
+  steps = undefined,
+  currentStep = 0,
+  onStepClick = undefined,
+  closeOnBackdrop = undefined,
 }) {
+  const hasSteps = Array.isArray(steps) && steps.length > 1;
+  const stepIndex = hasSteps ? Math.min(Math.max(currentStep, 0), steps.length - 1) : 0;
+  // 진행형은 바깥 클릭으로 닫히면 입력이 날아가므로 기본 막음
+  const isBackdropClose = closeOnBackdrop ?? !hasSteps;
+  const buttons = buttonList.filter(Boolean);
+  const leftButtons = leftButtonList.filter(Boolean);
+
   const modalRef = useRef(null);
   const headRef = useRef(null);
   const lastButtonRef = useRef(null);
@@ -143,10 +198,20 @@ function Modal({
     return () => EscStack.remove(handler);
   }, [handleClose]);
 
-  // Enter: 마지막 버튼 실행
+  // Enter: 마지막 버튼 실행 (모달 안 버튼에 포커스가 있으면 그 버튼의 기본 동작만)
+  // 모달이 겹치면 화면 맨 위(DOM상 마지막) 모달만 처리
   useLayoutEffect(() => {
     const handleEnter = e => {
-      if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && !e.defaultPrevented) {
+      const wraps = document.querySelectorAll('.modal-wrap');
+      if (wraps[wraps.length - 1] !== modalRef.current) return;
+      if (
+        e.key === 'Enter' &&
+        e.target.tagName !== 'TEXTAREA' &&
+        !(
+          modalRef.current?.contains(e.target) && e.target.closest?.('button, a, [role="button"]')
+        ) &&
+        !e.defaultPrevented
+      ) {
         lastButtonRef.current?.click();
       }
     };
@@ -154,7 +219,7 @@ function Modal({
     return () => document.removeEventListener('keydown', handleEnter);
   }, []);
 
-  // 첫 input 포커스
+  // 첫 input 포커스 (단계가 바뀌면 다시)
   useLayoutEffect(() => {
     const input = modalRef.current?.querySelector(
       `
@@ -167,23 +232,30 @@ function Modal({
     if (input) {
       input.focus();
     } else {
-      modalRef.current?.focus();
+      modalRef.current?.focus({ preventScroll: true });
     }
-  }, []);
+  }, [stepIndex]);
 
   return (
     <>
       {createPortal(
         <>
-          <ModalBack onClick={handleClose} className="modal-back" />
+          <ModalBack onClick={isBackdropClose ? handleClose : undefined} className="modal-back" />
           <ModalWrap
             ref={modalRef}
             style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
             width={width}
             className="modal-wrap"
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label={typeof modalTitle === 'string' ? modalTitle : undefined}
           >
             <ModalHeader ref={headRef} onMouseDown={handleDown} movable={movable}>
-              {modalTitle || null}
+              {hasSteps ? <ModalTitle>{modalTitle || null}</ModalTitle> : modalTitle || null}
+              {hasSteps ? (
+                <ModalSteps steps={steps} currentStep={stepIndex} onStepClick={onStepClick} />
+              ) : null}
               {isCloseBtn ? <GrClose onClick={handleClose} /> : null}
             </ModalHeader>
             <ChildrenWrapper
@@ -196,13 +268,20 @@ function Modal({
               {children}
             </ChildrenWrapper>
             <ModalFooter>
-              {buttonList.map((el, i) => (
-                <Fragment key={el.props.children}>
-                  {React.cloneElement(el, {
-                    ref: i === buttonList.length - 1 ? lastButtonRef : null,
-                  })}
-                </Fragment>
-              ))}
+              {leftButtons.length > 0 ? (
+                // 단계마다 같은 자리 버튼 글자가 바뀌고 같은 글자 버튼도 올 수 있어 index key 사용
+                <FooterLeft>
+                  {/* eslint-disable-next-line react/no-array-index-key */}
+                  {leftButtons.map((el, i) => React.cloneElement(el, { key: i }))}
+                </FooterLeft>
+              ) : null}
+              {buttons.map((el, i) =>
+                React.cloneElement(el, {
+                  // eslint-disable-next-line react/no-array-index-key
+                  key: i,
+                  ref: i === buttons.length - 1 ? lastButtonRef : null,
+                }),
+              )}
             </ModalFooter>
           </ModalWrap>
         </>,
@@ -223,6 +302,8 @@ const ModalWrap = styled.div`
   border-radius: 12px;
   box-shadow: 0 3px 7px var(--seed-shadow);
 
+  outline: none;
+
   -ms-user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -235,10 +316,12 @@ const ModalHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 11px 18px;
+  gap: 12px;
   font-weight: bold;
   border-radius: 12px 12px 0 0;
 
-  & svg {
+  & > svg {
+    flex-shrink: 0;
     font-size: 18px;
     cursor: pointer;
   }
@@ -247,6 +330,102 @@ const ModalHeader = styled.div`
   border-bottom: 1px solid var(--seed-border);
 
   cursor: ${({ movable }) => (movable ? 'move' : 'normal')};
+`;
+
+const ModalTitle = styled.span`
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`;
+
+const StepList = styled.ol`
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  margin: 0 0 0 auto;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  font-weight: normal;
+  cursor: default;
+`;
+
+const StepItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  & .step-sep {
+    color: var(--seed-text-muted);
+  }
+  & > button,
+  & > .step-body {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+  }
+  & > button {
+    cursor: pointer;
+  }
+  & > button:hover .step-label {
+    text-decoration: underline;
+  }
+
+  &.past {
+    color: var(--seed-text-secondary);
+  }
+  &.current {
+    color: var(--seed-text);
+  }
+  &.current .step-label {
+    font-weight: bold;
+  }
+  &.future {
+    color: var(--seed-text-muted);
+  }
+`;
+
+const StepCircle = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 11px;
+  line-height: 1;
+
+  & svg {
+    font-size: 9px;
+  }
+  &.past {
+    border: 1px solid var(--seed-text-secondary);
+  }
+  &.current {
+    background: var(--seed-btn-primary-bg);
+    color: var(--seed-btn-primary-text);
+  }
+  &.future {
+    border: 1px solid var(--seed-border-strong);
+  }
+`;
+
+const SrOnly = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 `;
 
 const ChildrenWrapper = styled.div`
@@ -273,6 +452,13 @@ const ModalFooter = styled.div`
   padding: 11px 18px;
   gap: 15px;
   border-top: 1px solid var(--seed-border);
+`;
+
+const FooterLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-right: auto;
 `;
 
 const ModalBack = styled.div`
