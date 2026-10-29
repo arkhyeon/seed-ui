@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { useFloating, offset, flip, shift, size, hide, autoUpdate } from '@floating-ui/react-dom';
 
 // 트리거가 다른 요소(고정 푸터·그리드 하단 영역 등)에 '덮여' 안 보이는지 검사.
@@ -32,7 +33,10 @@ const occlusion = () => ({
  * @param {boolean} opts.hideWhenDetached 트리거가 스크롤 컨테이너 밖으로 가려지면
  *          middlewareData.hide.referenceHidden=true → 호출부에서 숨김 (ag-grid 셀 등)
  *          다른 요소에 덮여 가려져도 middlewareData.occlusion.occluded=true
+ * @param {Function} opts.onReferenceDetached 열린 동안 트리거가 DOM에서 빠지면(isConnected=false) 호출
+ *          — ag-grid 툴패널 닫힘 등 React 트리는 남고 DOM만 떼어지는 경우. 보통 닫기 함수를 넘긴다.
  * @returns useFloating 반환값 { refs, floatingStyles, middlewareData, ... }
+ *          + referenceDetached: 트리거가 DOM에서 빠진 상태 → 호출부에서 패널 숨김(기준점 잃고 (0,0)으로 튀는 것 방지)
  *          refs.setReference(트리거), refs.setFloating(떠있는 요소)에 연결하고
  *          floatingStyles를 요소 style로 쓴다.
  */
@@ -45,9 +49,10 @@ export default function useSeedFloating(
     matchWidth = false,
     clampHeight = true,
     hideWhenDetached = false,
+    onReferenceDetached,
   } = {},
 ) {
-  return useFloating({
+  const floating = useFloating({
     open,
     placement,
     strategy: 'fixed', // body로 포털 + fixed → 조상 transform/overflow 무시, 스크롤에 안 밀림
@@ -67,4 +72,31 @@ export default function useSeedFloating(
       ...(hideWhenDetached ? [hide(), occlusion()] : []),
     ],
   });
+
+  // 트리거 DOM 분리 감지. 분리 → 언마운트가 아니라 autoUpdate·언마운트로는 못 잡으므로 MutationObserver.
+  const { refs } = floating;
+  const [referenceDetached, setReferenceDetached] = useState(false);
+  const onDetachedRef = useRef(onReferenceDetached);
+  onDetachedRef.current = onReferenceDetached;
+  useEffect(() => {
+    if (!open) return undefined;
+    let detached = false;
+    const check = () => {
+      const r = refs.reference.current;
+      const next = !!r && r instanceof Node && !r.isConnected;
+      if (next === detached) return;
+      detached = next;
+      setReferenceDetached(next);
+      if (next) onDetachedRef.current?.(); // 분리될 때 1번만 (무시돼도 반복 호출 안 함)
+    };
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { childList: true, subtree: true });
+    check();
+    return () => {
+      observer.disconnect();
+      setReferenceDetached(false);
+    };
+  }, [open, refs]);
+
+  return { ...floating, referenceDetached };
 }

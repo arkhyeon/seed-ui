@@ -547,15 +547,26 @@ function RangeDatePickerProvider({
   const [hoverDate, setHoverDate] = useState(null);
   const [selectingPhase, setSelectingPhase] = useState('start');
 
+  const rangeStart = useMemo(() => toDate(startDt), [startDt]);
+  const rangeEnd = useMemo(() => toDate(endDt), [endDt]);
+
+  // 달력 닫기 (바깥 클릭·입력칸 DOM 분리 공통)
+  const closeCalendar = useCallback(() => {
+    setIsOpen(false);
+    // start만 찍고 닫으면 end를 start로 맞춰 당일 범위로 완성 (미선택으로 인한 API 400 방지)
+    if (selectingPhase === 'end' && !rangeEnd && startDt) {
+      setEndDt(startDt);
+      setSelectingPhase('start');
+    }
+  }, [selectingPhase, rangeEnd, startDt, setEndDt]);
+
   // 달력 위치: Floating UI(포털+flip/shift). 좌우 넘침은 shift가 자동 보정(기존 alignRight 대체).
   const { refs, floatingStyles } = useSeedFloating(isOpen, {
     placement: 'bottom-start',
     gap: 4,
     clampHeight: false,
+    onReferenceDetached: closeCalendar, // 입력칸이 DOM에서 빠지면 닫기
   });
-
-  const rangeStart = useMemo(() => toDate(startDt), [startDt]);
-  const rangeEnd = useMemo(() => toDate(endDt), [endDt]);
 
   const handleInputClick = useCallback(() => {
     if (disabled) return;
@@ -589,16 +600,11 @@ function RangeDatePickerProvider({
     const handler = ({ target }) => {
       // 입력 영역·(포털된) 달력 안이면 유지
       if (wrapperRef.current?.contains(target) || clickedInsideFloating(target)) return;
-      setIsOpen(false);
-      // start만 찍고 닫으면 end를 start로 맞춰 당일 범위로 완성 (미선택으로 인한 API 400 방지)
-      if (selectingPhase === 'end' && !rangeEnd && startDt) {
-        setEndDt(startDt);
-        setSelectingPhase('start');
-      }
+      closeCalendar();
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [selectingPhase, rangeEnd, startDt, setEndDt]);
+  }, [closeCalendar]);
 
   // 한쪽만 선택하고 적용하면 나머지도 같은 날짜로 맞춰 당일 검색처럼 처리
   const handleApply = useCallback(() => {

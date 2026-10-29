@@ -231,6 +231,7 @@ function DatePickerProvider({
     placement: 'bottom-start',
     gap: 6,
     clampHeight: false,
+    onReferenceDetached: () => setIsOpen(false), // 입력칸이 DOM에서 빠지면 닫기
   });
 
   const startYear = startDate.getFullYear();

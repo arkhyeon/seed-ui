@@ -46,17 +46,6 @@ function Popover({
   const controlled = openProp !== undefined;
   const open = controlled ? openProp : openState;
 
-  // Floating UI: 트리거(reference)·떠있는 패널(floating) 위치 계산 + flip/shift/size + autoUpdate
-  const { refs, floatingStyles, middlewareData } = useSeedFloating(open, {
-    placement,
-    gap: 6,
-    hideWhenDetached,
-  });
-  // 스크롤 컨테이너 밖으로 잘렸거나(hide) 다른 요소에 덮였으면(occlusion) 숨김
-  const detached =
-    hideWhenDetached &&
-    (middlewareData.hide?.referenceHidden || middlewareData.occlusion?.occluded);
-
   const setOpen = useCallback(
     next => {
       const value = typeof next === 'function' ? next(open) : next;
@@ -67,6 +56,21 @@ function Popover({
   );
   const toggle = () => setOpen(v => !v);
   const close = useCallback(() => setOpen(false), [setOpen]);
+
+  // Floating UI: 트리거(reference)·떠있는 패널(floating) 위치 계산 + flip/shift/size + autoUpdate
+  // 트리거가 DOM에서 빠지면(ag-grid 툴패널 닫힘 등) 자동 닫기 — 제어 모드면 onOpenChange(false)
+  const { refs, floatingStyles, middlewareData, referenceDetached } = useSeedFloating(open, {
+    placement,
+    gap: 6,
+    hideWhenDetached,
+    onReferenceDetached: close,
+  });
+  // 스크롤 컨테이너 밖으로 잘렸거나(hide) 다른 요소에 덮였으면(occlusion) 숨김.
+  // 트리거가 DOM에서 빠졌으면 hideWhenDetached와 무관하게 항상 숨김 (부모가 닫기를 무시해도 (0,0)에 안 뜨게)
+  const detached =
+    referenceDetached ||
+    (hideWhenDetached &&
+      (middlewareData.hide?.referenceHidden || middlewareData.occlusion?.occluded));
 
   // trigger 가 "클릭을 받을 수 있는 요소"(HelpIcon·버튼 등)면 그대로 쓰고 onClick만 자동 연결.
   // 문자열·숫자·Fragment면 기존 기본 네모 버튼(TriggerButton)으로 감싼다.

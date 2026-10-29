@@ -27,6 +27,7 @@ function DataList({
     gap: 2,
     matchWidth: true,
     clampHeight: false, // height prop(max-height)으로 높이 관리
+    onReferenceDetached: () => setListOpen(false), // 입력칸이 DOM에서 빠지면 닫기
   });
 
   const dataMap = useMemo(() => {
