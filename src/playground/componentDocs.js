@@ -455,8 +455,12 @@ const COMPONENT_DOCS = {
       fn('itemList', 'Array', '전체 목록'),
       fn('setItemList', '(list) => void', '순서가 바뀌면 호출'),
       fn('seq', 'number', '이 항목의 순서 (index)'),
+      fn('dropPadding', 'number', '목록 영역 바깥 몇 px까지 놓기를 받을지 (기본 24)'),
     ],
-    notes: ['key는 index가 아니라 항목의 고유값(id)을 쓰세요.'],
+    notes: [
+      'key는 index가 아니라 항목의 고유값(id)을 쓰세요.',
+      '항목 사이 틈이나 줄 바깥에 놓아도 가장 가까운 자리로 들어갑니다. 줄 끝 바깥은 그 줄의 마지막, 목록 아래는 맨 끝입니다.',
+    ],
   },
   Slider: {
     summary: '여러 화면을 좌우로 넘기는 슬라이드입니다. 자동 재생을 지원합니다.',

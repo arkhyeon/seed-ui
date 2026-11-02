@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useSyncExternalStore } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
@@ -8,12 +8,135 @@ import { css } from '@emotion/react';
  * @param seq 순번(인덱스)
  * @param children 드래그 대상 내부 컴포넌트
  * @param isDrag default = true, 드래그 가능 여부
- * @param direction default = 'vertical', 인디케이터/방향 ('vertical' | 'horizontal')
+ * @param dropPadding default = 24, 목록 영역 바깥 몇 px까지 드롭을 받을지
  * @returns {JSX.Element}
  */
-// 현재 드래그 중인 항목의 인덱스(동시 드래그는 1개).
-// 재정렬은 "놓는 순간(onDrop)"에만 1회 수행한다 — 드래그 중에는 리스트 상태를 바꾸지 않는다.
-let dragIndex = null;
+// 현재 드래그 상태(동시 드래그는 1개).
+// 들어갈 자리는 "커서 좌표 ↔ 드래그 시작 시점의 칸 위치"로만 계산한다.
+// 미리보기로 항목이 움직여도 판정 기준(칸)은 그대로라 경계에서 왔다갔다 하지 않고,
+// 항목 사이 틈·줄 바깥도 가장 가까운 칸으로 처리된다.
+// 재정렬(setItemList)은 "놓는 순간(drop)"에만 1회 수행한다 — 드래그 중에는 리스트 상태를 바꾸지 않는다.
+let drag = null;
+const listeners = new Set();
+const subscribe = l => {
+  listeners.add(l);
+  return () => listeners.delete(l);
+};
+const getSnapshot = () => drag;
+const setDrag = next => {
+  drag = next;
+  listeners.forEach(l => l());
+};
+
+// 마운트된 항목들 (드래그 시작 시 같은 목록의 칸 위치를 재기 위함)
+const registry = new Set();
+
+// from 항목을 over 자리로 옮겼을 때 seq 항목이 보이는 위치
+const displayIndex = (seq, from, over) => {
+  if (seq === from) return over;
+  if (from < over && seq > from && seq <= over) return seq - 1;
+  if (over < from && seq >= over && seq < from) return seq + 1;
+  return seq;
+};
+
+// 페이지 기준 좌표 (드래그 중 스크롤돼도 어긋나지 않게)
+const pageRect = el => {
+  const r = el.getBoundingClientRect();
+  return {
+    left: r.left + window.scrollX,
+    top: r.top + window.scrollY,
+    right: r.right + window.scrollX,
+    bottom: r.bottom + window.scrollY,
+  };
+};
+
+const commonAncestor = els => {
+  let a = els[0].parentElement;
+  while (a && !els.every(el => a.contains(el))) a = a.parentElement;
+  return a || document.body;
+};
+
+// 칸들을 줄로 묶는다. row: 가로로 흐르다 아래로 감김 / column: 세로로 흐르다 옆으로 감김
+const buildLayout = rects => {
+  const row =
+    rects.length > 1 &&
+    Math.abs(rects[1].top - rects[0].top) < (rects[0].bottom - rects[0].top) / 2;
+  const lines = [];
+  rects.forEach((r, i) => {
+    const prev = rects[i - 1];
+    const wrapped = !prev || (row ? r.left < prev.left : r.top < prev.top);
+    const c0 = row ? r.top : r.left;
+    const c1 = row ? r.bottom : r.right;
+    if (wrapped) lines.push({ start: i, end: i, c0, c1 });
+    else {
+      const line = lines[lines.length - 1];
+      line.end = i;
+      line.c0 = Math.min(line.c0, c0);
+      line.c1 = Math.max(line.c1, c1);
+    }
+  });
+  return { row, lines };
+};
+
+// 커서 위치 → 들어갈 인덱스
+// - 줄 안: 가장 가까운 칸 / 줄 앞·뒤 바깥: 그 줄의 처음·마지막
+// - 모든 줄보다 앞(위/왼쪽): 0, 모든 줄보다 뒤(아래/오른쪽): 마지막
+const targetOf = (x, y) => {
+  const { rects, row, lines } = drag;
+  const c = row ? y : x;
+  const m = row ? x : y;
+  if (c < lines[0].c0) return 0;
+  if (c > lines[lines.length - 1].c1) return rects.length - 1;
+  const dist = l => Math.max(l.c0 - c, c - l.c1, 0);
+  const line = lines.reduce((best, l) => (dist(l) < dist(best) ? l : best));
+  let k = line.start;
+  let min = Infinity;
+  for (let i = line.start; i <= line.end; i += 1) {
+    const r = rects[i];
+    const center = row ? (r.left + r.right) / 2 : (r.top + r.bottom) / 2;
+    if (Math.abs(m - center) < min) {
+      min = Math.abs(m - center);
+      k = i;
+    }
+  }
+  return k;
+};
+
+const pointOf = e => {
+  const x = e.clientX + window.scrollX;
+  const y = e.clientY + window.scrollY;
+  const { zone } = drag;
+  const inside = x >= zone.left && x <= zone.right && y >= zone.top && y <= zone.bottom;
+  return { x, y, inside };
+};
+
+// 목록 영역(+dropPadding) 안이면 어디서든 드롭 허용 — 항목 위가 아니어도 됨
+const onWindowDragOver = e => {
+  if (!drag) return;
+  const { x, y, inside } = pointOf(e);
+  // 영역 밖: 원래 순서로 되돌려 보여주고 드롭 불가
+  const over = inside ? targetOf(x, y) : drag.from;
+  if (inside) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  }
+  if (over !== drag.over) setDrag({ ...drag, over });
+};
+
+const onWindowDrop = e => {
+  if (!drag) return;
+  const { x, y, inside } = pointOf(e);
+  if (!inside) return;
+  e.preventDefault();
+  const { list, from, setItemList } = drag;
+  const over = targetOf(x, y);
+  setDrag(null);
+  if (from === over) return;
+  const data = [...list];
+  const [moved] = data.splice(from, 1);
+  data.splice(over, 0, moved);
+  setItemList(data);
+};
 
 function DNDWrapper({
   itemList,
@@ -21,22 +144,47 @@ function DNDWrapper({
   seq,
   children,
   isDrag = true,
-  direction = 'vertical',
+  dropPadding = 24,
 }) {
-  // 이 항목 기준으로 드롭 위치를 미리 보여주는 선의 위치: 'before' | 'after' | null
-  const [hint, setHint] = useState(null);
-  const horizontal = direction === 'horizontal';
+  const ref = useRef(null);
+  const entry = useRef({ ref });
+  entry.current.list = itemList;
+  entry.current.seq = seq;
 
-  // 커서 위치가 이 항목의 앞쪽인지 뒤쪽인지
-  const sideOf = e => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pos = horizontal ? e.clientX : e.clientY;
-    const mid = horizontal ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
-    return pos < mid ? 'before' : 'after';
-  };
+  useEffect(() => {
+    const e = entry.current;
+    registry.add(e);
+    return () => registry.delete(e);
+  }, []);
+
+  const state = useSyncExternalStore(subscribe, getSnapshot);
+  const active = state && state.list === itemList;
 
   const onDragStart = e => {
-    dragIndex = seq;
+    const els = [];
+    registry.forEach(en => {
+      if (en.list === itemList && en.ref.current) els[en.seq] = en.ref.current;
+    });
+    const rects = els.map(pageRect);
+    const box = pageRect(commonAncestor(els.filter(Boolean)));
+    // 목록 컨테이너와 칸들을 모두 덮는 영역 + 여유
+    const zone = {
+      left: Math.min(box.left, ...rects.map(r => r.left)) - dropPadding,
+      top: Math.min(box.top, ...rects.map(r => r.top)) - dropPadding,
+      right: Math.max(box.right, ...rects.map(r => r.right)) + dropPadding,
+      bottom: Math.max(box.bottom, ...rects.map(r => r.bottom)) + dropPadding,
+    };
+    setDrag({
+      list: itemList,
+      setItemList,
+      from: seq,
+      over: seq,
+      rects,
+      zone,
+      ...buildLayout(rects),
+    });
+    window.addEventListener('dragover', onWindowDragOver);
+    window.addEventListener('drop', onWindowDrop);
     e.currentTarget.classList.add('grabbing');
     e.dataTransfer.effectAllowed = 'move';
     try {
@@ -46,55 +194,37 @@ function DNDWrapper({
     }
   };
 
+  // 드롭 성공/실패 모두 여기서 정리. 놓지 않고 끝남(영역 밖, ESC) → 원래 순서로 복귀
   const onDragEnd = e => {
-    dragIndex = null;
-    setHint(null);
+    window.removeEventListener('dragover', onWindowDragOver);
+    window.removeEventListener('drop', onWindowDrop);
     e.currentTarget.classList.remove('grabbing');
+    if (drag) setDrag(null);
   };
 
-  // drop 허용 + 'move' 커서 유지 + 드롭 위치 인디케이터 갱신
-  const onDragOver = e => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    if (dragIndex === null || dragIndex === seq) {
-      if (hint) setHint(null);
-      return;
-    }
-    const side = sideOf(e);
-    if (side !== hint) setHint(side); // 위치가 바뀔 때만 리렌더
-  };
-
-  const onDragLeave = () => {
-    if (hint) setHint(null);
-  };
-
-  const onDrop = e => {
-    e.preventDefault();
-    setHint(null);
-    if (dragIndex === null || dragIndex === seq) return;
-
-    // 인디케이터와 동일하게 앞/뒤 삽입 위치를 계산
-    let target = sideOf(e) === 'before' ? seq : seq + 1;
-    const data = [...itemList];
-    const [moved] = data.splice(dragIndex, 1);
-    if (dragIndex < target) target -= 1; // 제거로 인한 인덱스 보정
-    data.splice(target, 0, moved);
-    dragIndex = null;
-    setItemList(data);
-  };
+  // 미리보기 위치로 이동할 거리 (원래 칸 → 보이는 칸)
+  let style;
+  if (active) {
+    const { rects, from, over } = state;
+    const to = rects[displayIndex(seq, from, over)];
+    const at = rects[seq];
+    const dx = to && at ? to.left - at.left : 0;
+    const dy = to && at ? to.top - at.top : 0;
+    style = {
+      transform: dx || dy ? `translate(${dx}px, ${dy}px)` : undefined,
+      transition: 'transform 150ms ease',
+    };
+  }
 
   return (
     <DndWrapper
+      ref={ref}
       onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
       onDragEnd={onDragEnd}
       draggable={isDrag}
       data-position={seq}
       isDrag={isDrag}
-      direction={direction}
-      hint={hint}
+      style={style}
     >
       {children}
     </DndWrapper>
@@ -109,7 +239,7 @@ const DndWrapper = styled.div`
       ? css`
           user-select: none;
           cursor: move;
-          /* 드래그 중인 항목: 반투명 + 점선 테두리로 "떠 있는" 상태 표시 */
+          /* 드래그 중인 항목: 반투명 + 점선 테두리로 들어갈 자리를 표시 */
           &.grabbing {
             opacity: 0.35;
             outline: 2px dashed var(--seed-primary);
@@ -121,40 +251,6 @@ const DndWrapper = styled.div`
           -webkit-user-drag: none;
           cursor: default;
         `}
-
-  /* 드롭 위치 미리보기: 삽입될 경계에 점선 슬롯 표시.
-     레이아웃을 밀지 않도록(스크롤/오실레이션 방지) 절대배치 오버레이로만 그린다. */
-  ${({ hint, direction }) => {
-    if (!hint) return '';
-    const vertical = direction !== 'horizontal';
-    // 항목 사이 gap(6px) 중앙에 오도록 경계 바깥쪽으로 살짝 배치
-    const bar = vertical
-      ? `left: 0; right: 0; height: 4px;`
-      : `top: 0; bottom: 0; width: 4px;`;
-    const place =
-      // eslint-disable-next-line no-nested-ternary
-      hint === 'before'
-        ? vertical
-          ? `top: -5px;`
-          : `left: -5px;`
-        : vertical
-        ? `bottom: -5px;`
-        : `right: -5px;`;
-
-    return css`
-      &::after {
-        content: '';
-        position: absolute;
-        ${bar}
-        ${place}
-        border: 1px dashed var(--seed-primary);
-        background: rgba(251, 91, 91, 0.35);
-        border-radius: 3px;
-        z-index: 5;
-        pointer-events: none;
-      }
-    `;
-  }}
 `;
 
 export default DNDWrapper;
