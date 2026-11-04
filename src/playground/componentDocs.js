@@ -9,6 +9,61 @@
 const fn = (name, type, desc, optional) => ({ name, type, desc, optional });
 
 const COMPONENT_DOCS = {
+  // ─── Chip ────────────────────────────────────
+  Chip: {
+    badge: 'NEW',
+    summary: '둥근 이름표(칩·태그·뱃지) 공통 컴포넌트입니다. 화면마다 따로 만들던 칩을 대신합니다.',
+    whenToUse: [
+      '업무 그룹·상태·유형처럼 짧은 값을 이름표로 보여줄 때',
+      '켜고 끄는 필터 칩(active + onClick), 지울 수 있는 검색 기록(onRemove)',
+    ],
+    props: [
+      fn(
+        'size',
+        "'xs' | 'sm' | 'md'",
+        'xs=10px 글자(작은 태그) · sm=11px(기본) · md=12px·높이 22px',
+        true,
+      ),
+      fn('shape', "'pill' | 'tag'", 'pill=완전 둥근(기본) · tag=3~4px 각진 태그', true),
+      fn(
+        'tone',
+        "'neutral' | 'strong' | 'outline' | 'soft'",
+        'neutral=연회색(기본) · strong=진한 바탕+흰 글자 · outline=테두리만 · soft=color 의 연한 바탕+진한 글자+옅은 테두리',
+        true,
+      ),
+      fn('color', 'string', 'soft·strong·outline 기준색 (CSS 색/변수, 예: var(--st-ok))', true),
+      fn('dot', 'string', '앞에 8px 색 점', true),
+      fn('icon', 'ReactNode', '앞 아이콘', true),
+      fn('active', 'boolean', '선택 상태 — strong 모양으로 표시 (토글 칩)', true),
+      fn('onClick', '(e) => void', '있으면 <button> 으로 렌더 + hover/focus 스타일', true),
+      fn('onRemove', '(e) => void', '있으면 뒤에 ✕ 버튼 (클릭은 onClick 으로 전파 안 됨)', true),
+      fn('removeTitle', 'string', '✕ 버튼 툴팁 (기본: 삭제)', true),
+      fn('title', 'string', '툴팁 (기본: children 문자열). 글자가 넘치면 말줄임', true),
+      fn('className · style', '-', '자리별 미세 조정용으로 그대로 전달', true),
+    ],
+    notes: [
+      '색은 전부 테마 변수(--seed-chip-neutral-*, --seed-chip-strong-* 등)라 라이트·다크가 자동 전환됩니다.',
+      '그리드 셀 라벨(--seed-chip-bg/text, 청회색)과는 별개입니다.',
+      '연타 방지는 없습니다. onClick 이 API 를 부르면 호출하는 쪽에서 막으세요.',
+    ],
+  },
+  ChipList: {
+    badge: 'NEW',
+    summary: '칩 묶음입니다. max 개만 보여주고 나머지는 "+N ▾" 를 눌러 Popover 로 봅니다.',
+    whenToUse: ['정보 패널의 업무 그룹 목록처럼 칸이 좁은데 개수가 많을 수 있을 때'],
+    props: [
+      fn('items', 'Array<string | { key?, label, ...Chip props }>', '칩 목록'),
+      fn('max', 'number', '보여줄 개수 (없으면 전부)', true),
+      fn('chipProps', 'object', '모든 칩 공통 props (size·shape·tone 등)', true),
+      fn('popoverTitle', 'string', '넘친 목록 창 제목', true),
+      fn('popoverWidth', 'number | string', '넘친 목록 창 너비', true),
+      fn('wrap', "'nowrap' | 'wrap'", '보이는 칩 줄바꿈 (기본 nowrap → 좁으면 말줄임)', true),
+      fn('gap', 'number', '칩 간격 px (기본 4)', true),
+      fn('empty', 'ReactNode', '항목이 없을 때 표시', true),
+    ],
+    notes: ['넘친 목록에서 칩을 클릭하면 onClick 실행 후 창이 닫힙니다.'],
+  },
+
   // ─── Buttons ─────────────────────────────────
   BlackButton: {
     summary: '화면의 주요 동작(저장·확인·조회)에 쓰는 검정 버튼입니다.',
@@ -60,7 +115,12 @@ const COMPONENT_DOCS = {
     props: [
       fn('value', 'number', '선택된 항목 번호 (1부터)'),
       fn('setValue', '(value) => void', '선택이 바뀌면 호출'),
-      fn('underline', 'boolean', '부모 너비(100%)만큼 아래 구분선 표시. 모달·카드 안에서 쓸 때', true),
+      fn(
+        'underline',
+        'boolean',
+        '부모 너비(100%)만큼 아래 구분선 표시. 모달·카드 안에서 쓸 때',
+        true,
+      ),
     ],
   },
 
@@ -138,7 +198,8 @@ const COMPONENT_DOCS = {
     ],
   },
   TimePicker: {
-    summary: '시·분 목록에서 고르거나, 팝업 상단에 0947·1430처럼 직접 쳐서 넣는 시간 선택칸입니다(24시간제).',
+    summary:
+      '시·분 목록에서 고르거나, 팝업 상단에 0947·1430처럼 직접 쳐서 넣는 시간 선택칸입니다(24시간제).',
     whenToUse: ['실행 시각, 예약 시간 입력'],
     props: [
       fn('time', "string ('HH:mm')", '선택된 시간'),
@@ -241,11 +302,21 @@ const COMPONENT_DOCS = {
       fn('handleClose', '() => void', '닫기(×·ESC·취소)'),
       fn('callback', '() => void', '확인 버튼', true),
       fn('buttonList', 'ReactNode[]', '하단 오른쪽 버튼 직접 지정. Enter는 마지막 버튼', true),
-      fn('leftButtonList', 'ReactNode[]', '하단 왼쪽 기능 버튼 (테이블 옵션 등). Enter 대상 아님', true),
+      fn(
+        'leftButtonList',
+        'ReactNode[]',
+        '하단 왼쪽 기능 버튼 (테이블 옵션 등). Enter 대상 아님',
+        true,
+      ),
       fn('steps', 'string[]', '진행 단계 라벨. 2개 이상이면 헤더에 단계 표시', true),
       fn('currentStep', 'number', '현재 단계 (0부터). 기본 0', true),
       fn('onStepClick', '(index) => void', '지난 단계 클릭 시. 없으면 클릭 불가', true),
-      fn('closeOnBackdrop', 'boolean', '바깥 클릭으로 닫기. 기본: steps 있으면 false, 없으면 true', true),
+      fn(
+        'closeOnBackdrop',
+        'boolean',
+        '바깥 클릭으로 닫기. 기본: steps 있으면 false, 없으면 true',
+        true,
+      ),
       fn('children', 'ReactNode', '본문'),
     ],
     notes: [

@@ -34,6 +34,8 @@ import InputGrid from '../components/InputGrid';
 import Counter from '../components/Counter/Counter';
 import CountList from '../components/CountList/CountList';
 import LabelList from '../components/LabelList/LabelList';
+import Chip from '../components/Chip/Chip';
+import ChipList from '../components/Chip/ChipList';
 import {
   MainTabButton,
   selectSideTab,
@@ -2054,6 +2056,173 @@ const steps = useMemo(() => [
   setSelectedValueList={setSelected}
 />`,
   },
+  {
+    category: 'Data',
+    name: 'Chip',
+    controls: [
+      { key: 'children', type: 'text', default: '업무 그룹' },
+      { key: 'size', type: 'select', options: ['xs', 'sm', 'md'], default: 'sm' },
+      { key: 'shape', type: 'select', options: ['pill', 'tag'], default: 'pill' },
+      {
+        key: 'tone',
+        type: 'select',
+        options: ['neutral', 'strong', 'outline', 'soft'],
+        default: 'neutral',
+      },
+      {
+        key: 'color',
+        type: 'text',
+        default: '',
+        desc: 'soft·strong·outline 기준색 (예: #2e7d32, var(--seed-primary))',
+      },
+      { key: 'dot', type: 'text', default: '', desc: '앞 8px 색 점 (예: #42a5f5)' },
+      { key: 'withIcon', type: 'boolean', default: false, desc: '앞 아이콘 데모' },
+      {
+        key: 'clickable',
+        type: 'boolean',
+        default: false,
+        desc: 'onClick 연결 → <button> 렌더 + 토글(active) 데모',
+      },
+      { key: 'removable', type: 'boolean', default: false, desc: 'onRemove 연결 → 뒤에 ✕ 버튼' },
+    ],
+    initialState: { active: false, removed: false },
+    render: (p, { state, setState }) => (
+      <ChipDemo>
+        <ChipRow>
+          {state.removed ? (
+            <WhiteButton onClick={() => setState({ removed: false })}>다시 표시</WhiteButton>
+          ) : (
+            <Chip
+              size={p.size}
+              shape={p.shape}
+              tone={p.tone}
+              color={p.color || undefined}
+              dot={p.dot || undefined}
+              icon={p.withIcon ? <TbLayoutGrid /> : undefined}
+              active={p.clickable && state.active}
+              onClick={p.clickable ? () => setState({ active: !state.active }) : undefined}
+              onRemove={p.removable ? () => setState({ removed: true }) : undefined}
+            >
+              {p.children}
+            </Chip>
+          )}
+        </ChipRow>
+        {['light', 'dark'].map(theme => (
+          <ChipThemeBox key={theme} data-theme={theme}>
+            <ChipThemeName>{theme === 'light' ? '라이트' : '다크'}</ChipThemeName>
+            {['xs', 'sm', 'md'].map(size =>
+              ['pill', 'tag'].map(shape => (
+                <ChipRow key={size + shape}>
+                  <ChipRowName>
+                    {size} · {shape}
+                  </ChipRowName>
+                  <Chip size={size} shape={shape}>
+                    neutral
+                  </Chip>
+                  <Chip size={size} shape={shape} tone="strong">
+                    strong
+                  </Chip>
+                  <Chip size={size} shape={shape} tone="strong" color="#2e7d32">
+                    strong+color
+                  </Chip>
+                  <Chip size={size} shape={shape} tone="outline">
+                    outline
+                  </Chip>
+                  <Chip size={size} shape={shape} tone="soft" color="#1e88e5">
+                    soft
+                  </Chip>
+                  <Chip size={size} shape={shape} tone="soft" color="#e53935">
+                    soft
+                  </Chip>
+                </ChipRow>
+              )),
+            )}
+            <ChipRow>
+              <ChipRowName>dot·icon·active·remove</ChipRowName>
+              <Chip size="md" dot="#42a5f5" onClick={() => {}}>
+                업무 그룹 A
+              </Chip>
+              <Chip tone="soft" color="#43a047" icon={<TbCategoryPlus />}>
+                완료
+              </Chip>
+              <Chip onClick={() => {}}>꺼짐</Chip>
+              <Chip active onClick={() => {}}>
+                켜짐
+              </Chip>
+              <Chip onClick={() => {}} onRemove={() => {}}>
+                검색 기록
+              </Chip>
+              <Chip size="md" style={{ maxWidth: 90 }}>
+                아주 긴 이름은 말줄임됩니다
+              </Chip>
+            </ChipRow>
+          </ChipThemeBox>
+        ))}
+      </ChipDemo>
+    ),
+    snippet: p => {
+      const attrs = [
+        p.size !== 'sm' && `size="${p.size}"`,
+        p.shape !== 'pill' && `shape="${p.shape}"`,
+        p.tone !== 'neutral' && `tone="${p.tone}"`,
+        p.color && `color="${p.color}"`,
+        p.dot && `dot="${p.dot}"`,
+        p.withIcon && 'icon={<TbLayoutGrid />}',
+        p.clickable && 'active={active}',
+        p.clickable && 'onClick={() => setActive(v => !v)}',
+        p.removable && 'onRemove={handleRemove}',
+      ].filter(Boolean);
+      return `import { Chip } from 'seed-ui';
+
+<Chip${attrs.length ? ` ${attrs.join(' ')}` : ''}>${p.children}</Chip>`;
+    },
+  },
+  {
+    category: 'Data',
+    name: 'ChipList',
+    controls: [
+      { key: 'max', type: 'number', default: 2, desc: '보여줄 칩 개수. 나머지는 "+N ▾" Popover' },
+      { key: 'size', type: 'select', options: ['xs', 'sm', 'md'], default: 'md' },
+      { key: 'popoverTitle', type: 'text', default: '업무 그룹' },
+      { key: 'width', type: 'text', default: '260px', desc: '감싸는 영역 너비 (좁히면 말줄임)' },
+    ],
+    render: p => {
+      const items = [
+        { key: 1, label: '정산', dot: '#42a5f5' },
+        { key: 2, label: '고객 관리', dot: '#66bb6a' },
+        { key: 3, label: '배치 작업', dot: '#ffa726' },
+        { key: 4, label: '리포트', dot: '#ab47bc' },
+        { key: 5, label: '공통', dot: '#78909c' },
+      ].map(it => ({ ...it, onClick: () => CLM.alertInfo(`${it.label} 이동`) }));
+      return (
+        <ChipDemo>
+          {['light', 'dark'].map(theme => (
+            <ChipThemeBox key={theme} data-theme={theme} style={{ width: p.width }}>
+              <ChipList
+                items={items}
+                max={p.max}
+                chipProps={{ size: p.size }}
+                popoverTitle={p.popoverTitle}
+              />
+            </ChipThemeBox>
+          ))}
+        </ChipDemo>
+      );
+    },
+    snippet: p => `import { ChipList } from 'seed-ui';
+
+<ChipList
+  max={${p.max}}
+  chipProps={{ size: '${p.size}' }}
+  popoverTitle="${p.popoverTitle}"
+  items={groups.map(g => ({
+    key: g.id,
+    label: g.name,
+    dot: g.color,
+    onClick: () => navigate(g.path),
+  }))}
+/>`,
+  },
 
   // ─── Menu ─────────────────────────────────────────────────
   {
@@ -3415,6 +3584,44 @@ const Brand = styled.div`
   font-size: 19px;
   font-weight: 700;
   color: #fff;
+`;
+
+// Chip / ChipList 데모: 라이트·다크 나란히 (data-theme 로 영역별 테마 강제)
+const ChipDemo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+`;
+
+const ChipThemeBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 100%;
+  padding: 12px;
+  border: 1px solid var(--seed-border);
+  border-radius: 8px;
+  background: var(--seed-surface);
+  color: var(--seed-text);
+`;
+
+const ChipThemeName = styled.div`
+  font-size: 12px;
+  color: var(--seed-text-muted);
+`;
+
+const ChipRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+`;
+
+const ChipRowName = styled.span`
+  width: 150px;
+  font-size: 11px;
+  color: var(--seed-text-secondary);
 `;
 
 const ThemeToggle = styled.button`

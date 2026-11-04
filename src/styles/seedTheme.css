@@ -10,7 +10,9 @@
  * 소비 앱 IDE 가 var(--seed-*) 를 해석(빨간줄 제거)할 수 있다.
  */
 
-:root {
+/* [data-theme='light'] : 다크 화면 안 일부 영역을 라이트로 고정할 때 (플레이그라운드 비교 등) */
+:root,
+[data-theme='light'] {
   /* 표면 */
   --seed-surface: #ffffff;        /* 카드/입력/모달/기본 버튼 */
   --seed-surface-alt: #f7f7f7;    /* 옅은 보조 표면/스트라이프 */
@@ -34,6 +36,20 @@
   /* 라벨 칩(CountList/LabelList 기본 칩 색; 컴포넌트 color prop 으로 개별 override 가능) */
   --seed-chip-bg: #78909c;
   --seed-chip-text: #ffffff;
+
+  /* 공통 Chip(둥근 이름표) — 위 --seed-chip-bg/text(그리드 라벨 청회색)와 별개 */
+  --seed-chip-neutral-bg: #f0f0f0;     /* neutral: 연회색 바탕 */
+  --seed-chip-neutral-text: #545454;
+  --seed-chip-strong-bg: #1a1a1a;      /* strong/active: 진한 바탕 */
+  --seed-chip-strong-text: #ffffff;
+  --seed-chip-on-color: #ffffff;       /* strong + color 지정 시 글자 */
+  --seed-chip-outline-border: #d2d2d2; /* outline: 테두리만 */
+  --seed-chip-soft-bg-mix: 14%;        /* soft: color 비율 (바탕/테두리/글자) */
+  --seed-chip-soft-border-mix: 35%;
+  --seed-chip-soft-text-mix: 80%;
+  --seed-chip-hover-brightness: 0.94;  /* 클릭 칩 hover 밝기 */
+  --seed-chip-focus: #455a64;
+  --seed-chip-remove-hover: rgba(0, 0, 0, 0.1);
 
   /* 헤더 바 배경 (라이트/다크 모두 어두운 바; 다크에선 더 어둡게) */
   --seed-header-bg: #3e3e3e;
@@ -94,6 +110,19 @@
 
   --seed-chip-bg: #37474f;
   --seed-chip-text: #e0e0e0;
+
+  --seed-chip-neutral-bg: #333333;
+  --seed-chip-neutral-text: #c8c8c8;
+  --seed-chip-strong-bg: #e6e6e6;
+  --seed-chip-strong-text: #1a1a1a;
+  --seed-chip-on-color: #ffffff;
+  --seed-chip-outline-border: #565656;
+  --seed-chip-soft-bg-mix: 22%;
+  --seed-chip-soft-border-mix: 45%;
+  --seed-chip-soft-text-mix: 70%;
+  --seed-chip-hover-brightness: 1.18;
+  --seed-chip-focus: #b0bec5;
+  --seed-chip-remove-hover: rgba(255, 255, 255, 0.15);
 
   --seed-header-bg: #1c1c1c;
 

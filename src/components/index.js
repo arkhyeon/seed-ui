@@ -23,6 +23,8 @@ import CustomTextArea from './InputComp/CustomTextArea';
 import InputGrid from './InputGrid';
 import { BlackButton, RadioButton, SwitchButton, WhiteButton } from './Button/Button';
 import LabelList from './LabelList/LabelList';
+import Chip from './Chip/Chip';
+import ChipList from './Chip/ChipList';
 import Count from './Count/Count';
 import Counter from './Counter/Counter';
 import CountList from './CountList/CountList';
@@ -94,6 +96,8 @@ export { CustomTextArea };
 export { InputGrid };
 
 export { LabelList };
+
+export { Chip, ChipList };
 
 export { Count };
 
