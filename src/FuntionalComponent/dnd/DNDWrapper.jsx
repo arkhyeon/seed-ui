@@ -39,20 +39,39 @@ const displayIndex = (seq, from, over) => {
   return seq;
 };
 
-// 페이지 기준 좌표 (드래그 중 스크롤돼도 어긋나지 않게)
-const pageRect = el => {
-  const r = el.getBoundingClientRect();
+// 목록 컨테이너 "내용" 기준 원점(화면 좌표). 컨테이너 자체·바깥 스크롤·창 스크롤이
+// 바뀌어도 매번 다시 재므로, 칸 위치(rects)는 이 원점 기준으로 저장하면 어긋나지 않는다.
+const originOf = anc => {
+  const a = anc.getBoundingClientRect();
   return {
-    left: r.left + window.scrollX,
-    top: r.top + window.scrollY,
-    right: r.right + window.scrollX,
-    bottom: r.bottom + window.scrollY,
+    x: a.left + anc.clientLeft - anc.scrollLeft,
+    y: a.top + anc.clientTop - anc.scrollTop,
   };
 };
 
+const relRect = (el, o) => {
+  const r = el.getBoundingClientRect();
+  return { left: r.left - o.x, top: r.top - o.y, right: r.right - o.x, bottom: r.bottom - o.y };
+};
+
+// 스크롤/잘림이 있는 조상들 — 드롭 영역은 이들의 보이는 영역 안으로 자른다
+const clippingAncestors = el => {
+  const list = [];
+  for (
+    let a = el;
+    a && a !== document.body && a !== document.documentElement;
+    a = a.parentElement
+  ) {
+    const s = getComputedStyle(a);
+    if (s.overflowX !== 'visible' || s.overflowY !== 'visible') list.push(a);
+  }
+  return list;
+};
+
 const commonAncestor = els => {
+  const containsAll = node => els.every(el => node.contains(el));
   let a = els[0].parentElement;
-  while (a && !els.every(el => a.contains(el))) a = a.parentElement;
+  while (a && !containsAll(a)) a = a.parentElement;
   return a || document.body;
 };
 
@@ -102,12 +121,32 @@ const targetOf = (x, y) => {
   return k;
 };
 
+// 커서 → 컨테이너 내용 기준 좌표 + 드롭 영역 안인지
+// 드롭 영역 = (컨테이너 ∪ 칸들) ∩ 스크롤 조상들의 보이는 영역, + dropPadding
 const pointOf = e => {
-  const x = e.clientX + window.scrollX;
-  const y = e.clientY + window.scrollY;
-  const { zone } = drag;
-  const inside = x >= zone.left && x <= zone.right && y >= zone.top && y <= zone.bottom;
-  return { x, y, inside };
+  const { anc, clips, bbox, pad } = drag;
+  const o = originOf(anc);
+  const a = anc.getBoundingClientRect();
+  const zone = {
+    left: Math.min(a.left, bbox.left + o.x),
+    top: Math.min(a.top, bbox.top + o.y),
+    right: Math.max(a.right, bbox.right + o.x),
+    bottom: Math.max(a.bottom, bbox.bottom + o.y),
+  };
+  clips.forEach(c => {
+    const r = c.getBoundingClientRect();
+    zone.left = Math.max(zone.left, r.left);
+    zone.top = Math.max(zone.top, r.top);
+    zone.right = Math.min(zone.right, r.right);
+    zone.bottom = Math.min(zone.bottom, r.bottom);
+  });
+  const { clientX: cx, clientY: cy } = e;
+  const inside =
+    cx >= zone.left - pad &&
+    cx <= zone.right + pad &&
+    cy >= zone.top - pad &&
+    cy <= zone.bottom + pad;
+  return { x: cx - o.x, y: cy - o.y, inside };
 };
 
 // 목록 영역(+dropPadding) 안이면 어디서든 드롭 허용 — 항목 위가 아니어도 됨
@@ -138,14 +177,7 @@ const onWindowDrop = e => {
   setItemList(data);
 };
 
-function DNDWrapper({
-  itemList,
-  setItemList,
-  seq,
-  children,
-  isDrag = true,
-  dropPadding = 24,
-}) {
+function DNDWrapper({ itemList, setItemList, seq, children, isDrag = true, dropPadding = 24 }) {
   const ref = useRef(null);
   const entry = useRef({ ref });
   entry.current.list = itemList;
@@ -165,14 +197,14 @@ function DNDWrapper({
     registry.forEach(en => {
       if (en.list === itemList && en.ref.current) els[en.seq] = en.ref.current;
     });
-    const rects = els.map(pageRect);
-    const box = pageRect(commonAncestor(els.filter(Boolean)));
-    // 목록 컨테이너와 칸들을 모두 덮는 영역 + 여유
-    const zone = {
-      left: Math.min(box.left, ...rects.map(r => r.left)) - dropPadding,
-      top: Math.min(box.top, ...rects.map(r => r.top)) - dropPadding,
-      right: Math.max(box.right, ...rects.map(r => r.right)) + dropPadding,
-      bottom: Math.max(box.bottom, ...rects.map(r => r.bottom)) + dropPadding,
+    const anc = commonAncestor(els.filter(Boolean));
+    const o = originOf(anc);
+    const rects = els.map(el => relRect(el, o));
+    const bbox = {
+      left: Math.min(...rects.map(r => r.left)),
+      top: Math.min(...rects.map(r => r.top)),
+      right: Math.max(...rects.map(r => r.right)),
+      bottom: Math.max(...rects.map(r => r.bottom)),
     };
     setDrag({
       list: itemList,
@@ -180,7 +212,10 @@ function DNDWrapper({
       from: seq,
       over: seq,
       rects,
-      zone,
+      anc,
+      clips: clippingAncestors(anc),
+      bbox,
+      pad: dropPadding,
       ...buildLayout(rects),
     });
     window.addEventListener('dragover', onWindowDragOver);
