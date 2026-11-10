@@ -342,7 +342,7 @@ const COMPONENT_DOCS = {
       fn(
         'CLM.alertError(message | { title, message, detail })',
         'Promise<void>',
-        '오류 창 (빨강 선 + ✕). 닫히면 resolve. detail은 접힌 상세 정보 + 복사',
+        '오류 창 (빨강 선 + ✕). 닫히면 resolve. detail은 접힌 상세 정보',
       ),
       fn(
         "CLM.confirm(message | { title, message, detail, buttons?, type?: 'danger' })",

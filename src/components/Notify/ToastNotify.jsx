@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import { css, keyframes } from '@emotion/react';
 import { cancelConfirm, deleteAlert, deleteConfirm, useNotifyStore } from '../../R2wZustand';
@@ -201,28 +201,6 @@ function ToastConfirm({ title, message = '', detail, buttons, type = '' }) {
 }
 
 function Detail({ text }) {
-  const [copied, setCopied] = useState('');
-  const preRef = useRef();
-
-  const copy = e => {
-    e.preventDefault();
-    const fallback = () => {
-      const range = document.createRange();
-      range.selectNodeContents(preRef.current);
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-      setCopied('선택됨');
-    };
-    if (!navigator.clipboard) {
-      fallback();
-      return;
-    }
-    navigator.clipboard
-      .writeText(text)
-      .then(() => setCopied('복사됨'))
-      .catch(fallback);
-  };
-
   return (
     <DetailBox>
       <summary>
@@ -232,10 +210,7 @@ function Detail({ text }) {
         상세 정보
       </summary>
       <DetailBody>
-        <CopyButton type="button" onClick={copy}>
-          {copied || '복사'}
-        </CopyButton>
-        <pre ref={preRef}>{text}</pre>
+        <pre>{text}</pre>
       </DetailBody>
     </DetailBox>
   );
@@ -441,20 +416,6 @@ const DetailBody = styled.div`
     white-space: pre-wrap;
     word-break: break-all;
   }
-`;
-
-const CopyButton = styled.button`
-  float: right;
-  position: relative;
-  z-index: 1;
-  margin: 6px 6px 0 8px;
-  padding: 2px 8px;
-  font-size: 11.5px;
-  color: var(--seed-text-secondary);
-  background: var(--seed-surface);
-  border: 1px solid var(--seed-border);
-  border-radius: 5px;
-  cursor: pointer;
 `;
 
 const Footer = styled.div`
