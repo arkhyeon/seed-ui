@@ -184,16 +184,22 @@ function ToastConfirm({ title, message = '', detail, buttons, type = '' }) {
             {cancelText}
           </WhiteButton>
         )}
-        {primaryText &&
-          (isDanger ? (
-            <DangerButton ref={primaryRef} onClick={() => close(true)}>
-              {primaryText}
-            </DangerButton>
-          ) : (
-            <BlackButton ref={primaryRef} onClick={() => close(true)}>
-              {primaryText}
-            </BlackButton>
-          ))}
+        {primaryText && isDanger && (
+          <DangerButton ref={primaryRef} onClick={() => close(true)}>
+            {primaryText}
+          </DangerButton>
+        )}
+        {/* 오류 창 [확인] 하나뿐이면 닫기 용도라 흰 버튼 */}
+        {primaryText && !isDanger && isError && !cancelText && (
+          <WhiteButton ref={primaryRef} onClick={() => close(true)}>
+            {primaryText}
+          </WhiteButton>
+        )}
+        {primaryText && !isDanger && !(isError && !cancelText) && (
+          <BlackButton ref={primaryRef} onClick={() => close(true)}>
+            {primaryText}
+          </BlackButton>
+        )}
         {extraText && <BlackButton onClick={() => close(2)}>{extraText}</BlackButton>}
       </Footer>
     </ConfirmCard>
@@ -251,8 +257,8 @@ const DimOverlay = styled.div`
   z-index: 99998;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 16px;
+  align-items: flex-start;
+  padding: 60px 16px 16px; /* 토스트(ToastWrap top 60px)와 같은 자리 */
   animation: ${fadeIn} 0.16s ease-out both;
 `;
 
@@ -427,14 +433,15 @@ const Footer = styled.div`
   margin-top: 16px;
 `;
 
-const DangerButton = styled(BlackButton)`
-  background: var(--seed-danger);
-  border-color: transparent;
-  color: #fff;
+// 삭제·중지: 흰 바탕 + 빨간 글씨·테두리 (빨강은 선·아이콘·글씨 포인트로만)
+const DangerButton = styled(WhiteButton)`
+  background: var(--seed-surface);
+  border-color: var(--seed-danger);
+  color: var(--seed-danger);
 
   :hover {
-    background: var(--seed-danger);
-    color: #fff;
-    filter: brightness(0.94);
+    background: color-mix(in srgb, var(--seed-danger) 8%, var(--seed-surface));
+    border-color: var(--seed-danger);
+    color: var(--seed-danger);
   }
 `;
