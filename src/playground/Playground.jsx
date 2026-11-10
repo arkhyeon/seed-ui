@@ -2837,6 +2837,37 @@ const dynamicRoutes = useMemo(() => {
           >
             confirm (Promise)
           </BlackButton>
+          <BlackButton
+            onClick={async () => {
+              const ok = await CLM.confirm({
+                title: 'DBMS를 삭제하시겠습니까?',
+                message: '연결된 업무 그룹·분리보관 설정에 영향이 있을 수 있습니다.',
+                buttons: ['취소', '삭제'],
+                type: 'danger',
+              });
+              CLM.alert(ok ? '삭제를 눌렀습니다.' : '취소했습니다.');
+            }}
+          >
+            confirm (danger)
+          </BlackButton>
+          <BlackButton
+            onClick={() =>
+              CLM.alertError({
+                title: '엑셀 업로드에 실패했습니다.',
+                message: '3행 업무 그룹 값이 올바르지 않습니다.',
+                detail: '오류 코드: EXCEL_INVALID_VALUE',
+              })
+            }
+          >
+            alertError(detail)
+          </BlackButton>
+          <BlackButton
+            onClick={() =>
+              CLM.alertSuccess({ title: '설정 완료', message: 'CLM 서버 정보를 설정했습니다.' })
+            }
+          >
+            alertSuccess(제목형)
+          </BlackButton>
         </div>
         <ToastNotify />
       </NotifyPreview>
@@ -2849,7 +2880,9 @@ const dynamicRoutes = useMemo(() => {
 // 2) 어디서든 호출
 CLM.alertSuccess('저장되었습니다.');
 CLM.alertError('실패했습니다.');
-const ok = await CLM.confirm({ title: '확인', message: '진행할까요?' }); // Promise<boolean>`,
+const ok = await CLM.confirm({ title: '확인', message: '진행할까요?' }); // Promise<boolean>
+const del = await CLM.confirm({ title: '삭제하시겠습니까?', buttons: ['취소', '삭제'], type: 'danger' });
+await CLM.alertError({ title: '업로드 실패', message: '3행 값 오류', detail: '오류 코드: ...' }); // 닫힐 때까지 기다림`,
     realUsage: {
       file: 'assets/R2wZustand.js (정의) · main.jsx (<ToastNotify/>)',
       code: `import { CLM } from 'assets/R2wZustand';

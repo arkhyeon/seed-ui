@@ -333,11 +333,29 @@ const COMPONENT_DOCS = {
     summary: '화면 구석에 잠깐 뜨는 알림(성공·실패)과 확인창(confirm)입니다.',
     whenToUse: ['저장 성공·실패 알림', '삭제 전 확인 (await CLM.confirm)'],
     props: [
-      fn('CLM.alertSuccess(message)', 'function', '성공 알림'),
-      fn('CLM.alertError(message)', 'function', '실패 알림'),
-      fn('CLM.confirm({ title, message, buttons? })', 'Promise<boolean>', '확인창. 확인이면 true'),
+      fn(
+        'CLM.alertSuccess(message | { title, message })',
+        'function',
+        '성공 알림 (파랑 선 + ✓). 3초 뒤 닫힘, 누르면 바로 닫힘',
+      ),
+      fn('CLM.alertInfo(message | { title, message })', 'function', '정보 알림 (회색 선 + i)'),
+      fn(
+        'CLM.alertError(message | { title, message, detail })',
+        'Promise<void>',
+        '오류 창 (빨강 선 + ✕). 닫히면 resolve. detail은 접힌 상세 정보 + 복사',
+      ),
+      fn(
+        "CLM.confirm(message | { title, message, detail, buttons?, type?: 'danger' })",
+        'Promise<boolean>',
+        "확인창. 확인이면 true. 문자열은 제목 자리. type: 'danger'면 빨간 주 버튼 + [취소]에 포커스",
+      ),
     ],
-    notes: ['<ToastNotify />는 앱 최상단에 한 번만 렌더합니다.'],
+    notes: [
+      '<ToastNotify />는 앱 최상단에 한 번만 렌더합니다.',
+      '모양: 카드 왼쪽 끝 3px 색 선 + 제목 앞 원 아이콘. 일반 확인창은 검정 선만(아이콘 없음).',
+      "삭제·중지처럼 되돌릴 수 없는 확인에는 type: 'danger'를 붙이세요.",
+      '토스트는 위에서 아래로 쌓이고, 마우스를 올리면 시간이 멈춥니다.',
+    ],
   },
 
   // ─── Navigation ──────────────────────────────

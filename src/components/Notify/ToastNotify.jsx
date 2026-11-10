@@ -1,14 +1,18 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { cancelConfirm, deleteAlert, deleteConfirm, useNotifyStore } from '../../R2wZustand';
 import { BlackButton, WhiteButton } from '../Button/Button';
 import EscStack from '../../common/EscStack';
 
 /**
  * CLM 알림 렌더러. 앱 최상단에 한 번만 렌더한다.
- * 토스트: CLM.alert / alertInfo / alertSuccess
- * 컨펌:   CLM.alertError / CLM.confirm(Promise 반환)
+ * 토스트: CLM.alert / alertInfo / alertSuccess  (string | { title, message })
+ * 컨펌:   CLM.alertError / CLM.confirm  (Promise 반환)
+ *
+ * 모양: 카드 왼쪽 끝 3px 색 선 + 제목 앞 20px 원 아이콘.
+ *   일반 확인 = 검정 선(아이콘 없음) · 삭제·중지(type: 'danger') = 빨강 ! · 오류 = 빨강 ✕
+ *   성공 = 파랑 ✓ · 정보 = 회색 i
  */
 function ToastNotify({ interval = 3000 }) {
   const { toastList, confirm } = useNotifyStore();
@@ -21,7 +25,11 @@ function ToastNotify({ interval = 3000 }) {
         ))}
       </ToastWrap>
       {confirm && (
-        <DimOverlay onClick={cancelConfirm}>
+        <DimOverlay
+          onMouseDown={e => {
+            if (e.target === e.currentTarget) cancelConfirm();
+          }}
+        >
           <ToastConfirm {...confirm} />
         </DimOverlay>
       )}
@@ -31,184 +39,439 @@ function ToastNotify({ interval = 3000 }) {
 
 export default ToastNotify;
 
+/* ───────── 아이콘 ───────── */
+const GLYPH = {
+  error: <path d="M3.5 3.5l5 5M8.5 3.5l-5 5" />,
+  danger: <path d="M6 2.8v4M6 9.2v.1" />,
+  success: <path d="M2.8 6.3 5 8.4l4.2-4.6" />,
+  info: <path d="M6 5.4v3.8M6 2.9v.1" />,
+};
+
+function Glyph({ tone }) {
+  return (
+    <GlyphBox aria-hidden="true">
+      <svg
+        viewBox="0 0 12 12"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {GLYPH[tone] ?? GLYPH.info}
+      </svg>
+    </GlyphBox>
+  );
+}
+
+const TONE_COLOR = {
+  plain: 'var(--seed-text)',
+  danger: 'var(--seed-danger)',
+  error: 'var(--seed-danger)',
+  success: '#03a7f1',
+  info: 'var(--seed-text-muted)',
+};
+
+/* ───────── 토스트 ───────── */
 function ToastAlert({ id, content, interval, type }) {
+  const { title, message } =
+    content && typeof content === 'object' ? content : { title: '', message: content };
+  const tone = type === 'success' || type === 'error' ? type : 'info';
+  const timer = useRef();
+  const left = useRef(interval);
+  const startedAt = useRef(0);
+
+  const arm = useCallback(() => {
+    clearTimeout(timer.current);
+    startedAt.current = Date.now();
+    timer.current = setTimeout(() => deleteAlert(id), left.current);
+  }, [id]);
+
+  const pause = useCallback(() => {
+    clearTimeout(timer.current);
+    left.current = Math.max(800, left.current - (Date.now() - startedAt.current));
+  }, []);
+
   useLayoutEffect(() => {
-    const timer = setTimeout(() => deleteAlert(id), interval);
+    arm();
     const handler = () => deleteAlert(id);
     EscStack.push(handler);
-
     return () => {
-      clearTimeout(timer);
+      clearTimeout(timer.current);
       EscStack.remove(handler);
     };
-  }, [id, interval]);
+  }, [id, arm]);
 
   return (
-    <ToastAlertItem type={type} onClick={() => deleteAlert(id)}>
-      {content}
-    </ToastAlertItem>
+    <ToastCard
+      role="status"
+      tone={tone}
+      noTitle={!title}
+      onClick={() => deleteAlert(id)}
+      onMouseEnter={pause}
+      onMouseLeave={arm}
+    >
+      <Glyph tone={tone} />
+      <TextBox>
+        {title && <Title>{title}</Title>}
+        <Message>{message}</Message>
+      </TextBox>
+    </ToastCard>
   );
 }
 
-function ToastConfirm({ title, message = '', buttons = ['취소', '확인'], type = '' }) {
+/* ───────── 컨펌 / 오류 ───────── */
+function ToastConfirm({ title, message = '', detail, buttons, type = '' }) {
   const { responseHandler } = useNotifyStore();
-  const focusRef = useRef();
+  const boxRef = useRef();
+  const primaryRef = useRef();
+  const cancelRef = useRef();
 
-  const handleConfirmClick = useCallback(() => {
-    if (responseHandler) responseHandler(true);
-    deleteConfirm();
-  }, [responseHandler]);
+  const isError = type === 'error';
+  const isDanger = type === 'danger';
+  let tone = 'plain';
+  if (isError) tone = 'error';
+  else if (isDanger) tone = 'danger';
+  const btns = buttons ?? (isError ? ['확인'] : ['취소', '확인']);
+  // 버튼이 하나면 그게 주 버튼
+  const [cancelText, primaryText, extraText] = btns.length === 1 ? ['', btns[0]] : btns;
 
-  const handleCancelClick = useCallback(() => {
-    if (responseHandler) responseHandler(false);
-    deleteConfirm();
-  }, [responseHandler]);
+  const close = useCallback(
+    value => {
+      if (responseHandler) responseHandler(value);
+      deleteConfirm();
+    },
+    [responseHandler],
+  );
 
   useEffect(() => {
-    focusRef.current?.focus();
-    const handler = () => handleCancelClick();
+    // 삭제·중지는 실수로 Enter 쳐도 안 지워지게 [취소]에 포커스
+    (isDanger && cancelRef.current ? cancelRef : primaryRef).current?.focus();
+    const handler = () => close(false);
     EscStack.push(handler);
     return () => EscStack.remove(handler);
-  }, [handleCancelClick]);
+  }, [close, isDanger]);
+
+  // Tab 이 창 안에서만 돌도록
+  const trapTab = e => {
+    if (e.key !== 'Tab') return;
+    const list = [...boxRef.current.querySelectorAll('button, summary')];
+    if (!list.length) return;
+    const i = list.indexOf(document.activeElement);
+    e.preventDefault();
+    list[(i + (e.shiftKey ? -1 : 1) + list.length) % list.length].focus();
+  };
 
   return (
-    <ToastConfirmItem type={type} onClick={handleCancelClick} tabIndex={0}>
-      {title && <ToastConfirmHeader>{title}</ToastConfirmHeader>}
-      <ToastConfirmBody>{message}</ToastConfirmBody>
-      <ToastConfirmFooter>
-        {buttons[0] && (
-          <WhiteButton onClick={handleCancelClick} tabIndex={0}>
-            {buttons[0]}
+    <ConfirmCard
+      ref={boxRef}
+      role={isError || isDanger ? 'alertdialog' : 'dialog'}
+      aria-modal="true"
+      tone={tone}
+      hasIcon={isError || isDanger}
+      onKeyDown={trapTab}
+    >
+      {(isError || isDanger) && <Glyph tone={tone} />}
+      <TextBox>
+        {title && <Title>{title}</Title>}
+        {message && <Message scroll>{message}</Message>}
+      </TextBox>
+      {detail && <Detail text={detail} />}
+      <Footer>
+        {cancelText && (
+          <WhiteButton ref={cancelRef} onClick={() => close(false)}>
+            {cancelText}
           </WhiteButton>
         )}
-        {buttons[1] && (
-          <BlackButton onClick={handleConfirmClick} tabIndex={0} ref={focusRef}>
-            {buttons[1]}
-          </BlackButton>
-        )}
-        {buttons[2] && (
-          <BlackButton onClick={handleConfirmClick} tabIndex={0}>
-            {buttons[1]}
-          </BlackButton>
-        )}
-      </ToastConfirmFooter>
-    </ToastConfirmItem>
+        {primaryText &&
+          (isDanger ? (
+            <DangerButton ref={primaryRef} onClick={() => close(true)}>
+              {primaryText}
+            </DangerButton>
+          ) : (
+            <BlackButton ref={primaryRef} onClick={() => close(true)}>
+              {primaryText}
+            </BlackButton>
+          ))}
+        {extraText && <BlackButton onClick={() => close(2)}>{extraText}</BlackButton>}
+      </Footer>
+    </ConfirmCard>
   );
 }
+
+function Detail({ text }) {
+  const [copied, setCopied] = useState('');
+  const preRef = useRef();
+
+  const copy = e => {
+    e.preventDefault();
+    const fallback = () => {
+      const range = document.createRange();
+      range.selectNodeContents(preRef.current);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      setCopied('선택됨');
+    };
+    if (!navigator.clipboard) {
+      fallback();
+      return;
+    }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => setCopied('복사됨'))
+      .catch(fallback);
+  };
+
+  return (
+    <DetailBox>
+      <summary>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m9 6 6 6-6 6" />
+        </svg>
+        상세 정보
+      </summary>
+      <DetailBody>
+        <CopyButton type="button" onClick={copy}>
+          {copied || '복사'}
+        </CopyButton>
+        <pre ref={preRef}>{text}</pre>
+      </DetailBody>
+    </DetailBox>
+  );
+}
+
+/* ───────── 스타일 ───────── */
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+const popIn = keyframes`
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+`;
+const dropIn = keyframes`
+  from { opacity: 0; transform: translateY(-14px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+`;
 
 const ToastWrap = styled.div`
   position: fixed;
-  top: 60px;
+  top: 16px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 99999;
+  z-index: 99999; /* 확인창(99998) 위, GuideTour(100000) 아래 */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  gap: 8px;
+  width: 440px;
+  max-width: calc(100vw - 32px);
+  pointer-events: none;
 `;
 
 const DimOverlay = styled.div`
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  z-index: 99999;
+  background-color: rgba(18, 20, 23, 0.42);
+  z-index: 99998;
   display: flex;
   justify-content: center;
-  align-items: baseline;
-  padding-top: 60px;
+  align-items: flex-start;
+  padding: 120px 16px 16px;
+  animation: ${fadeIn} 0.16s ease-out both;
 `;
 
-const ToastDefault = styled.div`
-  width: 400px;
-  min-height: 45px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px 20px;
-  gap: 12px;
-  background-color: var(--seed-surface);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  color: var(--x-000);
-  font-size: 14px;
-  border-radius: 6px;
-  opacity: 1;
-  transition: 0.3s all ease-in-out;
-  pointer-events: all;
+// 확인창·토스트 공통 카드: 왼쪽 끝 3px 색 선
+const cardBase = ({ tone }) => css`
+  --notify-tone: ${TONE_COLOR[tone] ?? TONE_COLOR.plain};
   position: relative;
-  line-height: 1.3;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 440px;
+  max-width: 100%;
+  background: var(--seed-surface);
+  color: var(--seed-text);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 32px -8px rgba(0, 0, 0, 0.28);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: start;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: left;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--notify-tone);
+  }
+`;
+
+const ConfirmCard = styled.div`
+  ${cardBase}
+  padding: 18px 20px 16px 22px;
+  outline: none;
+  animation: ${popIn} 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  ${({ hasIcon }) =>
+    !hasIcon &&
+    css`
+      grid-template-columns: 1fr;
+      width: 400px;
+
+      details {
+        grid-column: 1;
+      }
+    `}
+`;
+
+const ToastCard = styled.div`
+  ${cardBase}
+  padding: 16px 20px 16px 22px;
+  cursor: pointer;
   user-select: none;
+  pointer-events: all;
+  transition: background 0.12s;
+  animation: ${dropIn} 0.3s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  ${({ noTitle }) =>
+    noTitle &&
+    css`
+      align-items: center;
+    `}
 
-  animation: dash 0.3s linear both;
-  @keyframes dash {
-    0% {
-      opacity: 0;
-      bottom: -50px;
-    }
-    100% {
-      opacity: 1;
-      bottom: 0;
-    }
+  &:hover {
+    background: var(--seed-surface-alt);
   }
 `;
 
-const ToastAlertItem = styled(ToastDefault)`
-  ${({ type }) => {
-    let borderColor = '';
-    switch (type) {
-      case 'success':
-        borderColor = '#03a7f1';
-        break;
-      case 'error':
-        borderColor = 'var(--seed-primary)';
-        break;
-      default:
-        borderColor = 'var(--x-e9e9e9)';
-        break;
-    }
-    return css`
-      border-left: 5px solid ${borderColor};
-    `;
-  }}
-  box-sizing: border-box;
-  overflow-y: auto;
-  white-space: pre-wrap;
-  overflow-x: hidden;
-  word-wrap: break-word;
+const GlyphBox = styled.span`
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--notify-tone);
+  color: #fff;
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
 `;
 
-const ToastConfirmItem = styled(ToastDefault)`
+const TextBox = styled.div`
+  min-width: 0;
+  display: flex;
   flex-direction: column;
-  & > div {
-    width: 100%;
-  }
-  ${({ type }) => {
-    if (type === 'error') {
-      return css`
-        border-left: 5px solid var(--seed-primary);
-      `;
-    }
-    return '';
-  }}
+  gap: 2px;
 `;
 
-const ToastConfirmHeader = styled.div`
+const Title = styled.div`
   font-size: 16px;
-  font-weight: bold;
-`;
-
-const ToastConfirmBody = styled.div`
-  padding: 6px 0 0;
-  max-height: 200px;
-  box-sizing: border-box;
-  overflow-y: auto;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--seed-text);
   white-space: pre-wrap;
-  overflow-x: hidden;
-  word-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 `;
 
-const ToastConfirmFooter = styled.div`
+const Message = styled.div`
+  color: var(--seed-text-secondary);
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  ${({ scroll }) =>
+    scroll &&
+    css`
+      max-height: 200px;
+      overflow-y: auto;
+    `}
+`;
+
+const DetailBox = styled.details`
+  grid-column: 2;
+  margin-top: 12px;
+
+  summary {
+    cursor: pointer;
+    font-size: 12.5px;
+    color: var(--seed-text-secondary);
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    user-select: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.15s;
+  }
+  &[open] summary svg {
+    transform: rotate(90deg);
+  }
+`;
+
+const DetailBody = styled.div`
+  position: relative;
+  margin-top: 8px;
+  background: var(--seed-surface-alt);
+  border: 1px solid var(--seed-border);
+  border-radius: 8px;
+
+  pre {
+    margin: 0;
+    padding: 10px 12px;
+    font: 12px/1.55 ui-monospace, Consolas, monospace;
+    max-height: 140px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+`;
+
+const CopyButton = styled.button`
+  float: right;
+  position: relative;
+  z-index: 1;
+  margin: 6px 6px 0 8px;
+  padding: 2px 8px;
+  font-size: 11.5px;
+  color: var(--seed-text-secondary);
+  background: var(--seed-surface);
+  border: 1px solid var(--seed-border);
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+const Footer = styled.div`
+  grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
-  gap: 15px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+`;
+
+const DangerButton = styled(BlackButton)`
+  background: var(--seed-danger);
+  border-color: transparent;
+  color: #fff;
+
+  :hover {
+    background: var(--seed-danger);
+    color: #fff;
+    filter: brightness(0.94);
+  }
 `;
