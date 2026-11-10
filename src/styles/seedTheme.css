@@ -65,7 +65,10 @@
   /* 주 버튼(BlackButton) — 선택상태와 달리 새하양이 아닌 차분한 채움 + 명확한 hover */
   --seed-btn-primary-bg: #3e3e3e;
   --seed-btn-primary-text: #ffffff;
-  --seed-btn-primary-hover: #455a64;
+  --seed-btn-primary-hover: #555555;
+  /* 보조 버튼(WhiteButton) hover + 버튼 클릭 테두리 — 무채색 */
+  --seed-btn-secondary-hover: #f0f0f0;
+  --seed-btn-active-outline: #bdbdbd;
 
   /* 스크롤바/그림자/오버레이 */
   --seed-subject-bg: transparent; /* InputGrid Title: 라이트=투명(원본), 다크만 배경 */
@@ -136,6 +139,8 @@
   --seed-btn-primary-bg: #6d6d6d;
   --seed-btn-primary-text: #ffffff;
   --seed-btn-primary-hover: #828282;
+  --seed-btn-secondary-hover: #3a3a3a;
+  --seed-btn-active-outline: #5a5a5a;
 
   --seed-subject-bg: #2b2b2b;
   --seed-scrollbar-track: #2b2b2b;

@@ -86,11 +86,11 @@ const Button = styled.button`
   max-height: 32px;
 
   :hover {
-    background-color: var(--seed-hover-strong);
+    background-color: var(--seed-btn-secondary-hover);
   }
 
   :active {
-    outline: 3px solid var(--x-b0bec5);
+    outline: 3px solid var(--seed-btn-active-outline);
   }
 `;
 
@@ -102,10 +102,6 @@ const BlackBtn = styled(Button)`
     background-color: var(--seed-btn-primary-hover);
     color: var(--seed-btn-primary-text);
   }
-
-  &.showComp {
-    background-color: #6674fe !important;
-  }
 `;
 
 const WhiteBtn = styled(Button)`
@@ -113,7 +109,8 @@ const WhiteBtn = styled(Button)`
   background: var(--seed-surface);
   :hover,
   :active {
-    color: var(--seed-invert-text);
+    background-color: var(--seed-btn-secondary-hover);
+    color: var(--seed-text);
   }
 `;
 
