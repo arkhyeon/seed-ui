@@ -47,9 +47,9 @@ const GLYPH = {
   info: <path d="M6 5.4v3.8M6 2.9v.1" />,
 };
 
-function Glyph({ tone }) {
+function Glyph({ tone, flush }) {
   return (
-    <GlyphBox aria-hidden="true">
+    <GlyphBox aria-hidden="true" flush={flush}>
       <svg
         viewBox="0 0 12 12"
         fill="none"
@@ -111,10 +111,10 @@ function ToastAlert({ id, content, interval, type }) {
       onMouseEnter={pause}
       onMouseLeave={arm}
     >
-      <Glyph tone={tone} />
+      <Glyph tone={tone} flush={!title} />
       <TextBox>
         {title && <Title>{title}</Title>}
-        <Message>{message}</Message>
+        <Message solo={!title}>{message}</Message>
       </TextBox>
     </ToastCard>
   );
@@ -171,11 +171,11 @@ function ToastConfirm({ title, message = '', detail, buttons, type = '' }) {
       hasIcon={isError || isDanger}
       onKeyDown={trapTab}
     >
-      {(isError || isDanger) && <Glyph tone={tone} />}
+      {(isError || isDanger) && <Glyph tone={tone} flush={!title} />}
       <TextBox scroll>
         {/* 제목 없이 문장만 오면(CLM.alertError('…'), confirm({ message })) 그 문장을 제목 자리에 */}
-        <Title>{title || message}</Title>
-        {title && message && <Message>{message}</Message>}
+        {title && <Title>{title}</Title>}
+        {message && <Message solo={!title}>{message}</Message>}
       </TextBox>
       {detail && <Detail text={detail} />}
       <Footer>
@@ -257,7 +257,7 @@ const dropIn = keyframes`
 
 const ToastWrap = styled.div`
   position: fixed;
-  top: 16px;
+  top: 60px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 99999; /* 확인창(99998) 위, GuideTour(100000) 아래 */
@@ -276,12 +276,12 @@ const DimOverlay = styled.div`
   z-index: 99998;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 120px 16px 16px;
+  align-items: center;
+  padding: 16px;
   animation: ${fadeIn} 0.16s ease-out both;
 `;
 
-// 확인창·토스트 공통 카드: 왼쪽 끝 3px 색 선
+// 확인창·토스트 공통 카드: 왼쪽 3px 색 선(border-left)
 const cardBase = ({ tone }) => css`
   --notify-tone: ${TONE_COLOR[tone] ?? TONE_COLOR.plain};
   position: relative;
@@ -291,6 +291,7 @@ const cardBase = ({ tone }) => css`
   max-width: 100%;
   background: var(--seed-surface);
   color: var(--seed-text);
+  border-left: 3px solid var(--notify-tone);
   border-radius: 10px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 32px -8px rgba(0, 0, 0, 0.28);
   display: grid;
@@ -300,19 +301,11 @@ const cardBase = ({ tone }) => css`
   font-size: 14px;
   line-height: 1.5;
   text-align: left;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 3px;
-    background: var(--notify-tone);
-  }
 `;
 
 const ConfirmCard = styled.div`
   ${cardBase}
-  padding: 18px 20px 16px 22px;
+  padding: 18px 20px 16px 19px;
   outline: none;
   animation: ${popIn} 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
   ${({ hasIcon }) =>
@@ -329,7 +322,7 @@ const ConfirmCard = styled.div`
 
 const ToastCard = styled.div`
   ${cardBase}
-  padding: 16px 20px 16px 22px;
+  padding: 16px 20px 16px 19px;
   cursor: pointer;
   user-select: none;
   pointer-events: all;
@@ -351,7 +344,8 @@ const GlyphBox = styled.span`
   place-items: center;
   width: 20px;
   height: 20px;
-  margin-top: 1px; /* 제목 줄 높이 22px 안에서 세로 가운데 */
+  /* 제목 줄(22px) 또는 본문 줄(20px) 안에서 세로 가운데 */
+  margin-top: ${({ flush }) => (flush ? '0' : '1px')};
   border-radius: 50%;
   background: var(--notify-tone);
   color: #fff;
@@ -388,6 +382,12 @@ const Title = styled.div`
 const Message = styled.div`
   color: var(--seed-text-secondary);
   line-height: 1.45;
+  ${({ solo }) =>
+    solo &&
+    css`
+      color: var(--seed-text);
+      line-height: 20px;
+    `}
   white-space: pre-wrap;
   word-break: keep-all;
   overflow-wrap: anywhere;
