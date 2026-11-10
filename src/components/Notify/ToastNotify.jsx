@@ -172,9 +172,10 @@ function ToastConfirm({ title, message = '', detail, buttons, type = '' }) {
       onKeyDown={trapTab}
     >
       {(isError || isDanger) && <Glyph tone={tone} />}
-      <TextBox>
-        {title && <Title>{title}</Title>}
-        {message && <Message scroll>{message}</Message>}
+      <TextBox scroll>
+        {/* 제목 없이 문장만 오면(CLM.alertError('…'), confirm({ message })) 그 문장을 제목 자리에 */}
+        <Title>{title || message}</Title>
+        {title && message && <Message>{message}</Message>}
       </TextBox>
       {detail && <Detail text={detail} />}
       <Footer>
@@ -297,7 +298,7 @@ const cardBase = ({ tone }) => css`
   column-gap: 10px;
   align-items: start;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
   text-align: left;
 
   &::before {
@@ -350,7 +351,7 @@ const GlyphBox = styled.span`
   place-items: center;
   width: 20px;
   height: 20px;
-  margin-top: 2px;
+  margin-top: 1px; /* 제목 줄 높이 22px 안에서 세로 가운데 */
   border-radius: 50%;
   background: var(--notify-tone);
   color: #fff;
@@ -365,13 +366,19 @@ const TextBox = styled.div`
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  ${({ scroll }) =>
+    scroll &&
+    css`
+      max-height: 60vh;
+      overflow-y: auto;
+    `}
 `;
 
 const Title = styled.div`
   font-size: 16px;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 22px;
   color: var(--seed-text);
   white-space: pre-wrap;
   word-break: keep-all;
@@ -380,15 +387,10 @@ const Title = styled.div`
 
 const Message = styled.div`
   color: var(--seed-text-secondary);
+  line-height: 1.45;
   white-space: pre-wrap;
   word-break: keep-all;
   overflow-wrap: anywhere;
-  ${({ scroll }) =>
-    scroll &&
-    css`
-      max-height: 200px;
-      overflow-y: auto;
-    `}
 `;
 
 const DetailBox = styled.details`
