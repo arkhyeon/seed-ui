@@ -34,10 +34,10 @@
   --seed-danger: #e53935;
 
   /* 라벨 칩(CountList/LabelList 기본 칩 색; 컴포넌트 color prop 으로 개별 override 가능) */
-  --seed-chip-bg: #78909c;
+  --seed-chip-bg: #3e3e3e;
   --seed-chip-text: #ffffff;
 
-  /* 공통 Chip(둥근 이름표) — 위 --seed-chip-bg/text(그리드 라벨 청회색)와 별개 */
+  /* 공통 Chip(둥근 이름표) — 위 --seed-chip-bg/text(그리드 라벨 짙은 회색)와 별개 */
   --seed-chip-neutral-bg: #f0f0f0;     /* neutral: 연회색 바탕 */
   --seed-chip-neutral-text: #545454;
   --seed-chip-strong-bg: #1a1a1a;      /* strong/active: 진한 바탕 */
@@ -111,7 +111,7 @@
   --seed-primary: #fb5b5b;
   --seed-danger: #ff6b6b;
 
-  --seed-chip-bg: #37474f;
+  --seed-chip-bg: #4a4a4a;
   --seed-chip-text: #e0e0e0;
 
   --seed-chip-neutral-bg: #333333;
