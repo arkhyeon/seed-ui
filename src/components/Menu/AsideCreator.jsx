@@ -44,10 +44,10 @@ const Container = styled.div`
     top: 0;
     left: 0;
     z-index: 10;
-    background-color: white;
+    background-color: var(--seed-surface);
     border-bottom: 1px solid var(--seed-border);
     transition: 0.2s;
-    color: black;
+    color: var(--x-black);
 
     ${({ hide }) => {
       return (
