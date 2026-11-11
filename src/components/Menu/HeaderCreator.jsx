@@ -31,7 +31,7 @@ const HeaderWrap = styled.header`
   justify-content: space-between;
   align-items: center;
   height: 55px;
-  background-color: #3e3e3e;
+  background-color: var(--seed-header-bg);
 
   & > a {
     display: flex;

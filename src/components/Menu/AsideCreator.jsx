@@ -45,7 +45,7 @@ const Container = styled.div`
     left: 0;
     z-index: 10;
     background-color: white;
-    border-bottom: 1px solid #d2d2d2;
+    border-bottom: 1px solid var(--seed-border);
     transition: 0.2s;
     color: black;
 
@@ -114,24 +114,24 @@ const AsideWrap = styled.div`
   & > ul > li > a {
     &.active {
       font-weight: bold;
-      color: white;
-      background-color: #3e3e3e !important;
+      color: var(--seed-emphasis-text);
+      background-color: var(--seed-emphasis-bg) !important;
     }
   }
 
   & ul li ul li:has(a.active) {
     &:before {
-      background: #3e3e3e;
+      background: var(--seed-emphasis-bg);
     }
   }
 `;
 
 const SideTitle = styled.div`
   font-size: 15px;
-  color: #212529;
+  color: var(--seed-text);
   border-radius: 5px;
   padding: 10px 15px;
-  background-color: #eceff1;
+  background-color: var(--seed-surface-header);
   display: flex;
   justify-content: space-between;
 

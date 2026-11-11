@@ -131,22 +131,22 @@ const CheckBoxWrap = styled.div`
       -webkit-appearance: none;
       appearance: none;
       border-radius: 0.15em;
-      border: 1px solid #545454;
+      border: 1px solid var(--seed-text-secondary);
       outline: none;
       cursor: pointer;
 
       &:disabled {
-        border: 1px solid #d1d1d1;
-        background-color: #f9f9f9;
+        border: 1px solid var(--x-d1d1d1);
+        background-color: var(--x-f9f9f9);
         cursor: not-allowed;
       }
 
       &:checked {
-        background-color: #545454;
+        background-color: var(--seed-text-secondary);
 
         &::before {
           content: '\\2714';
-          color: #ffffff;
+          color: var(--seed-surface);
           /* 18px 기준(글자 14px, 오른쪽·위 2px) 비율로 크기·위치 맞춤 */
           font-size: ${({ $size }) => ($size * 14) / 18}px;
           position: relative;
@@ -157,11 +157,11 @@ const CheckBoxWrap = styled.div`
 
       /* 체크된 채 잠김: 채운 배경 대신 잠긴 칸 + 회색 체크 → 일반 체크보다 약해 보이게 */
       &:disabled:checked {
-        border-color: #d1d1d1;
-        background-color: #f9f9f9;
+        border-color: var(--x-d1d1d1);
+        background-color: var(--x-f9f9f9);
 
         &::before {
-          color: #aaaaaa;
+          color: var(--x-aaa);
         }
       }
     }

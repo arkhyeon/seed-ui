@@ -93,7 +93,7 @@ const CreateMenuList = styled.ul`
   & > li:hover > a {
     color: white;
     font-weight: bold;
-    background-color: #fb5b5b;
+    background-color: var(--seed-primary);
     border-radius: 10px 10px 0 0;
   }
 `;

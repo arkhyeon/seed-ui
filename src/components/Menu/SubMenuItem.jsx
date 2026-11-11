@@ -113,10 +113,10 @@ const List = styled.ul`
   flex-direction: column;
   display: flex;
   padding: 10px 0;
-  border: 1px solid #d2d2d2;
+  border: 1px solid var(--seed-border);
   border-radius: 5px;
-  background-color: white;
-  box-shadow: 1px 1px 3px 0px #d2d2d2;
+  background-color: var(--seed-surface);
+  box-shadow: 1px 1px 3px 0px var(--seed-border);
 
   .subMenuItem {
     width: 100%;
@@ -129,14 +129,14 @@ const List = styled.ul`
 const Item = styled.li`
   & ul li:hover > a {
     font-weight: bold;
-    background-color: #e8eefb;
+    background-color: var(--seed-hover);
   }
 
   & ul li .active,
   & ul li.mainActive:active > a {
-    color: #ffffff;
+    color: var(--seed-emphasis-text);
     font-weight: bold;
-    background-color: #3e3e3e !important;
+    background-color: var(--seed-emphasis-bg) !important;
   }
 
   & a {
@@ -147,7 +147,7 @@ const Item = styled.li`
     width: 190px;
     height: 38px;
     font-size: 14px;
-    color: #212529;
+    color: var(--seed-text);
     display: flex;
     align-items: center;
     padding: 0 15px;
