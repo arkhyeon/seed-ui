@@ -173,7 +173,7 @@ function ToastConfirm({ title, message = '', detail, buttons, type = '' }) {
     >
       {(isError || isDanger) && <Glyph tone={tone} flush={!title} />}
       <TextBox scroll>
-        {/* 제목 없이 문장만 오면(CLM.alertError('…'), confirm({ message })) 그 문장을 제목 자리에 */}
+        {/* 제목 없이 문장만 오면(CLM.alertError('…'), confirm({ message })) 제목 없이 본문(solo)으로만 */}
         {title && <Title>{title}</Title>}
         {message && <Message solo={!title}>{message}</Message>}
       </TextBox>
