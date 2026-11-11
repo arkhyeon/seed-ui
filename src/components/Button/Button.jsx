@@ -80,7 +80,8 @@ const Button = styled.button`
   font-size: 13px;
   border-radius: 5px;
   padding: 7px 13px 8px 13.5px;
-  transition: 0.3s;
+  /* all 이면 outline 까지 애니메이션돼 누르는 동안 테두리가 자라남 → 색만 전환 */
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   cursor: pointer;
   border: 1px solid var(--seed-border);
   max-height: 32px;
@@ -89,8 +90,15 @@ const Button = styled.button`
     background-color: var(--seed-btn-secondary-hover);
   }
 
+  /* 눌림: 바깥 링 대신 살짝 어둡게 — 크기 변화 없음 */
   :active {
-    outline: 3px solid var(--seed-btn-active-outline);
+    filter: brightness(0.92);
+  }
+
+  /* 키보드 포커스만 링 표시 */
+  :focus-visible {
+    outline: 2px solid var(--seed-btn-active-outline);
+    outline-offset: 1px;
   }
 `;
 
