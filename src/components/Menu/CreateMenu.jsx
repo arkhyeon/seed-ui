@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import SubMenuItem from './SubMenuItem';
 import MenuContext from './MenuContext';
+import { Z_LAYER } from '../../common/zLayer';
 
 /**
  * @param {Array} menus
@@ -78,7 +79,8 @@ const CreateMenuList = styled.ul`
   justify-content: center;
   gap: 0;
   position: relative;
-  z-index: 10;
+  // 화면에서 연 선택 목록·달력(1500)보다 위, 모달(9999)보다 아래 — common/zLayer.js
+  z-index: ${Z_LAYER.HEADER};
 
   & > li {
     & > a {

@@ -568,6 +568,7 @@ const COMPONENT_DOCS = {
 
   // ─── 문서 페이지 (함수) ──────────────────────
   tourTarget: { badge: 'NEW' },
+  zLayer: { badge: 'NEW' },
 };
 
 export default COMPONENT_DOCS;

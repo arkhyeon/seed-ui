@@ -132,6 +132,9 @@ export { DNDWrapper };
 
 export { EscStack };
 
+// 겹침 순서(z-index) 층 — 직접 만든 팝업·드롭다운도 같은 층을 쓰도록 공개
+export { Z_LAYER, getFloatingZIndex } from '../common/zLayer';
+
 export {
   ToastNotify,
   CLM,

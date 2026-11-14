@@ -144,7 +144,10 @@ ref를 달 수 없는 ag-grid 내부, 모달 하단 버튼, 표의 한 열, GoJS
 | **Layout** | `Accordion` · `DividingLine` · `Card` · `OptionCard` |
 | **Data** | `Counter` · `CountList` · `LabelList` |
 | **Menu** | `HeaderCreator` · `AsideCreator` · `SetRoute` |
-| **Utility** | `DNDWrapper` · `Slider` · `EscStack` · `tourTarget` <sup>NEW</sup> |
+| **Utility** | `DNDWrapper` · `Slider` · `EscStack` · `tourTarget` <sup>NEW</sup> · `Z_LAYER` <sup>NEW</sup> |
+
+> **겹침 순서 (z-index)** — 화면에서 연 목록·달력 `1500` < 상단 메뉴 `2000` < 모달 `9999` < 모달 안 목록 `10000` < 알림 `99998~`.
+> 떠있는 요소는 열릴 때 자리에 맞춰 자동으로 정해집니다. 직접 만든 팝업은 `Z_LAYER` · `getFloatingZIndex`를 쓰세요. (플레이그라운드 `zLayer`)
 
 ### 메뉴 데이터 하나로 헤더 · 사이드 메뉴 · 라우트
 
