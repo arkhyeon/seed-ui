@@ -103,6 +103,10 @@ const List = styled.ul`
     float: left;
   }
   position: absolute;
+  /* 하위 메뉴만 열린 선택 목록·달력(DataList·DatePicker 등 10000)보다 위.
+     상단 메뉴 막대 자체는 층이 없어, 위로 펼쳐진 목록·달력이 막대를 덮는다.
+     모달(9999)이 떠 있으면 막대가 덮개 아래라 하위 메뉴가 열리지 않음. 알림(99998~)보다는 아래 */
+  z-index: 10001;
   /* isOpen(=visible)에 따라 opacity/transform으로 fade in/out.
      닫히면 상위(useMountTransition)에서 transition 시간만큼 지연 후 unmount하므로
      fade-out이 정상 재생되고, 닫힌 뒤에는 DOM에서 제거된다. */

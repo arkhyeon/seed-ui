@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import SubMenuItem from './SubMenuItem';
 import MenuContext from './MenuContext';
-import { Z_LAYER } from '../../common/zLayer';
 
 /**
  * @param {Array} menus
@@ -79,8 +78,8 @@ const CreateMenuList = styled.ul`
   justify-content: center;
   gap: 0;
   position: relative;
-  // 화면에서 연 선택 목록·달력(1500)보다 위, 모달(9999)보다 아래 — common/zLayer.js
-  z-index: ${Z_LAYER.HEADER};
+  /* z-index 를 두지 않음: 여기서 층을 만들면 하위 메뉴(List)가 이 층 안에 갇혀
+     열린 선택 목록·달력(10000)보다 위로 못 올라감. 하위 메뉴 층은 SubMenuItem List 에서 지정 */
 
   & > li {
     & > a {

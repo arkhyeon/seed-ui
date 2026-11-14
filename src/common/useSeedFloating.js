@@ -1,6 +1,5 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFloating, offset, flip, shift, size, hide, autoUpdate } from '@floating-ui/react-dom';
-import { getFloatingZIndex, Z_LAYER } from './zLayer';
 
 // 트리거가 다른 요소(고정 푸터·그리드 하단 영역 등)에 '덮여' 안 보이는지 검사.
 // hide()는 조상 overflow로 잘린 경우만 잡으므로, 트리거 중앙 지점의 최상단 요소로 가림 여부를 본다.
@@ -99,17 +98,5 @@ export default function useSeedFloating(
     };
   }, [open, refs]);
 
-  // 겹침 순서: 열릴 때 트리거가 속한 층 바로 위 (화면 1500 / 모달 안 10000) — common/zLayer.js 참고
-  const [zIndex, setZIndex] = useState(Z_LAYER.PAGE_FLOATING);
-  useLayoutEffect(() => {
-    if (!open) return;
-    setZIndex(getFloatingZIndex(refs.reference.current));
-  }, [open, refs]);
-
-  const floatingStyles = useMemo(
-    () => ({ ...floating.floatingStyles, zIndex }),
-    [floating.floatingStyles, zIndex],
-  );
-
-  return { ...floating, floatingStyles, referenceDetached };
+  return { ...floating, referenceDetached };
 }
