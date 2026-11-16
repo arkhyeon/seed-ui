@@ -189,12 +189,16 @@ function Modal({
     return () => window.removeEventListener('resize', handleCenter);
   }, [handleCenter]);
 
-  // ESC: EscStack에 등록
+  // ESC: EscStack에 등록 (마운트 때 한 번만).
+  // handleClose가 인라인 함수라 매 렌더마다 바뀌어도 다시 push하지 않음 →
+  // 모달 안에서 나중에 연 DataList·Popover보다 스택 위로 올라가 ESC를 가로채는 일 방지
+  const handleCloseRef = useRef(handleClose);
+  handleCloseRef.current = handleClose;
   useLayoutEffect(() => {
-    const handler = () => handleClose?.();
+    const handler = () => handleCloseRef.current?.();
     EscStack.push(handler);
     return () => EscStack.remove(handler);
-  }, [handleClose]);
+  }, []);
 
   // Enter: 마지막 버튼 실행 (모달 안 버튼에 포커스가 있으면 그 버튼의 기본 동작만)
   // 모달이 겹치면 화면 맨 위(DOM상 마지막) 모달만 처리

@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import useSeedFloating from '../../common/useSeedFloating';
 import { FLOATING_PROP, clickedInsideFloating } from '../../common/floating';
+import EscStack from '../../common/EscStack';
 import { TextInput } from '../InputComp/InputComponent';
 import { PickerInputIcon, Wrapper, panelStyle, headerBand } from './dateComponents/PickerShared';
 
@@ -65,11 +66,8 @@ function QuickInput({ text, setText, invalid, onEnter, placeholder }) {
     if (e.key === 'Enter') {
       e.preventDefault();
       onEnter();
-    } else if (e.key === 'Escape' && text) {
-      // 입력 중 Esc는 입력만 지우고 패널은 유지
-      e.preventDefault();
-      setText('');
     }
+    // Esc(입력 지우기 / 닫기)는 TimePicker의 EscStack 핸들러가 처리
   };
 
   return (
@@ -180,20 +178,27 @@ function TimePicker({ time = '00:00', itemHeight = 32, onChange = () => {}, disa
     change(`${pad(now.getHours())}:${pad(now.getMinutes())}`);
   };
 
-  // 바깥 클릭 / Esc 로 닫기
+  // 바깥 클릭으로 닫기
   useEffect(() => {
     if (!isOpen) return undefined;
     const onDown = ({ target }) => {
       if (wrapperRef.current?.contains(target) || clickedInsideFloating(target)) return;
       setIsOpen(false);
     };
-    const onKey = e => e.key === 'Escape' && !e.defaultPrevented && setIsOpen(false);
     document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
-    };
+    return () => document.removeEventListener('mousedown', onDown);
+  }, [isOpen]);
+
+  // Esc: 열려 있는 동안 EscStack에 등록 → 모달 안에서도 패널이 먼저 닫힘.
+  // 직접 입력 중이면 입력만 지우고 패널은 유지, 비어 있으면 닫기.
+  // typed는 ref로 읽어 입력할 때마다 다시 push되지 않게 함(스택 순서 유지)
+  const typedRef = useRef(typed);
+  typedRef.current = typed;
+  useLayoutEffect(() => {
+    if (!isOpen) return undefined;
+    const handler = () => (typedRef.current ? setTyped('') : setIsOpen(false));
+    EscStack.push(handler);
+    return () => EscStack.remove(handler);
   }, [isOpen]);
 
   return (

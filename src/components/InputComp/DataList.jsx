@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
+import EscStack from '../../common/EscStack';
 import useSeedFloating from '../../common/useSeedFloating';
 import { FLOATING_PROP } from '../../common/floating';
 import { DataListInput } from './InputComponent';
@@ -80,6 +81,15 @@ function DataList({
     return () => document.removeEventListener('mousedown', closeList);
   }, [closeList]);
 
+  // Esc로 목록 닫기: 열려 있는 동안 EscStack에 등록.
+  // EscStack이 document 캡처 단계에서 Esc를 먼저 가로채므로(모달 등), 여기 올려야 목록이 먼저 닫힘
+  useLayoutEffect(() => {
+    if (!isListOpen) return undefined;
+    const handler = () => setListOpen(false);
+    EscStack.push(handler);
+    return () => EscStack.remove(handler);
+  }, [isListOpen]);
+
   const arrowMove = useCallback(
     e => {
       const children = dataListWrapRef.current?.children;
@@ -104,9 +114,8 @@ function DataList({
           const originalValue = valueList.find(v => String(v) === attrValue);
           handleItemClick(originalValue ?? attrValue);
         }
-      } else if (e.keyCode === 27) {
-        setListOpen(false);
       }
+      // Esc는 EscStack 핸들러(아래 useLayoutEffect)가 처리
     },
     [isListOpen, handleItemClick, valueList],
   );
