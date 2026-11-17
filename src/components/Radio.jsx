@@ -59,7 +59,7 @@ function Radio({
       }
       setValue(el.value);
     },
-    [setValue],
+    [setValue, disabled],
   );
 
   const renderOption = useCallback(() => {
@@ -70,12 +70,13 @@ function Radio({
             key={`label-${el.value}`}
             onClick={() => handleValue(el)}
             labelOutSpacing={labelOutSpacing}
-            disabled={value !== el.value && (disabled || el.disabled)}
+            // 선택된 항목도 비활성이면 흐리게 (이전엔 선택 안 된 항목만 흐려져 선택값은 활성처럼 보였음)
+            disabled={disabled || el.disabled}
           >
             <CheckWrapper
               checkColor={checkColor}
               labelInSpacing={labelInSpacing}
-              hoverColor={hoverColor}
+              hoverColor={disabled || el.disabled ? 'transparent' : hoverColor}
               type={type}
               value={el.value}
               checked={value === el.value}
@@ -93,7 +94,17 @@ function Radio({
         ))}
       </OptionWrapper>
     );
-  }, [handleValue, hoverColor, labelInSpacing, labelOutSpacing, list, value, type, checkColor]);
+  }, [
+    handleValue,
+    hoverColor,
+    labelInSpacing,
+    labelOutSpacing,
+    list,
+    value,
+    type,
+    checkColor,
+    disabled,
+  ]);
 
   return renderOption();
 }
@@ -171,7 +182,7 @@ const Check = styled.div`
 const Label = styled.label`
   display: flex;
   align-items: center;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   gap: 6px;
   opacity: ${({ disabled }) => disabled && 0.5};
 
