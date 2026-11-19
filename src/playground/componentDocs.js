@@ -54,6 +54,12 @@ const COMPONENT_DOCS = {
     props: [
       fn('items', 'Array<string | { key?, label, ...Chip props }>', '칩 목록'),
       fn('max', 'number', '보여줄 개수 (없으면 전부)', true),
+      fn(
+        'fit',
+        'boolean',
+        '부모 너비에 들어가는 만큼만 보여줌. max 와 같이 쓰면 작은 쪽 (부모 너비를 다 차지)',
+        true,
+      ),
       fn('chipProps', 'object', '모든 칩 공통 props (size·shape·tone 등)', true),
       fn('popoverTitle', 'string', '넘친 목록 창 제목', true),
       fn('popoverWidth', 'number | string', '넘친 목록 창 너비', true),
@@ -61,7 +67,10 @@ const COMPONENT_DOCS = {
       fn('gap', 'number', '칩 간격 px (기본 4)', true),
       fn('empty', 'ReactNode', '항목이 없을 때 표시', true),
     ],
-    notes: ['넘친 목록에서 칩을 클릭하면 onClick 실행 후 창이 닫힙니다.'],
+    notes: [
+      '넘친 목록에서 칩을 클릭하면 onClick 실행 후 창이 닫힙니다.',
+      'fit 은 "+N" 자리까지 남기고 계산하며, 첫 칩 하나도 안 들어가면 그 칩만 말줄임으로 보여줍니다.',
+    ],
   },
 
   // ─── Buttons ─────────────────────────────────

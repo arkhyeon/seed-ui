@@ -2182,6 +2182,12 @@ const steps = useMemo(() => [
     name: 'ChipList',
     controls: [
       { key: 'max', type: 'number', default: 2, desc: '보여줄 칩 개수. 나머지는 "+N ▾" Popover' },
+      {
+        key: 'fit',
+        type: 'boolean',
+        default: false,
+        desc: '부모 너비에 들어가는 만큼만 (max 와 같이 쓰면 작은 쪽)',
+      },
       { key: 'size', type: 'select', options: ['xs', 'sm', 'md'], default: 'md' },
       { key: 'popoverTitle', type: 'text', default: '업무 그룹' },
       { key: 'width', type: 'text', default: '260px', desc: '감싸는 영역 너비 (좁히면 말줄임)' },
@@ -2193,6 +2199,7 @@ const steps = useMemo(() => [
         { key: 3, label: '배치 작업', dot: '#ffa726' },
         { key: 4, label: '리포트', dot: '#ab47bc' },
         { key: 5, label: '공통', dot: '#78909c' },
+        { key: 6, label: '아주 긴 이름의 업무 그룹 예시입니다', dot: '#ef5350' },
       ].map(it => ({ ...it, onClick: () => CLM.alertInfo(`${it.label} 이동`) }));
       return (
         <ChipDemo>
@@ -2201,6 +2208,7 @@ const steps = useMemo(() => [
               <ChipList
                 items={items}
                 max={p.max}
+                fit={p.fit}
                 chipProps={{ size: p.size }}
                 popoverTitle={p.popoverTitle}
               />
@@ -2212,7 +2220,7 @@ const steps = useMemo(() => [
     snippet: p => `import { ChipList } from 'seed-ui';
 
 <ChipList
-  max={${p.max}}
+  max={${p.max}}${p.fit ? '\n  fit' : ''}
   chipProps={{ size: '${p.size}' }}
   popoverTitle="${p.popoverTitle}"
   items={groups.map(g => ({
