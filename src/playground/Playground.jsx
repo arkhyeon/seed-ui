@@ -870,18 +870,62 @@ const stories = [
     name: 'DataList',
     controls: [
       { key: 'select', type: 'boolean', default: true },
+      { key: 'searchable', type: 'boolean', default: true },
       { key: 'placeholder', type: 'text', default: '선택하세요' },
+      { key: 'emptyText', type: 'text', default: '검색 결과 없음' },
       { key: 'height', type: 'text', default: '200px' },
       { key: 'disabled', type: 'boolean', default: false },
-      { key: 'valueList', type: 'json', default: '["서울", "부산", "대구", "인천", "광주"]' },
-      { key: 'labelList', type: 'json', default: '[]' },
+      {
+        key: 'valueList',
+        type: 'json',
+        default: JSON.stringify(Array.from({ length: 30 }, (_, i) => 101 + i)),
+      },
+      {
+        // 한글(초성 검색 확인용)·영문 섞인 업무그룹/서버 이름 예시
+        key: 'labelList',
+        type: 'json',
+        default: JSON.stringify([
+          '고객정보 파기',
+          '고객 해지 분리보관',
+          '계약 이력 정리',
+          '신규 업무그룹',
+          '서버 이관 테스트',
+          '사내 재현용',
+          '정보계 원장',
+          '정산 배치',
+          '복원 임시그룹',
+          '분리보관 삭제 쿼리',
+          '카드 승인 내역',
+          '카드 회원 해지',
+          '대출 상환 이력',
+          '예금 계좌 해지',
+          '모듈 테스트',
+          'ORA_01',
+          'ORA_02',
+          'MSSQL_03',
+          'TIBERO_04',
+          'DB2_05',
+          'MYSQL_06',
+          'PG_07',
+          'CLM-ORA11G26_DST',
+          'CLM-ORA11G26_ORG',
+          '[QA] 테스트 코드 01',
+          '[공통] 모듈테스트',
+          '거래종료 추출',
+          '거래종료 검증',
+          '통합테스트',
+          '시계열 테스트',
+        ]),
+      },
     ],
-    initialState: { value: '' },
+    initialState: { value: 101 },
     render: (p, { state, setState }) => (
       <div style={{ width: 240 }}>
         <DataList
           select={p.select}
+          searchable={p.searchable}
           placeholder={p.placeholder}
+          emptyText={p.emptyText}
           height={p.height}
           disabled={p.disabled}
           valueList={parseJson(p.valueList, [])}
@@ -889,17 +933,22 @@ const stories = [
           defaultValue={state.value}
           setData={v => setState({ value: v })}
         />
+        <div style={{ marginTop: 8, fontSize: 12, color: 'var(--seed-text-muted, #868e96)' }}>
+          현재 값(setData): {JSON.stringify(state.value)}
+        </div>
       </div>
     ),
-    snippet: p => `const [value, setValue] = useState('');
+    snippet: p => `const [serverId, setServerId] = useState(101);
 
 <DataList
   select={${p.select}}
+  searchable={${p.searchable}}
   placeholder="${p.placeholder}"
   height="${p.height}"
-  valueList={['서울', '부산', '대구']}
-  defaultValue={value}
-  setData={setValue}
+  valueList={serverList.map(s => s.serverid)}
+  labelList={serverList.map(s => s.server_name)}
+  defaultValue={serverId}
+  setData={setServerId}
 />`,
   },
   {

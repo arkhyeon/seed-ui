@@ -9,10 +9,6 @@ export const theme = {
     hoverFontColor: '#EEEEEE',
     divideLine: '#ebebeb',
   },
-  dataListStyle: {
-    hoverBackgroundColor: 'black',
-    hoverColor: 'white',
-  },
   paginationStyle: {
     backgroundColor: 'white',
     fontColor: 'red',

@@ -169,11 +169,35 @@ const COMPONENT_DOCS = {
     props: [fn('value', 'number', '현재 값'), fn('onChange', '(value) => void', '바뀌면 호출')],
   },
   DataList: {
+    badge: 'UPDATE',
     summary: '목록에서 고르거나, 입력하면서 걸러 고르는 선택칸입니다.',
-    whenToUse: ['선택지가 많아 검색이 필요한 드롭다운'],
+    whenToUse: [
+      '선택지가 많아 검색이 필요한 드롭다운 (select + searchable)',
+      '목록 밖 값도 직접 입력해야 하는 칸 (select 없이 자유입력)',
+    ],
     props: [
       fn('defaultValue', 'string', '처음 값'),
       fn('setData', '(value) => void', '선택이 바뀌면 호출'),
+      fn('select', 'boolean', '목록에서만 고르기. 입력칸은 읽기전용', true),
+      fn(
+        'searchable',
+        'boolean',
+        'select와 함께: 입력해서 목록을 거르고, 값은 항목을 골라야만 바뀜',
+        true,
+      ),
+      fn(
+        'emptyText',
+        'string',
+        "searchable에서 걸러진 항목이 없을 때 문구 (기본 '검색 결과 없음')",
+        true,
+      ),
+    ],
+    notes: [
+      'select + searchable: 입력한 글자는 값이 되지 않습니다. 고르지 않고 닫으면(바깥 클릭·Esc·Tab) 원래 선택값으로 돌아갑니다.',
+      'searchable에서 Enter는 강조된 항목을 고릅니다(검색 중엔 첫 항목). ↑↓·Home·End로 강조를 옮기고, 포커스는 입력칸에 남아 이어서 타이핑할 수 있습니다.',
+      "searchable 검색은 대소문자를 무시하고 한글 초성도 됩니다('ㄱㄹㅈㄹ' → 거래종료, '서ㅂ' → 서버). 맞는 글자는 목록에서 강조됩니다.",
+      '목록 강조: 마우스·키보드 강조는 다른 seed-ui 목록과 같은 연한 호버색, 현재 선택값은 헤더 바와 같은 짙은 회색 바탕(--seed-header-bg)입니다. 테마의 dataListStyle은 더 이상 쓰지 않습니다.',
+      'select 없이 쓰면 입력한 글자가 그대로 setData로 전달됩니다(자유입력). 값과 라벨이 다른 목록에는 쓰지 마세요.',
     ],
   },
   CustomTextArea: {
