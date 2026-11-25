@@ -193,8 +193,11 @@ function DataList({
       e.preventDefault();
       setActiveIndex(e.key === 'Home' ? 0 : last);
     } else if (e.key === 'Enter') {
+      // 목록이 닫혀 있으면 막지 않음 → 모달의 'Enter = 마지막 버튼' 등 바깥 동작이 그대로 동작
+      if (!isListOpen) return;
+      // 목록이 열려 있으면 고르는 중이므로 항상 막음 (걸러진 항목이 없어도 모달 저장이 눌리지 않게)
       e.preventDefault();
-      if (isListOpen && filteredList[activeIndex]) handleItemClick(filteredList[activeIndex].value);
+      if (filteredList[activeIndex]) handleItemClick(filteredList[activeIndex].value);
     }
     // Esc는 EscStack 핸들러가 처리, Tab은 focusin 감지로 닫힘
   };
