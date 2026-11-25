@@ -869,8 +869,7 @@ const stories = [
     category: 'Inputs',
     name: 'DataList',
     controls: [
-      { key: 'select', type: 'boolean', default: true },
-      { key: 'searchable', type: 'boolean', default: true },
+      { key: 'select', type: 'boolean', default: false },
       { key: 'placeholder', type: 'text', default: '선택하세요' },
       { key: 'emptyText', type: 'text', default: '검색 결과 없음' },
       { key: 'height', type: 'text', default: '200px' },
@@ -923,7 +922,6 @@ const stories = [
       <div style={{ width: 240 }}>
         <DataList
           select={p.select}
-          searchable={p.searchable}
           placeholder={p.placeholder}
           emptyText={p.emptyText}
           height={p.height}
@@ -940,9 +938,8 @@ const stories = [
     ),
     snippet: p => `const [serverId, setServerId] = useState(101);
 
-<DataList
-  select={${p.select}}
-  searchable={${p.searchable}}
+// 기본은 검색형. 항목이 적은 고정 목록만 select
+<DataList${p.select ? '\n  select' : ''}
   placeholder="${p.placeholder}"
   height="${p.height}"
   valueList={serverList.map(s => s.serverid)}

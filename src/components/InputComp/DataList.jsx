@@ -63,7 +63,6 @@ function DataList({
   defaultValue,
   setData,
   select = false,
-  searchable = false,
   emptyText = '검색 결과 없음',
   height = '400px',
   disabled = false,
@@ -73,9 +72,10 @@ function DataList({
   const ref = useRef();
   const dataListWrapRef = useRef();
   const [isListOpen, setListOpen] = useState(false);
-  // select + searchable: 입력은 목록 거르기용 검색어일 뿐, 값은 목록에서 골라야만 바뀐다.
-  // 검색어(query)가 null이면 선택된 값의 라벨을 보여 준다.
-  const isSearchSelect = select && searchable;
+  // 두 모드 모두 값은 목록에서 골라야만 바뀐다 (자유입력 없음).
+  // - select: 입력칸 읽기전용, 목록을 보고 고름 (항목이 적은 고정 목록)
+  // - 기본(검색형): 입력은 목록 거르기용 검색어. 검색어(query)가 null이면 선택된 값의 라벨을 보여 준다.
+  const isSearchSelect = !select;
   const [query, setQuery] = useState(null);
 
   // 검색형 키보드 탐색: 포커스는 입력칸에 둔 채 강조 위치(activeIndex)만 옮긴다 (WAI-ARIA combobox 방식)
@@ -105,34 +105,20 @@ function DataList({
     return map;
   }, [valueList, labelList]);
 
-  const displayValue = useMemo(() => {
-    if (dataMap.has(defaultValue)) {
-      return dataMap.get(defaultValue);
-    }
-    return select ? '' : defaultValue;
-  }, [defaultValue, dataMap, select]);
+  const displayValue = useMemo(
+    () => (dataMap.has(defaultValue) ? dataMap.get(defaultValue) : ''),
+    [defaultValue, dataMap],
+  );
 
   const filteredList = useMemo(() => {
     const toItem = v => ({ value: v, label: dataMap.get(v) });
-    if (isSearchSelect) {
-      if (!query) return valueList.map(toItem);
-      return valueList.reduce((acc, v) => {
-        const range = matchLabel(dataMap.get(v), query);
-        if (range) acc.push({ ...toItem(v), range });
-        return acc;
-      }, []);
-    }
-    const keyword = select ? '' : defaultValue;
-    if (!keyword) return valueList.map(toItem);
-    const lowerCaseValue = keyword.toString().toLowerCase();
-    return valueList
-      .filter(v =>
-        String(dataMap.get(v) ?? '')
-          .toLowerCase()
-          .includes(lowerCaseValue),
-      )
-      .map(toItem);
-  }, [defaultValue, valueList, dataMap, select, isSearchSelect, query]);
+    if (!isSearchSelect || !query) return valueList.map(toItem);
+    return valueList.reduce((acc, v) => {
+      const range = matchLabel(dataMap.get(v), query);
+      if (range) acc.push({ ...toItem(v), range });
+      return acc;
+    }, []);
+  }, [valueList, dataMap, isSearchSelect, query]);
 
   // 강조 위치 초기화: 검색어가 있으면 첫 항목, 없으면 현재 선택 항목
   useEffect(() => {
@@ -146,15 +132,10 @@ function DataList({
     document.getElementById(`${listboxId}-${activeIndex}`)?.scrollIntoView({ block: 'nearest' });
   }, [isSearchSelect, isListOpen, activeIndex, listboxId]);
 
+  // 검색형에서만 호출됨 (select는 읽기전용)
   const handleInputChange = e => {
-    if (isSearchSelect) {
-      setQuery(e.target.value);
-      setListOpen(true);
-      return;
-    }
-    if (!select) {
-      setData(e.target.value);
-    }
+    setQuery(e.target.value);
+    setListOpen(true);
   };
 
   const handleItemClick = useCallback(
@@ -269,7 +250,7 @@ function DataList({
             if (isSearchSelect && query === null) setQuery('');
           }}
           onKeyDown={isSearchSelect ? handleSearchKeyDown : arrowMove}
-          readOnly={select && !searchable}
+          readOnly={select}
           disabled={disabled}
           placeholder={(isSearchSelect && query !== null && displayValue) || placeholder}
           {...(isSearchSelect && {
@@ -315,7 +296,7 @@ function DataList({
                     tabIndex={0}
                     key={data.value}
                     value={data.value}
-                    aria-selected={select && data.value === defaultValue}
+                    aria-selected={data.value === defaultValue}
                     onClick={() => handleItemClick(data.value)}
                     onKeyDown={arrowMove}
                   >
