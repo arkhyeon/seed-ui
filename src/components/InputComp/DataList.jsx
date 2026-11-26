@@ -56,10 +56,14 @@ function HighlightedLabel({ label, range }) {
   );
 }
 
+// labelList 기본값을 렌더마다 새 [] 로 만들면 dataMap·filteredList 가 매번 새로 계산돼
+// 강조 위치 초기화 effect 가 방향키 누를 때마다 돌아 강조가 제자리로 돌아감 → 모듈 상수로 고정
+const EMPTY_LABELS = [];
+
 function DataList({
   id,
   valueList,
-  labelList = [],
+  labelList = EMPTY_LABELS,
   defaultValue,
   setData,
   select = false,
@@ -121,10 +125,18 @@ function DataList({
   }, [valueList, dataMap, isSearchSelect, query]);
 
   // 강조 위치 초기화: 검색어가 있으면 첫 항목, 없으면 현재 선택 항목
+  // 목록 '내용'이 바뀔 때만 다시 잡는다. 부모가 렌더마다 새 배열(valueList·labelList)을 넘겨도
+  // 배열 참조만 바뀐 경우엔 초기화하지 않음 → 방향키로 옮긴 강조가 제자리로 돌아가지 않음
+  const filteredListRef = useRef(filteredList);
+  filteredListRef.current = filteredList;
+  const filteredKey = useMemo(
+    () => filteredList.map(d => `${typeof d.value}:${String(d.value)}`).join(''),
+    [filteredList],
+  );
   useEffect(() => {
     if (!isSearchSelect || !isListOpen) return;
-    setActiveIndex(query ? 0 : filteredList.findIndex(d => d.value === defaultValue));
-  }, [isSearchSelect, isListOpen, query, filteredList, defaultValue]);
+    setActiveIndex(query ? 0 : filteredListRef.current.findIndex(d => d.value === defaultValue));
+  }, [isSearchSelect, isListOpen, query, filteredKey, defaultValue]);
 
   // 강조 항목이 목록 밖으로 나가면 보이도록 스크롤
   useEffect(() => {
